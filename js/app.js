@@ -28,6 +28,9 @@ const RULES = {
 };
 const PRICE = "$9.99";
 const TAX_NOTE = "Plus sales tax based on your state, calculated at checkout.";
+// Paste your Stripe Payment Link between the quotes to switch from demo checkout to real payments.
+// In Stripe, set the link's after-payment redirect to: https://brightsprouts.academy/#payment-success
+const STRIPE_PAYMENT_LINK = "";
 
 // ---------- State ----------
 const state = {
@@ -632,6 +635,7 @@ const App = {
     users[email] = { name, email, pw: hashPw(pw), plan: "free", customCount: 0, joined: new Date().toLocaleDateString() };
     saveUsers(users);
     localStorage.setItem("bs_session", email);
+    applyPendingUpgrade();
     go("home");
   },
   login() {
@@ -640,12 +644,19 @@ const App = {
     const users = loadUsers();
     if (!users[email] || users[email].pw !== hashPw(pw)) { state.authMsg = "Email or password doesn't match. Try again!"; render(); return; }
     localStorage.setItem("bs_session", email);
+    applyPendingUpgrade();
     go("home");
   },
   logout() { localStorage.removeItem("bs_session"); go("home"); },
 
   startUpgrade() {
-    if (!currentUser()) { state.authMode = "signup"; state.authMsg = "Create your free account first, then upgrade to Premium!"; go("auth"); return; }
+    const u = currentUser();
+    if (!u) { state.authMode = "signup"; state.authMsg = "Create your free account first, then upgrade to Premium!"; go("auth"); return; }
+    if (STRIPE_PAYMENT_LINK) {
+      const sep = STRIPE_PAYMENT_LINK.includes("?") ? "&" : "?";
+      window.location.href = STRIPE_PAYMENT_LINK + sep + "prefilled_email=" + encodeURIComponent(u.email);
+      return;
+    }
     state.modal = true; render();
   },
   closeModal() { state.modal = false; render(); },
@@ -681,8 +692,26 @@ function applyHash() {
     if (LESSONS[g] && LESSONS[g][m[2]] && canGrade(g)) { state.grade = g; state.subject = m[2]; state.view = "lesson"; }
   } else if ((m = h.match(/^story-(\d+)$/))) {
     if (canStory(+m[1]) && STORIES.some(s => s.id === +m[1])) { state.currentStory = +m[1]; state.view = "story"; }
+  } else if (h === "payment-success") {
+    const u = currentUser();
+    if (u) {
+      u.plan = "premium"; saveCurrentUser(u);
+      state.view = "account";
+    } else {
+      localStorage.setItem("bs_pending_upgrade", "1");
+      state.authMode = "login";
+      state.authOk = "🎉 Payment received! Log in and your Premium will activate.";
+      state.view = "auth";
+    }
+    history.replaceState(null, "", location.pathname);
   } else if (["home", "lessons", "stories", "maker", "pricing"].includes(h)) {
     state.view = h;
+  }
+}
+function applyPendingUpgrade() {
+  if (localStorage.getItem("bs_pending_upgrade")) {
+    const u = currentUser();
+    if (u) { u.plan = "premium"; saveCurrentUser(u); localStorage.removeItem("bs_pending_upgrade"); }
   }
 }
 document.addEventListener("DOMContentLoaded", () => { applyHash(); render(); });

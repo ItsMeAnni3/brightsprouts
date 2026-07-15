@@ -35,9 +35,11 @@ The upgrade button currently simulates a purchase. To collect real money:
 
 1. Create a free account at **stripe.com** → Products → add "Premium Family, $9.99/month subscription".
 2. Create a **Payment Link** for it (no coding needed — Stripe generates a checkout URL). Turn on **Stripe Tax** in the settings — it automatically calculates and collects the correct sales tax for each customer's state (this is exactly the "plus tax depending on state" behavior, handled for you).
-3. In `js/app.js`, find `startUpgrade()` and replace the modal with:
-   `window.location.href = "YOUR_STRIPE_PAYMENT_LINK";`
-4. Stripe handles cards, receipts, and recurring billing, and pays out to your bank.
+3. In the Payment Link's settings, set **After payment → redirect customers to**: `https://brightsprouts.academy/#payment-success`
+4. In `js/app.js`, paste the link into `STRIPE_PAYMENT_LINK = "..."` near the top. That's the whole switch: the upgrade button now opens real Stripe checkout (with the customer's email pre-filled), and returning customers are auto-upgraded to Premium in that browser.
+5. Stripe handles cards, receipts, recurring billing, and state sales tax, and pays out to your bank.
+
+**Honest limitation of this starter setup:** Premium activation happens in the customer's browser via the redirect, not through verified server-side confirmation — and accounts don't sync across devices. This is fine for launch (the content is client-visible anyway), but before scaling up, move to real accounts + Stripe webhooks (Firebase/Supabase) so payment status is verified and follows the user everywhere.
 
 Simpler alternatives: **Gumroad** or **Lemon Squeezy** (even easier than Stripe, they also handle sales tax for you).
 
