@@ -9,6 +9,7 @@ const SUBJECTS = [
   { key: "math",       label: "Math",       emoji: "🔢" },
   { key: "reading",    label: "Reading",    emoji: "📖" },
   { key: "vocabulary", label: "Vocabulary", emoji: "🦋" },
+  { key: "writing",    label: "Writing",    emoji: "✍️" },
   { key: "science",    label: "Science",    emoji: "🔬" },
   { key: "history",    label: "History",    emoji: "🏛️" }
 ];
@@ -25,14 +26,15 @@ const RULES = {
   free:    { grades: [1, 2], stories: 10, custom: 2 },
   premium: { grades: "all",  stories: "all", custom: "all" }
 };
-const PRICE = "$4.99";
+const PRICE = "$9.99";
+const TAX_NOTE = "Plus sales tax based on your state, calculated at checkout.";
 
 // ---------- State ----------
 const state = {
   view: "home", grade: 1, subject: "math",
   storyFilter: "all", currentStory: null,
   authMode: "signup", authMsg: "", authOk: "",
-  mathCache: {}, madeStory: null
+  sheetCache: {}, madeStory: null
 };
 
 // ---------- Storage helpers ----------
@@ -170,6 +172,36 @@ function sup(n) {
   return String(n).split("").map(c => m[c] || c).join("");
 }
 
+// ---- Universal worksheet generator: every subject gets fresh sheets ----
+function shuffleArr(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) { const j = rand(i + 1); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+function scrambleWord(w) {
+  let s = w, tries = 0;
+  while (s === w && tries < 10) { s = shuffleArr(w.split("")).join(""); tries++; }
+  return s;
+}
+function genVocab(words) {
+  return shuffleArr(words).map(w => {
+    const kind = rand(3);
+    if (kind === 0) {
+      const blanked = w[2].replace(new RegExp(w[0], "i"), "________");
+      return { q: `Fill in the blank: ${blanked}`, a: w[0] };
+    }
+    if (kind === 1) return { q: `Unscramble this word: "${scrambleWord(w[0])}"  (hint: ${w[1].split("(")[0].trim()})`, a: w[0] };
+    return { q: `Write your own sentence using the word "${w[0]}"  (meaning: ${w[1].split("(")[0].trim()})`, a: "Sentences will vary — check the word is used correctly." };
+  });
+}
+function makeSheet(g, subj, lesson) {
+  if (subj === "math") return genMath(g);
+  if (subj === "vocabulary") return genVocab(lesson.words);
+  if (subj === "writing") return shuffleArr(lesson.prompts).slice(0, 4).map(p => ({ q: p, a: lesson.rubric }));
+  const pool = (lesson.questions || []).concat(lesson.extraQuestions || []);
+  return shuffleArr(pool).slice(0, Math.min(6, pool.length));
+}
+
 // ============================================================
 // CUSTOM STORY MAKER
 // ============================================================
@@ -283,7 +315,7 @@ function homeView() {
   <div class="hero">
     <span class="big-emoji">🌱</span>
     <h1>BrightSprouts Academy</h1>
-    <p>Fun, printable lessons for <b>Grades 1–12</b> in Math, Reading, Vocabulary, Science & History — plus <b>50 stories</b> that teach kindness, courage, and character. Made for parents. Loved by kids.</p>
+    <p>Fun, printable lessons for <b>Grades 1–12</b> in Math, Reading, Vocabulary, Writing, Science & History — plus <b>50 stories</b> that teach kindness, courage, and character. Made for parents. Loved by kids.</p>
     <button class="btn btn-primary" onclick="App.go('lessons')">🚀 Explore Lessons</button>
     <button class="btn btn-secondary" onclick="App.go('stories')">📖 Read Stories</button>
   </div>
@@ -291,7 +323,7 @@ function homeView() {
     <div class="feature"><div class="fe">🖨️</div><h3>Print & Learn</h3><p>Every lesson prints as a beautiful worksheet — with an optional answer key for parents.</p></div>
     <div class="feature"><div class="fe">📖</div><h3>50 Moral Stories</h3><p>Adventures, kids helping strangers, and helping at home — every story teaches a value.</p></div>
     <div class="feature"><div class="fe">✨</div><h3>Custom Story Maker</h3><p>Put YOUR child in the story! Pick a name, a setting, and a value — we write the tale.</p></div>
-    <div class="feature"><div class="fe">🔢</div><h3>Endless Math Sheets</h3><p>Our math generator makes fresh practice problems every time — never the same sheet twice.</p></div>
+    <div class="feature"><div class="fe">🔢</div><h3>Endless Worksheets</h3><p>Every subject generates a fresh printable worksheet on demand — never the same sheet twice.</p></div>
   </div>
   <div class="card" style="text-align:center">
     <h2>How it works</h2>
@@ -310,7 +342,7 @@ function lessonsView() {
   }
   return `<div class="view">
     <h1>📚 Pick a Grade</h1>
-    <p class="subtitle">Five subjects per grade: Math • Reading • Vocabulary • Science • History ${tier() !== "premium" ? "&nbsp;·&nbsp; 🔒 = Premium" : ""}</p>
+    <p class="subtitle">Six subjects per grade: Math • Reading • Vocabulary • Writing • Science • History ${tier() !== "premium" ? "&nbsp;·&nbsp; 🔒 = Premium" : ""}</p>
     <div class="grid grid-4">${tiles.join("")}</div>
   </div>`;
 }
@@ -328,14 +360,12 @@ function lessonView() {
       lesson.words.map(w => `<tr><td class="w">${esc(w[0])}</td><td>${esc(w[1])}</td><td><i>${esc(w[2])}</i></td></tr>`).join("") + `</table>`;
   }
 
-  let questions = lesson.questions || [];
-  if (subj === "math") {
-    if (!state.mathCache[g]) state.mathCache[g] = genMath(g);
-    questions = state.mathCache[g];
-  }
+  const sheetKey = g + "-" + subj;
+  if (!state.sheetCache[sheetKey]) state.sheetCache[sheetKey] = makeSheet(g, subj, lesson);
+  const questions = state.sheetCache[sheetKey];
   const qHtml = questions.length ? `
-    <div class="questions"><h3>✏️ Practice Time ${subj === "math" ? `<button class="btn btn-secondary btn-sm no-print" onclick="App.newMath()">🎲 New Problems</button>` : ""}</h3>
-      ${questions.map((qa, i) => `<div class="q-item">${i + 1}. ${esc(qa.q)}<span class="write-line print-only"></span></div>`).join("")}
+    <div class="questions"><h3>✏️ Practice Time <button class="btn btn-secondary btn-sm no-print" onclick="App.newSheet()">🎲 New Worksheet</button></h3>
+      ${questions.map((qa, i) => `<div class="q-item">${i + 1}. ${esc(qa.q)}${'<span class="write-line print-only"></span>'.repeat(subj === "writing" ? 5 : 1)}</div>`).join("")}
     </div>
     <div class="answers-section answers-page" style="display:none">
       <h3>✅ Answer Key — ${esc(lesson.title)} (Grade ${g})</h3>
@@ -454,7 +484,7 @@ function pricingView() {
         <h2>🌱 Free</h2>
         <div class="price">$0<span>/forever</span></div>
         <ul>
-          <li>Grades 1 & 2 — all five subjects</li>
+          <li>Grades 1 & 2 — all six subjects</li>
           <li>10 moral-value stories</li>
           <li>2 custom stories</li>
           <li>Printable worksheets</li>
@@ -467,12 +497,12 @@ function pricingView() {
       <div class="plan best">
         <span class="ribbon">MOST POPULAR</span>
         <h2>⭐ Premium Family</h2>
-        <div class="price">${PRICE}<span>/month</span></div>
+        <div class="price">${PRICE}<span>/month + tax</span></div>
         <ul>
-          <li>ALL grades 1–12, all subjects</li>
+          <li>ALL grades 1–12, all six subjects</li>
           <li>All 50 moral-value stories</li>
           <li>Unlimited custom stories</li>
-          <li>Unlimited fresh math worksheets</li>
+          <li>Unlimited fresh worksheets in every subject</li>
           <li>Printable answer keys</li>
           <li>New content as it's added</li>
         </ul>
@@ -480,7 +510,7 @@ function pricingView() {
           : `<button class="btn btn-primary" onclick="App.startUpgrade()">Go Premium ⭐</button>`}
       </div>
     </div>
-    <p style="margin-top:22px;color:#8a86a8;font-size:.85rem">This starter app simulates checkout. See README.md to connect Stripe and collect real payments.</p>
+    <p style="margin-top:22px;color:#8a86a8;font-size:.85rem">${TAX_NOTE}<br>This starter app simulates checkout. See README.md to connect Stripe and collect real payments.</p>
   </div>`;
 }
 
@@ -528,7 +558,8 @@ function accountView() {
 function upgradeModal() {
   return `<div class="modal-back" onclick="if(event.target===this)App.closeModal()">
     <div class="modal">
-      <h2>⭐ Premium Family — ${PRICE}/month</h2>
+      <h2>⭐ Premium Family — ${PRICE}/month + tax</h2>
+      <p>${TAX_NOTE}</p>
       <p>This is a <b>demo checkout</b>. When you launch for real, this button becomes your Stripe payment page (see README.md — it takes about 15 minutes to set up).</p>
       <button class="btn btn-primary" style="width:100%" onclick="App.completeUpgrade()">✅ Complete Demo Purchase</button>
       <button class="btn btn-ghost" style="width:100%;margin-top:10px" onclick="App.closeModal()">Maybe later</button>
@@ -552,7 +583,7 @@ const App = {
     state.grade = g; state.subject = "math"; go("lesson");
   },
   openSubject(s) { state.subject = s; go("lesson"); },
-  newMath() { state.mathCache[state.grade] = genMath(state.grade); render(); },
+  newSheet() { delete state.sheetCache[state.grade + "-" + state.subject]; render(); },
   toggleKey(on) {
     document.querySelectorAll(".answers-section").forEach(el => el.style.display = on ? "block" : "none");
     const t = document.getElementById("key-toggle"); if (t) t.checked = on;

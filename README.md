@@ -13,13 +13,13 @@ accounts, lessons, stories, printing. No installation needed.
 
 | Feature | Details |
 |---|---|
-| 📚 Lessons | 60 lessons: Grades 1–12 × 5 subjects, each with a "Let's Learn" section, a fun family activity, and practice questions |
-| 🔢 Math generator | Every grade gets **fresh, auto-generated math problems** — click "New Problems" for a brand-new worksheet, endlessly |
+| 📚 Lessons | 72 lessons: Grades 1–12 × 6 subjects (Math, Reading, Vocabulary, Writing, Science, History), each with a "Let's Learn" section, a fun family activity, and practice questions |
+| 🔢 Worksheet generator | **Every subject** generates fresh worksheets — click "New Worksheet" for a reshuffled sheet, endlessly (math problems are fully auto-generated; other subjects draw from expanded question pools) |
 | 🖨️ Printing | Every lesson and story has a Print button. Worksheets print with a Name/Date header, answer lines, and an **optional answer key** (parents' checkbox) |
 | 📖 Story Library | 50 original stories with morals, in 3 themes: Adventures, Kids Helping Strangers, and Helping at Home — each with discussion questions |
 | ✨ Story Maker | Parents enter their child's name, a sidekick, a setting, a theme, and a value — the app writes a personalized story with a moral, ready to print |
 | 👤 Accounts | Sign up / log in / account page. Data is stored in the browser (see "Going live" below) |
-| ⭐ Monetization | Free plan (Grades 1–2, 10 stories, 2 custom stories) vs Premium **$4.99/month** (everything). Locked content shows 🔒 and funnels users to sign up or upgrade |
+| ⭐ Monetization | Free plan (Grades 1–2, 10 stories, 2 custom stories) vs Premium **$9.99/month + state sales tax** (everything). Locked content shows 🔒 and funnels users to sign up or upgrade |
 
 ## 💰 How you earn money with this
 
@@ -27,14 +27,14 @@ The app is already structured as a **freemium subscription business**:
 
 1. **Free plan hooks families in** — Grades 1–2 and 10 stories are genuinely useful, so parents sign up.
 2. **Locks create the upgrade moment** — the instant a parent taps Grade 3 or story #11, they see the Premium page.
-3. **Premium is priced at $4.99/month** (change `PRICE` and `RULES` at the top of `js/app.js` to adjust pricing or what's free).
+3. **Premium is priced at $9.99/month plus tax** (change `PRICE` and `RULES` at the top of `js/app.js` to adjust pricing or what's free).
 
 ### Turning on REAL payments (the demo checkout → Stripe)
 
 The upgrade button currently simulates a purchase. To collect real money:
 
-1. Create a free account at **stripe.com** → Products → add "Premium Family, $4.99/month subscription".
-2. Create a **Payment Link** for it (no coding needed — Stripe generates a checkout URL).
+1. Create a free account at **stripe.com** → Products → add "Premium Family, $9.99/month subscription".
+2. Create a **Payment Link** for it (no coding needed — Stripe generates a checkout URL). Turn on **Stripe Tax** in the settings — it automatically calculates and collects the correct sales tax for each customer's state (this is exactly the "plus tax depending on state" behavior, handled for you).
 3. In `js/app.js`, find `startUpgrade()` and replace the modal with:
    `window.location.href = "YOUR_STRIPE_PAYMENT_LINK";`
 4. Stripe handles cards, receipts, and recurring billing, and pays out to your bank.
