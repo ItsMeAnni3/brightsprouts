@@ -23,7 +23,8 @@ const K_SUBJECTS = [
   { key: "things",   label: "Toys & Things", emoji: "🧸" }
 ];
 const GEN_SUBJECTS = [
-  { key: "geography", label: "Geography", emoji: "🌍" }
+  { key: "geography",  label: "Geography",     emoji: "🌍" },
+  { key: "florafauna", label: "Flora & Fauna", emoji: "🌿" }
 ];
 function subjectsFor(g) { return g === 0 ? K_SUBJECTS : (g === 13 ? GEN_SUBJECTS : SUBJECTS); }
 function gradeName(g) { return g === 0 ? "Kindergarten" : (g === 13 ? "General Knowledge" : "Grade " + g); }
@@ -271,9 +272,29 @@ function genGeo(lesson) {
   });
 }
 
+function genFF() {
+  const all = [];
+  LESSONS[13].geography.continents.forEach(c => (c.countries || []).forEach(k => {
+    const ff = FF_BY_ISO[k[0]];
+    if (ff) all.push({ iso: k[0], country: k[1], flora: ff.flora, fauna: ff.fauna });
+  }));
+  return shuffleArr(all).slice(0, 8).map((p, i) => {
+    const kind = i % 4;
+    if (kind === 0) return { html: true, q: `Name two animals you could find in ${flagImg(p.iso)} <b>${esc(p.country)}</b>.  ______________`, a: `Any two of: ${p.fauna.join(", ")}` };
+    if (kind === 1) return { html: true, q: `Name a famous plant or tree of ${flagImg(p.iso)} <b>${esc(p.country)}</b>.  ______________`, a: `Any of: ${p.flora.join(", ")}` };
+    if (kind === 2) {
+      const isFlora = rand(2) === 0;
+      const sp = isFlora ? pick(p.flora) : pick(p.fauna);
+      return { q: `FLORA or FAUNA? Is the ${sp.toLowerCase()} a plant or an animal?  ______________`, a: isFlora ? "Flora — a plant!" : "Fauna — an animal!" };
+    }
+    const ic = pick(FF_ICONIC);
+    return { q: `Which country is famous for the ${ic[0]}?  ______________`, a: ic[1] };
+  });
+}
+
 function makeSheet(g, subj, lesson) {
   if (g === 0) return genKinder(subj, lesson);
-  if (g === 13) return genGeo(lesson);
+  if (g === 13) return subj === "florafauna" ? genFF() : genGeo(lesson);
   if (subj === "math") return genMath(g);
   if (subj === "spelling") return genSpelling(lesson.spellWords);
   if (subj === "vocabulary") return genVocab(lesson.words);
@@ -480,6 +501,20 @@ function lessonView() {
     let cells = "";
     for (let n = 1; n <= 100; n++) cells += `<span class="${n % 10 === 0 ? "ten" : ""}">${n}</span>`;
     body += `<div class="numgrid">${cells}</div>`;
+  }
+  if (lesson.floraFauna) {
+    const conts = LESSONS[13].geography.continents;
+    body += `<div class="cont-nav no-print">` + conts.filter(c => c.countries).map((c, i) =>
+      `<button class="btn btn-ghost btn-sm" onclick="document.getElementById('ff-${i}').scrollIntoView({behavior:'smooth'})">${c.emoji} ${esc(c.name)}</button>`).join("") + `</div>`;
+    conts.forEach((c, i) => {
+      if (!c.countries) return;
+      body += `<div id="ff-${i}"><h3 style="margin:22px 0 10px;font-size:1.3rem">${c.emoji} ${esc(c.name)}</h3>
+        <div style="overflow-x:auto"><table class="word-table"><tr><th>Flag</th><th>Country</th><th>🌿 Flora (plants)</th><th>🐾 Fauna (animals)</th></tr>` +
+        c.countries.map(k => {
+          const ff = FF_BY_ISO[k[0]] || { flora: [], fauna: [] };
+          return `<tr><td>${flagImg(k[0])}</td><td><b>${esc(k[1])}</b></td><td>${ff.flora.map(esc).join(", ")}</td><td>${ff.fauna.map(esc).join(", ")}</td></tr>`;
+        }).join("") + `</table></div></div>`;
+    });
   }
   if (lesson.continents) {
     body += `<div class="cont-nav no-print">` + lesson.continents.map((c, i) =>
