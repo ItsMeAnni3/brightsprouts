@@ -14,6 +14,8 @@ accounts, lessons, stories, printing. No installation needed.
 | Feature | Details |
 |---|---|
 | 📚 Lessons | 84 lessons: Grades 1–12 × 7 subjects (Math, Reading, Vocabulary, Spelling, Writing, Science, History) plus a free Kindergarten section (alphabet, counting to 100, shapes, 100 picture words) — each with a "Let's Learn" section, a fun family activity, and practice questions |
+| 🌍 General Knowledge | World geography (7 continents, 195 countries with flags + capitals) and Flora & Fauna (5 plants + 5 animals per country, with photos and scientific names) |
+| ⚗️ Additional Material | Colour periodic table (118 elements), the abacus and how to use it, essential formulas for Grades 1–12, and printable addition/multiplication tables |
 | 🔢 Worksheet generator | **Every subject** generates fresh worksheets — click "New Worksheet" for a reshuffled sheet, endlessly (math problems are fully auto-generated; other subjects draw from expanded question pools) |
 | 🖨️ Printing | Every lesson and story has a Print button. Worksheets print with a Name/Date header, answer lines, and an **optional answer key** (parents' checkbox) |
 | 📖 Story Library | 50 original stories with morals, in 3 themes: Adventures, Kids Helping Strangers, and Helping at Home — each with discussion questions |
@@ -65,6 +67,22 @@ Simpler alternatives: **Gumroad** or **Lemon Squeezy** (even easier than Stripe,
 - **Pricing / what's free**: `RULES` and `PRICE` at the top of `js/app.js`.
 - **Add lessons**: copy any lesson block in `js/lessons1.js` / `lessons2.js` — the format is self-explanatory.
 - **Add stories**: append to `js/stories2.js` following the same pattern (id, title, theme, ages, moral, text).
+
+## ✅ Content accuracy
+
+Factual data is verified against outside sources rather than trusted from memory:
+
+| Data | Verified against | Result |
+|---|---|---|
+| 195 countries & capitals | Wikidata SPARQL | all match |
+| 1,950 species claims (flora/fauna) | GBIF occurrence records | verified; 20 errors found & fixed |
+| 118 chemical elements | Built from PubChem, cross-checked against Wikidata | 0 symbol errors, all grid positions correct |
+| 6,240 generated maths answers | Independently recomputed from each question | 2 generator bugs found & fixed |
+| 265 spelling words | dictionaryapi.dev + Wiktionary | all real, correctly spelled |
+| 55 formulas | Numerically tested (identities, roots plugged back in, known values) | all correct |
+| 288 arithmetic table cells | Recomputed | all correct |
+
+**Known limitation:** prose facts in the science/history lessons and reading-comprehension answer keys are human-written and not machine-verifiable.
 
 ## 📁 Files
 

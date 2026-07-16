@@ -90,6 +90,7 @@ main{max-width:1100px;margin:0 auto;padding:26px 18px 80px}
 .grade-tile .lock{position:absolute;top:8px;right:12px;font-size:1rem}
 .g0{background:linear-gradient(135deg,#ff6b9d,#ffd166)}
 .g13{background:linear-gradient(135deg,#2ec4b6,#4d96ff)}
+.g14{background:linear-gradient(135deg,#8338ec,#ff6b9d)}
 .g1{background:var(--pink)}.g2{background:var(--orange)}.g3{background:var(--yellow);color:var(--ink)}
 .g4{background:var(--green)}.g5{background:var(--teal)}.g6{background:var(--blue)}
 .g7{background:var(--purple)}.g8{background:#e26d5c}.g9{background:#3a86ff}
@@ -124,6 +125,57 @@ main{max-width:1100px;margin:0 auto;padding:26px 18px 80px}
 .word-table .w{font-weight:800;color:var(--pink)}
 .lesson-tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:18px 0}
 .lesson-tools label{font-size:.92rem;display:flex;align-items:center;gap:6px}
+
+/* ---------- Periodic table ---------- */
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0 16px}
+.legend span{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:600}
+.legend i{width:15px;height:15px;border-radius:4px;border:1px solid rgba(0,0,0,.15)}
+.ptable-scroll{overflow-x:auto;padding-bottom:6px}
+.ptable{display:grid;grid-template-columns:repeat(18,minmax(52px,1fr));gap:3px;min-width:980px}
+.el{
+  border-radius:5px;padding:3px 2px;text-align:center;line-height:1.15;
+  border:1px solid rgba(0,0,0,.14);display:flex;flex-direction:column;justify-content:center;min-height:54px;
+}
+.el .z{font-size:.55rem;font-weight:700;opacity:.75}
+.el .sym{font-size:1rem;font-weight:900;color:#1e1c33}
+.el .nm{font-size:.46rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.el .ms{font-size:.44rem;opacity:.7}
+.el-note{font-size:.68rem;text-align:center;color:#8a86a8;padding:4px 0}
+
+/* ---------- Abacus ---------- */
+.abacus-wrap{display:grid;grid-template-columns:minmax(300px,1.2fr) 1fr;gap:18px;align-items:start;margin-bottom:16px}
+.abacus{width:100%;height:auto;border-radius:12px}
+.abacus-key{background:#f4f0ff;border-radius:12px;padding:14px 16px;font-size:.9rem;line-height:1.6}
+.abacus-key p{margin:5px 0}
+.abacus-key .dot{display:inline-block;width:13px;height:13px;border-radius:50%;margin-right:5px;vertical-align:middle;border:1px solid #7c5cbf}
+.abacus-key .dot.pink{background:#ff6b9d}.abacus-key .dot.teal{background:#2ec4b6}.abacus-key .dot.grey{background:#e9e2f5}
+@media (max-width:760px){ .abacus-wrap{grid-template-columns:1fr} }
+
+/* ---------- Formula sheet ---------- */
+.fband{margin-bottom:18px}
+.fband h3{color:var(--purple-dark);margin-bottom:6px}
+.ftable{width:100%;border-collapse:collapse}
+.ftable th,.ftable td{border:2px solid #e0dcf0;padding:7px 10px;text-align:left;font-size:.9rem;vertical-align:top}
+.ftable th{background:#f4f0ff;color:var(--purple-dark)}
+.ftable .fmath{font-family:"Cambria Math",Georgia,serif;font-weight:700;color:var(--pink);white-space:nowrap}
+.ftable .fmean{color:#6a668c;font-size:.85rem}
+
+/* ---------- Maths tables ---------- */
+.mtable{border-collapse:collapse;margin-bottom:6px}
+.mtable th,.mtable td{border:1px solid #d9d4ee;padding:6px 9px;text-align:center;font-size:.88rem;min-width:36px}
+.mtable th{background:var(--purple);color:#fff;font-weight:800}
+.mtable th.corner{background:var(--purple-dark);font-size:1rem}
+.mtable td{background:#fff}
+.mtable td.diag{background:var(--yellow);font-weight:800}
+
+@media print{
+  .ptable{min-width:0;grid-template-columns:repeat(18,1fr);gap:1px}
+  .el{min-height:38px;border:.5px solid #999;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .el .sym{font-size:.7rem}.el .nm,.el .ms{font-size:.34rem}
+  .legend i,.mtable th,.mtable td.diag,.abacus{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .ftable,.mtable,.fband,.abacus-wrap{break-inside:avoid}
+  .mtable th,.mtable td{padding:4px 6px}
+}
 
 /* ---------- Geography ---------- */
 .flagimg{width:38px;height:auto;border:1px solid #d9d4ee;border-radius:4px;vertical-align:middle;background:#fff}

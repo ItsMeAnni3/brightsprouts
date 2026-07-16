@@ -26,8 +26,24 @@ const GEN_SUBJECTS = [
   { key: "geography",  label: "Geography",     emoji: "🌍" },
   { key: "florafauna", label: "Flora & Fauna", emoji: "🌿" }
 ];
-function subjectsFor(g) { return g === 0 ? K_SUBJECTS : (g === 13 ? GEN_SUBJECTS : SUBJECTS); }
-function gradeName(g) { return g === 0 ? "Kindergarten" : (g === 13 ? "General Knowledge" : "Grade " + g); }
+const ADD_SUBJECTS = [
+  { key: "periodic", label: "Periodic Table", emoji: "⚗️" },
+  { key: "abacus",   label: "Abacus",         emoji: "🧮" },
+  { key: "formulas", label: "Formulas",       emoji: "📐" },
+  { key: "tables",   label: "Maths Tables",   emoji: "🔢" }
+];
+function subjectsFor(g) {
+  if (g === 0) return K_SUBJECTS;
+  if (g === 13) return GEN_SUBJECTS;
+  if (g === 14) return ADD_SUBJECTS;
+  return SUBJECTS;
+}
+function gradeName(g) {
+  if (g === 0) return "Kindergarten";
+  if (g === 13) return "General Knowledge";
+  if (g === 14) return "Additional Learning Material";
+  return "Grade " + g;
+}
 function flagImg(iso, size) { return `<img class="flagimg" src="https://flagcdn.com/w${size || 40}/${iso}.png" alt="flag" loading="lazy">`; }
 // species entries are [common name, scientific name]
 function spImgSrc(sci) { return (typeof SPECIES_IMG !== "undefined") ? SPECIES_IMG[sci] : null; }
@@ -317,8 +333,53 @@ function genFF() {
   });
 }
 
+// ---- Additional-material worksheets ----
+function genExtra(subj, lesson) {
+  const R = (lo, hi) => lo + rand(hi - lo + 1);
+  const qs = [];
+  if (subj === "periodic") {
+    for (let i = 0; i < 8; i++) {
+      const e = pick(ELEMENTS), k = i % 4;
+      if (k === 0) qs.push({ q: `What is the chemical symbol for ${e[2]}?  ______`, a: e[1] });
+      else if (k === 1) qs.push({ q: `Which element has the symbol ${e[1]}?  ______`, a: e[2] });
+      else if (k === 2) qs.push({ q: `What is the atomic number of ${e[2]} (${e[1]})?  ______`, a: e[0] });
+      else qs.push({ q: `${e[2]} (${e[1]}) has ${e[0]} protons. How many protons does an atom of ${e[2]} have?  ______`, a: e[0] });
+    }
+  } else if (subj === "abacus") {
+    for (let i = 0; i < 8; i++) {
+      const k = i % 3;
+      if (k === 0) {
+        const n = R(1, 9);
+        qs.push({ q: `Show ${n} on one abacus rod: how many 5-beads and how many 1-beads?  ______`,
+                  a: `${n >= 5 ? "1 five-bead" : "0 five-beads"} and ${n % 5} one-bead${n % 5 === 1 ? "" : "s"}  (${n >= 5 ? "5 + " + (n % 5) : n} = ${n})` });
+      } else if (k === 1) {
+        const h = R(0, 1), e = R(0, 4);
+        qs.push({ q: `A rod has ${h ? "the 5-bead pushed down" : "no 5-bead pushed down"} and ${e} one-bead${e === 1 ? "" : "s"} pushed up. What number is it showing?  ______`, a: h * 5 + e });
+      } else {
+        const n = R(2, 4), digits = Array.from({ length: n }, () => R(0, 9)).join("");
+        const names = ["ones", "tens", "hundreds", "thousands"];
+        qs.push({ q: `Which rods would you use to show ${digits}? (name them right to left)  ______`,
+                  a: names.slice(0, n).join(", ") + ` — ${n} rods` });
+      }
+    }
+  } else if (subj === "tables") {
+    for (let i = 0; i < 10; i++) {
+      if (i % 2 === 0) { const a = R(1, 12), b = R(1, 12); qs.push({ q: `${a} + ${b} = ____`, a: a + b }); }
+      else { const a = R(1, 12), b = R(1, 12); qs.push({ q: `${a} × ${b} = ____`, a: a * b }); }
+    }
+  } else { // formulas
+    const pool = [];
+    FORMULAS.forEach(b => b.items.forEach(f => pool.push([b.band, f[0], f[1]])));
+    shuffleArr(pool).slice(0, 8).forEach(f => {
+      qs.push({ q: `Write the formula for: ${f[1]}  (${f[0].split("·")[1] ? f[0].split("·")[1].trim() : f[0]})  ______________`, a: f[2] });
+    });
+  }
+  return qs;
+}
+
 function makeSheet(g, subj, lesson) {
   if (g === 0) return genKinder(subj, lesson);
+  if (g === 14) return genExtra(subj, lesson);
   if (g === 13) return subj === "florafauna" ? genFF() : genGeo(lesson);
   if (subj === "math") return genMath(g);
   if (subj === "spelling") return genSpelling(lesson.spellWords);
@@ -494,9 +555,10 @@ function homeView() {
 // ---------- Lessons ----------
 function lessonsView() {
   const tiles = [];
-  for (let g = 0; g <= 13; g++) {
+  for (let g = 0; g <= 14; g++) {
     const locked = !canGrade(g);
-    tiles.push(`<button class="grade-tile g${g}" onclick="App.openGrade(${g})">${locked ? '<span class="lock">🔒</span>' : ""}${g === 0 ? "🌈 Kindergarten" : (g === 13 ? "🌍 General" : "Grade " + g)}</button>`);
+    const label = g === 0 ? "🌈 Kindergarten" : g === 13 ? "🌍 General" : g === 14 ? "⚗️ Extras" : "Grade " + g;
+    tiles.push(`<button class="grade-tile g${g}" onclick="App.openGrade(${g})">${locked ? '<span class="lock">🔒</span>' : ""}${label}</button>`);
   }
   return `<div class="view">
     <h1>📚 Pick a Grade</h1>
@@ -526,6 +588,78 @@ function lessonView() {
     let cells = "";
     for (let n = 1; n <= 100; n++) cells += `<span class="${n % 10 === 0 ? "ten" : ""}">${n}</span>`;
     body += `<div class="numgrid">${cells}</div>`;
+  }
+  if (lesson.periodicTable) {
+    const catColor = {}; ELEM_CATS.forEach(c => catColor[c[0]] = c[2]);
+    body += `<div class="legend">` + ELEM_CATS.map(c =>
+      `<span><i style="background:${c[2]}"></i>${esc(c[1])}</span>`).join("") + `</div>`;
+    body += `<div class="ptable-scroll"><div class="ptable">` + ELEMENTS.map(e =>
+      `<div class="el ${e[4]}" style="grid-column:${e[5]};grid-row:${e[6]};background:${catColor[e[4]]}">
+         <span class="z">${e[0]}</span><span class="sym">${esc(e[1])}</span>
+         <span class="nm">${esc(e[2])}</span><span class="ms">${esc(e[3])}</span>
+       </div>`).join("") +
+      `<div class="el-note" style="grid-column:3 / span 15;grid-row:8">↓ Lanthanides (57–71) and actinides (89–103) belong in the gaps above ↓</div>` +
+      `</div></div>`;
+    body += `<p style="font-size:.8rem;color:#8a86a8;margin-top:10px">Element data from PubChem, US National Library of Medicine. Atomic masses are standard atomic weights.</p>`;
+  }
+  if (lesson.abacusDemo) {
+    const rods = [
+      { label: "Thousands", h: 0, e: 2 }, { label: "Hundreds", h: 1, e: 3 },
+      { label: "Tens", h: 0, e: 4 }, { label: "Ones", h: 1, e: 2 }
+    ];
+    const value = rods.map(r => r.h * 5 + r.e).join("");
+    body += `<div class="abacus-wrap">
+      <svg class="abacus" viewBox="0 0 380 284" role="img" aria-label="Soroban abacus showing ${value}">
+        <rect x="8" y="8" width="364" height="268" rx="12" fill="#8d5524" />
+        <rect x="22" y="22" width="336" height="230" rx="6" fill="#fff6e5" />
+        <rect x="22" y="86" width="336" height="9" fill="#8d5524" />
+        ${rods.map((r, i) => {
+          const x = 60 + i * 84;
+          let s = `<line x1="${x}" y1="30" x2="${x}" y2="246" stroke="#c68642" stroke-width="4"/>`;
+          // heaven bead (worth 5): pushed DOWN to the bar = counted; parked up = 0
+          s += `<ellipse cx="${x}" cy="${r.h ? 74 : 40}" rx="26" ry="12" fill="${r.h ? "#ff6b9d" : "#e9e2f5"}" stroke="#7c5cbf" stroke-width="2"/>`;
+          // 4 earth beads (worth 1 each): pushed UP to the bar = counted; parked at the bottom = 0
+          for (let b = 0; b < 4; b++) {
+            const counted = b < r.e;
+            const y = counted ? 108 + b * 26 : 238 - (3 - b) * 26;
+            s += `<ellipse cx="${x}" cy="${y}" rx="26" ry="12" fill="${counted ? "#2ec4b6" : "#e9e2f5"}" stroke="#7c5cbf" stroke-width="2"/>`;
+          }
+          s += `<text x="${x}" y="268" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">${r.label}</text>`;
+          s += `<text x="${x}" y="20" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">${r.h * 5 + r.e}</text>`;
+          return s;
+        }).join("")}
+      </svg>
+      <div class="abacus-key">
+        <p><b>This abacus is showing ${value}.</b> Read it rod by rod, left to right — just like a written number.</p>
+        <p><span class="dot pink"></span> Pink bead <b>above</b> the bar = <b>5</b> (only when pushed <i>down</i> to the bar)</p>
+        <p><span class="dot teal"></span> Teal beads <b>below</b> the bar = <b>1</b> each (only when pushed <i>up</i> to the bar)</p>
+        <p><span class="dot grey"></span> Grey beads are pushed away from the bar — they count as <b>0</b></p>
+        <p style="margin-top:8px">Example — the hundreds rod shows ${rods[1].h * 5 + rods[1].e}: one 5-bead down${rods[1].e ? ` plus ${rods[1].e} one-bead${rods[1].e > 1 ? "s" : ""} up` : ""}.</p>
+      </div>
+    </div>`;
+  }
+  if (lesson.formulaSheet) {
+    body += FORMULAS.map(b => `
+      <div class="fband">
+        <h3>${esc(b.band)}</h3>
+        <table class="ftable"><tr><th>Formula for…</th><th>The formula</th><th>What it means</th></tr>` +
+        b.items.map(f => `<tr><td>${esc(f[0])}</td><td class="fmath">${esc(f[1])}</td><td class="fmean">${esc(f[2])}</td></tr>`).join("") +
+        `</table></div>`).join("");
+  }
+  if (lesson.mathTables) {
+    const grid = (title, size, fn, note) => {
+      let h = `<h3 style="margin:20px 0 8px">${title}</h3><p class="lesson-intro" style="margin-bottom:8px">${note}</p><div style="overflow-x:auto"><table class="mtable"><tr><th class="corner">${title.includes("Addition") ? "+" : "×"}</th>`;
+      for (let c = 1; c <= size; c++) h += `<th>${c}</th>`;
+      h += `</tr>`;
+      for (let r = 1; r <= size; r++) {
+        h += `<tr><th>${r}</th>`;
+        for (let c = 1; c <= size; c++) h += `<td class="${r === c ? "diag" : ""}">${fn(r, c)}</td>`;
+        h += `</tr>`;
+      }
+      return h + `</table></div>`;
+    };
+    body += grid("Addition Table (1–12)", 12, (r, c) => r + c, "Find a row and a column — where they meet is the answer. 7 + 8 = 15.");
+    body += grid("Multiplication Table (1–12)", 12, (r, c) => r * c, "The shaded diagonal shows the square numbers: 1, 4, 9, 16, 25 …");
   }
   if (lesson.floraFauna) {
     const conts = LESSONS[13].geography.continents;
@@ -780,7 +914,9 @@ const App = {
       else go("pricing");
       return;
     }
-    state.grade = g; state.subject = g === 0 ? "alphabet" : (g === 13 ? "geography" : "math"); go("lesson");
+    state.grade = g;
+    state.subject = g === 0 ? "alphabet" : g === 13 ? "geography" : g === 14 ? "periodic" : "math";
+    go("lesson");
   },
   openSubject(s) { state.subject = s; go("lesson"); },
   newSheet() { delete state.sheetCache[state.grade + "-" + state.subject]; render(); },
