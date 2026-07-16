@@ -89,6 +89,7 @@ main{max-width:1100px;margin:0 auto;padding:26px 18px 80px}
 .grade-tile:hover{transform:scale(1.05)}
 .grade-tile .lock{position:absolute;top:8px;right:12px;font-size:1rem}
 .g0{background:linear-gradient(135deg,#ff6b9d,#ffd166)}
+.g13{background:linear-gradient(135deg,#2ec4b6,#4d96ff)}
 .g1{background:var(--pink)}.g2{background:var(--orange)}.g3{background:var(--yellow);color:var(--ink)}
 .g4{background:var(--green)}.g5{background:var(--teal)}.g6{background:var(--blue)}
 .g7{background:var(--purple)}.g8{background:#e26d5c}.g9{background:#3a86ff}
@@ -123,6 +124,10 @@ main{max-width:1100px;margin:0 auto;padding:26px 18px 80px}
 .word-table .w{font-weight:800;color:var(--pink)}
 .lesson-tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:18px 0}
 .lesson-tools label{font-size:.92rem;display:flex;align-items:center;gap:6px}
+
+/* ---------- Geography ---------- */
+.flagimg{width:38px;height:auto;border:1px solid #d9d4ee;border-radius:4px;vertical-align:middle;background:#fff}
+.cont-nav{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 10px}
 
 /* ---------- Spelling word chips ---------- */
 .spellgrid{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}

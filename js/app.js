@@ -22,8 +22,12 @@ const K_SUBJECTS = [
   { key: "fruits",   label: "Food",          emoji: "🍎" },
   { key: "things",   label: "Toys & Things", emoji: "🧸" }
 ];
-function subjectsFor(g) { return g === 0 ? K_SUBJECTS : SUBJECTS; }
-function gradeName(g) { return g === 0 ? "Kindergarten" : "Grade " + g; }
+const GEN_SUBJECTS = [
+  { key: "geography", label: "Geography", emoji: "🌍" }
+];
+function subjectsFor(g) { return g === 0 ? K_SUBJECTS : (g === 13 ? GEN_SUBJECTS : SUBJECTS); }
+function gradeName(g) { return g === 0 ? "Kindergarten" : (g === 13 ? "General Knowledge" : "Grade " + g); }
+function flagImg(iso, size) { return `<img class="flagimg" src="https://flagcdn.com/w${size || 40}/${iso}.png" alt="flag" loading="lazy">`; }
 
 const THEME_LABELS = {
   adventure: "🗺️ Adventures",
@@ -254,8 +258,22 @@ function genSpelling(words) {
   return qs;
 }
 
+// ---- Geography generator: endless flag/capital/continent quizzes ----
+function genGeo(lesson) {
+  const all = [];
+  lesson.continents.forEach(c => (c.countries || []).forEach(k => all.push({ iso: k[0], country: k[1], capital: k[2], cont: c.name })));
+  return shuffleArr(all).slice(0, 8).map((p, i) => {
+    const kind = i % 4;
+    if (kind === 0) return { html: true, q: `What is the capital of ${flagImg(p.iso)} <b>${esc(p.country)}</b>?  ______________`, a: p.capital };
+    if (kind === 1) return { html: true, q: `Which country has the capital city <b>${esc(p.capital)}</b>?  ______________`, a: p.country };
+    if (kind === 2) return { html: true, q: `Which continent is ${flagImg(p.iso)} <b>${esc(p.country)}</b> on?  ______________`, a: p.cont };
+    return { html: true, q: `Name the country this flag belongs to:  ${flagImg(p.iso, 80)}  ______________`, a: `${p.country} (capital: ${p.capital})` };
+  });
+}
+
 function makeSheet(g, subj, lesson) {
   if (g === 0) return genKinder(subj, lesson);
+  if (g === 13) return genGeo(lesson);
   if (subj === "math") return genMath(g);
   if (subj === "spelling") return genSpelling(lesson.spellWords);
   if (subj === "vocabulary") return genVocab(lesson.words);
@@ -430,9 +448,9 @@ function homeView() {
 // ---------- Lessons ----------
 function lessonsView() {
   const tiles = [];
-  for (let g = 0; g <= 12; g++) {
+  for (let g = 0; g <= 13; g++) {
     const locked = !canGrade(g);
-    tiles.push(`<button class="grade-tile g${g}" onclick="App.openGrade(${g})">${locked ? '<span class="lock">🔒</span>' : ""}${g === 0 ? "🌈 Kindergarten" : "Grade " + g}</button>`);
+    tiles.push(`<button class="grade-tile g${g}" onclick="App.openGrade(${g})">${locked ? '<span class="lock">🔒</span>' : ""}${g === 0 ? "🌈 Kindergarten" : (g === 13 ? "🌍 General" : "Grade " + g)}</button>`);
   }
   return `<div class="view">
     <h1>📚 Pick a Grade</h1>
@@ -463,6 +481,19 @@ function lessonView() {
     for (let n = 1; n <= 100; n++) cells += `<span class="${n % 10 === 0 ? "ten" : ""}">${n}</span>`;
     body += `<div class="numgrid">${cells}</div>`;
   }
+  if (lesson.continents) {
+    body += `<div class="cont-nav no-print">` + lesson.continents.map((c, i) =>
+      `<button class="btn btn-ghost btn-sm" onclick="document.getElementById('cont-${i}').scrollIntoView({behavior:'smooth'})">${c.emoji} ${esc(c.name)}</button>`).join("") + `</div>`;
+    lesson.continents.forEach((c, i) => {
+      body += `<div id="cont-${i}"><h3 style="margin:22px 0 6px;font-size:1.3rem">${c.emoji} ${esc(c.name)}${c.countries ? ` — ${c.countries.length} countries` : ""}</h3>
+        <p class="lesson-intro" style="margin-bottom:10px">${esc(c.facts)}</p>`;
+      if (c.countries) {
+        body += `<div style="overflow-x:auto"><table class="word-table"><tr><th>Flag</th><th>Country</th><th>Capital</th></tr>` +
+          c.countries.map(k => `<tr><td>${flagImg(k[0])}</td><td><b>${esc(k[1])}</b></td><td>${esc(k[2])}</td></tr>`).join("") + `</table></div>`;
+      }
+      body += `</div>`;
+    });
+  }
   if (lesson.words) {
     body += `<table class="word-table"><tr><th>Word</th><th>Meaning</th><th>Example</th></tr>` +
       lesson.words.map(w => `<tr><td class="w">${esc(w[0])}</td><td>${esc(w[1])}</td><td><i>${esc(w[2])}</i></td></tr>`).join("") + `</table>`;
@@ -473,11 +504,11 @@ function lessonView() {
   const questions = state.sheetCache[sheetKey];
   const qHtml = questions.length ? `
     <div class="questions"><h3>✏️ Practice Time <button class="btn btn-secondary btn-sm no-print" onclick="App.newSheet()">🎲 New Worksheet</button></h3>
-      ${questions.map((qa, i) => `<div class="q-item">${i + 1}. ${esc(qa.q)}${'<span class="write-line print-only"></span>'.repeat(subj === "writing" ? 5 : 1)}</div>`).join("")}
+      ${questions.map((qa, i) => `<div class="q-item">${i + 1}. ${qa.html ? qa.q : esc(qa.q)}${'<span class="write-line print-only"></span>'.repeat(subj === "writing" ? 5 : 1)}</div>`).join("")}
     </div>
     <div class="answers-section answers-page" style="display:none">
       <h3>✅ Answer Key — ${esc(lesson.title)} (${gradeName(g)})</h3>
-      ${questions.map((qa, i) => `<div class="q-item">${i + 1}. ${esc(qa.q)}<span class="answer">Answer: ${esc(qa.a)}</span></div>`).join("")}
+      ${questions.map((qa, i) => `<div class="q-item">${i + 1}. ${qa.html ? qa.q : esc(qa.q)}<span class="answer">Answer: ${esc(qa.a)}</span></div>`).join("")}
     </div>` : "";
 
   return `<div class="view">
@@ -607,7 +638,7 @@ function pricingView() {
         <h2>⭐ Premium Family</h2>
         <div class="price">${PRICE}<span>/month + tax</span></div>
         <ul>
-          <li>ALL grades K–12, all subjects</li>
+          <li>ALL grades K–12 + General Knowledge (world geography)</li>
           <li>All 50 moral-value stories</li>
           <li>Unlimited custom stories</li>
           <li>Unlimited fresh worksheets in every subject</li>
@@ -688,7 +719,7 @@ const App = {
       else go("pricing");
       return;
     }
-    state.grade = g; state.subject = g === 0 ? "alphabet" : "math"; go("lesson");
+    state.grade = g; state.subject = g === 0 ? "alphabet" : (g === 13 ? "geography" : "math"); go("lesson");
   },
   openSubject(s) { state.subject = s; go("lesson"); },
   newSheet() { delete state.sheetCache[state.grade + "-" + state.subject]; render(); },
