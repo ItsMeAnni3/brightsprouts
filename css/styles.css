@@ -283,6 +283,63 @@ main{max-width:1100px;margin:0 auto;padding:26px 18px 80px}
   .kcard{border:1.5px solid #bbb;break-inside:avoid}
 }
 
+/* ---------- Animated story scenes ---------- */
+.storyscene{
+  width:100%;max-width:520px;height:auto;display:block;margin:0 auto 18px;
+  border-radius:18px;box-shadow:var(--shadow);border:3px solid #fff;
+}
+.story-card .storyscene{max-width:100%;margin-bottom:10px;border-radius:14px;border-width:2px;box-shadow:none}
+@keyframes sc-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes sc-bob{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-4px) rotate(1.5deg)}}
+@keyframes sc-sway{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+@keyframes sc-swing{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}}
+@keyframes sc-tw{0%,100%{opacity:.25;transform:scale(.8)}50%{opacity:1;transform:scale(1.15)}}
+@keyframes sc-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.09)}}
+@keyframes sc-spin{to{transform:rotate(360deg)}}
+@keyframes sc-rain{0%{transform:translateY(0);opacity:0}10%{opacity:1}100%{transform:translateY(120px);opacity:0}}
+@keyframes sc-fall{0%{transform:translateY(0) rotate(0);opacity:0}10%{opacity:1}100%{transform:translateY(115px) rotate(220deg);opacity:0}}
+@keyframes sc-wave{0%,100%{transform:translateX(0)}50%{transform:translateX(10px)}}
+@keyframes sc-beam{0%,100%{transform:rotate(-14deg)}50%{transform:rotate(14deg)}}
+@keyframes sc-flicker{0%,100%{transform:scaleY(1);opacity:.9}50%{transform:scaleY(1.22);opacity:1}}
+@keyframes sc-firefly{0%{transform:translate(0,0);opacity:0}25%{opacity:1}50%{transform:translate(18px,-14px);opacity:1}75%{opacity:.2}100%{transform:translate(0,0);opacity:0}}
+@keyframes sc-smoke{0%{transform:translateY(0) scale(.6);opacity:.9}100%{transform:translateY(-26px) scale(1.5);opacity:0}}
+@keyframes sc-steam{0%{transform:translateY(4px);opacity:0}30%{opacity:.9}100%{transform:translateY(-14px);opacity:0}}
+@keyframes sc-glow{0%,100%{opacity:.55}50%{opacity:1}}
+@keyframes sc-flutter{0%,100%{transform:translate(0,0) rotate(-6deg)}50%{transform:translate(-14px,-10px) rotate(6deg)}}
+@keyframes sc-wag{0%,100%{transform:rotate(-18deg)}50%{transform:rotate(18deg)}}
+@keyframes sc-blink{0%,92%,100%{transform:scaleY(1)}96%{transform:scaleY(.1)}}
+@keyframes sc-roll{0%{transform:translateX(0) rotate(0);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateX(88px) rotate(360deg);opacity:0}}
+@keyframes sc-glide{0%{transform:translate(0,0);opacity:0}20%{opacity:1}80%{opacity:1}100%{transform:translate(150px,-14px);opacity:0}}
+.sc-float{animation:sc-float 3.4s ease-in-out infinite}
+.sc-bob{animation:sc-bob 3s ease-in-out infinite}
+.sc-sway{animation:sc-sway 2.8s ease-in-out infinite}
+.sc-swing{animation:sc-swing 2.4s ease-in-out infinite}
+.sc-tw{animation:sc-tw 2.2s ease-in-out infinite}
+.sc-pulse{animation:sc-pulse 3s ease-in-out infinite}
+.sc-spin{animation:sc-spin 3.5s linear infinite}
+.sc-rain{animation:sc-rain 1.6s linear infinite}
+.sc-fall{animation:sc-fall 5s linear infinite}
+.sc-wave{animation:sc-wave 3.2s ease-in-out infinite}
+.sc-beam{animation:sc-beam 6s ease-in-out infinite}
+.sc-flicker{animation:sc-flicker 1s ease-in-out infinite;transform-origin:bottom}
+.sc-firefly{animation:sc-firefly 5s ease-in-out infinite}
+.sc-smoke{animation:sc-smoke 3.4s ease-out infinite}
+.sc-steam{animation:sc-steam 2.6s ease-out infinite}
+.sc-glow{animation:sc-glow 2.6s ease-in-out infinite}
+.sc-flutter{animation:sc-flutter 4s ease-in-out infinite}
+.sc-wag{animation:sc-wag .5s ease-in-out infinite}
+.sc-blink{animation:sc-blink 4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.sc-roll{animation:sc-roll 4.5s ease-in-out infinite}
+.sc-glide{animation:sc-glide 7s ease-in-out infinite}
+/* some children are motion-sensitive, and some parents just want calm: honour the OS setting */
+@media (prefers-reduced-motion: reduce){
+  .storyscene *{animation:none !important}
+}
+@media print{
+  .storyscene *{animation:none !important}
+  .storyscene{box-shadow:none;border:1px solid #ccc;max-width:300px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
 /* ---------- Stories ---------- */
 .story-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
 .story-filters button{border:none;border-radius:999px;padding:9px 16px;font-weight:700;background:#e9e5f8;color:var(--purple-dark)}

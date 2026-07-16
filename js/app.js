@@ -845,6 +845,7 @@ function storiesView() {
     const locked = !canStory(s.id);
     return `<div class="story-card" style="cursor:pointer" onclick="App.openStory(${s.id})">
       ${locked ? '<span class="lock-tag">🔒</span>' : ""}
+      ${sceneFor(s.id)}
       <h3>${esc(s.title)}</h3>
       <div class="meta">${THEME_LABELS[s.theme]} · Ages ${s.ages}</div>
       <div class="moral-tag">💡 ${esc(s.moral)}</div>
@@ -858,14 +859,26 @@ function storiesView() {
   </div>`;
 }
 
+function sceneFor(id, cls) {
+  const key = (typeof STORY_ART !== "undefined") ? STORY_ART[id] : null;
+  const svg = (key && typeof STORY_SCENES !== "undefined") ? STORY_SCENES[key] : null;
+  return svg ? `<svg class="storyscene ${cls || ""}" viewBox="0 0 220 130" role="img"
+                 aria-label="An illustration for this story">${svg}</svg>` : "";
+}
+function readingTime(text) {
+  const words = text.trim().split(/\s+/).length;
+  return { words, mins: Math.max(2, Math.round(words / 110)) }; // ~110 wpm read aloud to a child
+}
 function storyView() {
   const s = STORIES.find(x => x.id === state.currentStory);
+  const rt = readingTime(s.text);
   return `<div class="view">
     <button class="btn btn-ghost btn-sm no-print" onclick="App.go('stories')">← Story Library</button>
     <div class="card" style="margin-top:14px">
       <div class="print-only print-header"><span class="brand">🌱 BrightSprouts Academy — Story Time</span><span>${THEME_LABELS[s.theme]}</span></div>
+      ${sceneFor(s.id)}
       <h1>${esc(s.title)}</h1>
-      <p class="subtitle">${THEME_LABELS[s.theme]} · Ages ${s.ages}</p>
+      <p class="subtitle">${THEME_LABELS[s.theme]} · Ages ${s.ages} · 📖 about ${rt.mins} minutes to read aloud</p>
       <div class="story-full">${esc(s.text)}</div>
       <div class="moral-banner">💡 <b>The moral of the story:</b> ${esc(s.moral)}</div>
       <div class="learn-box no-print"><h3>💬 Talk about it together</h3><ul>
