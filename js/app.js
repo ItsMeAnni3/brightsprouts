@@ -26,6 +26,10 @@ const GEN_SUBJECTS = [
   { key: "geography",  label: "Geography",     emoji: "🌍" },
   { key: "florafauna", label: "Flora & Fauna", emoji: "🌿" }
 ];
+const BOOK_SUBJECTS = [
+  { key: "best100",  label: "100 Best Books", emoji: "🏆" },
+  { key: "readnow",  label: "Read Online",    emoji: "📖" }
+];
 const ADD_SUBJECTS = [
   { key: "periodic", label: "Periodic Table",  emoji: "⚗️" },
   { key: "abacus",   label: "Abacus",          emoji: "🧮" },
@@ -38,13 +42,19 @@ function subjectsFor(g) {
   if (g === 0) return K_SUBJECTS;
   if (g === 13) return GEN_SUBJECTS;
   if (g === 14) return ADD_SUBJECTS;
+  if (g === 15) return BOOK_SUBJECTS;
   return SUBJECTS;
 }
 function gradeName(g) {
   if (g === 0) return "Kindergarten";
   if (g === 13) return "General Knowledge";
   if (g === 14) return "Additional Learning Material";
+  if (g === 15) return "Books";
   return "Grade " + g;
+}
+function doodle(key, cls) {
+  const d = (typeof BOOK_DOODLES !== "undefined") ? BOOK_DOODLES[key] : null;
+  return d ? `<svg class="doodle ${cls || ""}" viewBox="0 0 88 88" aria-hidden="true">${d}</svg>` : "";
 }
 function flagImg(iso, size) { return `<img class="flagimg" src="https://flagcdn.com/w${size || 40}/${iso}.png" alt="flag" loading="lazy">`; }
 // species entries are [common name, scientific name]
@@ -65,9 +75,11 @@ const THEME_LABELS = {
 };
 
 // ---------- Free vs Premium rules (your monetization!) ----------
+// Books (15) are free for everyone: the reading library is the best thing we can give away,
+// and a family that reads here is a family that subscribes later.
 const RULES = {
-  guest:   { grades: [0, 1],    stories: 3,  custom: 0 },
-  free:    { grades: [0, 1, 2], stories: 10, custom: 2 },
+  guest:   { grades: [0, 1, 15],    stories: 3,  custom: 0 },
+  free:    { grades: [0, 1, 2, 15], stories: 10, custom: 2 },
   premium: { grades: "all",  stories: "all", custom: "all" }
 };
 const PRICE = "$9.99";
@@ -93,7 +105,8 @@ const state = {
   sheetCache: {}, madeStory: null,
   colorTheme: "all", colorBig: false, colorPick: null,
   contactForm: {}, contactErr: {}, contactMsg: "", contactSent: null,
-  traceMode: "upper", tracePick: null
+  traceMode: "upper", tracePick: null,
+  bookGenre: "all", reading: null, readFont: 18
 };
 
 // ---------- Storage helpers ----------
@@ -569,9 +582,10 @@ function homeView() {
 // ---------- Lessons ----------
 function lessonsView() {
   const tiles = [];
-  for (let g = 0; g <= 14; g++) {
+  for (let g = 0; g <= 15; g++) {
     const locked = !canGrade(g);
-    const label = g === 0 ? "🌈 Kindergarten" : g === 13 ? "🌍 General" : g === 14 ? "⚗️ Extras" : "Grade " + g;
+    const label = g === 0 ? "🌈 Kindergarten" : g === 13 ? "🌍 General" : g === 14 ? "⚗️ Extras"
+                : g === 15 ? "📚 Books" : "Grade " + g;
     tiles.push(`<button class="grade-tile g${g}" onclick="App.openGrade(${g})">${locked ? '<span class="lock">🔒</span>' : ""}${label}</button>`);
   }
   return `<div class="view">
@@ -605,6 +619,64 @@ function lessonView() {
     let cells = "";
     for (let n = 1; n <= 100; n++) cells += `<span class="${n % 10 === 0 ? "ten" : ""}">${n}</span>`;
     body += `<div class="numgrid">${cells}</div>`;
+  }
+  if (lesson.best100) {
+    const genres = ["all", ...Array.from(new Set(BOOKS.map(b => b.g))).sort()];
+    body += `<div class="color-bar no-print">` + genres.map(g =>
+      `<button class="btn btn-sm ${state.bookGenre === g ? "btn-primary" : "btn-ghost"}"
+        onclick="App.bookGenre('${g}')">${g === "all" ? "📚 All genres" : esc(g)}</button>`).join("") + `</div>`;
+    let shown = 0;
+    BOOK_BANDS.forEach(band => {
+      const list = BOOKS.filter(b => b.b === band[0] && (state.bookGenre === "all" || b.g === state.bookGenre));
+      if (!list.length) return;
+      shown += list.length;
+      body += `<div class="bandhead">${doodle(band[3])}<div><h3>${esc(band[1])}</h3>
+                 <p>${esc(band[2])} · ${list.length} book${list.length === 1 ? "" : "s"}</p></div></div>`;
+      body += `<div class="booklist">` + list.map(b => `
+        <div class="bookrow">
+          <div class="bookyear">${b.y}</div>
+          <div class="bookmain">
+            <h4>${esc(b.t)}</h4>
+            <p class="bookby">${esc(b.a)} · <span class="bookgenre">${esc(b.g)}</span></p>
+            <p class="bookwhy">${esc(b.w)}</p>
+            ${b.n ? `<p class="booknote">⚠️ For parents: ${esc(b.n)}</p>` : ""}
+          </div>
+          <a class="booklink no-print" target="_blank" rel="noopener"
+             href="https://openlibrary.org/search?q=${encodeURIComponent(b.t + " " + b.a)}">Find it →</a>
+        </div>`).join("") + `</div>`;
+    });
+    if (!shown) body += `<p class="lesson-intro">No books in that genre — try another!</p>`;
+    body += `<div class="bookfoot">${doodle("stack")}
+      <p><b>These are recommendations, not copies.</b> Almost every book here is still in copyright,
+      so we point you at your library or bookshop rather than hosting them. Nearly all are on the shelf
+      at your local library for free — the “Find it” links show you where.
+      <br><br>Want to read something right now? The <b>Read Online</b> tab has ${typeof PD_BOOKS !== "undefined" ? PD_BOOKS.length : 34}
+      complete classics you can read here, free, because they're out of copyright.</p></div>`;
+  }
+  if (lesson.readOnline) {
+    if (state.reading) return readerHtml();
+    const bands = { "1-2": "Grades 1–2", "3-5": "Grades 3–5", "6-8": "Grades 6–8", "9-12": "Grades 9–12" };
+    const doodles = { "1-2": "openbook", "3-5": "dragon", "6-8": "magnifier", "9-12": "quill" };
+    Object.keys(bands).forEach(bd => {
+      const list = PD_BOOKS.filter(b => b.b === bd);
+      if (!list.length) return;
+      body += `<div class="bandhead">${doodle(doodles[bd])}<div><h3>${bands[bd]}</h3>
+                 <p>${list.length} free book${list.length === 1 ? "" : "s"} to read right now</p></div></div>`;
+      body += `<div class="grid grid-3">` + list.map(b => `
+        <div class="pdcard" onclick="App.readBook('${b.slug}')">
+          <div class="pdspine"></div>
+          <h4>${esc(b.t)}</h4>
+          <p class="bookby">${esc(b.a)} · ${b.y}</p>
+          <span class="moral-tag">${esc(b.g)}</span>
+          <p class="bookwhy">${esc(b.w)}</p>
+          <p class="pdmeta">${b.ch} chapter${b.ch === 1 ? "" : "s"} · ${(b.words / 1000).toFixed(0)}k words · about ${Math.max(1, Math.round(b.words / 9000))} hr read</p>
+          <button class="btn btn-primary btn-sm">📖 Read it free</button>
+        </div>`).join("") + `</div>`;
+    });
+    body += `<div class="bookfoot">${doodle("lamp")}
+      <p><b>Why are these free?</b> Every book here is out of copyright, which means it belongs to
+      everybody now. They come from Project Gutenberg, a volunteer library that has been digitising
+      public-domain books since 1971. Read them, print them, share them — they're yours.</p></div>`;
   }
   if (lesson.tracingSheet) {
     // A tracing row: three-line handwriting guides, one solid model glyph, then dashed copies.
@@ -859,6 +931,51 @@ function storiesView() {
   </div>`;
 }
 
+// ---------- Read Online reader ----------
+function readerHtml() {
+  const r = state.reading;
+  if (r.loading) return `<div class="view"><div class="card" style="text-align:center;padding:60px">
+    ${doodle("openbook")}<h2>Opening the book…</h2><p class="subtitle">Fetching ${esc(r.title)}</p></div></div>`;
+  if (r.error) return `<div class="view"><div class="card" style="text-align:center;padding:50px">
+    <h2>😕 That book wouldn't open</h2><p class="subtitle">${esc(r.error)}</p>
+    <button class="btn btn-primary" onclick="App.closeBook()">← Back to the library</button></div></div>`;
+  const ch = r.book.chapters[r.ch];
+  const total = r.book.chapters.length;
+  return `<div class="view">
+    <div class="readerbar no-print">
+      <button class="btn btn-ghost btn-sm" onclick="App.closeBook()">← Library</button>
+      <select onchange="App.gotoChapter(this.value)" class="chsel">
+        ${r.book.chapters.map((c, i) => `<option value="${i}" ${i === r.ch ? "selected" : ""}>${i + 1}. ${esc(c.t)}</option>`).join("")}
+      </select>
+      <span class="readsize">
+        <button class="btn btn-ghost btn-sm" onclick="App.readSize(-1)" title="Smaller text">A−</button>
+        <button class="btn btn-ghost btn-sm" onclick="App.readSize(1)" title="Bigger text">A+</button>
+      </span>
+      <button class="btn btn-secondary btn-sm" onclick="window.print()">🖨️ Print chapter</button>
+    </div>
+    <div class="card readerpage" style="font-size:${state.readFont}px">
+      <div class="print-only print-header"><span class="brand">🌱 BrightSprouts Academy — Read Online</span><span>${esc(r.book.title)}</span></div>
+      <div class="readhead">
+        <h1>${esc(r.book.title)}</h1>
+        <p class="subtitle">${esc(r.book.author)} · Chapter ${r.ch + 1} of ${total}</p>
+        <div class="readprog no-print"><i style="width:${Math.round((r.ch + 1) / total * 100)}%"></i></div>
+      </div>
+      <h2 class="chtitle">${esc(ch.t)}</h2>
+      ${ch.p.map((p, i) => (i > 0 && i % 8 === 0 ? `<div class="paradoodle no-print">${doodle(r.doodles[(i / 8 | 0) % r.doodles.length])}</div>` : "") +
+        `<p class="readp">${esc(p)}</p>`).join("")}
+      <div class="readnav no-print">
+        <button class="btn btn-ghost" ${r.ch === 0 ? "disabled" : ""} onclick="App.gotoChapter(${r.ch - 1})">← Previous</button>
+        <span>${r.ch + 1} / ${total}</span>
+        <button class="btn btn-primary" ${r.ch === total - 1 ? "disabled" : ""} onclick="App.gotoChapter(${r.ch + 1})">Next chapter →</button>
+      </div>
+      ${r.ch === total - 1 ? `<div class="bookend">${doodle("stack")}<h3>🎉 You finished ${esc(r.book.title)}!</h3>
+        <p>That's ${esc(r.book.author)} read cover to cover. Go and tell someone.</p>
+        <button class="btn btn-primary" onclick="App.closeBook()">Pick another book</button></div>` : ""}
+      <p class="pdsource">Public domain · ${esc(r.book.source)}</p>
+    </div>
+  </div>`;
+}
+
 function sceneFor(id, cls) {
   const key = (typeof STORY_ART !== "undefined") ? STORY_ART[id] : null;
   const svg = (key && typeof STORY_SCENES !== "undefined") ? STORY_SCENES[key] : null;
@@ -1104,16 +1221,54 @@ const App = {
       return;
     }
     state.grade = g;
-    state.subject = g === 0 ? "alphabet" : g === 13 ? "geography" : g === 14 ? "periodic" : "math";
+    state.reading = null;
+    state.subject = g === 0 ? "alphabet" : g === 13 ? "geography" : g === 14 ? "periodic" : g === 15 ? "best100" : "math";
     go("lesson");
   },
   openSubject(s) {
     // never render a subject that doesn't exist for this grade — that used to blank the page
     if (!LESSONS[state.grade] || !LESSONS[state.grade][s]) return;
+    state.reading = null;
     state.subject = s; go("lesson");
   },
   newSheet() { delete state.sheetCache[state.grade + "-" + state.subject]; render(); },
   newColorPage() { state.colorPick = null; render(); },
+  bookGenre(g) { state.bookGenre = g; render(); },
+  readBook(slug) {
+    const meta = PD_BOOKS.find(b => b.slug === slug);
+    const keys = Object.keys(BOOK_DOODLES);
+    state.reading = { slug, title: meta.t, loading: true, ch: 0, doodles: shuffleArr(keys).slice(0, 4) };
+    render();
+    fetch("books/" + slug + ".json")
+      .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .then(book => {
+        if (!state.reading || state.reading.slug !== slug) return;   // reader closed while loading
+        state.reading.book = book;
+        state.reading.loading = false;
+        // pick up where this child left off
+        const saved = +(localStorage.getItem("bs_read_" + slug) || 0);
+        state.reading.ch = Math.min(Math.max(0, saved), book.chapters.length - 1);
+        render();
+      })
+      .catch(e => {
+        if (!state.reading) return;
+        state.reading.loading = false;
+        state.reading.error = "We couldn't load it just now (" + e.message + "). Check your connection and try again.";
+        render();
+      });
+  },
+  closeBook() { state.reading = null; render(); window.scrollTo(0, 0); },
+  gotoChapter(i) {
+    const r = state.reading; if (!r || !r.book) return;
+    r.ch = Math.min(Math.max(0, +i), r.book.chapters.length - 1);
+    localStorage.setItem("bs_read_" + r.slug, r.ch);
+    render(); window.scrollTo(0, 0);
+  },
+  readSize(d) {
+    state.readFont = Math.min(30, Math.max(14, state.readFont + d * 2));
+    localStorage.setItem("bs_readfont", state.readFont);
+    render();
+  },
   traceMode(m) { state.traceMode = m; state.tracePick = null; render(); },
   newTracePage() { state.tracePick = null; render(); },
   colorTheme(t) { state.colorTheme = t; state.colorPick = null; render(); },
