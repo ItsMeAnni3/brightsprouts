@@ -13,7 +13,7 @@ accounts, lessons, stories, printing. No installation needed.
 
 | Feature | Details |
 |---|---|
-| 📚 Lessons | 72 lessons: Grades 1–12 × 6 subjects (Math, Reading, Vocabulary, Writing, Science, History), each with a "Let's Learn" section, a fun family activity, and practice questions |
+| 📚 Lessons | 84 lessons: Grades 1–12 × 7 subjects (Math, Reading, Vocabulary, Spelling, Writing, Science, History) plus a free Kindergarten section (alphabet, counting to 100, shapes, 100 picture words) — each with a "Let's Learn" section, a fun family activity, and practice questions |
 | 🔢 Worksheet generator | **Every subject** generates fresh worksheets — click "New Worksheet" for a reshuffled sheet, endlessly (math problems are fully auto-generated; other subjects draw from expanded question pools) |
 | 🖨️ Printing | Every lesson and story has a Print button. Worksheets print with a Name/Date header, answer lines, and an **optional answer key** (parents' checkbox) |
 | 📖 Story Library | 50 original stories with morals, in 3 themes: Adventures, Kids Helping Strangers, and Helping at Home — each with discussion questions |

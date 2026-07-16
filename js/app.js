@@ -9,6 +9,7 @@ const SUBJECTS = [
   { key: "math",       label: "Math",       emoji: "🔢" },
   { key: "reading",    label: "Reading",    emoji: "📖" },
   { key: "vocabulary", label: "Vocabulary", emoji: "🦋" },
+  { key: "spelling",   label: "Spelling",   emoji: "🐝" },
   { key: "writing",    label: "Writing",    emoji: "✍️" },
   { key: "science",    label: "Science",    emoji: "🔬" },
   { key: "history",    label: "History",    emoji: "🏛️" }
@@ -207,9 +208,56 @@ function genVocab(words) {
     return { q: `Write your own sentence using the word "${w[0]}"  (meaning: ${w[1].split("(")[0].trim()})`, a: "Sentences will vary — check the word is used correctly." };
   });
 }
+// ---- Spelling generator: endless sheets with auto-generated misspellings ----
+function misspellOnce(w) {
+  const kind = rand(4), L = w.length;
+  if (kind === 0 && L > 3) { // swap two adjacent letters (keep the first letter)
+    const i = 1 + rand(L - 2);
+    return w.slice(0, i) + w[i + 1] + w[i] + w.slice(i + 2);
+  }
+  if (kind === 1 && L > 4) { // drop a middle letter
+    const i = 1 + rand(L - 2);
+    return w.slice(0, i) + w.slice(i + 1);
+  }
+  if (kind === 2) { // double a letter
+    const i = 1 + rand(L - 1);
+    return w.slice(0, i) + w[i - 1] + w.slice(i);
+  }
+  const idxs = []; // swap a vowel
+  for (let i = 1; i < L; i++) if ("aeiou".includes(w[i])) idxs.push(i);
+  if (idxs.length) {
+    const i = pick(idxs);
+    return w.slice(0, i) + pick("aeiou".replace(w[i], "").split("")) + w.slice(i + 1);
+  }
+  return w + w[L - 1];
+}
+function misspell(w, avoid) {
+  for (let t = 0; t < 20; t++) { const m = misspellOnce(w); if (m !== w && !avoid.includes(m)) return m; }
+  return w + w[w.length - 1];
+}
+function genSpelling(words) {
+  const qs = [];
+  shuffleArr(words).slice(0, 10).forEach((w, i) => {
+    const kind = i % 4;
+    if (kind === 0) qs.push({ q: `Unscramble the word:  "${scrambleWord(w)}"  (it starts with "${w[0]}")`, a: w });
+    else if (kind === 1) {
+      let shown = w[0];
+      for (let j = 1; j < w.length; j++) shown += (j % 3 === 2 ? "_" : w[j]);
+      qs.push({ q: `Fill in the missing letters:   ${shown.split("").join(" ")}`, a: w });
+    } else if (kind === 2) {
+      const m1 = misspell(w, [w]), m2 = misspell(w, [w, m1]);
+      qs.push({ q: `Circle the correct spelling:   ${shuffleArr([w, m1, m2]).join("     ")}`, a: w });
+    } else {
+      qs.push({ q: `🗣️ Spelling test: a grown-up reads answer #${i + 1} from the answer key out loud — you write it!`, a: w });
+    }
+  });
+  return qs;
+}
+
 function makeSheet(g, subj, lesson) {
   if (g === 0) return genKinder(subj, lesson);
   if (subj === "math") return genMath(g);
+  if (subj === "spelling") return genSpelling(lesson.spellWords);
   if (subj === "vocabulary") return genVocab(lesson.words);
   if (subj === "writing") return shuffleArr(lesson.prompts).slice(0, 4).map(p => ({ q: p, a: lesson.rubric }));
   const pool = (lesson.questions || []).concat(lesson.extraQuestions || []);
@@ -361,7 +409,7 @@ function homeView() {
   <div class="hero">
     <span class="big-emoji">🌱</span>
     <h1>BrightSprouts Academy</h1>
-    <p>Fun, printable lessons for <b>Kindergarten through Grade 12</b> — picture words, alphabet & counting for little ones, then Math, Reading, Vocabulary, Writing, Science & History — plus <b>50 stories</b> that teach kindness, courage, and character. Made for parents. Loved by kids.</p>
+    <p>Fun, printable lessons for <b>Kindergarten through Grade 12</b> — picture words, alphabet & counting for little ones, then Math, Reading, Vocabulary, Spelling, Writing, Science & History — plus <b>50 stories</b> that teach kindness, courage, and character. Made for parents. Loved by kids.</p>
     <button class="btn btn-primary" onclick="App.go('lessons')">🚀 Explore Lessons</button>
     <button class="btn btn-secondary" onclick="App.go('stories')">📖 Read Stories</button>
   </div>
@@ -388,7 +436,7 @@ function lessonsView() {
   }
   return `<div class="view">
     <h1>📚 Pick a Grade</h1>
-    <p class="subtitle">Kindergarten picture lessons, then six subjects per grade: Math • Reading • Vocabulary • Writing • Science • History ${tier() !== "premium" ? "&nbsp;·&nbsp; 🔒 = Premium" : ""}</p>
+    <p class="subtitle">Kindergarten picture lessons, then seven subjects per grade: Math • Reading • Vocabulary • Spelling • Writing • Science • History ${tier() !== "premium" ? "&nbsp;·&nbsp; 🔒 = Premium" : ""}</p>
     <div class="grid grid-4">${tiles.join("")}</div>
   </div>`;
 }
@@ -405,6 +453,10 @@ function lessonView() {
     body += `<div class="kgrid">` + lesson.cards.map(c =>
       `<div class="kcard">${c.l ? `<span class="kletter">${c.l}</span>` : ""}${c.svg ? c.svg : `<span class="kemoji">${c.e}</span>`}<span class="kname">${esc(c.n)}</span></div>`
     ).join("") + `</div>`;
+  }
+  if (lesson.spellWords) {
+    body += `<div class="learn-box"><h3>🐝 This Week's Word List</h3><div class="spellgrid">` +
+      lesson.spellWords.map(w => `<span>${esc(w)}</span>`).join("") + `</div></div>`;
   }
   if (lesson.numberGrid) {
     let cells = "";

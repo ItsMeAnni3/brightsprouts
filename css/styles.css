@@ -124,6 +124,10 @@ main{max-width:1100px;margin:0 auto;padding:26px 18px 80px}
 .lesson-tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:18px 0}
 .lesson-tools label{font-size:.92rem;display:flex;align-items:center;gap:6px}
 
+/* ---------- Spelling word chips ---------- */
+.spellgrid{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.spellgrid span{background:#fff;border:2px solid #e0dcf0;border-radius:999px;padding:7px 15px;font-weight:700;font-size:.98rem}
+
 /* ---------- Kindergarten picture cards ---------- */
 .kgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(108px,1fr));gap:10px;margin-bottom:18px}
 .kcard{
