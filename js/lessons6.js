@@ -117,7 +117,7 @@ const FF_ICONIC = [
   ["ring-tailed lemur","Madagascar"],["Komodo dragon","Indonesia"],["Iberian lynx","Spain"],["koala","Australia"],
   ["bird of paradise","Papua New Guinea"],["silver fern","New Zealand"],["golden wattle","Australia"],
   ["toco toucan","Brazil"],["platypus","Australia"],["Siberian tiger","Russia"],["English oak","United Kingdom"],
-  ["lavender","France"],["olive tree","Italy (and the Mediterranean)"],["okapi","DR Congo"],["quetzal","Guatemala (and Costa Rica)"]
+  ["lavender","France"],["olive tree","Italy (and the Mediterranean)"],["okapi","DR Congo"],["resplendent quetzal","Guatemala (and Costa Rica)"]
 ];
 
 LESSONS[13].florafauna = {

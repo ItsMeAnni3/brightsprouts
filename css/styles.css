@@ -129,6 +129,20 @@ main{max-width:1100px;margin:0 auto;padding:26px 18px 80px}
 .flagimg{width:38px;height:auto;border:1px solid #d9d4ee;border-radius:4px;vertical-align:middle;background:#fff}
 .cont-nav{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 10px}
 
+/* ---------- Flora & fauna species chips / photos ---------- */
+.spwrap{display:flex;flex-wrap:wrap;gap:6px;min-width:260px}
+.spchip{
+  display:inline-flex;align-items:center;gap:6px;background:#f7f4ff;border:1px solid #e4dcf6;
+  border-radius:999px;padding:3px 10px 3px 3px;font-size:.82rem;font-weight:600;white-space:nowrap;
+}
+.spchip img{width:30px;height:30px;object-fit:cover;border-radius:50%;background:#fff;flex-shrink:0}
+.spphoto{width:56px;height:56px;object-fit:cover;border-radius:8px;vertical-align:middle;margin:0 6px;border:1px solid #e4dcf6}
+.spphoto.big{width:130px;height:110px;display:block;margin:8px 0}
+@media print{
+  .spchip{border:1px solid #ccc;background:#fff;break-inside:avoid}
+  .spchip img,.spphoto{ -webkit-print-color-adjust:exact;print-color-adjust:exact }
+}
+
 /* ---------- Spelling word chips ---------- */
 .spellgrid{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
 .spellgrid span{background:#fff;border:2px solid #e0dcf0;border-radius:999px;padding:7px 15px;font-weight:700;font-size:.98rem}
