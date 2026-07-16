@@ -107,6 +107,7 @@ function customLeft() {
 }
 
 function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+function gcd(a, b) { return b ? gcd(b, a % b) : a; }
 function rand(n) { return Math.floor(Math.random() * n); }
 function pick(arr) { return arr[rand(arr.length)]; }
 
@@ -147,8 +148,15 @@ function genMath(grade) {
         break;
       }
       case 6: {
-        if (i % 3 === 0) { const p = pick([10, 20, 25, 50, 75]), n = R(2, 20) * 4; q = `Find ${p}% of ${n}. ____`; a = (p / 100) * n; }
-        else if (i % 3 === 1) { const k = R(2, 6), x = R(2, 9), y = R(2, 9); q = `Simplify the ratio ${x * k}:${y * k} = ____`; a = `${x}:${y}`; }
+        // (p * n) / 100 keeps the arithmetic exact — (p / 100) * n rounds twice and prints 7.6000000000000005
+        if (i % 3 === 0) { const p = pick([10, 20, 25, 50, 75]), n = R(2, 20) * 4; q = `Find ${p}% of ${n}. ____`; a = (p * n) / 100; }
+        else if (i % 3 === 1) {
+          // reduce x:y to lowest terms first, or the "simplified" answer key isn't simplified (8:8 -> 4:4)
+          let x = R(2, 9), y = R(2, 9);
+          const d = gcd(x, y); x /= d; y /= d;
+          const k = R(2, 6);
+          q = `Simplify the ratio ${x * k}:${y * k} = ____`; a = `${x}:${y}`;
+        }
         else { const m = R(2, 6) * 30, h = pick([2, 3, 5]); q = `A car travels ${m * h} miles in ${h} hours. What is its speed in miles per hour? ____`; a = m; }
         break;
       }

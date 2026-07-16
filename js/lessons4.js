@@ -41,12 +41,13 @@ const SPELLING = {
   intro: "Why does Wednesday hide a 'd'? Why does February sneak in an 'r'? Time to outsmart the sneakiest words in English.",
   learn: [
     "Say the hidden letters when you practice: Wed-NES-day, Feb-RU-ary — hear them, spell them.",
+    "Days of the week and months of the year ALWAYS start with a capital letter: Wednesday, February — never wednesday or february!",
     "'ea' can say E (weather? no — beautiful!) — when unsure, picture the word in your mind.",
     "Compound-chunk long words: break-fast, neigh-bor, cal-en-dar.",
     "Memory tricks win: 'A friEND is there til the END.' Make your own for your hardest word!"
   ],
   activity: "📝 Silent Letter Detective: Find and list 5 more words with silent letters (hint: knee, lamb, ghost...). What letters hide in them?",
-  spellWords: ["although","answer","beautiful","breakfast","business","calendar","complete","different","early","favorite","february","important","knowledge","library","minute","neighbor","question","sentence","surprise","through","weather","wednesday"]
+  spellWords: ["although","answer","beautiful","breakfast","business","calendar","complete","different","early","favorite","February","important","knowledge","library","minute","neighbor","question","sentence","surprise","through","weather","Wednesday"]
 },
 5: {
   title: "The i-before-e Club & Other Rules", emoji: "📏",
