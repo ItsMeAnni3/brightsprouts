@@ -31,6 +31,7 @@ const ADD_SUBJECTS = [
   { key: "abacus",   label: "Abacus",          emoji: "🧮" },
   { key: "formulas", label: "Formulas",        emoji: "📐" },
   { key: "tables",   label: "Maths Tables",    emoji: "🔢" },
+  { key: "tracing",  label: "Tracing",         emoji: "✏️" },
   { key: "coloring", label: "Colouring Book",  emoji: "🖍️" }
 ];
 function subjectsFor(g) {
@@ -91,7 +92,8 @@ const state = {
   authMode: "signup", authMsg: "", authOk: "",
   sheetCache: {}, madeStory: null,
   colorTheme: "all", colorBig: false, colorPick: null,
-  contactForm: {}, contactErr: {}, contactMsg: "", contactSent: null
+  contactForm: {}, contactErr: {}, contactMsg: "", contactSent: null,
+  traceMode: "upper", tracePick: null
 };
 
 // ---------- Storage helpers ----------
@@ -604,6 +606,74 @@ function lessonView() {
     for (let n = 1; n <= 100; n++) cells += `<span class="${n % 10 === 0 ? "ten" : ""}">${n}</span>`;
     body += `<div class="numgrid">${cells}</div>`;
   }
+  if (lesson.tracingSheet) {
+    // A tracing row: three-line handwriting guides, one solid model glyph, then dashed copies.
+    // Glyphs are real text rendered as outlines (fill:none + dashed stroke) so they trace properly.
+    const FONT = "'Comic Sans MS','Century Gothic','Trebuchet MS',Verdana,sans-serif";
+    // Guide lines come from MEASURED Comic Sans ink (canvas actualBoundingBox), not guesses.
+    // At 100px: ascender h=78, capital A=72, digit=76, x-height=54, descender g=28. Ink does not scale
+    // perfectly linearly (at 64px the h measures 51, i.e. .797em), so each ratio carries a little margin —
+    // a glyph poking through its own guide line is exactly what a tracing sheet must not do.
+    // Top line = ascender, so b/d/h/k/l touch it and capitals sit just beneath, as on real handwriting paper.
+    const SIZE = 64, ASC = 0.80 * SIZE, XH = 0.55 * SIZE, DESC = 0.29 * SIZE;
+    const TOP = 8, BASE = TOP + ASC, MID = BASE - XH, DLINE = BASE + DESC, H = DLINE + 8, W = 480;
+    const traceRow = (label, reps) => {
+      const step = (W - 24) / reps;
+      let g = "";
+      for (let i = 0; i < reps; i++) {
+        const model = i === 0;
+        g += `<text x="${12 + i * step}" y="${BASE}" font-family="${FONT}" font-size="${SIZE}"
+              fill="none" stroke="${model ? "#8a86a8" : "#c4bedd"}" stroke-width="${model ? 1.6 : 1.1}"
+              ${model ? "" : 'stroke-dasharray="4 3.2"'} stroke-linecap="round">${esc(label)}</text>`;
+      }
+      return `<svg class="tracerow" viewBox="0 0 ${W} ${H}" role="img" aria-label="Trace ${esc(label)}">
+        <line x1="6" y1="${TOP}" x2="${W - 6}" y2="${TOP}" stroke="#ddd8ee" stroke-width="1"/>
+        <line x1="6" y1="${MID}" x2="${W - 6}" y2="${MID}" stroke="#ddd8ee" stroke-width="1" stroke-dasharray="6 5"/>
+        <line x1="6" y1="${BASE}" x2="${W - 6}" y2="${BASE}" stroke="#9a94b8" stroke-width="1.6"/>
+        <line x1="6" y1="${DLINE}" x2="${W - 6}" y2="${DLINE}" stroke="#ece8f8" stroke-width="1"/>
+        ${g}
+      </svg>`;
+    };
+    const A = n => String.fromCharCode(65 + n), a = n => String.fromCharCode(97 + n);
+    const m = state.traceMode;
+    let rows = [], grid = false;
+    if (m === "upper")      rows = Array.from({ length: 26 }, (_, i) => [A(i), 6]);
+    else if (m === "lower") rows = Array.from({ length: 26 }, (_, i) => [a(i), 6]);
+    else if (m === "both")  rows = Array.from({ length: 26 }, (_, i) => [A(i) + a(i), 4]);
+    else if (m === "num10") rows = Array.from({ length: 10 }, (_, i) => [String(i + 1), 6]);
+    else if (m === "num20") rows = Array.from({ length: 20 }, (_, i) => [String(i + 1), 6]);
+    else if (m === "num100") grid = true;
+    else { // random practice set — a handful of glyphs, lots of repetition
+      if (!state.tracePick) {
+        const pool = Array.from({ length: 26 }, (_, i) => A(i))
+          .concat(Array.from({ length: 26 }, (_, i) => a(i)))
+          .concat(Array.from({ length: 10 }, (_, i) => String(i + 1)));
+        state.tracePick = shuffleArr(pool).slice(0, 8);
+      }
+      rows = state.tracePick.map(c => [c, 6]);
+    }
+
+    body += `<div class="trace-bar no-print">` + TRACE_MODES.map(t =>
+      `<button class="btn btn-sm ${state.traceMode === t[0] ? "btn-primary" : "btn-ghost"}" onclick="App.traceMode('${t[0]}')">${esc(t[1])}</button>`).join("") + `</div>`;
+
+    if (grid) {
+      let cells = "";
+      for (let n = 1; n <= 100; n++) {
+        // digits are .76em tall: font 26 -> 19.8 high, so a baseline at 32 keeps them inside the 40-high cell
+        cells += `<div class="tracecell">
+          <svg viewBox="0 0 48 42" role="img" aria-label="Trace the number ${n}">
+            <line x1="3" y1="33" x2="45" y2="33" stroke="#c9c4dd" stroke-width="1"/>
+            <text x="24" y="32" text-anchor="middle" font-family="${FONT}" font-size="26"
+                  fill="none" stroke="#c4bedd" stroke-width="1.1" stroke-dasharray="3.4 2.8" stroke-linecap="round">${n}</text>
+          </svg></div>`;
+      }
+      body += `<p class="lesson-intro">Trace every number from 1 to 100. Say each one out loud as you write it!</p>
+               <div class="tracegrid">${cells}</div>`;
+    } else {
+      body += `<div class="tracesheet">` + rows.map(r =>
+        `<div class="tracerow-wrap"><span class="tracelabel">${esc(r[0])}</span>${traceRow(r[0], r[1])}</div>`).join("") + `</div>`;
+    }
+  }
   if (lesson.coloringBook) {
     const pool = COLOR_ART.filter(a => state.colorTheme === "all" || a[2] === state.colorTheme);
     const n = state.colorBig ? 2 : 6;
@@ -731,8 +801,9 @@ function lessonView() {
   }
 
   const sheetKey = g + "-" + subj;
-  if (!lesson.coloringBook && !state.sheetCache[sheetKey]) state.sheetCache[sheetKey] = makeSheet(g, subj, lesson);
-  const questions = lesson.coloringBook ? [] : state.sheetCache[sheetKey];
+  const noQuiz = lesson.coloringBook || lesson.tracingSheet;
+  if (!noQuiz && !state.sheetCache[sheetKey]) state.sheetCache[sheetKey] = makeSheet(g, subj, lesson);
+  const questions = noQuiz ? [] : state.sheetCache[sheetKey];
   const qHtml = questions.length ? `
     <div class="questions"><h3>✏️ Practice Time <button class="btn btn-secondary btn-sm no-print" onclick="App.newSheet()">🎲 New Worksheet</button></h3>
       ${questions.map((qa, i) => `<div class="q-item">${i + 1}. ${qa.html ? qa.q : esc(qa.q)}${'<span class="write-line print-only"></span>'.repeat(subj === "writing" ? 5 : 1)}</div>`).join("")}
@@ -756,7 +827,8 @@ function lessonView() {
       ${qHtml}
       <div class="lesson-tools no-print">
         ${lesson.coloringBook ? `<button class="btn btn-secondary" onclick="App.newColorPage()">🎲 New Pictures</button>` : ""}
-        <button class="btn btn-primary" onclick="window.print()">🖨️ Print ${lesson.coloringBook ? "Colouring Page" : "Worksheet"}</button>
+        ${lesson.tracingSheet && state.traceMode === "random" ? `<button class="btn btn-secondary" onclick="App.newTracePage()">🎲 New Practice Set</button>` : ""}
+        <button class="btn btn-primary" onclick="window.print()">🖨️ Print ${lesson.coloringBook ? "Colouring Page" : lesson.tracingSheet ? "Tracing Sheet" : "Worksheet"}</button>
         ${questions.length ? `<label><input type="checkbox" id="key-toggle" onchange="App.toggleKey(this.checked)"> Show / print answer key</label>` : ""}
       </div>
     </div>
@@ -1029,6 +1101,8 @@ const App = {
   },
   newSheet() { delete state.sheetCache[state.grade + "-" + state.subject]; render(); },
   newColorPage() { state.colorPick = null; render(); },
+  traceMode(m) { state.traceMode = m; state.tracePick = null; render(); },
+  newTracePage() { state.tracePick = null; render(); },
   colorTheme(t) { state.colorTheme = t; state.colorPick = null; render(); },
   colorSize(big) { state.colorBig = big; state.colorPick = null; render(); },
   toggleKey(on) {

@@ -83,6 +83,31 @@ tables: {
 }
 };
 
+LESSONS[14].tracing = {
+  title: "Tracing Practice: Letters & Numbers", emoji: "✏️",
+  intro: "Lightly dashed letters and numbers to trace over — the classic way little hands learn to write. Pick what to practise, then print!",
+  learn: [
+    "Trace the dashed lines slowly. Slow and neat beats fast and messy — speed comes later, all by itself.",
+    "The three guide lines are your runway: most letters start at the top line, all of them sit on the bottom line, and small letters reach up to the dashed middle line.",
+    "Letters with tails (g, j, p, q, y) hang below the bottom line — that's the fourth, lowest line.",
+    "The first letter in each row is solid: that's the model. Look at it, then trace the dashed ones.",
+    "Hold the pencil loosely, about a thumb's width above the point. A tight grip tires the hand fast.",
+    "5–10 minutes a day is plenty. Stop before it stops being fun!"
+  ],
+  activity: "🌟 Rainbow Tracing: Trace each letter a second and third time in different colours, right on top. Kids love it — and the repetition is what builds the muscle memory.",
+  tracingSheet: true
+};
+
+const TRACE_MODES = [
+  ["upper",   "A B C — Capitals"],
+  ["lower",   "a b c — Small letters"],
+  ["both",    "Aa Bb — Both"],
+  ["num10",   "1–10 Numbers"],
+  ["num20",   "1–20 Numbers"],
+  ["num100",  "1–100 Grid"],
+  ["random",  "🎲 Practice set"]
+];
+
 // ---- Formula sheet: grade-banded, each with a plain-English meaning ----
 const FORMULAS = [
  { band: "Grades 1–2 · First Numbers", items: [

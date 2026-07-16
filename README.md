@@ -15,7 +15,7 @@ accounts, lessons, stories, printing. No installation needed.
 |---|---|
 | 📚 Lessons | 84 lessons: Grades 1–12 × 7 subjects (Math, Reading, Vocabulary, Spelling, Writing, Science, History) plus a free Kindergarten section (alphabet, counting to 100, shapes, 100 picture words) — each with a "Let's Learn" section, a fun family activity, and practice questions |
 | 🌍 General Knowledge | World geography (7 continents, 195 countries with flags + capitals) and Flora & Fauna (5 plants + 5 animals per country, with photos and scientific names) |
-| ⚗️ Additional Material | Colour periodic table (118 elements), the abacus and how to use it, essential formulas for Grades 1–12, and printable addition/multiplication tables |
+| ⚗️ Additional Material | Colour periodic table (118 elements), the abacus and how to use it, essential formulas for Grades 1–12, printable addition/multiplication tables, **tracing sheets** (A–Z, a–z, 1–100, lightly dashed with handwriting guide lines) and a **colouring book** (36 outline pictures) |
 | 🔢 Worksheet generator | **Every subject** generates fresh worksheets — click "New Worksheet" for a reshuffled sheet, endlessly (math problems are fully auto-generated; other subjects draw from expanded question pools) |
 | 🖨️ Printing | Every lesson and story has a Print button. Worksheets print with a Name/Date header, answer lines, and an **optional answer key** (parents' checkbox) |
 | 📖 Story Library | 50 original stories with morals, in 3 themes: Adventures, Kids Helping Strangers, and Helping at Home — each with discussion questions |
@@ -105,6 +105,7 @@ Factual data is verified against outside sources rather than trusted from memory
 | 265 spelling words | dictionaryapi.dev + Wiktionary | all real, correctly spelled |
 | 55 formulas | Numerically tested (identities, roots plugged back in, known values) | all correct |
 | 288 arithmetic table cells | Recomputed | all correct |
+| Tracing guide lines | Glyph ink measured via canvas `actualBoundingBox` | 3 off-by-a-hair errors found & fixed |
 
 **Known limitation:** prose facts in the science/history lessons and reading-comprehension answer keys are human-written and not machine-verifiable.
 

@@ -139,6 +139,29 @@ main{max-width:1100px;margin:0 auto;padding:26px 18px 80px}
 .field-hint{display:block;margin-top:5px;font-size:.8rem;color:#8a86a8}
 .privacy-note{margin-top:12px;font-size:.82rem;color:#6a668c;line-height:1.6;text-align:center}
 
+/* ---------- Tracing sheets ---------- */
+.trace-bar{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 16px}
+.tracesheet{display:flex;flex-direction:column;gap:6px}
+.tracerow-wrap{display:flex;align-items:center;gap:10px}
+.tracelabel{
+  font-family:"Comic Sans MS",cursive;font-weight:bold;font-size:1.1rem;color:var(--purple);
+  min-width:34px;text-align:center;flex-shrink:0;
+}
+.tracerow{flex:1;height:auto;max-width:100%}
+.tracegrid{display:grid;grid-template-columns:repeat(10,1fr);gap:4px}
+.tracecell{border:1px solid #e8e4f6;border-radius:5px;padding:2px}
+.tracecell svg{width:100%;height:auto;display:block}
+@media (max-width:640px){ .tracegrid{grid-template-columns:repeat(5,1fr)} }
+
+@media print{
+  .tracerow-wrap{break-inside:avoid;page-break-inside:avoid;gap:6px}
+  .tracesheet{gap:3px}
+  .tracelabel{color:#000;font-size:1rem}
+  .tracerow line,.tracerow text,.tracecell svg *{ -webkit-print-color-adjust:exact;print-color-adjust:exact }
+  .tracegrid{grid-template-columns:repeat(10,1fr);gap:2px}
+  .tracecell{border:1px solid #ccc;break-inside:avoid}
+}
+
 /* ---------- Colouring book ---------- */
 .color-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0 16px}
 .color-sep{width:1px;height:24px;background:#ddd8ee;margin:0 4px}
