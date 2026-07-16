@@ -29,12 +29,14 @@ const GEN_SUBJECTS = [
 function subjectsFor(g) { return g === 0 ? K_SUBJECTS : (g === 13 ? GEN_SUBJECTS : SUBJECTS); }
 function gradeName(g) { return g === 0 ? "Kindergarten" : (g === 13 ? "General Knowledge" : "Grade " + g); }
 function flagImg(iso, size) { return `<img class="flagimg" src="https://flagcdn.com/w${size || 40}/${iso}.png" alt="flag" loading="lazy">`; }
-function spChip(name) {
-  const src = (typeof SPECIES_IMG !== "undefined") ? SPECIES_IMG[name] : null;
-  return `<span class="spchip">${src ? `<img src="${src}" alt="${esc(name)}" loading="lazy">` : ""}${esc(name)}</span>`;
+// species entries are [common name, scientific name]
+function spImgSrc(sci) { return (typeof SPECIES_IMG !== "undefined") ? SPECIES_IMG[sci] : null; }
+function spChip(sp) {
+  const [name, sci] = sp, src = spImgSrc(sci);
+  return `<span class="spchip" title="${esc(sci)}">${src ? `<img src="${src}" alt="${esc(name)}" loading="lazy">` : ""}<span class="spname">${esc(name)}<i>${esc(sci)}</i></span></span>`;
 }
-function spPhoto(name, big) {
-  const src = (typeof SPECIES_IMG !== "undefined") ? SPECIES_IMG[name] : null;
+function spPhoto(sci, big) {
+  const src = spImgSrc(sci);
   return src ? `<img class="spphoto${big ? " big" : ""}" src="${src}" alt="species photo" loading="lazy">` : "";
 }
 
@@ -283,26 +285,27 @@ function genGeo(lesson) {
 function genFF() {
   const all = [];
   LESSONS[13].geography.continents.forEach(c => (c.countries || []).forEach(k => {
-    const ff = FF_BY_ISO[k[0]];
+    const ff = FF_COUNTRY[k[0]];
     if (ff) all.push({ iso: k[0], country: k[1], flora: ff.flora, fauna: ff.fauna });
   }));
+  const names = list => list.map(s => s[0]).join(", ");
   return shuffleArr(all).slice(0, 8).map((p, i) => {
     const kind = i % 5;
-    if (kind === 0) return { html: true, q: `Name two animals you could find in ${flagImg(p.iso)} <b>${esc(p.country)}</b>.  ______________`, a: `Any two of: ${p.fauna.join(", ")}` };
-    if (kind === 1) return { html: true, q: `Name a famous plant or tree of ${flagImg(p.iso)} <b>${esc(p.country)}</b>.  ______________`, a: `Any of: ${p.flora.join(", ")}` };
+    if (kind === 0) return { html: true, q: `Name two animals you could find in ${flagImg(p.iso)} <b>${esc(p.country)}</b>.  ______________`, a: `Any two of: ${names(p.fauna)}` };
+    if (kind === 1) return { html: true, q: `Name a famous plant or tree of ${flagImg(p.iso)} <b>${esc(p.country)}</b>.  ______________`, a: `Any of: ${names(p.flora)}` };
     if (kind === 2) {
       const isFlora = rand(2) === 0;
       const sp = isFlora ? pick(p.flora) : pick(p.fauna);
-      return { html: true, q: `FLORA or FAUNA? Is this a plant or an animal? ${spPhoto(sp)} <b>${esc(sp)}</b>  ______________`, a: isFlora ? "Flora — a plant!" : "Fauna — an animal!" };
+      return { html: true, q: `FLORA or FAUNA? Is this a plant or an animal? ${spPhoto(sp[1])} <b>${esc(sp[0])}</b>  ______________`, a: isFlora ? "Flora — a plant!" : "Fauna — an animal!" };
     }
     if (kind === 3) {
       const isFlora = rand(2) === 0;
       const sp = isFlora ? pick(p.flora) : pick(p.fauna);
-      const photo = spPhoto(sp, true);
-      if (photo) return { html: true, q: `Name this ${isFlora ? "plant" : "animal"} — it's found in ${flagImg(p.iso)} ${esc(p.country)}:<br>${photo}  ______________`, a: sp };
+      const photo = spPhoto(sp[1], true);
+      if (photo) return { html: true, q: `Name this ${isFlora ? "plant" : "animal"} — it lives in ${flagImg(p.iso)} ${esc(p.country)}:<br>${photo}  ______________`, a: `${sp[0]} (${sp[1]})` };
     }
     const ic = pick(FF_ICONIC);
-    return { html: true, q: `Which country is famous for the ${esc(ic[0])}? ${spPhoto(ic[0].charAt(0).toUpperCase() + ic[0].slice(1))}  ______________`, a: ic[1] };
+    return { html: true, q: `Which country is famous for the ${esc(ic[0])}? ${spPhoto(ic[1])}  ______________`, a: ic[2] };
   });
 }
 
@@ -525,11 +528,11 @@ function lessonView() {
       body += `<div id="ff-${i}"><h3 style="margin:22px 0 10px;font-size:1.3rem">${c.emoji} ${esc(c.name)}</h3>
         <div style="overflow-x:auto"><table class="word-table"><tr><th>Flag</th><th>Country</th><th>🌿 Flora (plants)</th><th>🐾 Fauna (animals)</th></tr>` +
         c.countries.map(k => {
-          const ff = FF_BY_ISO[k[0]] || { flora: [], fauna: [] };
+          const ff = FF_COUNTRY[k[0]] || { flora: [], fauna: [] };
           return `<tr><td>${flagImg(k[0])}</td><td><b>${esc(k[1])}</b></td><td><div class="spwrap">${ff.flora.map(spChip).join("")}</div></td><td><div class="spwrap">${ff.fauna.map(spChip).join("")}</div></td></tr>`;
         }).join("") + `</table></div></div>`;
     });
-    body += `<p style="font-size:.8rem;color:#8a86a8;margin-top:14px">Species photos courtesy of Wikimedia Commons contributors.</p>`;
+    body += `<p style="font-size:.8rem;color:#8a86a8;margin-top:14px">Each species is listed with its scientific name and was checked against occurrence records in the Global Biodiversity Information Facility (GBIF). Photos courtesy of Wikimedia Commons contributors.</p>`;
   }
   if (lesson.continents) {
     body += `<div class="cont-nav no-print">` + lesson.continents.map((c, i) =>
