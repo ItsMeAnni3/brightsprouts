@@ -75,13 +75,23 @@ const TAX_NOTE = "Plus sales tax based on your state, calculated at checkout.";
 // In Stripe, set the link's after-payment redirect to: https://brightsprouts.academy/#payment-success
 const STRIPE_PAYMENT_LINK = "https://buy.stripe.com/9B6dR9f5Mfta6o4f9q3gk04";
 
+// ---- Contact form ----
+// Where messages go. Until CONTACT_ENDPOINT is set, the Send button opens the visitor's
+// own email app with the message pre-written (works with no setup, but they must press send).
+// See README.md — pasting a FormSubmit/Formspree/Web3Forms URL here delivers straight to your inbox.
+const CONTACT_ENDPOINT = "";
+const CONTACT_EMAIL = "ana.d.malone@outlook.com";
+const CONTACT_TOPICS = ["A question about the lessons", "Feedback or a suggestion",
+  "I found a mistake in the content", "Something isn't working", "Billing or my subscription", "Something else"];
+
 // ---------- State ----------
 const state = {
   view: "home", grade: 1, subject: "math",
   storyFilter: "all", currentStory: null,
   authMode: "signup", authMsg: "", authOk: "",
   sheetCache: {}, madeStory: null,
-  colorTheme: "all", colorBig: false, colorPick: null
+  colorTheme: "all", colorBig: false, colorPick: null,
+  contactForm: {}, contactErr: {}, contactMsg: "", contactSent: null
 };
 
 // ---------- Storage helpers ----------
@@ -518,7 +528,7 @@ function makeStory(name, friend, settingKey, themeKey, valueKey) {
 function go(view) { state.view = view; state.authMsg = ""; state.authOk = ""; render(); window.scrollTo(0, 0); }
 
 function navHtml() {
-  const items = [["home", "🏡 Home"], ["lessons", "📚 Lessons"], ["stories", "📖 Stories"], ["maker", "✨ Story Maker"], ["pricing", "⭐ Plans"]];
+  const items = [["home", "🏡 Home"], ["lessons", "📚 Lessons"], ["stories", "📖 Stories"], ["maker", "✨ Story Maker"], ["pricing", "⭐ Plans"], ["contact", "✉️ Contact"]];
   return items.map(([v, l]) => `<button class="${state.view === v ? "active" : ""}" onclick="App.go('${v}')">${l}</button>`).join("");
 }
 function authZoneHtml() {
@@ -570,7 +580,10 @@ function lessonsView() {
 }
 
 function lessonView() {
-  const g = state.grade, subj = state.subject;
+  const g = state.grade;
+  // belt and braces: if state ever holds a subject this grade doesn't have, fall back to its first one
+  let subj = state.subject;
+  if (!LESSONS[g] || !LESSONS[g][subj]) subj = state.subject = subjectsFor(g)[0].key;
   const lesson = LESSONS[g][subj];
   const tabs = subjectsFor(g).map(s =>
     `<button class="${s.key === subj ? "active" : ""}" onclick="App.openSubject('${s.key}')">${s.emoji} ${s.label}</button>`).join("");
@@ -872,6 +885,71 @@ function pricingView() {
   </div>`;
 }
 
+// ---------- Contact ----------
+function validEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e); }
+function validPhone(p) {
+  const digits = p.replace(/[^\d]/g, "");
+  return digits.length >= 7 && digits.length <= 15;
+}
+function contactView() {
+  const u = currentUser();
+  // prefill from the signed-in account so parents don't retype what we already know
+  if (u && !state.contactForm.name && !state.contactForm.email) {
+    state.contactForm = Object.assign({}, state.contactForm, { name: u.name, email: u.email });
+  }
+  if (state.contactSent) {
+    return `<div class="view"><div class="card auth-card" style="text-align:center">
+      <div style="font-size:3rem">✅</div>
+      <h1>Message sent!</h1>
+      <p class="subtitle">Thank you for getting in touch. We read every message and will reply to
+        <b>${esc(state.contactSent)}</b> as soon as we can.</p>
+      <button class="btn btn-primary" onclick="App.go('home')">Back to Home</button>
+      <button class="btn btn-ghost" style="margin-top:8px" onclick="App.contactAgain()">Send another message</button>
+    </div></div>`;
+  }
+  const f = state.contactForm || {};
+  const err = state.contactErr || {};
+  const field = (id, label, type, ph, hint) => `
+    <div class="field">
+      <label for="c-${id}">${label}</label>
+      <input id="c-${id}" type="${type}" placeholder="${ph}" value="${esc(f[id] || "")}"
+             class="${err[id] ? "bad" : ""}" ${type === "tel" ? 'inputmode="tel"' : ""}>
+      ${err[id] ? `<span class="field-err">${esc(err[id])}</span>` : (hint ? `<span class="field-hint">${hint}</span>` : "")}
+    </div>`;
+  return `<div class="view">
+    <h1>✉️ Contact Us</h1>
+    <p class="subtitle">Questions, feedback, or spotted a mistake? We'd love to hear from you.</p>
+    <div class="card contact-card">
+      ${state.contactMsg ? `<div class="error-msg">${esc(state.contactMsg)}</div>` : ""}
+      <div class="maker-form">
+        ${field("name", "Your name *", "text", "e.g. Ana Malone")}
+        ${field("email", "Email address *", "email", "you@example.com", "So we can reply to you")}
+        ${field("phone", "Phone number", "tel", "(555) 123-4567", "Optional — only if you'd prefer a call")}
+        <div class="field">
+          <label for="c-topic">What's it about?</label>
+          <select id="c-topic">${CONTACT_TOPICS.map(t =>
+            `<option ${f.topic === t ? "selected" : ""}>${esc(t)}</option>`).join("")}</select>
+        </div>
+        <div class="field full">
+          <label for="c-message">Your message *</label>
+          <textarea id="c-message" rows="6" placeholder="Tell us what's on your mind…"
+                    class="${err.message ? "bad" : ""}">${esc(f.message || "")}</textarea>
+          ${err.message ? `<span class="field-err">${esc(err.message)}</span>` : `<span class="field-hint">A few sentences is plenty</span>`}
+        </div>
+        <div class="field full" style="position:absolute;left:-9999px" aria-hidden="true">
+          <label for="c-website">Leave this empty</label><input id="c-website" tabindex="-1" autocomplete="off">
+        </div>
+        <div class="full">
+          <button class="btn btn-primary" style="width:100%" onclick="App.sendContact()">✉️ Send Message</button>
+          <p class="privacy-note">🔒 We use your details only to reply to you — never sold, never shared.
+          Please don't include passwords or card numbers in your message.
+          ${u ? "" : "You don't need an account to write to us."}</p>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
 // ---------- Auth ----------
 function authView() {
   const isLogin = state.authMode === "login";
@@ -930,6 +1008,8 @@ function upgradeModal() {
 // ============================================================
 const App = {
   go,
+  // single place we hand off to the browser, so tests can observe it instead of navigating
+  openLink(url) { window.location.href = url; },
   goAuth(mode) { state.authMode = mode; go("auth"); },
 
   openGrade(g) {
@@ -942,7 +1022,11 @@ const App = {
     state.subject = g === 0 ? "alphabet" : g === 13 ? "geography" : g === 14 ? "periodic" : "math";
     go("lesson");
   },
-  openSubject(s) { state.subject = s; go("lesson"); },
+  openSubject(s) {
+    // never render a subject that doesn't exist for this grade — that used to blank the page
+    if (!LESSONS[state.grade] || !LESSONS[state.grade][s]) return;
+    state.subject = s; go("lesson");
+  },
   newSheet() { delete state.sheetCache[state.grade + "-" + state.subject]; render(); },
   newColorPage() { state.colorPick = null; render(); },
   colorTheme(t) { state.colorTheme = t; state.colorPick = null; render(); },
@@ -981,6 +1065,59 @@ const App = {
     render();
     const el = document.getElementById("made-story");
     if (el) el.scrollIntoView({ behavior: "smooth" });
+  },
+
+  contactAgain() { state.contactSent = null; state.contactForm = {}; state.contactErr = {}; state.contactMsg = ""; render(); },
+  sendContact() {
+    const val = id => (document.getElementById("c-" + id).value || "").trim();
+    const f = { name: val("name"), email: val("email"), phone: val("phone"), topic: val("topic"), message: val("message") };
+    state.contactForm = f;
+    state.contactMsg = "";
+    const err = {};
+    if (!f.name) err.name = "Please tell us your name.";
+    else if (f.name.length > 80) err.name = "That name looks too long.";
+    if (!f.email) err.email = "We need an email address to reply to.";
+    else if (!validEmail(f.email)) err.email = "That email doesn't look right — check for a typo?";
+    if (f.phone && !validPhone(f.phone)) err.phone = "That phone number doesn't look right (7–15 digits).";
+    if (!f.message) err.message = "Please write your message.";
+    else if (f.message.length < 10) err.message = "Could you add a little more detail?";
+    else if (f.message.length > 5000) err.message = "That message is very long — could you shorten it?";
+    state.contactErr = err;
+    if (Object.keys(err).length) { render(); return; }
+    // honeypot: real people never fill this hidden field, bots do
+    if (val("website")) { state.contactSent = f.email; render(); return; }
+
+    const body =
+      "Name: " + f.name + "\n" +
+      "Email: " + f.email + "\n" +
+      "Phone: " + (f.phone || "(not given)") + "\n" +
+      "Topic: " + f.topic + "\n" +
+      "Account: " + (currentUser() ? currentUser().email + " (" + currentUser().plan + ")" : "not logged in") + "\n" +
+      "Sent: " + new Date().toLocaleString() + "\n\n" + f.message;
+
+    if (CONTACT_ENDPOINT) {
+      const btn = document.querySelector(".contact-card .btn-primary");
+      if (btn) { btn.textContent = "Sending…"; btn.disabled = true; }
+      fetch(CONTACT_ENDPOINT, {
+        method: "POST",
+        headers: { "Accept": "application/json", "Content-Type": "application/json" },
+        body: JSON.stringify({ name: f.name, email: f.email, phone: f.phone, topic: f.topic, message: f.message,
+                               _subject: "BrightSprouts: " + f.topic })
+      }).then(r => {
+        if (!r.ok) throw new Error("status " + r.status);
+        state.contactSent = f.email; state.contactForm = {}; render();
+      }).catch(() => {
+        state.contactMsg = "Sorry — that didn't send. Please email us directly at " + CONTACT_EMAIL + " and we'll get right back to you.";
+        render();
+      });
+      return;
+    }
+    // No endpoint configured: hand the message to the visitor's own email app.
+    App.openLink("mailto:" + CONTACT_EMAIL +
+      "?subject=" + encodeURIComponent("BrightSprouts: " + f.topic) +
+      "&body=" + encodeURIComponent(body));
+    state.contactSent = f.email;
+    render();
   },
 
   signup() {
@@ -1036,7 +1173,8 @@ function render() {
   const views = {
     home: homeView, lessons: lessonsView, lesson: lessonView,
     stories: storiesView, story: storyView, maker: makerView,
-    pricing: pricingView, auth: authView, account: accountView
+    pricing: pricingView, auth: authView, account: accountView,
+    contact: contactView
   };
   document.getElementById("nav").innerHTML = navHtml();
   document.getElementById("authzone").innerHTML = authZoneHtml();
@@ -1064,7 +1202,7 @@ function applyHash() {
       state.view = "auth";
     }
     history.replaceState(null, "", location.pathname);
-  } else if (["home", "lessons", "stories", "maker", "pricing"].includes(h)) {
+  } else if (["home", "lessons", "stories", "maker", "pricing", "contact"].includes(h)) {
     state.view = h;
   }
 }

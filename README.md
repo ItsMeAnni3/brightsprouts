@@ -68,6 +68,30 @@ Simpler alternatives: **Gumroad** or **Lemon Squeezy** (even easier than Stripe,
 - **Add lessons**: copy any lesson block in `js/lessons1.js` / `lessons2.js` — the format is self-explanatory.
 - **Add stories**: append to `js/stories2.js` following the same pattern (id, title, theme, ages, moral, text).
 
+## ✉️ Contact form — connecting it to your inbox
+
+The Contact page collects name, email, phone (optional), topic and message, with full validation
+and a hidden spam trap. **Right now it works with zero setup**: pressing Send opens the visitor's
+own email app with the message pre-written to `CONTACT_EMAIL`.
+
+That's fine to launch with, but it has a real drawback: the visitor still has to press send in
+their mail app, and people on a phone without a mail account set up may not get one at all —
+so you can lose messages. To have messages land straight in your inbox:
+
+1. Go to **formsubmit.co** (no signup) — or Formspree / Web3Forms if you prefer an account.
+2. Your endpoint is `https://formsubmit.co/ajax/YOUR_EMAIL`. Send one test message to activate it
+   (they email you a one-time confirmation link).
+3. Paste that URL into `CONTACT_ENDPOINT = "..."` near the top of `js/app.js`.
+4. Done — the form now POSTs directly and shows the success screen. If the service is ever down,
+   the code falls back to telling the visitor to email you directly.
+
+FormSubmit also gives you a **hashed endpoint** after activation — use that one so your email
+address isn't sitting in the page source for spam bots to scrape.
+
+**Note on the phone field:** it's optional on purpose. Requiring a phone number on a contact form
+makes a lot of people abandon it, and you reply by email anyway. To make it required, add
+`if (!f.phone) err.phone = "..."` in `sendContact()`.
+
 ## ✅ Content accuracy
 
 Factual data is verified against outside sources rather than trusted from memory:
