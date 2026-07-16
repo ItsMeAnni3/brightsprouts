@@ -38,11 +38,13 @@ const ADD_SUBJECTS = [
   { key: "tracing",  label: "Tracing",         emoji: "✏️" },
   { key: "coloring", label: "Colouring Book",  emoji: "🖍️" }
 ];
+const MAKE_SUBJECTS = [{ key: "create", label: "Creature Maker", emoji: "🎨" }];
 function subjectsFor(g) {
   if (g === 0) return K_SUBJECTS;
   if (g === 13) return GEN_SUBJECTS;
   if (g === 14) return ADD_SUBJECTS;
   if (g === 15) return BOOK_SUBJECTS;
+  if (g === 16) return MAKE_SUBJECTS;
   return SUBJECTS;
 }
 function gradeName(g) {
@@ -50,7 +52,33 @@ function gradeName(g) {
   if (g === 13) return "General Knowledge";
   if (g === 14) return "Additional Learning Material";
   if (g === 15) return "Books";
+  if (g === 16) return "Create";
   return "Grade " + g;
+}
+// Build the creature SVG from the chosen parts. Order matters: back to front.
+function mmSvg(m, forExport) {
+  const c = MM_COLORS[m.colour];
+  const call = (tbl, key) => (tbl[key] ? tbl[key](c) : "");
+  return `
+    <g class="mm-layer mm-back">${MM_SCENES[m.scene]}</g>
+    <g class="mm-layer mm-char">
+      <g class="${forExport ? "" : "mm-breathe"}">
+        ${call(MM_WINGS, m.wings)}
+        ${call(MM_TAILS, m.tail)}
+        ${call(MM_BODIES, m.body)}
+        ${call(MM_EXTRAS, m.extra === "cape" ? "cape" : "none")}
+        ${call(MM_HEADS, m.head)}
+        ${call(MM_TOPS, m.top)}
+        ${call(MM_EYES, m.eyes)}
+        ${call(MM_MOUTHS, m.mouth)}
+        ${m.extra !== "cape" ? call(MM_EXTRAS, m.extra) : ""}
+      </g>
+    </g>
+    <g class="mm-layer mm-front">
+      <g class="mm-tw"><path d="M26 60 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3 z" fill="#ffd166"/></g>
+      <g class="mm-tw" style="animation-delay:.9s"><path d="M176 78 l2.5 6 6 2.5 -6 2.5 -2.5 6 -2.5 -6 -6 -2.5 6 -2.5 z" fill="#fff"/></g>
+      <g class="mm-tw" style="animation-delay:1.7s"><path d="M164 154 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2 z" fill="#ff6b9d"/></g>
+    </g>`;
 }
 function doodle(key, cls) {
   const d = (typeof BOOK_DOODLES !== "undefined") ? BOOK_DOODLES[key] : null;
@@ -78,8 +106,8 @@ const THEME_LABELS = {
 // Books (15) are free for everyone: the reading library is the best thing we can give away,
 // and a family that reads here is a family that subscribes later.
 const RULES = {
-  guest:   { grades: [0, 1, 15],    stories: 3,  custom: 0 },
-  free:    { grades: [0, 1, 2, 15], stories: 10, custom: 2 },
+  guest:   { grades: [0, 1, 15, 16],    stories: 3,  custom: 0 },
+  free:    { grades: [0, 1, 2, 15, 16], stories: 10, custom: 2 },
   premium: { grades: "all",  stories: "all", custom: "all" }
 };
 const PRICE = "$9.99";
@@ -106,7 +134,8 @@ const state = {
   colorTheme: "all", colorBig: false, colorPick: null,
   contactForm: {}, contactErr: {}, contactMsg: "", contactSent: null,
   traceMode: "upper", tracePick: null,
-  bookGenre: "all", reading: null, readFont: 18
+  bookGenre: "all", reading: null, readFont: 18,
+  maker: null
 };
 
 // ---------- Storage helpers ----------
@@ -582,10 +611,10 @@ function homeView() {
 // ---------- Lessons ----------
 function lessonsView() {
   const tiles = [];
-  for (let g = 0; g <= 15; g++) {
+  for (let g = 0; g <= 16; g++) {
     const locked = !canGrade(g);
     const label = g === 0 ? "🌈 Kindergarten" : g === 13 ? "🌍 General" : g === 14 ? "⚗️ Extras"
-                : g === 15 ? "📚 Books" : "Grade " + g;
+                : g === 15 ? "📚 Books" : g === 16 ? "🎨 Create" : "Grade " + g;
     tiles.push(`<button class="grade-tile g${g}" onclick="App.openGrade(${g})">${locked ? '<span class="lock">🔒</span>' : ""}${label}</button>`);
   }
   return `<div class="view">
@@ -619,6 +648,49 @@ function lessonView() {
     let cells = "";
     for (let n = 1; n <= 100; n++) cells += `<span class="${n % 10 === 0 ? "ten" : ""}">${n}</span>`;
     body += `<div class="numgrid">${cells}</div>`;
+  }
+  if (lesson.magicMaker) {
+    if (!state.maker) state.maker = mmRandom();
+    const m = state.maker;
+    const chip = (part, key, label) => `<button class="mmchip ${m[part] === key ? "on" : ""}"
+        onclick="App.mmSet('${part}','${key}')">${esc(label)}</button>`;
+    body += `<div class="mmwrap">
+      <div class="mmstage" id="mmstage">
+        <div class="mmscene" id="mmscene">
+          <svg viewBox="0 0 200 200" class="mmsvg" id="mmsvg" role="img"
+               aria-label="A creature called ${esc(m.name)}">${mmSvg(m)}</svg>
+        </div>
+        <div class="mmshadow"></div>
+        <p class="mmhint no-print">👆 Move your mouse or finger over ${esc(m.name)} — watch them lean out at you!</p>
+      </div>
+      <div class="mmpanel no-print">
+        <div class="field">
+          <label for="mmname">✏️ Name your creature</label>
+          <input id="mmname" value="${esc(m.name)}" maxlength="24" oninput="App.mmName(this.value)">
+        </div>
+        <button class="btn btn-primary" style="width:100%" onclick="App.mmSurprise()">🎲 Surprise Me!</button>
+        <div class="mmparts">
+          <div class="mmpart"><span>🏞️ Where</span><div>${Object.keys(MM_SCENES).map(k => chip("scene", k, k)).join("")}</div></div>
+          <div class="mmpart"><span>🎨 Colour</span><div>${MM_COLORS.map((c, i) =>
+            `<button class="mmswatch ${m.colour === i ? "on" : ""}" title="${esc(c[0])}"
+              style="background:${c[1]};border-color:${c[2]}" onclick="App.mmSet('colour',${i})"></button>`).join("")}</div></div>
+          <div class="mmpart"><span>🫧 Body</span><div>${Object.keys(MM_BODIES).map(k => chip("body", k, k)).join("")}</div></div>
+          <div class="mmpart"><span>😀 Head</span><div>${Object.keys(MM_HEADS).map(k => chip("head", k, k)).join("")}</div></div>
+          <div class="mmpart"><span>👀 Eyes</span><div>${Object.keys(MM_EYES).map(k => chip("eyes", k, k)).join("")}</div></div>
+          <div class="mmpart"><span>👄 Mouth</span><div>${Object.keys(MM_MOUTHS).map(k => chip("mouth", k, k)).join("")}</div></div>
+          <div class="mmpart"><span>👂 Ears &amp; horns</span><div>${Object.keys(MM_TOPS).map(k => chip("top", k, k)).join("")}</div></div>
+          <div class="mmpart"><span>🦋 Wings</span><div>${Object.keys(MM_WINGS).map(k => chip("wings", k, k)).join("")}</div></div>
+          <div class="mmpart"><span>🐾 Tail</span><div>${Object.keys(MM_TAILS).map(k => chip("tail", k, k)).join("")}</div></div>
+          <div class="mmpart"><span>🎩 Accessory</span><div>${Object.keys(MM_EXTRAS).map(k => chip("extra", k, k)).join("")}</div></div>
+        </div>
+        <div class="mmsave">
+          <button class="btn btn-secondary" onclick="App.mmSave()">💾 Save as a picture</button>
+          <button class="btn btn-ghost" onclick="window.print()">🖨️ Print</button>
+        </div>
+        <p class="mmcount">${mmCombos().toLocaleString()} different creatures are possible in here.</p>
+      </div>
+    </div>
+    <div class="print-only" style="text-align:center;margin-top:10px"><h2>${esc(m.name)}</h2></div>`;
   }
   if (lesson.best100) {
     const genres = ["all", ...Array.from(new Set(BOOKS.map(b => b.g))).sort()];
@@ -1222,7 +1294,8 @@ const App = {
     }
     state.grade = g;
     state.reading = null;
-    state.subject = g === 0 ? "alphabet" : g === 13 ? "geography" : g === 14 ? "periodic" : g === 15 ? "best100" : "math";
+    state.subject = g === 0 ? "alphabet" : g === 13 ? "geography" : g === 14 ? "periodic"
+                  : g === 15 ? "best100" : g === 16 ? "create" : "math";
     go("lesson");
   },
   openSubject(s) {
@@ -1233,6 +1306,34 @@ const App = {
   },
   newSheet() { delete state.sheetCache[state.grade + "-" + state.subject]; render(); },
   newColorPage() { state.colorPick = null; render(); },
+  mmSet(part, val) { state.maker[part] = val; render(); mmPop(); },
+  mmName(v) { state.maker.name = v; const s = document.getElementById("mmsvg"); if (s) s.setAttribute("aria-label", "A creature called " + v); },
+  mmSurprise() { const n = state.maker.name; state.maker = mmRandom(); render(); mmPop(); },
+  mmSave() {
+    const m = state.maker;
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="800" height="800">${mmSvg(m, true)}</svg>`;
+    const img = new Image();
+    img.onload = function () {
+      const cv = document.createElement("canvas");
+      cv.width = 800; cv.height = 880;
+      const g = cv.getContext("2d");
+      g.fillStyle = "#fff"; g.fillRect(0, 0, 800, 880);
+      g.drawImage(img, 0, 0, 800, 800);
+      g.fillStyle = "#7c5cbf";
+      g.font = "bold 44px 'Comic Sans MS', Verdana, sans-serif";
+      g.textAlign = "center";
+      g.fillText(m.name, 400, 850);
+      cv.toBlob(function (blob) {
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = (m.name || "creature").replace(/[^\w-]+/g, "_") + ".png";
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+      }, "image/png");
+    };
+    img.onerror = function () { alert("Sorry — saving didn't work in this browser. Try the Print button instead!"); };
+    img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+  },
   bookGenre(g) { state.bookGenre = g; render(); },
   readBook(slug) {
     const meta = PD_BOOKS.find(b => b.slug === slug);
@@ -1411,6 +1512,39 @@ window.App = App;
 // ============================================================
 // RENDER
 // ============================================================
+// ---- Creature Maker: the "leaning out of the screen" effect ----
+// The scene sits back in 3D space, the creature sits forward. Tilting the whole stage toward the
+// pointer makes the creature swing out past the frame — which is the bit children shriek at.
+function mmTilt() {
+  const stage = document.getElementById("mmstage"), scene = document.getElementById("mmscene");
+  if (!stage || !scene) return;
+  const move = (px, py) => {
+    const r = stage.getBoundingClientRect();
+    const dx = (px - (r.left + r.width / 2)) / (r.width / 2);
+    const dy = (py - (r.top + r.height / 2)) / (r.height / 2);
+    const cl = v => Math.max(-1, Math.min(1, v));
+    scene.style.transform = `rotateY(${cl(dx) * 22}deg) rotateX(${cl(-dy) * 16}deg) scale(1.04)`;
+    stage.style.setProperty("--sx", (cl(dx) * 16) + "px");
+    stage.style.setProperty("--sy", (cl(dy) * 10) + "px");
+  };
+  const rest = () => {
+    scene.style.transform = "";
+    stage.style.setProperty("--sx", "0px");
+    stage.style.setProperty("--sy", "0px");
+  };
+  stage.onmousemove = e => move(e.clientX, e.clientY);
+  stage.onmouseleave = rest;
+  stage.ontouchmove = e => { const t = e.touches[0]; if (t) { move(t.clientX, t.clientY); e.preventDefault(); } };
+  stage.ontouchend = rest;
+}
+function mmPop() {
+  const s = document.getElementById("mmscene");
+  if (!s) return;
+  s.classList.remove("mm-pop");
+  void s.offsetWidth;      // restart the animation
+  s.classList.add("mm-pop");
+}
+
 function render() {
   const views = {
     home: homeView, lessons: lessonsView, lesson: lessonView,
@@ -1421,6 +1555,7 @@ function render() {
   document.getElementById("nav").innerHTML = navHtml();
   document.getElementById("authzone").innerHTML = authZoneHtml();
   document.getElementById("app").innerHTML = (views[state.view] || homeView)() + (state.modal ? upgradeModal() : "");
+  mmTilt();
 }
 // Optional deep links: #lessons, #stories, #maker, #pricing, #lesson-3-science, #story-12
 function applyHash() {
