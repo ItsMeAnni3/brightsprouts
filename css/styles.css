@@ -88,6 +88,7 @@ main{max-width:1100px;margin:0 auto;padding:26px 18px 80px}
 }
 .grade-tile:hover{transform:scale(1.05)}
 .grade-tile .lock{position:absolute;top:8px;right:12px;font-size:1rem}
+.g0{background:linear-gradient(135deg,#ff6b9d,#ffd166)}
 .g1{background:var(--pink)}.g2{background:var(--orange)}.g3{background:var(--yellow);color:var(--ink)}
 .g4{background:var(--green)}.g5{background:var(--teal)}.g6{background:var(--blue)}
 .g7{background:var(--purple)}.g8{background:#e26d5c}.g9{background:#3a86ff}
@@ -122,6 +123,24 @@ main{max-width:1100px;margin:0 auto;padding:26px 18px 80px}
 .word-table .w{font-weight:800;color:var(--pink)}
 .lesson-tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:18px 0}
 .lesson-tools label{font-size:.92rem;display:flex;align-items:center;gap:6px}
+
+/* ---------- Kindergarten picture cards ---------- */
+.kgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(108px,1fr));gap:10px;margin-bottom:18px}
+.kcard{
+  background:#fff;border:3px solid #f0eafd;border-radius:14px;text-align:center;
+  padding:12px 6px 10px;display:flex;flex-direction:column;align-items:center;gap:4px;
+}
+.kcard .kemoji{font-size:2.5rem;line-height:1.2}
+.kcard .kname{font-weight:700;font-size:.92rem;color:var(--ink)}
+.kcard .kletter{font-family:"Comic Sans MS",cursive;font-size:1.35rem;font-weight:900;color:var(--purple)}
+.kcard .kshape{margin:6px 0}
+.numgrid{display:grid;grid-template-columns:repeat(10,1fr);gap:5px;margin-bottom:18px}
+.numgrid span{background:#f4f0ff;border-radius:8px;text-align:center;padding:9px 0;font-weight:800;font-size:.95rem}
+.numgrid span.ten{background:var(--yellow)}
+@media print{
+  .kgrid{grid-template-columns:repeat(5,1fr)}
+  .kcard{border:1.5px solid #bbb;break-inside:avoid}
+}
 
 /* ---------- Stories ---------- */
 .story-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}

@@ -13,6 +13,16 @@ const SUBJECTS = [
   { key: "science",    label: "Science",    emoji: "🔬" },
   { key: "history",    label: "History",    emoji: "🏛️" }
 ];
+const K_SUBJECTS = [
+  { key: "alphabet", label: "Alphabet",      emoji: "🔤" },
+  { key: "counting", label: "Counting",      emoji: "💯" },
+  { key: "shapes",   label: "Shapes",        emoji: "🔷" },
+  { key: "animals",  label: "Animals",       emoji: "🐶" },
+  { key: "fruits",   label: "Food",          emoji: "🍎" },
+  { key: "things",   label: "Toys & Things", emoji: "🧸" }
+];
+function subjectsFor(g) { return g === 0 ? K_SUBJECTS : SUBJECTS; }
+function gradeName(g) { return g === 0 ? "Kindergarten" : "Grade " + g; }
 
 const THEME_LABELS = {
   adventure: "🗺️ Adventures",
@@ -22,8 +32,8 @@ const THEME_LABELS = {
 
 // ---------- Free vs Premium rules (your monetization!) ----------
 const RULES = {
-  guest:   { grades: [1],    stories: 3,  custom: 0 },
-  free:    { grades: [1, 2], stories: 10, custom: 2 },
+  guest:   { grades: [0, 1],    stories: 3,  custom: 0 },
+  free:    { grades: [0, 1, 2], stories: 10, custom: 2 },
   premium: { grades: "all",  stories: "all", custom: "all" }
 };
 const PRICE = "$9.99";
@@ -198,11 +208,44 @@ function genVocab(words) {
   });
 }
 function makeSheet(g, subj, lesson) {
+  if (g === 0) return genKinder(subj, lesson);
   if (subj === "math") return genMath(g);
   if (subj === "vocabulary") return genVocab(lesson.words);
   if (subj === "writing") return shuffleArr(lesson.prompts).slice(0, 4).map(p => ({ q: p, a: lesson.rubric }));
   const pool = (lesson.questions || []).concat(lesson.extraQuestions || []);
   return shuffleArr(pool).slice(0, Math.min(6, pool.length));
+}
+const COUNT_EMOJI = ["⭐", "🍎", "🎈", "🐟", "🌸", "🚗", "🧁", "🐤"];
+function genKinder(subj, lesson) {
+  const qs = [];
+  const R = (lo, hi) => lo + rand(hi - lo + 1);
+  const A = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  for (let i = 0; i < 8; i++) {
+    if (subj === "alphabet") {
+      if (i % 2 === 0) { const c = pick(lesson.cards); qs.push({ q: `What letter does ${c.e} ${c.n} start with? ____`, a: c.l[0] }); }
+      else { const s = R(0, 22); qs.push({ q: `Fill in the missing letter:   ${A[s]}   ${A[s + 1]}   ____   ${A[s + 3]}`, a: A[s + 2] }); }
+    } else if (subj === "counting") {
+      const kind = i % 3;
+      if (kind === 0) { const e = pick(COUNT_EMOJI), n = R(3, 10); qs.push({ q: `Count the ${e}:   ${e.repeat(n)}   How many? ____`, a: n }); }
+      else if (kind === 1) { const n = R(1, 98); qs.push({ q: i % 2 ? `What number comes right after ${n}? ____` : `What number comes right before ${n + 2}? ____`, a: n + 1 }); }
+      else { const t = R(1, 7) * 10; qs.push({ q: `Count by tens:   ${t},  ${t + 10},  ____,  ${t + 30}`, a: t + 20 }); }
+    } else if (subj === "shapes") {
+      const pool = [
+        ["How many sides does a triangle have? ____", "3"],
+        ["How many sides does a square have? ____", "4"],
+        ["How many corners does a circle have? ____", "0 — it's perfectly round!"],
+        ["How many sides does a rectangle have? ____", "4 (2 long, 2 short)"],
+        ["Which shape has 5 points and twinkles in the sky? ____", "A star"],
+        ["Which shape means love? ____", "A heart"]
+      ];
+      if (i % 2 === 0) { const p = pick(pool); qs.push({ q: p[0], a: p[1] }); }
+      else { const s = pick(["🔺", "🟥", "🔵", "⭐", "❤️"]), n = R(3, 8); qs.push({ q: `Count the shapes:   ${s.repeat(n)}   ____`, a: n }); }
+    } else { // picture-word pages: animals / fruits / things
+      if (i % 2 === 0) { const c = pick(lesson.cards); qs.push({ q: `What letter does ${c.e} ${c.n} start with? ____`, a: c.n[0].toUpperCase() }); }
+      else { const c = pick(lesson.cards), n = R(3, 9); qs.push({ q: `Count:   ${c.e.repeat(n)}   How many ${c.n.toLowerCase()}s? ____`, a: n }); }
+    }
+  }
+  return qs;
 }
 
 // ============================================================
@@ -318,7 +361,7 @@ function homeView() {
   <div class="hero">
     <span class="big-emoji">🌱</span>
     <h1>BrightSprouts Academy</h1>
-    <p>Fun, printable lessons for <b>Grades 1–12</b> in Math, Reading, Vocabulary, Writing, Science & History — plus <b>50 stories</b> that teach kindness, courage, and character. Made for parents. Loved by kids.</p>
+    <p>Fun, printable lessons for <b>Kindergarten through Grade 12</b> — picture words, alphabet & counting for little ones, then Math, Reading, Vocabulary, Writing, Science & History — plus <b>50 stories</b> that teach kindness, courage, and character. Made for parents. Loved by kids.</p>
     <button class="btn btn-primary" onclick="App.go('lessons')">🚀 Explore Lessons</button>
     <button class="btn btn-secondary" onclick="App.go('stories')">📖 Read Stories</button>
   </div>
@@ -339,13 +382,13 @@ function homeView() {
 // ---------- Lessons ----------
 function lessonsView() {
   const tiles = [];
-  for (let g = 1; g <= 12; g++) {
+  for (let g = 0; g <= 12; g++) {
     const locked = !canGrade(g);
-    tiles.push(`<button class="grade-tile g${g}" onclick="App.openGrade(${g})">${locked ? '<span class="lock">🔒</span>' : ""}Grade ${g}</button>`);
+    tiles.push(`<button class="grade-tile g${g}" onclick="App.openGrade(${g})">${locked ? '<span class="lock">🔒</span>' : ""}${g === 0 ? "🌈 Kindergarten" : "Grade " + g}</button>`);
   }
   return `<div class="view">
     <h1>📚 Pick a Grade</h1>
-    <p class="subtitle">Six subjects per grade: Math • Reading • Vocabulary • Writing • Science • History ${tier() !== "premium" ? "&nbsp;·&nbsp; 🔒 = Premium" : ""}</p>
+    <p class="subtitle">Kindergarten picture lessons, then six subjects per grade: Math • Reading • Vocabulary • Writing • Science • History ${tier() !== "premium" ? "&nbsp;·&nbsp; 🔒 = Premium" : ""}</p>
     <div class="grid grid-4">${tiles.join("")}</div>
   </div>`;
 }
@@ -353,11 +396,21 @@ function lessonsView() {
 function lessonView() {
   const g = state.grade, subj = state.subject;
   const lesson = LESSONS[g][subj];
-  const tabs = SUBJECTS.map(s =>
+  const tabs = subjectsFor(g).map(s =>
     `<button class="${s.key === subj ? "active" : ""}" onclick="App.openSubject('${s.key}')">${s.emoji} ${s.label}</button>`).join("");
 
   let body = "";
   if (lesson.passage) body += `<div class="passage-box"><b>📄 Read this:</b><br><br>${esc(lesson.passage)}</div>`;
+  if (lesson.cards) {
+    body += `<div class="kgrid">` + lesson.cards.map(c =>
+      `<div class="kcard">${c.l ? `<span class="kletter">${c.l}</span>` : ""}${c.svg ? c.svg : `<span class="kemoji">${c.e}</span>`}<span class="kname">${esc(c.n)}</span></div>`
+    ).join("") + `</div>`;
+  }
+  if (lesson.numberGrid) {
+    let cells = "";
+    for (let n = 1; n <= 100; n++) cells += `<span class="${n % 10 === 0 ? "ten" : ""}">${n}</span>`;
+    body += `<div class="numgrid">${cells}</div>`;
+  }
   if (lesson.words) {
     body += `<table class="word-table"><tr><th>Word</th><th>Meaning</th><th>Example</th></tr>` +
       lesson.words.map(w => `<tr><td class="w">${esc(w[0])}</td><td>${esc(w[1])}</td><td><i>${esc(w[2])}</i></td></tr>`).join("") + `</table>`;
@@ -371,16 +424,16 @@ function lessonView() {
       ${questions.map((qa, i) => `<div class="q-item">${i + 1}. ${esc(qa.q)}${'<span class="write-line print-only"></span>'.repeat(subj === "writing" ? 5 : 1)}</div>`).join("")}
     </div>
     <div class="answers-section answers-page" style="display:none">
-      <h3>✅ Answer Key — ${esc(lesson.title)} (Grade ${g})</h3>
+      <h3>✅ Answer Key — ${esc(lesson.title)} (${gradeName(g)})</h3>
       ${questions.map((qa, i) => `<div class="q-item">${i + 1}. ${esc(qa.q)}<span class="answer">Answer: ${esc(qa.a)}</span></div>`).join("")}
     </div>` : "";
 
   return `<div class="view">
     <button class="btn btn-ghost btn-sm no-print" onclick="App.go('lessons')">← All Grades</button>
-    <h1 style="margin-top:14px">Grade ${g}</h1>
+    <h1 style="margin-top:14px">${gradeName(g)}</h1>
     <div class="tabs no-print">${tabs}</div>
     <div class="card" id="lesson-card">
-      <div class="print-only print-header"><span class="brand">🌱 BrightSprouts Academy — Grade ${g} ${SUBJECTS.find(s => s.key === subj).label}</span><span>Name: ____________ &nbsp; Date: ________</span></div>
+      <div class="print-only print-header"><span class="brand">🌱 BrightSprouts Academy — ${gradeName(g)} ${subjectsFor(g).find(s => s.key === subj).label}</span><span>Name: ____________ &nbsp; Date: ________</span></div>
       <div class="lesson-head"><span class="lesson-emoji">${lesson.emoji}</span><h2>${esc(lesson.title)}</h2></div>
       <p class="lesson-intro">${esc(lesson.intro)}</p>
       ${lesson.learn ? `<div class="learn-box"><h3>🧠 Let's Learn!</h3><ul>${lesson.learn.map(l => `<li>${esc(l)}</li>`).join("")}</ul></div>` : ""}
@@ -487,7 +540,7 @@ function pricingView() {
         <h2>🌱 Free</h2>
         <div class="price">$0<span>/forever</span></div>
         <ul>
-          <li>Grades 1 & 2 — all six subjects</li>
+          <li>Kindergarten – Grade 2, everything included</li>
           <li>10 moral-value stories</li>
           <li>2 custom stories</li>
           <li>Printable worksheets</li>
@@ -502,7 +555,7 @@ function pricingView() {
         <h2>⭐ Premium Family</h2>
         <div class="price">${PRICE}<span>/month + tax</span></div>
         <ul>
-          <li>ALL grades 1–12, all six subjects</li>
+          <li>ALL grades K–12, all subjects</li>
           <li>All 50 moral-value stories</li>
           <li>Unlimited custom stories</li>
           <li>Unlimited fresh worksheets in every subject</li>
@@ -583,7 +636,7 @@ const App = {
       else go("pricing");
       return;
     }
-    state.grade = g; state.subject = "math"; go("lesson");
+    state.grade = g; state.subject = g === 0 ? "alphabet" : "math"; go("lesson");
   },
   openSubject(s) { state.subject = s; go("lesson"); },
   newSheet() { delete state.sheetCache[state.grade + "-" + state.subject]; render(); },
