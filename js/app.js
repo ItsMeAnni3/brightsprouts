@@ -27,10 +27,11 @@ const GEN_SUBJECTS = [
   { key: "florafauna", label: "Flora & Fauna", emoji: "🌿" }
 ];
 const ADD_SUBJECTS = [
-  { key: "periodic", label: "Periodic Table", emoji: "⚗️" },
-  { key: "abacus",   label: "Abacus",         emoji: "🧮" },
-  { key: "formulas", label: "Formulas",       emoji: "📐" },
-  { key: "tables",   label: "Maths Tables",   emoji: "🔢" }
+  { key: "periodic", label: "Periodic Table",  emoji: "⚗️" },
+  { key: "abacus",   label: "Abacus",          emoji: "🧮" },
+  { key: "formulas", label: "Formulas",        emoji: "📐" },
+  { key: "tables",   label: "Maths Tables",    emoji: "🔢" },
+  { key: "coloring", label: "Colouring Book",  emoji: "🖍️" }
 ];
 function subjectsFor(g) {
   if (g === 0) return K_SUBJECTS;
@@ -79,7 +80,8 @@ const state = {
   view: "home", grade: 1, subject: "math",
   storyFilter: "all", currentStory: null,
   authMode: "signup", authMsg: "", authOk: "",
-  sheetCache: {}, madeStory: null
+  sheetCache: {}, madeStory: null,
+  colorTheme: "all", colorBig: false, colorPick: null
 };
 
 // ---------- Storage helpers ----------
@@ -589,6 +591,27 @@ function lessonView() {
     for (let n = 1; n <= 100; n++) cells += `<span class="${n % 10 === 0 ? "ten" : ""}">${n}</span>`;
     body += `<div class="numgrid">${cells}</div>`;
   }
+  if (lesson.coloringBook) {
+    const pool = COLOR_ART.filter(a => state.colorTheme === "all" || a[2] === state.colorTheme);
+    const n = state.colorBig ? 2 : 6;
+    if (!state.colorPick || state.colorPick.theme !== state.colorTheme || state.colorPick.big !== state.colorBig) {
+      state.colorPick = { theme: state.colorTheme, big: state.colorBig, items: shuffleArr(pool).slice(0, Math.min(n, pool.length)) };
+    }
+    body += `<div class="color-bar no-print">
+      ${COLOR_THEMES.map(t => `<button class="btn btn-sm ${state.colorTheme === t[0] ? "btn-primary" : "btn-ghost"}" onclick="App.colorTheme('${t[0]}')">${t[1]}</button>`).join("")}
+      <span class="color-sep"></span>
+      <button class="btn btn-sm ${state.colorBig ? "btn-ghost" : "btn-secondary"}" onclick="App.colorSize(false)">6 per page</button>
+      <button class="btn btn-sm ${state.colorBig ? "btn-secondary" : "btn-ghost"}" onclick="App.colorSize(true)">2 big pictures</button>
+    </div>`;
+    body += `<div class="color-grid ${state.colorBig ? "big" : ""}">` + state.colorPick.items.map(a =>
+      `<figure class="colorpage">
+         <svg viewBox="0 0 100 100" class="lineart" role="img" aria-label="${esc(a[1])} colouring picture">
+           <g fill="none" stroke="#111" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${a[3]}</g>
+         </svg>
+         <figcaption>${esc(a[1])}</figcaption>
+       </figure>`).join("") + `</div>`;
+    body += `<p class="no-print" style="font-size:.82rem;color:#8a86a8;margin-top:10px">${pool.length} pictures in this theme · press <b>New Pictures</b> for a different set · <b>Print</b> gives you clean outlines with no website around them.</p>`;
+  }
   if (lesson.periodicTable) {
     const catColor = {}; ELEM_CATS.forEach(c => catColor[c[0]] = c[2]);
     body += `<div class="legend">` + ELEM_CATS.map(c =>
@@ -695,8 +718,8 @@ function lessonView() {
   }
 
   const sheetKey = g + "-" + subj;
-  if (!state.sheetCache[sheetKey]) state.sheetCache[sheetKey] = makeSheet(g, subj, lesson);
-  const questions = state.sheetCache[sheetKey];
+  if (!lesson.coloringBook && !state.sheetCache[sheetKey]) state.sheetCache[sheetKey] = makeSheet(g, subj, lesson);
+  const questions = lesson.coloringBook ? [] : state.sheetCache[sheetKey];
   const qHtml = questions.length ? `
     <div class="questions"><h3>✏️ Practice Time <button class="btn btn-secondary btn-sm no-print" onclick="App.newSheet()">🎲 New Worksheet</button></h3>
       ${questions.map((qa, i) => `<div class="q-item">${i + 1}. ${qa.html ? qa.q : esc(qa.q)}${'<span class="write-line print-only"></span>'.repeat(subj === "writing" ? 5 : 1)}</div>`).join("")}
@@ -719,7 +742,8 @@ function lessonView() {
       ${lesson.activity ? `<div class="activity-box"><h3>🎉 Fun Family Activity</h3><p>${esc(lesson.activity)}</p></div>` : ""}
       ${qHtml}
       <div class="lesson-tools no-print">
-        <button class="btn btn-primary" onclick="window.print()">🖨️ Print Worksheet</button>
+        ${lesson.coloringBook ? `<button class="btn btn-secondary" onclick="App.newColorPage()">🎲 New Pictures</button>` : ""}
+        <button class="btn btn-primary" onclick="window.print()">🖨️ Print ${lesson.coloringBook ? "Colouring Page" : "Worksheet"}</button>
         ${questions.length ? `<label><input type="checkbox" id="key-toggle" onchange="App.toggleKey(this.checked)"> Show / print answer key</label>` : ""}
       </div>
     </div>
@@ -920,6 +944,9 @@ const App = {
   },
   openSubject(s) { state.subject = s; go("lesson"); },
   newSheet() { delete state.sheetCache[state.grade + "-" + state.subject]; render(); },
+  newColorPage() { state.colorPick = null; render(); },
+  colorTheme(t) { state.colorTheme = t; state.colorPick = null; render(); },
+  colorSize(big) { state.colorBig = big; state.colorPick = null; render(); },
   toggleKey(on) {
     document.querySelectorAll(".answers-section").forEach(el => el.style.display = on ? "block" : "none");
     const t = document.getElementById("key-toggle"); if (t) t.checked = on;
