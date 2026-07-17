@@ -121,7 +121,7 @@ const STRIPE_PAYMENT_LINK = "https://buy.stripe.com/9B6dR9f5Mfta6o4f9q3gk04";
 // messages post straight to your inbox — the key stands in for your address, so the form itself
 // never carries it. While the key is empty, Send falls back to opening the visitor's own email app.
 // See README.md.
-const CONTACT_ACCESS_KEY = "";
+const CONTACT_ACCESS_KEY = "8a53ecc1-cc59-4aa7-9edb-274d34222ad7";
 const CONTACT_ENDPOINT = "https://api.web3forms.com/submit";
 // Only used for the mailto fallback and the "if all else fails, write to us" message. Assembled at
 // runtime rather than written out whole, so the plain address isn't sitting in the file for
