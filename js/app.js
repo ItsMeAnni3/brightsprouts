@@ -27,8 +27,7 @@ const GEN_SUBJECTS = [
   { key: "florafauna", label: "Flora & Fauna", emoji: "🌿" }
 ];
 const BOOK_SUBJECTS = [
-  { key: "best100",  label: "100 Best Books", emoji: "🏆" },
-  { key: "readnow",  label: "Read Online",    emoji: "📖" }
+  { key: "readnow", label: "Read Online", emoji: "📖" }
 ];
 const ADD_SUBJECTS = [
   { key: "periodic", label: "Periodic Table",  emoji: "⚗️" },
@@ -139,7 +138,7 @@ const state = {
   colorTheme: "all", colorBig: false, colorPick: null,
   contactForm: {}, contactErr: {}, contactMsg: "", contactSent: null,
   traceMode: "upper", tracePick: null,
-  bookGenre: "all", reading: null, readFont: 18,
+  reading: null, readFont: 18,
   maker: null
 };
 
@@ -696,39 +695,6 @@ function lessonView() {
       </div>
     </div>
     <div class="print-only" style="text-align:center;margin-top:10px"><h2>${esc(m.name)}</h2></div>`;
-  }
-  if (lesson.best100) {
-    const genres = ["all", ...Array.from(new Set(BOOKS.map(b => b.g))).sort()];
-    body += `<div class="color-bar no-print">` + genres.map(g =>
-      `<button class="btn btn-sm ${state.bookGenre === g ? "btn-primary" : "btn-ghost"}"
-        onclick="App.bookGenre('${g}')">${g === "all" ? "📚 All genres" : esc(g)}</button>`).join("") + `</div>`;
-    let shown = 0;
-    BOOK_BANDS.forEach(band => {
-      const list = BOOKS.filter(b => b.b === band[0] && (state.bookGenre === "all" || b.g === state.bookGenre));
-      if (!list.length) return;
-      shown += list.length;
-      body += `<div class="bandhead">${doodle(band[3])}<div><h3>${esc(band[1])}</h3>
-                 <p>${esc(band[2])} · ${list.length} book${list.length === 1 ? "" : "s"}</p></div></div>`;
-      body += `<div class="booklist">` + list.map(b => `
-        <div class="bookrow">
-          <div class="bookyear">${b.y}</div>
-          <div class="bookmain">
-            <h4>${esc(b.t)}</h4>
-            <p class="bookby">${esc(b.a)} · <span class="bookgenre">${esc(b.g)}</span></p>
-            <p class="bookwhy">${esc(b.w)}</p>
-            ${b.n ? `<p class="booknote">⚠️ For parents: ${esc(b.n)}</p>` : ""}
-          </div>
-          <a class="booklink no-print" target="_blank" rel="noopener"
-             href="https://openlibrary.org/search?q=${encodeURIComponent(b.t + " " + b.a)}">Find it →</a>
-        </div>`).join("") + `</div>`;
-    });
-    if (!shown) body += `<p class="lesson-intro">No books in that genre — try another!</p>`;
-    body += `<div class="bookfoot">${doodle("stack")}
-      <p><b>These are recommendations, not copies.</b> Almost every book here is still in copyright,
-      so we point you at your library or bookshop rather than hosting them. Nearly all are on the shelf
-      at your local library for free — the “Find it” links show you where.
-      <br><br>Want to read something right now? The <b>Read Online</b> tab has ${typeof PD_BOOKS !== "undefined" ? PD_BOOKS.length : 34}
-      complete classics you can read here, free, because they're out of copyright.</p></div>`;
   }
   if (lesson.readOnline) {
     if (state.reading) return readerHtml();
@@ -1300,7 +1266,7 @@ const App = {
     state.grade = g;
     state.reading = null;
     state.subject = g === 0 ? "alphabet" : g === 13 ? "geography" : g === 14 ? "periodic"
-                  : g === 15 ? "best100" : g === 16 ? "create" : "math";
+                  : g === 15 ? "readnow" : g === 16 ? "create" : "math";
     go("lesson");
   },
   openSubject(s) {
@@ -1339,7 +1305,6 @@ const App = {
     img.onerror = function () { alert("Sorry — saving didn't work in this browser. Try the Print button instead!"); };
     img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
   },
-  bookGenre(g) { state.bookGenre = g; render(); },
   readBook(slug) {
     const meta = PD_BOOKS.find(b => b.slug === slug);
     const keys = Object.keys(BOOK_DOODLES);
