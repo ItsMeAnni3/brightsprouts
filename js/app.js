@@ -117,11 +117,16 @@ const TAX_NOTE = "Plus sales tax based on your state, calculated at checkout.";
 const STRIPE_PAYMENT_LINK = "https://buy.stripe.com/9B6dR9f5Mfta6o4f9q3gk04";
 
 // ---- Contact form ----
-// Where messages go. Until CONTACT_ENDPOINT is set, the Send button opens the visitor's
-// own email app with the message pre-written (works with no setup, but they must press send).
-// See README.md — pasting a FormSubmit/Formspree/Web3Forms URL here delivers straight to your inbox.
-const CONTACT_ENDPOINT = "";
-const CONTACT_EMAIL = "ana.d.malone@outlook.com";
+// Paste the Web3Forms access key (emailed to you from web3forms.com) between the quotes and
+// messages post straight to your inbox — the key stands in for your address, so the form itself
+// never carries it. While the key is empty, Send falls back to opening the visitor's own email app.
+// See README.md.
+const CONTACT_ACCESS_KEY = "";
+const CONTACT_ENDPOINT = "https://api.web3forms.com/submit";
+// Only used for the mailto fallback and the "if all else fails, write to us" message. Assembled at
+// runtime rather than written out whole, so the plain address isn't sitting in the file for
+// scrapers to lift. It's a speed bump, not a lock — anyone determined can still read it.
+const CONTACT_EMAIL = ["ana.d.malone", "outlook.com"].join("@");
 const CONTACT_TOPICS = ["A question about the lessons", "Feedback or a suggestion",
   "I found a mistake in the content", "Something isn't working", "Billing or my subscription", "Something else"];
 
@@ -1438,21 +1443,30 @@ const App = {
       "Account: " + (currentUser() ? currentUser().email + " (" + currentUser().plan + ")" : "not logged in") + "\n" +
       "Sent: " + new Date().toLocaleString() + "\n\n" + f.message;
 
-    if (CONTACT_ENDPOINT) {
+    if (CONTACT_ACCESS_KEY) {
       const btn = document.querySelector(".contact-card .btn-primary");
       if (btn) { btn.textContent = "Sending…"; btn.disabled = true; }
       fetch(CONTACT_ENDPOINT, {
         method: "POST",
         headers: { "Accept": "application/json", "Content-Type": "application/json" },
-        body: JSON.stringify({ name: f.name, email: f.email, phone: f.phone, topic: f.topic, message: f.message,
-                               _subject: "BrightSprouts: " + f.topic })
-      }).then(r => {
-        if (!r.ok) throw new Error("status " + r.status);
-        state.contactSent = f.email; state.contactForm = {}; render();
-      }).catch(() => {
-        state.contactMsg = "Sorry — that didn't send. Please email us directly at " + CONTACT_EMAIL + " and we'll get right back to you.";
-        render();
-      });
+        body: JSON.stringify({
+          access_key: CONTACT_ACCESS_KEY,
+          subject: "BrightSprouts: " + f.topic,
+          from_name: "BrightSprouts Academy",
+          name: f.name, email: f.email, phone: f.phone || "(not given)",
+          topic: f.topic, message: f.message,
+          account: currentUser() ? currentUser().email + " (" + currentUser().plan + ")" : "not logged in"
+        })
+      }).then(r => r.json().then(j => ({ ok: r.ok, j })))
+        .then(({ ok, j }) => {
+          if (!ok || j.success === false) throw new Error(j.message || "rejected");
+          state.contactSent = f.email; state.contactForm = {}; render();
+        })
+        .catch(() => {
+          state.contactMsg = "Sorry — that didn't send. Please email us directly at " + CONTACT_EMAIL + " and we'll get right back to you.";
+          if (btn) { btn.textContent = "✉️ Send Message"; btn.disabled = false; }
+          render();
+        });
       return;
     }
     // No endpoint configured: hand the message to the visitor's own email app.

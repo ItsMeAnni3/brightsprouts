@@ -78,15 +78,18 @@ That's fine to launch with, but it has a real drawback: the visitor still has to
 their mail app, and people on a phone without a mail account set up may not get one at all —
 so you can lose messages. To have messages land straight in your inbox:
 
-1. Go to **formsubmit.co** (no signup) — or Formspree / Web3Forms if you prefer an account.
-2. Your endpoint is `https://formsubmit.co/ajax/YOUR_EMAIL`. Send one test message to activate it
-   (they email you a one-time confirmation link).
-3. Paste that URL into `CONTACT_ENDPOINT = "..."` near the top of `js/app.js`.
-4. Done — the form now POSTs directly and shows the success screen. If the service is ever down,
-   the code falls back to telling the visitor to email you directly.
+1. Go to **web3forms.com** and enter your email in the "Create Access Key" box. No account or
+   password — they email you an access key (a long code that looks like a UUID).
+2. Paste that key into `CONTACT_ACCESS_KEY = "..."` near the top of `js/app.js`.
+3. Done. The form now POSTs to `https://api.web3forms.com/submit` and messages arrive in your inbox
+   with the name, email, phone, topic, message and whether they were logged in.
 
-FormSubmit also gives you a **hashed endpoint** after activation — use that one so your email
-address isn't sitting in the page source for spam bots to scrape.
+**Why a key and not your email address:** the key stands in for your address, so your real email is
+never in the page for spam bots to harvest. (`CONTACT_EMAIL` is still used for the fallback message,
+but it's assembled at runtime rather than written out whole, so it doesn't match an address regex.)
+
+If Web3Forms is ever down or rejects a message, the code catches it and tells the visitor to email
+you directly, rather than silently swallowing their message.
 
 **Note on the phone field:** it's optional on purpose. Requiring a phone number on a contact form
 makes a lot of people abandon it, and you reply by email anyway. To make it required, add
