@@ -38,12 +38,20 @@ const ADD_SUBJECTS = [
   { key: "coloring", label: "Colouring Book",  emoji: "🖍️" }
 ];
 const MAKE_SUBJECTS = [{ key: "create", label: "Creature Maker", emoji: "🎨" }];
+const CS_SUBJECTS = [
+  { key: "csplan", label: "The Plan",     emoji: "🗺️" },
+  { key: "cs12",   label: "Grades 1–2",   emoji: "🧩" },
+  { key: "cs35",   label: "Grades 3–5",   emoji: "🧱" },
+  { key: "cs68",   label: "Grades 6–8",   emoji: "🔢" },
+  { key: "cs912",  label: "Grades 9–12",  emoji: "🐍" }
+];
 function subjectsFor(g) {
   if (g === 0) return K_SUBJECTS;
   if (g === 13) return GEN_SUBJECTS;
   if (g === 14) return ADD_SUBJECTS;
   if (g === 15) return BOOK_SUBJECTS;
   if (g === 16) return MAKE_SUBJECTS;
+  if (g === 17) return CS_SUBJECTS;
   return SUBJECTS;
 }
 function gradeName(g) {
@@ -52,6 +60,7 @@ function gradeName(g) {
   if (g === 14) return "Additional Learning Material";
   if (g === 15) return "Books";
   if (g === 16) return "Create";
+  if (g === 17) return "Computer Science";
   return "Grade " + g;
 }
 // Build the creature SVG from the chosen parts. Order matters: back to front.
@@ -437,8 +446,90 @@ function genExtra(subj, lesson) {
   return qs;
 }
 
+// ---- Computer Science worksheets: every answer is computed, so the key can't be wrong ----
+const CS_ORDER_TASKS = [
+  ["brush your teeth", ["put toothpaste on the brush", "brush every tooth", "rinse your mouth", "put the brush away"]],
+  ["make a jam sandwich", ["take two slices of bread", "spread the jam", "put the slices together", "cut it in half"]],
+  ["plant a seed", ["dig a small hole", "drop in the seed", "cover it with soil", "water it"]],
+  ["wash your hands", ["turn on the tap", "add soap and scrub", "rinse the soap off", "dry your hands"]],
+  ["draw a snowman", ["draw a big circle", "draw a smaller circle on top", "add eyes and a carrot nose", "add stick arms"]]
+];
+const CS_IO = [["keyboard","INPUT — you use it to talk to the computer"],["mouse","INPUT — you use it to talk to the computer"],
+  ["microphone","INPUT — you use it to talk to the computer"],["camera","INPUT — you use it to talk to the computer"],
+  ["scanner","INPUT — you use it to talk to the computer"],["screen (monitor)","OUTPUT — the computer uses it to talk to you"],
+  ["speakers","OUTPUT — the computer uses it to talk to you"],["printer","OUTPUT — the computer uses it to talk to you"],
+  ["headphones","OUTPUT — the computer uses it to talk to you"]];
+const CS_CHIP = [["a laptop","Yes"],["a smartphone","Yes"],["a modern washing machine","Yes — a small chip runs its programs!"],
+  ["a modern car","Yes — dozens of chips!"],["a games console","Yes"],["a wooden spoon","No"],["a teddy bear","No"],
+  ["a rock","No"],["a paper book","No"],["a bicycle bell","No"]];
+const CS_IF = [
+  ["it is raining", "take your umbrella", "It is raining.", true],
+  ["it is raining", "take your umbrella", "It is sunny.", false],
+  ["the light is red", "stop and wait", "The light is red.", true],
+  ["the light is red", "stop and wait", "The light is green.", false],
+  ["you are hungry", "eat an apple", "You just ate a big lunch and are full.", false],
+  ["the music is playing", "dance", "The music is playing.", true]
+];
+const CS_BOOL = [["True and False","False"],["True and True","True"],["False and False","False"],
+  ["True or False","True"],["False or False","False"],["True or True","True"],["not True","False"],["not False","True"]];
+const CS_WORDS = ["cat","python","robot","code","loop","screen","pixel"];
+
+function genCS(subj) {
+  const R = (lo, hi) => lo + rand(hi - lo + 1);
+  const qs = [];
+  for (let i = 0; i < 8; i++) {
+    if (subj === "cs12") {
+      const k = i % 3;
+      if (k === 0) {
+        const t = pick(CS_ORDER_TASKS);
+        const idx = shuffleArr(t[1].map((_, n) => n));
+        const shown = idx.map((n, j) => String.fromCharCode(65 + j) + ") " + t[1][n]).join("   ");
+        const ans = t[1].map((_, n) => String.fromCharCode(65 + idx.indexOf(n))).join(" ");
+        qs.push({ q: `Algorithm scramble! To ${t[0]}, put these steps in order (write the letters):   ${shown}`, a: ans });
+      } else if (k === 1) {
+        const d = pick(CS_IO);
+        qs.push({ q: `Is a ${d[0]} an INPUT or an OUTPUT?  ______`, a: d[1] });
+      } else {
+        const c = pick(CS_CHIP);
+        qs.push({ q: `Computer hunt: does ${c[0]} have a computer chip inside? (yes/no)  ______`, a: c[1] });
+      }
+    } else if (subj === "cs35") {
+      const k = i % 4;
+      if (k === 0) { const n = R(2, 6), m = R(2, 5); qs.push({ q: `A program says: repeat ${n} times [ move ${m} steps ]. How many steps does the robot move in total?  ______`, a: n * m }); }
+      else if (k === 1) { const n = R(2, 5), m = R(2, 4); qs.push({ q: `A loop runs ${n} times. Each time it stamps ${m} stars and 1 heart. How many stars, and how many hearts?  ______`, a: `${n * m} stars and ${n} hearts` }); }
+      else if (k === 2) { const a = R(2, 6), b = R(2, 6), c = R(1, Math.min(3, a + b - 1)); qs.push({ q: `A robot starts at 0 on a number line. It runs: forward ${a}, forward ${b}, back ${c}. Where does it stop?  ______`, a: a + b - c }); }
+      else { const f = pick(CS_IF); qs.push({ q: `The program says: IF ${f[0]} THEN ${f[1]}. ${f[2]} Does the program do it? (yes/no)  ______`, a: f[3] ? "Yes — the IF is true, so the steps inside run" : "No — the IF is false, so the steps inside are skipped" }); }
+    } else if (subj === "cs68") {
+      const k = i % 4;
+      if (k === 0) { const n = R(2, 31); qs.push({ q: `Change binary ${n.toString(2)} into an ordinary number.  ______`, a: n }); }
+      else if (k === 1) { const n = R(2, 31); qs.push({ q: `Write ${n} in binary.  ______`, a: n.toString(2) }); }
+      else if (k === 2) {
+        const a = R(2, 9), b = R(2, 9), op = pick(["+", "*", "-"]);
+        const res = op === "+" ? a + b : op === "*" ? a * b : (a >= b ? a - b : b - a);
+        const x = op === "-" ? Math.max(a, b) : a, y = op === "-" ? Math.min(a, b) : b;
+        qs.push({ q: `Trace this Python:   x = ${x}   then   x = x ${op} ${y}   then   print(x).  What is printed?  ______`, a: res });
+      }
+      else { const n = R(2, 8); qs.push({ q: `How many times does this loop print hello?   for i in range(${n}): print("hello")  ______`, a: n }); }
+    } else { // cs912
+      const k = i % 6;
+      if (k === 0) { const b = R(3, 9), a = R(b + 1, 40); qs.push({ q: `Python:  print(${a} // ${b})  prints what?  ______`, a: Math.floor(a / b) }); }
+      else if (k === 1) { const b = R(3, 9), a = R(b + 1, 40); qs.push({ q: `Python:  print(${a} % ${b})  prints what?  ______`, a: a % b }); }
+      else if (k === 2) { const e = R(2, 6); qs.push({ q: `Python:  print(2 ** ${e})  prints what?  ______`, a: Math.pow(2, e) }); }
+      else if (k === 3) { const w = pick(CS_WORDS); qs.push({ q: `Python:  print(len("${w}"))  prints what?  ______`, a: w.length }); }
+      else if (k === 4) {
+        const nums = [R(1, 9) * 10, R(1, 9) * 10 + 1, R(1, 9) * 10 + 2, R(1, 9) * 10 + 3];
+        const idx = R(0, 3);
+        qs.push({ q: `Python:  nums = [${nums.join(", ")}]   then   print(nums[${idx}]).  What is printed? (careful — counting starts at 0!)  ______`, a: nums[idx] });
+      }
+      else { const b = pick(CS_BOOL); qs.push({ q: `Python:  print(${b[0]})  prints what?  ______`, a: b[1] }); }
+    }
+  }
+  return qs;
+}
+
 function makeSheet(g, subj, lesson) {
   if (g === 0) return genKinder(subj, lesson);
+  if (g === 17) return genCS(subj);
   if (g === 14) return genExtra(subj, lesson);
   if (g === 13) return subj === "florafauna" ? genFF() : genGeo(lesson);
   if (subj === "math") return genMath(g);
@@ -615,10 +706,10 @@ function homeView() {
 // ---------- Lessons ----------
 function lessonsView() {
   const tiles = [];
-  for (let g = 0; g <= 16; g++) {
+  for (let g = 0; g <= 17; g++) {
     const locked = !canGrade(g);
     const label = g === 0 ? "🌈 Kindergarten" : g === 13 ? "🌍 General" : g === 14 ? "⚗️ Extras"
-                : g === 15 ? "📚 Books" : g === 16 ? "🎨 Create" : "Grade " + g;
+                : g === 15 ? "📚 Books" : g === 16 ? "🎨 Create" : g === 17 ? "💻 Computer Sci" : "Grade " + g;
     tiles.push(`<button class="grade-tile g${g}" onclick="App.openGrade(${g})">${locked ? '<span class="lock">🔒</span>' : ""}${label}</button>`);
   }
   return `<div class="view">
@@ -695,6 +786,23 @@ function lessonView() {
       </div>
     </div>
     <div class="print-only" style="text-align:center;margin-top:10px"><h2>${esc(m.name)}</h2></div>`;
+  }
+  if (lesson.csPlan) {
+    body += CS_PLAN.map((b, i) => `
+      <div class="fband csband">
+        <h3>${esc(b.band)}</h3>
+        <div class="csgoals">
+          <div><h4>🎯 What they learn</h4><ul>${b.goals.map(g => `<li>${esc(g)}</li>`).join("")}</ul></div>
+          <div>
+            <h4>🧰 Free tools</h4><p>${esc(b.tools)}</p>
+            <h4>🏁 Milestone</h4><p class="csmile">${esc(b.milestone)}</p>
+          </div>
+        </div>
+      </div>`).join("");
+    body += `<div class="bookfoot">${doodle("rocket")}
+      <p><b>How to use this plan:</b> find your child's band, open that tab above for the lesson,
+      and aim for the milestone — there's no deadline. A child who starts at twelve catches up fast;
+      the bands are about readiness, not a race. Everything named here is free.</p></div>`;
   }
   if (lesson.readOnline) {
     if (state.reading) return readerHtml();
@@ -916,7 +1024,7 @@ function lessonView() {
   }
 
   const sheetKey = g + "-" + subj;
-  const noQuiz = lesson.coloringBook || lesson.tracingSheet;
+  const noQuiz = lesson.coloringBook || lesson.tracingSheet || lesson.csPlan;
   if (!noQuiz && !state.sheetCache[sheetKey]) state.sheetCache[sheetKey] = makeSheet(g, subj, lesson);
   const questions = noQuiz ? [] : state.sheetCache[sheetKey];
   const qHtml = questions.length ? `
@@ -1115,7 +1223,7 @@ function pricingView() {
         <h2>⭐ Premium Family</h2>
         <div class="price">${PRICE}<span>/month + tax</span></div>
         <ul>
-          <li>ALL grades K–12 + General Knowledge (world geography)</li>
+          <li>ALL grades K–12 + General Knowledge + Computer Science</li>
           <li>All 50 moral-value stories</li>
           <li>Unlimited custom stories</li>
           <li>Unlimited fresh worksheets in every subject</li>
@@ -1266,7 +1374,7 @@ const App = {
     state.grade = g;
     state.reading = null;
     state.subject = g === 0 ? "alphabet" : g === 13 ? "geography" : g === 14 ? "periodic"
-                  : g === 15 ? "readnow" : g === 16 ? "create" : "math";
+                  : g === 15 ? "readnow" : g === 16 ? "create" : g === 17 ? "csplan" : "math";
     go("lesson");
   },
   openSubject(s) {

@@ -93,6 +93,18 @@ main{max-width:1100px;margin:0 auto;padding:26px 18px 80px}
 .g14{background:linear-gradient(135deg,#8338ec,#ff6b9d)}
 .g15{background:linear-gradient(135deg,#e26d5c,#ffd166);color:var(--ink)}
 .g16{background:linear-gradient(135deg,#ff6b9d,#4d96ff)}
+.g17{background:linear-gradient(135deg,#2d2a4a,#4d96ff)}
+
+/* ---------- Computer science plan ---------- */
+.csband{background:#fff;border:2px solid #eee9fa;border-radius:16px;padding:16px 18px}
+.csgoals{display:grid;grid-template-columns:1.3fr 1fr;gap:16px;margin-top:8px}
+.csgoals h4{font-size:.92rem;color:var(--purple-dark);margin-bottom:6px}
+.csgoals ul{margin-left:18px}
+.csgoals li{margin:5px 0;line-height:1.5;font-size:.92rem}
+.csgoals p{font-size:.88rem;color:#57547a;line-height:1.6;margin-bottom:10px}
+.csmile{background:#f0fff4;border-left:5px solid var(--green);border-radius:8px;padding:8px 12px}
+@media (max-width:700px){ .csgoals{grid-template-columns:1fr} }
+@media print{ .csband{break-inside:avoid;border:1px solid #ccc} }
 .g1{background:var(--pink)}.g2{background:var(--orange)}.g3{background:var(--yellow);color:var(--ink)}
 .g4{background:var(--green)}.g5{background:var(--teal)}.g6{background:var(--blue)}
 .g7{background:var(--purple)}.g8{background:#e26d5c}.g9{background:#3a86ff}
