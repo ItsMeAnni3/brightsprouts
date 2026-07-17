@@ -38,6 +38,13 @@ const ADD_SUBJECTS = [
   { key: "coloring", label: "Colouring Book",  emoji: "🖍️" }
 ];
 const MAKE_SUBJECTS = [{ key: "create", label: "Creature Maker", emoji: "🎨" }];
+const ENG_SUBJECTS = [
+  { key: "engplan",      label: "The Plan",  emoji: "🗺️" },
+  { key: "engreading",   label: "Reading",   emoji: "📖" },
+  { key: "engwriting",   label: "Writing",   emoji: "✍️" },
+  { key: "engspeaking",  label: "Speaking",  emoji: "🎤" },
+  { key: "englistening", label: "Listening", emoji: "👂" }
+];
 const CS_SUBJECTS = [
   { key: "csplan", label: "The Plan",     emoji: "🗺️" },
   { key: "cs12",   label: "Grades 1–2",   emoji: "🧩" },
@@ -52,6 +59,7 @@ function subjectsFor(g) {
   if (g === 15) return BOOK_SUBJECTS;
   if (g === 16) return MAKE_SUBJECTS;
   if (g === 17) return CS_SUBJECTS;
+  if (g === 18) return ENG_SUBJECTS;
   return SUBJECTS;
 }
 function gradeName(g) {
@@ -61,6 +69,7 @@ function gradeName(g) {
   if (g === 15) return "Books";
   if (g === 16) return "Create";
   if (g === 17) return "Computer Science";
+  if (g === 18) return "The English Language";
   return "Grade " + g;
 }
 // Build the creature SVG from the chosen parts. Order matters: back to front.
@@ -527,9 +536,64 @@ function genCS(subj) {
   return qs;
 }
 
+// ---- English Language worksheets ----
+function engFixSentence(s) {
+  return (s.charAt(0).toUpperCase() + s.slice(1)).replace(/\bi\b/g, "I") + ".";
+}
+function genEng(subj) {
+  const R = (lo, hi) => lo + rand(hi - lo + 1);
+  const POS = ["FIRST", "SECOND", "THIRD", "FOURTH"];
+  const qs = [];
+  const n = subj === "engspeaking" ? 6 : 8;
+  for (let i = 0; i < n; i++) {
+    if (subj === "engreading") {
+      const k = i % 4;
+      if (k === 0) { const w = pick(ENG_SYLLABLES); qs.push({ q: `Clap it out: how many syllables (beats) in "${w[0]}"?  ______`, a: w[1] }); }
+      else if (k === 1) {
+        const g1 = pick(ENG_RHYMES);
+        let others = shuffleArr(ENG_RHYMES.filter(r => r !== g1)).slice(0, 2).map(r => r[0]);
+        const correct = pick(g1[1]);
+        qs.push({ q: `Which word rhymes with "${g1[0]}"?   ( ${shuffleArr([correct, others[0], others[1]]).join(" / ")} )  ______`, a: correct });
+      }
+      else if (k === 2) {
+        const words = shuffleArr(ENG_WORDPOOL).slice(0, 3);
+        qs.push({ q: `Put these in dictionary (ABC) order:   ${words.join(", ")}  ______`, a: words.slice().sort().join(", ") });
+      }
+      else { const p = pick(ENG_PLURALS); qs.push({ q: `Tricky plurals: one ${p[0]}, two ______`, a: p[1] }); }
+    } else if (subj === "engwriting") {
+      const k = i % 4;
+      if (k === 0) { const s = pick(ENG_FIXCAP); qs.push({ q: `Fix this sentence (capitals and an end mark): "${s}"  ______`, a: engFixSentence(s) }); }
+      else if (k === 1) { const e = pick(ENG_ENDMARK); qs.push({ q: `Which end mark finishes it: "${e[0]}__"   ( .  ?  ! )  ______`, a: e[1] }); }
+      else if (k === 2) { const v = pick(ENG_PAST); qs.push({ q: `Time travel the verb: today I ${v[0]}, yesterday I ______`, a: v[1] }); }
+      else {
+        const topics = ["recess should be longer", "dogs make the best pets", "everyone should learn to swim", "homework should be optional on birthdays", "breakfast is the best meal"];
+        qs.push({ q: `Write ONE persuasive sentence arguing that ${pick(topics)} — a claim plus a because.  ______________`, a: "Sentences will vary — check for a clear claim and at least one reason after 'because'." });
+      }
+    } else if (subj === "engspeaking") {
+      qs.push({ q: `🎤 ${pick(ENG_SPEAK_PROMPTS)}`, a: ENG_SPEAK_RUBRIC });
+    } else { // englistening
+      const k = i % 4;
+      if (k === 0) { const a = R(2, 5), b = R(1, 4); qs.push({ q: `🗣️ A grown-up reads aloud: "Clap ${a} times, then stomp ${b} times." How many sounds altogether?  ______`, a: a + b }); }
+      else if (k === 1) {
+        const seq = pick(ENG_SEQS), p = R(0, 3);
+        qs.push({ q: `🗣️ A grown-up reads this list ONCE: "${seq.join(", ")}". Then asks: which one was ${POS[p]}?  ______`, a: seq[p] });
+      }
+      else if (k === 2) {
+        const g1 = pick(ENG_RHYMES);
+        const rhymers = shuffleArr(g1[1]).slice(0, 2);
+        const odd = pick(ENG_RHYMES.filter(r => r !== g1)[R(0, ENG_RHYMES.length - 2)][1]);
+        qs.push({ q: `🗣️ A grown-up reads: "${shuffleArr([g1[0], rhymers[0], odd, rhymers[1]]).join(", ")}". Which word does NOT rhyme with the others?  ______`, a: odd });
+      }
+      else { const w = pick(ENG_SYLLABLES); qs.push({ q: `🗣️ A grown-up says "${w[0]}" out loud. Clap the beats you hear — how many claps?  ______`, a: w[1] }); }
+    }
+  }
+  return qs;
+}
+
 function makeSheet(g, subj, lesson) {
   if (g === 0) return genKinder(subj, lesson);
   if (g === 17) return genCS(subj);
+  if (g === 18) return genEng(subj);
   if (g === 14) return genExtra(subj, lesson);
   if (g === 13) return subj === "florafauna" ? genFF() : genGeo(lesson);
   if (subj === "math") return genMath(g);
@@ -706,10 +770,11 @@ function homeView() {
 // ---------- Lessons ----------
 function lessonsView() {
   const tiles = [];
-  for (let g = 0; g <= 17; g++) {
+  for (let g = 0; g <= 18; g++) {
     const locked = !canGrade(g);
     const label = g === 0 ? "🌈 Kindergarten" : g === 13 ? "🌍 General" : g === 14 ? "⚗️ Extras"
-                : g === 15 ? "📚 Books" : g === 16 ? "🎨 Create" : g === 17 ? "💻 Computer Sci" : "Grade " + g;
+                : g === 15 ? "📚 Books" : g === 16 ? "🎨 Create" : g === 17 ? "💻 Computer Sci"
+                : g === 18 ? "🗣️ English" : "Grade " + g;
     tiles.push(`<button class="grade-tile g${g}" onclick="App.openGrade(${g})">${locked ? '<span class="lock">🔒</span>' : ""}${label}</button>`);
   }
   return `<div class="view">
@@ -786,6 +851,25 @@ function lessonView() {
       </div>
     </div>
     <div class="print-only" style="text-align:center;margin-top:10px"><h2>${esc(m.name)}</h2></div>`;
+  }
+  if (lesson.engDoodle) {
+    body += `<div class="engdoodle">${doodle(lesson.engDoodle)}</div>`;
+  }
+  if (lesson.engPlan) {
+    body += ENG_PLAN.map(b => `
+      <div class="fband csband">
+        <div class="bandhead" style="border:none;margin:0 0 10px;padding:0">${doodle(b.doodle)}
+          <div><h3 style="margin:0">${esc(b.band)}</h3></div></div>
+        <div class="enggrid">${ENG_DOMAINS.map(d => `
+          <div class="engdom"><h4>${d[1]}</h4><ul>${b[d[0]].map(g => `<li>${esc(g)}</li>`).join("")}</ul></div>`).join("")}
+        </div>
+        <p class="csmile">🏁 <b>Milestone:</b> ${esc(b.milestone)}</p>
+      </div>`).join("");
+    body += `<div class="bookfoot">${doodle("speech")}
+      <p><b>How to use this plan:</b> the four domains grow together, so touch all four every week —
+      even five minutes of each. The Reading, Writing, Spelling and Vocabulary tabs inside Grades 1–12
+      on this site are the daily practice ground for everything named here; the domain tabs above
+      hold the ideas, the games and the endless worksheets.</p></div>`;
   }
   if (lesson.csPlan) {
     body += CS_PLAN.map((b, i) => `
@@ -1024,7 +1108,7 @@ function lessonView() {
   }
 
   const sheetKey = g + "-" + subj;
-  const noQuiz = lesson.coloringBook || lesson.tracingSheet || lesson.csPlan;
+  const noQuiz = lesson.coloringBook || lesson.tracingSheet || lesson.csPlan || lesson.engPlan;
   if (!noQuiz && !state.sheetCache[sheetKey]) state.sheetCache[sheetKey] = makeSheet(g, subj, lesson);
   const questions = noQuiz ? [] : state.sheetCache[sheetKey];
   const qHtml = questions.length ? `
@@ -1223,7 +1307,7 @@ function pricingView() {
         <h2>⭐ Premium Family</h2>
         <div class="price">${PRICE}<span>/month + tax</span></div>
         <ul>
-          <li>ALL grades K–12 + General Knowledge + Computer Science</li>
+          <li>ALL grades K–12 + General Knowledge, Computer Science & English Language</li>
           <li>All 50 moral-value stories</li>
           <li>Unlimited custom stories</li>
           <li>Unlimited fresh worksheets in every subject</li>
@@ -1374,7 +1458,8 @@ const App = {
     state.grade = g;
     state.reading = null;
     state.subject = g === 0 ? "alphabet" : g === 13 ? "geography" : g === 14 ? "periodic"
-                  : g === 15 ? "readnow" : g === 16 ? "create" : g === 17 ? "csplan" : "math";
+                  : g === 15 ? "readnow" : g === 16 ? "create" : g === 17 ? "csplan"
+                  : g === 18 ? "engplan" : "math";
     go("lesson");
   },
   openSubject(s) {
