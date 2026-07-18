@@ -732,7 +732,7 @@ function makeStory(name, friend, settingKey, themeKey, valueKey) {
 function go(view) { if (typeof Speech !== "undefined") Speech.stop(); state.view = view; state.authMsg = ""; state.authOk = ""; render(); window.scrollTo(0, 0); }
 
 function navHtml() {
-  const items = [["home", "🏡 Home"], ["game", "🎮 Game"], ["lessons", "📚 Lessons"], ["stories", "📖 Stories"], ["maker", "✨ Story Maker"], ["pricing", "⭐ Plans"], ["contact", "✉️ Contact"]];
+  const items = [["home", "🏡 Home"], ["game", "🎮 Game"], ["globe", "🌍 Globe"], ["lessons", "📚 Lessons"], ["stories", "📖 Stories"], ["maker", "✨ Story Maker"], ["pricing", "⭐ Plans"], ["contact", "✉️ Contact"]];
   return items.map(([v, l]) => `<button class="${state.view === v ? "active" : ""}" onclick="App.go('${v}')">${l}</button>`).join("");
 }
 function starChip() {
@@ -791,6 +791,69 @@ function rewardsView() {
       <p><b>How to earn stars:</b> read a story (+1), read a book chapter (+1), grow a plant all the way (+2),
       make a creature (+1), write a custom story (+1), and win arcade games (up to +10). Come back every day to build your 🔥 streak!</p></div>
   </div>`;
+}
+
+// ---------- The Globe ----------
+function globeView() {
+  return `<div class="view">
+    <h1>🌍 The Globe</h1>
+    <p class="subtitle">Spin the whole world in your hands! Drag to rotate, zoom in and out, and tap any country to learn its name, capital and flag.</p>
+    <div class="globewrap">
+      <div class="globestage">
+        <div id="globe-canvas-wrap" class="globecanvaswrap">
+          <canvas id="globe-canvas" aria-label="An interactive 3D globe of Earth"></canvas>
+        </div>
+        <div class="globebtns no-print">
+          <button class="gbtn" onclick="App.globeZoom(1)" title="Zoom in">➕</button>
+          <button class="gbtn" onclick="App.globeZoom(-1)" title="Zoom out">➖</button>
+          <button class="gbtn" id="globe-spin-btn" onclick="App.globeSpin()" title="Start/stop spinning">⏸️</button>
+          <button class="gbtn" onclick="App.globeReset()" title="Reset the view">🔄</button>
+        </div>
+        <p class="globehint no-print">🖱️ Drag to spin · scroll or pinch to zoom · tap a country</p>
+        <p id="globe-status" class="globehint no-print"></p>
+      </div>
+      <div class="globeinfo" id="globe-info">${globeInfoHtml(null)}</div>
+    </div>
+    <div class="bookfoot">${doodle("rocket")}
+      <p><b>Did you know?</b> Earth is the only planet we know of with life. It spins once every 24 hours — that's what gives us day and night! This globe uses real map data, so every coastline and country is where it truly belongs.</p></div>
+  </div>`;
+}
+function globeInfoHtml(pick) {
+  if (!pick) {
+    return `<div class="globecard globecard-empty">
+      <div class="gemoji">🌐</div>
+      <h3>Tap a country</h3>
+      <p>Give the globe a spin and tap any country to see its flag, capital city and continent.</p>
+    </div>`;
+  }
+  if (pick.ocean) {
+    return `<div class="globecard globecard-empty">
+      <div class="gemoji">🌊</div>
+      <h3>The Ocean</h3>
+      <p>That's open water! About 71% of Earth is covered by ocean. Spin around and tap some land.</p>
+    </div>`;
+  }
+  const flag = pick.iso ? `<img class="globeflag" src="https://flagcdn.com/w160/${pick.iso}.png" alt="Flag of ${esc(pick.name)}">` : "";
+  return `<div class="globecard">
+    ${flag}
+    <h3>${esc(pick.name)}</h3>
+    ${pick.capital ? `<p class="gcap">🏛️ Capital: <b>${esc(pick.capital)}</b></p>` : ""}
+    ${pick.continent ? `<p class="gcont">🗺️ ${esc(pick.continent)}</p>` : ""}
+    ${pick.iso ? `<button class="btn btn-secondary btn-sm" onclick="App.globeToGeography()">📚 Learn more in Geography</button>` : `<p class="gcont">More facts coming soon!</p>`}
+  </div>`;
+}
+// Look up extra facts (capital, continent) for a picked country by its ISO code.
+function globeCountryInfo(id) {
+  if (id === 0) return { ocean: true };
+  if (id < 0 || id > GLOBE_META.countries.length) return null;
+  const meta = GLOBE_META.countries[id - 1];
+  const info = { name: meta.name, iso: meta.iso };
+  if (meta.iso) {
+    LESSONS[13].geography.continents.forEach(c => (c.countries || []).forEach(k => {
+      if (k[0] === meta.iso) { info.name = k[1]; info.capital = k[2]; info.continent = c.name; }
+    }));
+  }
+  return info;
 }
 
 // ---------- Home ----------
@@ -1595,6 +1658,28 @@ const App = {
   },
   gameHub() { state.gameScreen = "hub"; state.arcade = null; state.mem = null; go("game"); },
 
+  // ---- The Globe ----
+  globePick(id) {
+    const info = globeCountryInfo(id);
+    const el = document.getElementById("globe-info");
+    if (el) el.innerHTML = globeInfoHtml(info);
+    // reward curious explorers the first time they identify a real country
+    if (info && info.iso) rewardOnce("globe-" + info.iso, 1, "🌍 +1 star for exploring " + info.name + "!");
+  },
+  globeZoom(dir) { if (typeof Globe !== "undefined") Globe.zoomBy(dir > 0 ? 1.35 : 1 / 1.35); },
+  globeSpin() {
+    if (typeof Globe === "undefined") return;
+    const on = Globe.toggleSpin();
+    const b = document.getElementById("globe-spin-btn");
+    if (b) b.textContent = on ? "⏸️" : "▶️";
+  },
+  globeReset() {
+    if (typeof Globe !== "undefined") Globe.reset();
+    const b = document.getElementById("globe-spin-btn"); if (b) b.textContent = "⏸️";
+    const el = document.getElementById("globe-info"); if (el) el.innerHTML = globeInfoHtml(null);
+  },
+  globeToGeography() { state.grade = 13; state.subject = "geography"; go("lesson"); },
+
   gamePick(slug) { state.game = { plant: slug, stage: 0, water: 0, sun: 0 }; state.gameScreen = "plant"; go("game"); },
   gamePickNew() { state.game = { plant: null, stage: 0, water: 0, sun: 0 }; state.gameScreen = "plant"; render(); window.scrollTo(0, 0); },
   gameReplant() { state.game.stage = 0; state.game.water = 0; state.game.sun = 0; render(); gamePop(); },
@@ -2126,13 +2211,15 @@ function render() {
     home: homeView, lessons: lessonsView, lesson: lessonView,
     stories: storiesView, story: storyView, maker: makerView,
     pricing: pricingView, auth: authView, account: accountView,
-    contact: contactView, game: gameView, rewards: rewardsView
+    contact: contactView, game: gameView, rewards: rewardsView, globe: globeView
   };
   document.getElementById("nav").innerHTML = navHtml();
   document.getElementById("authzone").innerHTML = authZoneHtml();
   document.getElementById("app").innerHTML = (views[state.view] || homeView)() + (state.modal ? upgradeModal() : "");
   mmTilt();
   gameTilt();
+  if (state.view === "globe") { if (typeof Globe !== "undefined") Globe.mount(App.globePick); }
+  else if (typeof Globe !== "undefined") Globe.unmount();
 }
 // Optional deep links: #lessons, #stories, #maker, #pricing, #lesson-3-science, #story-12
 function applyHash() {
@@ -2156,7 +2243,7 @@ function applyHash() {
       state.view = "auth";
     }
     history.replaceState(null, "", location.pathname);
-  } else if (["home", "lessons", "stories", "maker", "pricing", "contact", "game", "rewards"].includes(h)) {
+  } else if (["home", "lessons", "stories", "maker", "pricing", "contact", "game", "rewards", "globe"].includes(h)) {
     state.view = h;
   }
 }
