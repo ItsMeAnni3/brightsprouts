@@ -729,19 +729,68 @@ function makeStory(name, friend, settingKey, themeKey, valueKey) {
 // ============================================================
 // VIEWS
 // ============================================================
-function go(view) { state.view = view; state.authMsg = ""; state.authOk = ""; render(); window.scrollTo(0, 0); }
+function go(view) { if (typeof Speech !== "undefined") Speech.stop(); state.view = view; state.authMsg = ""; state.authOk = ""; render(); window.scrollTo(0, 0); }
 
 function navHtml() {
   const items = [["home", "🏡 Home"], ["game", "🎮 Game"], ["lessons", "📚 Lessons"], ["stories", "📖 Stories"], ["maker", "✨ Story Maker"], ["pricing", "⭐ Plans"], ["contact", "✉️ Contact"]];
   return items.map(([v, l]) => `<button class="${state.view === v ? "active" : ""}" onclick="App.go('${v}')">${l}</button>`).join("");
 }
+function starChip() {
+  const r = Rewards.load();
+  return `<button class="starchip" onclick="App.go('rewards')" title="Your stars, streak and stickers">
+    ⭐ <b>${r.stars}</b>${r.streak > 1 ? ` <span class="streakpip">🔥${r.streak}</span>` : ""}</button>`;
+}
 function authZoneHtml() {
   const u = currentUser();
-  if (!u) return `<button class="btn btn-gold btn-sm" onclick="App.goAuth('login')">Log In</button>
+  const chip = starChip();
+  if (!u) return `${chip}<button class="btn btn-gold btn-sm" onclick="App.goAuth('login')">Log In</button>
                   <button class="btn btn-primary btn-sm" onclick="App.goAuth('signup')">Sign Up Free</button>`;
   const badge = u.plan === "premium" ? `<span class="badge">⭐ Premium</span>` : `<span class="badge free">Free Plan</span>`;
-  return `<span class="hello">Hi, ${esc(u.name.split(" ")[0])}! ${badge}</span>
+  return `${chip}<span class="hello">Hi, ${esc(u.name.split(" ")[0])}! ${badge}</span>
           <button class="btn btn-ghost btn-sm" onclick="App.go('account')">My Account</button>`;
+}
+
+// ---------- Rewards ----------
+function rewardsView() {
+  const r = Rewards.load();
+  const next = Rewards.nextSticker();
+  const unlockedCount = Rewards.stickersUnlocked();
+  const pct = next ? Math.min(100, Math.round((r.stars - (STICKERS[unlockedCount - 1] ? STICKERS[unlockedCount - 1].cost : 0)) /
+              (next.cost - (STICKERS[unlockedCount - 1] ? STICKERS[unlockedCount - 1].cost : 0)) * 100)) : 100;
+  return `<div class="view">
+    <h1>🏆 My Rewards</h1>
+    <p class="subtitle">Earn stars by reading, playing games, and making things. Fill your sticker shelf and collect every badge!</p>
+    <div class="rewardtop">
+      <div class="rewardbig"><span class="rbnum">⭐ ${r.stars}</span><span class="rblbl">stars earned</span></div>
+      <div class="rewardbig"><span class="rbnum">🔥 ${r.streak}</span><span class="rblbl">day${r.streak === 1 ? "" : "s"} in a row</span></div>
+      <div class="rewardbig"><span class="rbnum">🏅 ${r.badges.length}/${BADGES.length}</span><span class="rblbl">badges</span></div>
+    </div>
+    ${next ? `<div class="nextsticker">
+      <p>Next sticker: <b>${next.e} ${esc(next.n)}</b> at ${next.cost} stars — ${next.cost - r.stars} to go!</p>
+      <div class="readprog"><i style="width:${pct}%"></i></div>
+    </div>` : `<p class="nextsticker"><b>🎉 You've unlocked every sticker!</b></p>`}
+
+    <h2 class="rewardhead">🎨 Sticker Shelf</h2>
+    <div class="stickergrid">${STICKERS.map(s => {
+      const got = r.stars >= s.cost;
+      return `<div class="sticker ${got ? "on" : ""}" title="${got ? esc(s.n) : "Unlocks at " + s.cost + " stars"}">
+        <span class="stemoji">${got ? s.e : "❓"}</span>
+        <span class="stname">${got ? esc(s.n) : s.cost + "⭐"}</span></div>`;
+    }).join("")}</div>
+
+    <h2 class="rewardhead">🏅 Badges</h2>
+    <div class="badgegrid">${BADGES.map(b => {
+      const got = r.badges.indexOf(b.id) >= 0;
+      return `<div class="badge3 ${got ? "on" : ""}">
+        <span class="bgemoji">${b.e}</span>
+        <div><h4>${esc(b.n)}</h4><p>${esc(b.d)}</p></div>
+        ${got ? `<span class="bgtick">✓</span>` : `<span class="bglock">🔒</span>`}</div>`;
+    }).join("")}</div>
+
+    <div class="bookfoot" style="margin-top:20px">${doodle("rocket")}
+      <p><b>How to earn stars:</b> read a story (+1), read a book chapter (+1), grow a plant all the way (+2),
+      make a creature (+1), write a custom story (+1), and win arcade games (up to +10). Come back every day to build your 🔥 streak!</p></div>
+  </div>`;
 }
 
 // ---------- Home ----------
@@ -795,7 +844,8 @@ function lessonView() {
     `<button class="${s.key === subj ? "active" : ""}" onclick="App.openSubject('${s.key}')">${s.emoji} ${s.label}</button>`).join("");
 
   let body = "";
-  if (lesson.passage) body += `<div class="passage-box"><b>📄 Read this:</b><br><br>${esc(lesson.passage)}</div>`;
+  if (lesson.passage) body += `<div class="lesson-tools no-print" style="margin-bottom:10px">${listenBtn("passage-say", "Read this to me")}</div>
+    <div class="passage-box" id="passage-say" data-say="${esc(lesson.passage)}"><b>📄 Read this:</b><br><br>${esc(lesson.passage)}</div>`;
   if (lesson.cards) {
     body += `<div class="kgrid">` + lesson.cards.map(c =>
       `<div class="kcard">${c.l ? `<span class="kletter">${c.l}</span>` : ""}${c.svg ? c.svg : `<span class="kemoji">${c.e}</span>`}<span class="kname">${esc(c.n)}</span></div>`
@@ -1177,6 +1227,7 @@ function readerHtml() {
     <button class="btn btn-primary" onclick="App.closeBook()">← Back to the library</button></div></div>`;
   const ch = r.book.chapters[r.ch];
   const total = r.book.chapters.length;
+  const chapterText = ch.t + ". " + ch.p.join(" ");
   return `<div class="view">
     <div class="readerbar no-print">
       <button class="btn btn-ghost btn-sm" onclick="App.closeBook()">← Library</button>
@@ -1187,6 +1238,8 @@ function readerHtml() {
         <button class="btn btn-ghost btn-sm" onclick="App.readSize(-1)" title="Smaller text">A−</button>
         <button class="btn btn-ghost btn-sm" onclick="App.readSize(1)" title="Bigger text">A+</button>
       </span>
+      <span id="ch-say" data-say="${esc(chapterText)}" style="display:none"></span>
+      ${listenBtn("ch-say", "Listen")}
       <button class="btn btn-secondary btn-sm" onclick="window.print()">🖨️ Print chapter</button>
     </div>
     <div class="card readerpage" style="font-size:${state.readFont}px">
@@ -1232,7 +1285,8 @@ function storyView() {
       ${sceneFor(s.id)}
       <h1>${esc(s.title)}</h1>
       <p class="subtitle">${THEME_LABELS[s.theme]} · Ages ${s.ages} · 📖 about ${rt.mins} minutes to read aloud</p>
-      <div class="story-full">${esc(s.text)}</div>
+      <div class="lesson-tools no-print" style="margin-bottom:12px">${listenBtn("story-say", "Read this to me")}</div>
+      <div class="story-full" id="story-say" data-say="${esc(s.title + ". " + s.text + " The moral of the story: " + s.moral)}">${esc(s.text)}</div>
       <div class="moral-banner">💡 <b>The moral of the story:</b> ${esc(s.moral)}</div>
       <div class="learn-box no-print"><h3>💬 Talk about it together</h3><ul>
         <li>What was the hardest choice a character had to make?</li>
@@ -1253,7 +1307,8 @@ function makerView() {
     <div class="card" id="made-story">
       <div class="print-only print-header"><span class="brand">🌱 BrightSprouts Academy — A Custom Story</span><span>Starring someone special!</span></div>
       <h2>✨ ${esc(state.madeStory.title)}</h2>
-      <div class="story-full">${esc(state.madeStory.text)}</div>
+      <div class="lesson-tools no-print" style="margin-bottom:12px">${listenBtn("made-say", "Read this to me")}</div>
+      <div class="story-full" id="made-say" data-say="${esc(state.madeStory.title + ". " + state.madeStory.text + " The moral of the story: " + state.madeStory.moral)}">${esc(state.madeStory.text)}</div>
       <div class="moral-banner">💡 <b>The moral of the story:</b> ${esc(state.madeStory.moral)}</div>
       <div class="lesson-tools no-print">
         <button class="btn btn-primary" onclick="window.print()">🖨️ Print This Story</button>
@@ -1444,11 +1499,66 @@ function upgradeModal() {
 // ============================================================
 // ACTIONS
 // ============================================================
+// Award stars/badges and show a friendly floating toast. Central so every feature earns the same way.
+function earn(stars, msg) {
+  if (stars) Rewards.addStars(stars);
+  Rewards.checkAutoBadges().forEach(b => showToast(`🏅 Badge earned: ${b.n}!`, true));
+  if (msg) showToast(msg);
+  const az = document.getElementById("authzone");
+  if (az) az.innerHTML = authZoneHtml();   // refresh the star chip without a full re-render
+}
+function earnBadge(id) {
+  const b = Rewards.earnBadge(id);
+  if (b) { showToast(`🏅 Badge earned: ${b.n}!`, true); const az = document.getElementById("authzone"); if (az) az.innerHTML = authZoneHtml(); }
+}
+// Award a reward only the first time a given thing is done (so stars can't be farmed by repeating).
+function rewardOnce(key, stars, msg, badge) {
+  let done;
+  try { done = JSON.parse(localStorage.getItem("bs_rw_done")) || {}; } catch (e) { done = {}; }
+  if (done[key]) { if (badge) earnBadge(badge); return false; }
+  done[key] = 1;
+  localStorage.setItem("bs_rw_done", JSON.stringify(done));
+  earn(stars, msg);
+  if (badge) earnBadge(badge);
+  return true;
+}
+// Read-aloud button (only shown if the browser supports free speech). Reads the text of element `srcId`.
+function listenBtn(srcId, label) {
+  if (typeof Speech === "undefined" || !Speech.supported()) return "";
+  return `<button class="btn btn-secondary btn-sm listenbtn no-print" data-listen="${srcId}" onclick="App.listen('${srcId}')">🔊 ${label || "Listen"}</button>`;
+}
+let _toastT = null;
+function showToast(text, big) {
+  let t = document.getElementById("bs-toast");
+  if (!t) { t = document.createElement("div"); t.id = "bs-toast"; document.body.appendChild(t); }
+  t.className = "bs-toast show" + (big ? " big" : "");
+  t.textContent = text;
+  clearTimeout(_toastT);
+  _toastT = setTimeout(() => { t.className = "bs-toast"; }, big ? 2600 : 1700);
+}
+
 const App = {
   go,
   // single place we hand off to the browser, so tests can observe it instead of navigating
   openLink(url) { window.location.href = url; },
   goAuth(mode) { state.authMode = mode; go("auth"); },
+
+  // Read-aloud toggle. Speaks the text inside element `srcId`; press again (or its Stop) to halt.
+  listen(srcId) {
+    const btn = document.querySelector('[data-listen="' + srcId + '"]');
+    if (typeof Speech === "undefined" || !Speech.supported()) return;
+    if (Speech.speaking()) {
+      Speech.stop();
+      document.querySelectorAll(".listenbtn").forEach(b => b.innerHTML = "🔊 Listen");
+      return;
+    }
+    const src = document.getElementById(srcId);
+    if (!src) return;
+    const text = src.getAttribute("data-say") || src.textContent || "";
+    document.querySelectorAll(".listenbtn").forEach(b => b.innerHTML = "🔊 Listen");
+    if (btn) btn.innerHTML = "⏹ Stop";
+    Speech.speak(text, () => { if (btn) btn.innerHTML = "🔊 Listen"; });
+  },
 
   openGrade(g) {
     if (!canGrade(g)) {
@@ -1473,11 +1583,73 @@ const App = {
   newColorPage() { state.colorPick = null; render(); },
   mmSet(part, val) { state.maker[part] = val; render(); mmPop(); },
   mmName(v) { state.maker.name = v; const s = document.getElementById("mmsvg"); if (s) s.setAttribute("aria-label", "A creature called " + v); },
-  gamePick(slug) { state.game = { plant: slug, stage: 0, water: 0, sun: 0 }; go("game"); },
-  gamePickNew() { state.game = { plant: null, stage: 0, water: 0, sun: 0 }; go("game"); },
+  // ---- Game hub: routes between the plant game and the four arcade games ----
+  openGame(screen) {
+    state.gameScreen = screen;
+    if (screen === "plant") { if (!state.game) state.game = { plant: null, stage: 0, water: 0, sun: 0 }; }
+    else if (screen === "memory") { state.mem = { deck: memoryDeck(6), flipped: [], moves: 0, matched: 0, lock: false, done: false }; }
+    else if (screen === "matharace" || screen === "flagquiz" || screen === "spellbee") {
+      state.arcade = { type: screen, i: 0, correct: 0, q: arcadeQuestion(screen), answered: null, done: false };
+    }
+    go("game");
+  },
+  gameHub() { state.gameScreen = "hub"; state.arcade = null; state.mem = null; go("game"); },
+
+  gamePick(slug) { state.game = { plant: slug, stage: 0, water: 0, sun: 0 }; state.gameScreen = "plant"; go("game"); },
+  gamePickNew() { state.game = { plant: null, stage: 0, water: 0, sun: 0 }; state.gameScreen = "plant"; render(); window.scrollTo(0, 0); },
   gameReplant() { state.game.stage = 0; state.game.water = 0; state.game.sun = 0; render(); gamePop(); },
   gameWater() { if (state.game.water < GAME_NEED) state.game.water++; gameCheckGrow(); },
   gameSun() { if (state.game.sun < GAME_NEED) state.game.sun++; gameCheckGrow(); },
+
+  // ---- Arcade quiz answer (Math Race / Flag Quiz / Spelling Bee) ----
+  arcadeAnswer(opt) {
+    const a = state.arcade;
+    if (!a || a.answered != null || a.done) return;
+    a.answered = opt;
+    if (opt === a.q.answer) a.correct++;
+    render();
+    setTimeout(() => {
+      a.i++;
+      if (a.i >= ARCADE_Q) {
+        a.done = true;
+        const stars = arcadeStars(a.correct);
+        if (stars > 0) earn(stars, "⭐ +" + stars + (stars === 1 ? " star!" : " stars!"));
+        if (a.type === "matharace" && a.correct === ARCADE_Q) earnBadge("mathwhiz");
+        if (a.type === "spellbee" && a.correct === ARCADE_Q) earnBadge("speller");
+        if (a.type === "flagquiz" && a.correct >= 8) earnBadge("explorer");
+      } else {
+        a.q = arcadeQuestion(a.type);
+        a.answered = null;
+      }
+      render();
+    }, 850);
+  },
+
+  // ---- Memory Match ----
+  memFlip(id) {
+    const m = state.mem;
+    if (!m || m.lock || m.done) return;
+    const card = m.deck.find(c => c.id === id);
+    if (!card || card.up || card.done) return;
+    card.up = true; m.flipped.push(id); render();
+    if (m.flipped.length === 2) {
+      m.moves++;
+      m.lock = true;
+      const [a, b] = m.flipped.map(fid => m.deck.find(c => c.id === fid));
+      if (a.face === b.face) {
+        a.done = b.done = true; m.matched++; m.flipped = []; m.lock = false;
+        if (m.matched >= m.deck.length / 2) {
+          m.done = true;
+          const stars = memoryStars(m.deck.length / 2, m.moves);
+          earn(stars, "🧠 +" + stars + " stars — you matched them all!");
+          earnBadge("memory");
+        }
+        render();
+      } else {
+        setTimeout(() => { a.up = b.up = false; m.flipped = []; m.lock = false; render(); }, 850);
+      }
+    }
+  },
   mmSurprise() { const n = state.maker.name; state.maker = mmRandom(); render(); mmPop(); },
   mmSave() {
     const m = state.maker;
@@ -1503,6 +1675,7 @@ const App = {
     };
     img.onerror = function () { alert("Sorry — saving didn't work in this browser. Try the Print button instead!"); };
     img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+    earn(1, "⭐ +1 star for making a creature!"); earnBadge("creator");
   },
   readBook(slug) {
     const meta = PD_BOOKS.find(b => b.slug === slug);
@@ -1532,6 +1705,8 @@ const App = {
     const r = state.reading; if (!r || !r.book) return;
     r.ch = Math.min(Math.max(0, +i), r.book.chapters.length - 1);
     localStorage.setItem("bs_read_" + r.slug, r.ch);
+    rewardOnce("chap-" + r.slug + "-" + r.ch, 1, "⭐ +1 star for reading a chapter!");
+    if (r.ch === r.book.chapters.length - 1) rewardOnce("book-" + r.slug, 3, "📚 +3 stars — you finished a whole book!", "bookworm");
     render(); window.scrollTo(0, 0);
   },
   readSize(d) {
@@ -1556,6 +1731,7 @@ const App = {
       return;
     }
     state.currentStory = id; go("story");
+    rewardOnce("story-" + id, 1, "⭐ +1 star for reading a story!", "firststory");
   },
 
   createStory() {
@@ -1575,6 +1751,7 @@ const App = {
     saveCurrentUser(u);
     state.madeStory = story;
     render();
+    earn(1, "⭐ +1 star for making a story!"); earnBadge("storyteller");
     const el = document.getElementById("made-story");
     if (el) el.scrollIntoView({ behavior: "smooth" });
   },
@@ -1725,10 +1902,124 @@ function mmPop() {
 // ---------- Plant Life Cycle Game ----------
 const GAME_NEED = 3;   // waters and suns needed to grow to the next stage
 function gameView() {
+  const sc = state.gameScreen || "hub";
+  if (sc === "plant") return plantGameView();
+  if (sc === "memory") return memoryView();
+  if (sc === "matharace" || sc === "flagquiz" || sc === "spellbee") return arcadeQuizView();
+  return gameHubView();
+}
+
+function gameHubView() {
+  const plantTile = `
+    <div class="gtile" onclick="App.openGame('plant')">
+      <div class="gtemoji">🌱</div>
+      <h3>Plant Life Cycle</h3>
+      <p>Grow your own plant from seed to fruit.</p>
+      <button class="btn btn-primary btn-sm">Play</button>
+    </div>`;
+  const arcTiles = ARCADE_GAMES.map(a => `
+    <div class="gtile" onclick="App.openGame('${a.key}')">
+      <div class="gtemoji">${a.emoji}</div>
+      <h3>${esc(a.name)}</h3>
+      <p>${esc(a.desc)}</p>
+      <button class="btn btn-primary btn-sm">Play</button>
+    </div>`).join("");
+  return `<div class="view">
+    <h1>🎮 Game Arcade</h1>
+    <p class="subtitle">Pick a game to play. Every game you play earns you ⭐ stars for your Rewards collection!</p>
+    <div class="grid grid-3 gtiles">${plantTile}${arcTiles}</div>
+    <div class="bookfoot">${doodle("rocket")}
+      <p><b>Play &amp; learn!</b> Race through sums, guess flags from around the world, spot the correctly spelled word, or test your memory. Win stars, unlock stickers, and earn badges as you go.</p></div>
+  </div>`;
+}
+
+// ---- Arcade quiz view (Math Race / Flag Quiz / Spelling Bee) ----
+function arcadeQuizView() {
+  const a = state.arcade;
+  const meta = ARCADE_GAMES.find(x => x.key === a.type) || { name: "Game", emoji: "🎮" };
+  if (a.done) {
+    const stars = arcadeStars(a.correct);
+    const perfect = a.correct === ARCADE_Q;
+    return `<div class="view">
+      <button class="btn btn-ghost btn-sm no-print" onclick="App.gameHub()">← Back to games</button>
+      <div class="arcresult">
+        <div class="arcbadge">${perfect ? "🏆" : meta.emoji}</div>
+        <h1>${perfect ? "Perfect!" : "Nice work!"}</h1>
+        <p class="arcscore">You got <b>${a.correct}</b> out of ${ARCADE_Q} right</p>
+        <p class="arcstars">⭐ +${stars} star${stars === 1 ? "" : "s"} earned!</p>
+        <div class="arcactions">
+          <button class="btn btn-primary" onclick="App.openGame('${a.type}')">🔁 Play again</button>
+          <button class="btn btn-secondary" onclick="App.gameHub()">🎮 Other games</button>
+        </div>
+      </div>
+    </div>`;
+  }
+  const q = a.q;
+  const opts = q.options.map(o => {
+    let cls = "arcopt";
+    if (a.answered != null) {
+      if (o === q.answer) cls += " correct";
+      else if (o === a.answered) cls += " wrong";
+      else cls += " dim";
+    }
+    return `<button class="${cls}" onclick="App.arcadeAnswer(${JSON.stringify(o).replace(/"/g, "&quot;")})" ${a.answered != null ? "disabled" : ""}>${esc(o)}</button>`;
+  }).join("");
+  const pct = Math.round((a.i / ARCADE_Q) * 100);
+  return `<div class="view">
+    <button class="btn btn-ghost btn-sm no-print" onclick="App.gameHub()">← Back to games</button>
+    <div class="arcgame">
+      <div class="archead">
+        <span>${meta.emoji} ${esc(meta.name)}</span>
+        <span>Question ${a.i + 1} / ${ARCADE_Q} · ⭐ ${a.correct}</span>
+      </div>
+      <div class="arcprogress"><i style="width:${pct}%"></i></div>
+      <div class="arcprompt">${q.prompt}</div>
+      <div class="arcopts">${opts}</div>
+    </div>
+  </div>`;
+}
+
+// ---- Memory Match view ----
+function memoryView() {
+  const m = state.mem;
+  const pairs = m.deck.length / 2;
+  if (m.done) {
+    const stars = memoryStars(pairs, m.moves);
+    return `<div class="view">
+      <button class="btn btn-ghost btn-sm no-print" onclick="App.gameHub()">← Back to games</button>
+      <div class="arcresult">
+        <div class="arcbadge">🧠</div>
+        <h1>You did it!</h1>
+        <p class="arcscore">All ${pairs} pairs matched in <b>${m.moves}</b> tries</p>
+        <p class="arcstars">⭐ +${stars} star${stars === 1 ? "" : "s"} earned!</p>
+        <div class="arcactions">
+          <button class="btn btn-primary" onclick="App.openGame('memory')">🔁 Play again</button>
+          <button class="btn btn-secondary" onclick="App.gameHub()">🎮 Other games</button>
+        </div>
+      </div>
+    </div>`;
+  }
+  const cards = m.deck.map(c => {
+    const shown = c.up || c.done;
+    return `<button class="memcard ${shown ? "up" : ""} ${c.done ? "done" : ""}" onclick="App.memFlip(${c.id})" ${shown ? "disabled" : ""}>
+      <span class="memface">${shown ? c.face : "❓"}</span></button>`;
+  }).join("");
+  return `<div class="view">
+    <button class="btn btn-ghost btn-sm no-print" onclick="App.gameHub()">← Back to games</button>
+    <div class="arcgame">
+      <div class="archead"><span>🧠 Memory Match</span><span>Tries: ${m.moves} · Pairs: ${m.matched}/${pairs}</span></div>
+      <p class="mmhint">Flip two cards. If they match, they stay! Find all ${pairs} pairs.</p>
+      <div class="memgrid">${cards}</div>
+    </div>
+  </div>`;
+}
+
+function plantGameView() {
   const g = state.game;
   if (!g.plant) {
     return `<div class="view">
-      <h1>🎮 Plant Life Cycle Game</h1>
+      <button class="btn btn-ghost btn-sm no-print" onclick="App.gameHub()">← Back to games</button>
+      <h1 style="margin-top:12px">🌱 Plant Life Cycle Game</h1>
       <p class="subtitle">Pick a plant or tree to grow. Water it, give it sunshine, and watch it live its whole life cycle — from a tiny seed to fruit and new seeds!</p>
       <div class="grid grid-3">${PLANTS.map(p => `
         <div class="pgpick" onclick="App.gamePick('${p.slug}')">
@@ -1825,6 +2116,7 @@ function gameCheckGrow() {
       g.stage++; g.water = 0; g.sun = 0;
       render();
       gamePop();
+      if (g.stage >= PLANT_STAGES.length - 1) { earn(2, "🌿 +2 stars — your plant is fully grown!"); earnBadge("greenthumb"); }
     }, 550);   // a beat so the child sees both meters fill, then the plant leaps to its new stage
   }
 }
@@ -1834,7 +2126,7 @@ function render() {
     home: homeView, lessons: lessonsView, lesson: lessonView,
     stories: storiesView, story: storyView, maker: makerView,
     pricing: pricingView, auth: authView, account: accountView,
-    contact: contactView, game: gameView
+    contact: contactView, game: gameView, rewards: rewardsView
   };
   document.getElementById("nav").innerHTML = navHtml();
   document.getElementById("authzone").innerHTML = authZoneHtml();
@@ -1864,7 +2156,7 @@ function applyHash() {
       state.view = "auth";
     }
     history.replaceState(null, "", location.pathname);
-  } else if (["home", "lessons", "stories", "maker", "pricing", "contact", "game"].includes(h)) {
+  } else if (["home", "lessons", "stories", "maker", "pricing", "contact", "game", "rewards"].includes(h)) {
     state.view = h;
   }
 }
