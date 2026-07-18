@@ -157,7 +157,8 @@ const state = {
   contactForm: {}, contactErr: {}, contactMsg: "", contactSent: null,
   traceMode: "upper", tracePick: null,
   reading: null, readFont: 18,
-  maker: null
+  maker: null,
+  game: { plant: null, stage: 0, water: 0, sun: 0 }
 };
 
 // ---------- Storage helpers ----------
@@ -731,7 +732,7 @@ function makeStory(name, friend, settingKey, themeKey, valueKey) {
 function go(view) { state.view = view; state.authMsg = ""; state.authOk = ""; render(); window.scrollTo(0, 0); }
 
 function navHtml() {
-  const items = [["home", "🏡 Home"], ["lessons", "📚 Lessons"], ["stories", "📖 Stories"], ["maker", "✨ Story Maker"], ["pricing", "⭐ Plans"], ["contact", "✉️ Contact"]];
+  const items = [["home", "🏡 Home"], ["game", "🎮 Game"], ["lessons", "📚 Lessons"], ["stories", "📖 Stories"], ["maker", "✨ Story Maker"], ["pricing", "⭐ Plans"], ["contact", "✉️ Contact"]];
   return items.map(([v, l]) => `<button class="${state.view === v ? "active" : ""}" onclick="App.go('${v}')">${l}</button>`).join("");
 }
 function authZoneHtml() {
@@ -1472,6 +1473,11 @@ const App = {
   newColorPage() { state.colorPick = null; render(); },
   mmSet(part, val) { state.maker[part] = val; render(); mmPop(); },
   mmName(v) { state.maker.name = v; const s = document.getElementById("mmsvg"); if (s) s.setAttribute("aria-label", "A creature called " + v); },
+  gamePick(slug) { state.game = { plant: slug, stage: 0, water: 0, sun: 0 }; go("game"); },
+  gamePickNew() { state.game = { plant: null, stage: 0, water: 0, sun: 0 }; go("game"); },
+  gameReplant() { state.game.stage = 0; state.game.water = 0; state.game.sun = 0; render(); gamePop(); },
+  gameWater() { if (state.game.water < GAME_NEED) state.game.water++; gameCheckGrow(); },
+  gameSun() { if (state.game.sun < GAME_NEED) state.game.sun++; gameCheckGrow(); },
   mmSurprise() { const n = state.maker.name; state.maker = mmRandom(); render(); mmPop(); },
   mmSave() {
     const m = state.maker;
@@ -1716,18 +1722,125 @@ function mmPop() {
   void s.offsetWidth;      // restart the animation
   s.classList.add("mm-pop");
 }
+// ---------- Plant Life Cycle Game ----------
+const GAME_NEED = 3;   // waters and suns needed to grow to the next stage
+function gameView() {
+  const g = state.game;
+  if (!g.plant) {
+    return `<div class="view">
+      <h1>🎮 Plant Life Cycle Game</h1>
+      <p class="subtitle">Pick a plant or tree to grow. Water it, give it sunshine, and watch it live its whole life cycle — from a tiny seed to fruit and new seeds!</p>
+      <div class="grid grid-3">${PLANTS.map(p => `
+        <div class="pgpick" onclick="App.gamePick('${p.slug}')">
+          <div class="pgpickart"><svg viewBox="0 0 220 260">${(function(){ const s = plantScene(p, 4); return s.sky + s.art; })()}</svg></div>
+          <h3>${p.emoji} ${esc(p.name)}</h3>
+          <p>Grows from ${esc(p.seedName)} into ${esc(p.fruitLabel.toLowerCase())}!</p>
+          <button class="btn btn-primary btn-sm">🌱 Plant this</button>
+        </div>`).join("")}</div>
+      <div class="bookfoot">${doodle("rocket")}
+        <p><b>Did you know?</b> Every one of these plants is a "flowering plant" — it grows flowers, and every flower's job is to make new seeds. The apple pip you plant grows a tree that makes more apples, each full of more pips. That's the circle of life, and you're about to run it yourself!</p></div>
+    </div>`;
+  }
+  const p = PLANTS.find(x => x.slug === g.plant);
+  const scene = plantScene(p, g.stage);
+  const label = plantStageLabel(p, g.stage);
+  const fact = plantStageFact(p, g.stage);
+  const done = g.stage >= PLANT_STAGES.length - 1;
+  const dots = PLANT_STAGES.map((_, i) =>
+    `<span class="pgdot ${i < g.stage ? "past" : i === g.stage ? "now" : ""}" title="${esc(plantStageLabel(p, i))}"></span>`).join("");
+  const meter = (have) => Array.from({ length: GAME_NEED }, (_, i) => `<i class="${i < have ? "on" : ""}"></i>`).join("");
+  return `<div class="view">
+    <button class="btn btn-ghost btn-sm no-print" onclick="App.gamePickNew()">← Pick a different plant</button>
+    <h1 style="margin-top:12px">${p.emoji} Growing a ${esc(p.name)}</h1>
+    <div class="pgwrap">
+      <div class="pgstage" id="pgstage">
+        <div class="pgscene" id="pgscene">
+          <svg viewBox="0 0 220 260" class="pgsvg" id="pgplant" role="img" aria-label="A ${esc(p.name)} at the ${esc(label)} stage">
+            <g class="pg-back">${scene.sky}</g>
+            <g class="pg-plant">${scene.art}</g>
+          </svg>
+        </div>
+        <p class="mmhint no-print">👆 Move your mouse or finger over your plant — watch it lean out toward you!</p>
+      </div>
+      <div class="pgpanel no-print">
+        <div class="pgdots">${dots}</div>
+        <h3 class="pgstagename">Stage ${g.stage + 1} of ${PLANT_STAGES.length}: ${esc(label)}</h3>
+        <p class="pgfact">${esc(fact)}</p>
+        ${done ? `
+          <div class="pgwin">🎉 Your ${esc(p.name)} finished its whole life cycle!
+            The ${esc(p.fruitLabel.toLowerCase())} are full of new seeds, ready to start again.</div>
+          <button class="btn btn-primary" style="width:100%" onclick="App.gameReplant()">🌱 Plant a new seed</button>
+          <button class="btn btn-ghost" style="width:100%;margin-top:8px" onclick="App.gamePickNew()">Choose a different plant</button>
+        ` : `
+          <p class="pggrowhint">Fill both meters to help your ${esc(p.name)} grow to the next stage:</p>
+          <div class="pgcare">
+            <button class="btn pgwater" onclick="App.gameWater()">💧 Water</button>
+            <div class="pgmeter water">${meter(g.water)}</div>
+          </div>
+          <div class="pgcare">
+            <button class="btn pgsun" onclick="App.gameSun()">☀️ Sunshine</button>
+            <div class="pgmeter sun">${meter(g.sun)}</div>
+          </div>
+        `}
+        <div class="mmsave" style="margin-top:14px">
+          <button class="btn btn-secondary" onclick="window.print()">🖨️ Print my plant</button>
+        </div>
+      </div>
+    </div>
+    <div class="print-only" style="text-align:center;margin-top:10px"><h2>${p.emoji} ${esc(p.name)} — ${esc(label)}</h2></div>
+  </div>`;
+}
+
+// Same lean-out effect for the plant game: the growing plant leans forward out of the pot.
+function gameTilt() {
+  const stage = document.getElementById("pgstage"), scene = document.getElementById("pgscene");
+  if (!stage || !scene) return;
+  const cl = v => Math.max(-1, Math.min(1, v));
+  const move = (px, py) => {
+    const r = stage.getBoundingClientRect();
+    const dx = (px - (r.left + r.width / 2)) / (r.width / 2);
+    const dy = (py - (r.top + r.height / 2)) / (r.height / 2);
+    scene.style.transform = `rotateY(${cl(dx) * 20}deg) rotateX(${cl(-dy) * 14}deg) scale(1.05)`;
+    stage.style.setProperty("--sx", (cl(dx) * 14) + "px");
+  };
+  const rest = () => { scene.style.transform = ""; stage.style.setProperty("--sx", "0px"); };
+  stage.onmousemove = e => move(e.clientX, e.clientY);
+  stage.onmouseleave = rest;
+  stage.ontouchmove = e => { const t = e.touches[0]; if (t) { move(t.clientX, t.clientY); e.preventDefault(); } };
+  stage.ontouchend = rest;
+}
+function gamePop() {
+  const s = document.getElementById("pgplant");
+  if (!s) return;
+  s.classList.remove("pg-grow");
+  void s.offsetWidth;
+  s.classList.add("pg-grow");
+}
+// Called after each water/sun tap: refresh the meters, and when both are full, grow to the next stage.
+function gameCheckGrow() {
+  const g = state.game;
+  render();   // fill the meter the child just tapped
+  if (g.water >= GAME_NEED && g.sun >= GAME_NEED && g.stage < PLANT_STAGES.length - 1) {
+    setTimeout(() => {
+      g.stage++; g.water = 0; g.sun = 0;
+      render();
+      gamePop();
+    }, 550);   // a beat so the child sees both meters fill, then the plant leaps to its new stage
+  }
+}
 
 function render() {
   const views = {
     home: homeView, lessons: lessonsView, lesson: lessonView,
     stories: storiesView, story: storyView, maker: makerView,
     pricing: pricingView, auth: authView, account: accountView,
-    contact: contactView
+    contact: contactView, game: gameView
   };
   document.getElementById("nav").innerHTML = navHtml();
   document.getElementById("authzone").innerHTML = authZoneHtml();
   document.getElementById("app").innerHTML = (views[state.view] || homeView)() + (state.modal ? upgradeModal() : "");
   mmTilt();
+  gameTilt();
 }
 // Optional deep links: #lessons, #stories, #maker, #pricing, #lesson-3-science, #story-12
 function applyHash() {
@@ -1751,7 +1864,7 @@ function applyHash() {
       state.view = "auth";
     }
     history.replaceState(null, "", location.pathname);
-  } else if (["home", "lessons", "stories", "maker", "pricing", "contact"].includes(h)) {
+  } else if (["home", "lessons", "stories", "maker", "pricing", "contact", "game"].includes(h)) {
     state.view = h;
   }
 }
