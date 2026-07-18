@@ -741,6 +741,33 @@ footer{background:var(--purple-dark);color:#cfc6ee;text-align:center;padding:20p
 
 .listenbtn{background:var(--teal);color:#fff}
 
+/* ============ Welcome sprout (walks in on first visit, then fades) ============ */
+.ws-stage{position:fixed;inset:0;z-index:9998;pointer-events:none;overflow:hidden}
+.ws-walker{position:absolute;left:0;bottom:26px;width:118px;height:150px;
+  animation:ws-cross 6s linear forwards, ws-fade 6s ease forwards}
+.ws-walker svg{width:100%;height:100%;overflow:visible;display:block}
+.ws-body{transform-box:fill-box;transform-origin:50% 100%;animation:ws-bob .5s ease-in-out infinite}
+.ws-leg{transform-box:fill-box;transform-origin:50% 6%}
+.ws-leg-l{animation:ws-step .5s ease-in-out infinite}
+.ws-leg-r{animation:ws-step .5s ease-in-out infinite;animation-delay:-.25s}
+.ws-arm{transform-box:fill-box;transform-origin:50% 8%}
+.ws-arm-l{animation:ws-armswing .5s ease-in-out infinite}
+.ws-arm-r{animation:ws-armswing .5s ease-in-out infinite;animation-delay:-.25s}
+.ws-leaf{transform-box:fill-box}
+.ws-leaf-l{transform-origin:100% 100%;animation:ws-sway 1.1s ease-in-out infinite}
+.ws-leaf-r{transform-origin:0% 100%;animation:ws-sway 1.1s ease-in-out infinite;animation-delay:-.3s}
+.ws-shadow{transform-box:fill-box;transform-origin:50% 50%;animation:ws-shadowp .5s ease-in-out infinite}
+.ws-walker.ws-still{left:50%;transform:translateX(-50%);animation:ws-fade 2.2s ease forwards}
+.ws-walker.ws-still *{animation:none!important}
+@keyframes ws-cross{from{transform:translateX(-160px)}to{transform:translateX(calc(100vw + 160px))}}
+@keyframes ws-fade{0%{opacity:0}12%{opacity:1}70%{opacity:1}100%{opacity:0}}
+@keyframes ws-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@keyframes ws-step{0%,100%{transform:rotate(20deg)}50%{transform:rotate(-20deg)}}
+@keyframes ws-armswing{0%,100%{transform:rotate(-18deg)}50%{transform:rotate(18deg)}}
+@keyframes ws-sway{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+@keyframes ws-shadowp{0%,100%{transform:scaleX(1);opacity:.18}50%{transform:scaleX(.8);opacity:.1}}
+@media print{.ws-stage{display:none!important}}
+
 /* ============ The Globe ============ */
 .globewrap{display:grid;grid-template-columns:1fr 320px;gap:20px;margin-top:16px;align-items:start}
 .globestage{background:radial-gradient(circle at 50% 40%,#eaf3ff,#dbe7fb);border-radius:var(--radius);
