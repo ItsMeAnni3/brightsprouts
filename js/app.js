@@ -60,6 +60,7 @@ function subjectsFor(g) {
   if (g === 16) return MAKE_SUBJECTS;
   if (g === 17) return CS_SUBJECTS;
   if (g === 18) return ENG_SUBJECTS;
+  if (g === 19) return HIST_SUBJECTS;
   return SUBJECTS;
 }
 function gradeName(g) {
@@ -70,6 +71,7 @@ function gradeName(g) {
   if (g === 16) return "Create";
   if (g === 17) return "Computer Science";
   if (g === 18) return "The English Language";
+  if (g === 19) return "Historical Eras";
   return "Grade " + g;
 }
 // Build the creature SVG from the chosen parts. Order matters: back to front.
@@ -1014,11 +1016,11 @@ function homeView() {
 // ---------- Lessons ----------
 function lessonsView() {
   const tiles = [];
-  for (let g = 0; g <= 18; g++) {
+  for (let g = 0; g <= 19; g++) {
     const locked = !canGrade(g);
     const label = g === 0 ? "🌈 Kindergarten" : g === 13 ? "🌍 General" : g === 14 ? "⚗️ Extras"
                 : g === 15 ? "📚 Books" : g === 16 ? "🎨 Create" : g === 17 ? "💻 Computer Sci"
-                : g === 18 ? "🗣️ English" : "Grade " + g;
+                : g === 18 ? "🗣️ English" : g === 19 ? "⏳ History" : "Grade " + g;
     tiles.push(`<button class="grade-tile g${g}" onclick="App.openGrade(${g})">${locked ? '<span class="lock">🔒</span>' : ""}${label}</button>`);
   }
   return `<div class="view">
@@ -1347,13 +1349,26 @@ function lessonView() {
       body += `</div>`;
     });
   }
+  if (lesson.erasTimeline) {
+    body += `<div class="eratl">` + HIST_ERAS.map(e => `
+      <div class="eracard" style="--ec:${e.color}">
+        <div class="eradot">${e.emoji}</div>
+        <div class="erabody">
+          <div class="erahead"><h3>${esc(e.name)}</h3><span class="erawhen">${esc(e.when)}</span></div>
+          <p class="erablurb">${esc(e.blurb)}</p>
+          <ul class="erafacts">${e.facts.map(f => `<li>${esc(f)}</li>`).join("")}</ul>
+        </div>
+      </div>`).join("") + `</div>`;
+    body += `<div class="bookfoot">${doodle("rocket")}
+      <p><b>And the story keeps going!</b> Every era was built on the one before it — the tools, ideas, and discoveries all added up to the world we live in today. The next chapter of history hasn't been written yet… and one day it might have YOU in it. 🌱</p></div>`;
+  }
   if (lesson.words) {
     body += `<table class="word-table"><tr><th>Word</th><th>Meaning</th><th>Example</th></tr>` +
       lesson.words.map(w => `<tr><td class="w">${esc(w[0])}</td><td>${esc(w[1])}</td><td><i>${esc(w[2])}</i></td></tr>`).join("") + `</table>`;
   }
 
   const sheetKey = g + "-" + subj;
-  const noQuiz = lesson.coloringBook || lesson.tracingSheet || lesson.csPlan || lesson.engPlan;
+  const noQuiz = lesson.coloringBook || lesson.tracingSheet || lesson.csPlan || lesson.engPlan || lesson.erasTimeline;
   if (!noQuiz && !state.sheetCache[sheetKey]) state.sheetCache[sheetKey] = makeSheet(g, subj, lesson);
   const questions = noQuiz ? [] : state.sheetCache[sheetKey];
   const qHtml = questions.length ? `

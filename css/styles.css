@@ -95,6 +95,7 @@ main{max-width:1100px;margin:0 auto;padding:26px 18px 80px}
 .g16{background:linear-gradient(135deg,#ff6b9d,#4d96ff)}
 .g17{background:linear-gradient(135deg,#2d2a4a,#4d96ff)}
 .g18{background:linear-gradient(135deg,#e0507f,#7c5cbf)}
+.g19{background:linear-gradient(135deg,#a3763f,#d9a441);color:var(--ink)}
 
 /* ---------- English language plan ---------- */
 .enggrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0 12px}
@@ -740,6 +741,33 @@ footer{background:var(--purple-dark);color:#cfc6ee;text-align:center;padding:20p
 .memcard:not(.up):not(.done) .memface{color:#fff;opacity:.6;font-size:1.4rem}
 
 .listenbtn{background:var(--teal);color:#fff}
+
+/* ============ Historical Eras timeline ============ */
+.eratl{position:relative;margin:18px 0 6px;padding-left:26px}
+.eratl::before{content:"";position:absolute;left:8px;top:8px;bottom:8px;width:4px;border-radius:4px;
+  background:linear-gradient(180deg,#a3763f,#d9a441,#4d96ff,#7c5cbf,#e26d5c,#2ec4b6,#3a86ff,#6b7280,#f4732a,#9b5de5)}
+.eracard{position:relative;display:flex;gap:14px;background:var(--card);border-radius:16px;
+  box-shadow:var(--shadow);padding:16px 18px;margin-bottom:16px;border-left:6px solid var(--ec)}
+.eracard::before{content:"";position:absolute;left:-22px;top:24px;width:14px;height:14px;border-radius:50%;
+  background:var(--ec);box-shadow:0 0 0 4px #fff, 0 0 0 6px var(--ec)}
+.eradot{flex:0 0 auto;width:56px;height:56px;border-radius:16px;display:grid;place-items:center;
+  font-size:30px;background:color-mix(in srgb, var(--ec) 18%, #fff);}
+.erabody{flex:1;min-width:0}
+.erahead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.erahead h3{margin:0;color:var(--purple-dark);font-size:1.25rem}
+.erawhen{font-size:.8rem;font-weight:700;color:#fff;background:var(--ec);
+  padding:3px 10px;border-radius:999px;white-space:nowrap}
+.erablurb{margin:0 0 10px;line-height:1.55;color:#4a4770}
+.erafacts{margin:0;padding-left:2px;list-style:none;display:flex;flex-direction:column;gap:5px}
+.erafacts li{font-size:.9rem;background:#f7f5ff;border-radius:10px;padding:7px 12px;color:#544f78}
+@media (max-width:560px){
+  .eracard{flex-direction:column;gap:10px}
+  .eradot{width:48px;height:48px;font-size:26px}
+}
+@media print{
+  .eratl::before,.eracard::before{display:none}
+  .eracard{box-shadow:none;border:1px solid #ddd;break-inside:avoid}
+}
 
 /* ============ Shop & cart ============ */
 .cartchip{display:inline-flex;align-items:center;gap:5px;border:2px solid var(--teal);
