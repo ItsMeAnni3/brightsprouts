@@ -12,15 +12,13 @@ website code.
 
 ## Step 1 — Create your products in Stripe
 1. Stripe Dashboard → **Products** → **Add product**.
-2. Create one product for each item in the shop (name + price). Do this for all 8:
-   - K–2 Worksheet Mega Bundle — $4.99 (digital)
-   - Grades 3–5 Worksheet Bundle — $4.99 (digital)
-   - 50 Moral Stories — Printable Book — $6.99 (digital)
-   - Alphabet & Numbers Tracing Pack — $3.99 (digital)
-   - Reward Sticker Sheet Pack — $6.99 (physical)
-   - Printed Story Collection — $16.99 (physical)
-   - Reward Chart + Star Kit — $12.99 (physical)
-   - Sprout Mascot Plush Toy — $19.99 (physical)
+2. Create one product for each item in the shop (name + price). Right now there are 4 (all digital):
+   - K–2 Worksheet Mega Bundle — $4.99
+   - Grades 3–5 Worksheet Bundle — $4.99
+   - 50 Moral Stories — Printable Book — $6.99
+   - Alphabet & Numbers Tracing Pack — $3.99
+   (Physical goods were removed for now. If you add them back, create their products too and add
+   their price ids to `PRICE_MAP`.)
 3. For each, copy its **Price ID** (looks like `price_1AbC...`).
 4. Paste those IDs into `PRICE_MAP` in `server/create-checkout.js`.
 

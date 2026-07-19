@@ -897,14 +897,27 @@ function globeCountryInfo(id) {
 
 // ---------- Shop ----------
 function shopView() {
-  const filter = state.shopFilter || "all";
+  if (!PRODUCTS.length) {
+    return `<div class="view">
+      <h1>🛒 BrightSprouts Shop</h1>
+      <div class="card" style="text-align:center;padding:48px 20px">
+        <div style="font-size:56px">🌱</div>
+        <h2>Our shop is being stocked!</h2>
+        <p class="subtitle">New printable bundles and goodies are on the way. Check back soon!</p>
+        <button class="btn btn-primary" onclick="App.go('home')">← Back home</button>
+      </div>
+    </div>`;
+  }
+  const types = new Set(PRODUCTS.map(p => p.type));
+  const showTabs = types.size > 1;                       // only useful with more than one kind
+  const filter = showTabs ? (state.shopFilter || "all") : "all";
   const list = PRODUCTS.filter(p => filter === "all" || p.type === filter);
   const cart = Cart.load();
   const tab = (key, label) => `<button class="${filter === key ? "active" : ""}" onclick="App.shopFilter('${key}')">${label}</button>`;
   return `<div class="view">
     <h1>🛒 BrightSprouts Shop</h1>
-    <p class="subtitle">Take the learning off-screen! Instant printable bundles and real, shippable goodies for your little sprouts.</p>
-    <div class="tabs no-print">${tab("all", "✨ All")}${tab("digital", "📥 Digital Downloads")}${tab("physical", "📦 Physical Goods")}</div>
+    <p class="subtitle">Instant printable bundles you can download and print at home — a whole year of practice and stories for your little sprouts.</p>
+    ${showTabs ? `<div class="tabs no-print">${tab("all", "✨ All")}${tab("digital", "📥 Digital Downloads")}${tab("physical", "📦 Physical Goods")}</div>` : ""}
     <div class="grid grid-3 shopgrid">${list.map(p => {
       const inCart = cart[p.id] || 0;
       return `<div class="prodcard">
@@ -921,7 +934,7 @@ function shopView() {
       </div>`;
     }).join("")}</div>
     <div class="bookfoot">${doodle("rocket")}
-      <p><b>How it works:</b> digital bundles download instantly after checkout — print them at home as many times as you like. Physical items ship to your door; shipping &amp; tax are calculated securely at checkout. Every order helps a small family business grow. 🌱</p></div>
+      <p><b>How it works:</b> every bundle is a digital download — after checkout you get the PDF instantly and can print it at home as many times as you like. Any tax is calculated securely at checkout. Every order helps a small family business grow. 🌱</p></div>
   </div>`;
 }
 
