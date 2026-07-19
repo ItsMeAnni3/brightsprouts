@@ -13,7 +13,8 @@ const SUBJECTS = [
   { key: "writing",    label: "Writing",    emoji: "✍️" },
   { key: "science",    label: "Science",    emoji: "🔬" },
   { key: "history",    label: "History",    emoji: "🏛️" },
-  { key: "art",        label: "Visual Art", emoji: "🎨" }
+  { key: "art",        label: "Visual Art", emoji: "🎨" },
+  { key: "music",      label: "Music",      emoji: "🎵" }
 ];
 const K_SUBJECTS = [
   { key: "alphabet", label: "Alphabet",      emoji: "🔤" },
@@ -1026,7 +1027,7 @@ function lessonsView() {
   }
   return `<div class="view">
     <h1>📚 Pick a Grade</h1>
-    <p class="subtitle">Kindergarten picture lessons, then eight subjects per grade: Math • Reading • Vocabulary • Spelling • Writing • Science • History • Visual Art ${tier() !== "premium" ? "&nbsp;·&nbsp; 🔒 = Premium" : ""}</p>
+    <p class="subtitle">Kindergarten picture lessons, then nine subjects per grade: Math • Reading • Vocabulary • Spelling • Writing • Science • History • Visual Art • Music ${tier() !== "premium" ? "&nbsp;·&nbsp; 🔒 = Premium" : ""}</p>
     <div class="grid grid-4">${tiles.join("")}</div>
   </div>`;
 }
