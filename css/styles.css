@@ -741,6 +741,15 @@ footer{background:var(--purple-dark);color:#cfc6ee;text-align:center;padding:20p
 
 .listenbtn{background:var(--teal);color:#fff}
 
+/* ============ Family code redeem ============ */
+.famcode-box{margin-top:18px;background:#f4f0ff;border:1.5px dashed #c9bff0;border-radius:14px;padding:14px 16px}
+.famcode-box label{display:block;font-size:.92rem;margin-bottom:10px;color:var(--ink)}
+.famcode-row{display:flex;gap:8px;flex-wrap:wrap}
+.famcode-row input{flex:1;min-width:160px;padding:11px 14px;border:2px solid #ded7f5;border-radius:10px;
+  font-size:1rem;letter-spacing:.5px}
+.famcode-row input:focus{outline:none;border-color:var(--purple)}
+.famcode-ok{text-align:center;background:#f0fff4;border-radius:12px;padding:12px;margin-top:16px;font-weight:600;color:#2f8a4e}
+
 /* ============ Welcome sprout (walks in on first visit, then fades) ============ */
 .ws-stage{position:fixed;inset:0;z-index:9998;pointer-events:none;overflow:hidden}
 .ws-walker{position:absolute;left:0;bottom:26px;width:118px;height:150px;

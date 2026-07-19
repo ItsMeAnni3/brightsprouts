@@ -133,6 +133,34 @@ const TAX_NOTE = "Plus sales tax based on your state, calculated at checkout.";
 // In Stripe, set the link's after-payment redirect to: https://brightsprouts.academy/#payment-success
 const STRIPE_PAYMENT_LINK = "https://buy.stripe.com/9B6dR9f5Mfta6o4f9q3gk04";
 
+// ---- Family codes ----
+// Codes that unlock Premium for free (for family & friends). We store the SHA-256 HASH of each
+// code, never the code itself, so the actual code can't be read by viewing the page source.
+// The code is checked case-insensitively and ignores spaces/dashes.
+// To add or change a code: hash the normalized code (uppercase, letters+digits only) with SHA-256
+// and put the hex here. (The plaintext code is deliberately kept out of this file.)
+const FAMILY_CODE_HASHES = ["c278d76277555dccb5c8766098d82c57fb6f5b21a665211328ae609db3894519"];
+function normalizeCode(raw) { return (raw || "").toUpperCase().replace(/[^A-Z0-9]/g, ""); }
+async function isFamilyCode(raw) {
+  const norm = normalizeCode(raw);
+  if (!norm || !window.crypto || !crypto.subtle) return false;
+  try {
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(norm));
+    const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+    return FAMILY_CODE_HASHES.includes(hex);
+  } catch (e) { return false; }
+}
+// Redeem a code for the currently logged-in user. Returns true if it unlocked Premium.
+async function redeemFamilyCode(raw) {
+  const u = currentUser();
+  if (!u) return false;
+  if (!(await isFamilyCode(raw))) return false;
+  u.plan = "premium";
+  u.familyCode = true;
+  saveCurrentUser(u);
+  return true;
+}
+
 // ---- Contact form ----
 // Paste the Web3Forms access key (emailed to you from web3forms.com) between the quotes and
 // messages post straight to your inbox — the key stands in for your address, so the form itself
@@ -1518,6 +1546,7 @@ function authView() {
       ${isLogin ? "" : `<div class="field"><label>Parent's name</label><input id="au-name" placeholder="e.g. Ana Malone"></div>`}
       <div class="field"><label>Email</label><input id="au-email" type="email" placeholder="you@example.com"></div>
       <div class="field"><label>Password</label><input id="au-pw" type="password" placeholder="${isLogin ? "Your password" : "Choose a password (6+ characters)"}"></div>
+      ${isLogin ? "" : `<div class="field"><label>Family code <span style="font-weight:400;color:#8a86a8">(optional)</span></label><input id="au-code" placeholder="Have a code? Enter it to unlock Premium free"></div>`}
       <button class="btn btn-primary" style="width:100%" onclick="App.${isLogin ? "login" : "signup"}()">${isLogin ? "Log In" : "Create Free Account"}</button>
       <div class="auth-switch">${isLogin
         ? `New here? <a onclick="App.goAuth('signup')">Create a free account</a>`
@@ -1538,6 +1567,15 @@ function accountView() {
       <div class="q-item"><b>Email:</b> ${esc(u.email)}</div>
       <div class="q-item"><b>Member since:</b> ${esc(u.joined)}</div>
       <div class="q-item"><b>Custom stories created:</b> ${u.customCount || 0}</div>
+      ${u.plan !== "premium" ? `
+      <div class="famcode-box">
+        <label for="ac-code"><b>🎟️ Have a family code?</b> Enter it to unlock Premium free.</label>
+        <div class="famcode-row">
+          <input id="ac-code" placeholder="Enter your family code">
+          <button class="btn btn-primary" onclick="App.redeemCode()">Redeem</button>
+        </div>
+        <div id="ac-code-msg"></div>
+      </div>` : `<p class="famcode-ok">🎟️ ${u.familyCode ? "Premium unlocked with a family code" : "Premium is active"} — enjoy everything!</p>`}
       <div style="margin-top:20px;display:flex;gap:10px;flex-direction:column">
         ${u.plan !== "premium" ? `<button class="btn btn-primary" onclick="App.go('pricing')">⭐ Upgrade to Premium</button>` : ""}
         <button class="btn btn-ghost" onclick="App.logout()">Log Out</button>
@@ -1903,10 +1941,12 @@ const App = {
     render();
   },
 
-  signup() {
+  async signup() {
     const name = (document.getElementById("au-name").value || "").trim();
     const email = (document.getElementById("au-email").value || "").trim().toLowerCase();
     const pw = document.getElementById("au-pw").value || "";
+    const codeEl = document.getElementById("au-code");
+    const code = codeEl ? (codeEl.value || "").trim() : "";
     if (!name || !email || !pw) { state.authMsg = "Please fill in every field."; render(); return; }
     if (!/^\S+@\S+\.\S+$/.test(email)) { state.authMsg = "That email doesn't look right — try again?"; render(); return; }
     if (pw.length < 6) { state.authMsg = "Password needs at least 6 characters."; render(); return; }
@@ -1916,7 +1956,23 @@ const App = {
     saveUsers(users);
     localStorage.setItem("bs_session", email);
     applyPendingUpgrade();
+    if (code) {
+      const unlocked = await redeemFamilyCode(code);
+      go(unlocked ? "account" : "home");
+      showToast(unlocked ? "🎉 Family code accepted — Premium unlocked for free!" : "Account created! That family code wasn't recognized — you can add one anytime in My Account.", true);
+      return;
+    }
     go("home");
+  },
+  // Redeem a family code from the My Account page (for an existing free account).
+  async redeemCode() {
+    const el = document.getElementById("ac-code");
+    const box = document.getElementById("ac-code-msg");
+    const code = el ? (el.value || "").trim() : "";
+    if (!code) { if (box) box.innerHTML = `<div class="error-msg" style="margin-top:10px">Please enter your family code.</div>`; return; }
+    const unlocked = await redeemFamilyCode(code);
+    if (unlocked) { showToast("🎉 Premium unlocked for free! Enjoy everything.", true); render(); }
+    else if (box) box.innerHTML = `<div class="error-msg" style="margin-top:10px">Hmm, that code wasn't recognized. Double-check it and try again.</div>`;
   },
   login() {
     const email = (document.getElementById("au-email").value || "").trim().toLowerCase();
