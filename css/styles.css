@@ -785,6 +785,8 @@ footer{background:var(--purple-dark);color:#cfc6ee;text-align:center;padding:20p
 .ptype{position:absolute;top:6px;right:6px;font-size:.68rem;font-weight:700;padding:3px 8px;border-radius:999px}
 .ptype.digital{background:#e4f0ff;color:#2b6cb0}
 .ptype.physical{background:#fff2e0;color:#b5651d}
+.ptype.shop{background:#ffe9f1;color:#c43e78}
+.prodcard.external{border-top-color:var(--pink)}
 .prodcard h3{color:var(--purple-dark);font-size:1.05rem;margin:2px 0}
 .prodtag{font-size:.78rem;color:var(--teal);font-weight:700;margin-bottom:6px}
 .proddesc{font-size:.86rem;color:#5f5b82;flex:1;margin-bottom:12px}

@@ -920,9 +920,20 @@ function shopView() {
   const tab = (key, label) => `<button class="${filter === key ? "active" : ""}" onclick="App.shopFilter('${key}')">${label}</button>`;
   return `<div class="view">
     <h1>🛒 BrightSprouts Shop</h1>
-    <p class="subtitle">Instant printable bundles you can download and print at home — a whole year of practice and stories for your little sprouts.</p>
+    <p class="subtitle">Hand-picked collections of STEM kits, toys and school supplies for curious kids — from our sister shop, Petal &amp; Stone. 🌸</p>
     ${showTabs ? `<div class="tabs no-print">${tab("all", "✨ All")}${tab("digital", "📥 Digital Downloads")}${tab("physical", "📦 Physical Goods")}</div>` : ""}
     <div class="grid grid-3 shopgrid">${list.map(p => {
+      if (p.url) {
+        return `<div class="prodcard external">
+          <div class="prodart">${p.art}<span class="ptype shop">🌸 Petal &amp; Stone</span></div>
+          <h3>${esc(p.name)}</h3>
+          <p class="prodtag">${esc(p.tag)}</p>
+          <p class="proddesc">${esc(p.desc)}</p>
+          <div class="prodfoot">
+            <a class="btn btn-primary btn-sm" href="${esc(p.url)}" target="_blank" rel="noopener">Shop now ↗</a>
+          </div>
+        </div>`;
+      }
       const inCart = cart[p.id] || 0;
       return `<div class="prodcard">
         <div class="prodart">${p.art}<span class="ptype ${p.type}">${p.type === "digital" ? "📥 Digital" : "📦 Ships"}</span></div>
@@ -938,7 +949,7 @@ function shopView() {
       </div>`;
     }).join("")}</div>
     <div class="bookfoot">${doodle("rocket")}
-      <p><b>How it works:</b> every bundle is a digital download — after checkout you get the PDF instantly and can print it at home as many times as you like. Any tax is calculated securely at checkout. Every order helps a small family business grow. 🌱</p></div>
+      <p><b>How it works:</b> these collections are stocked by our sister store, <b>Petal &amp; Stone</b>. Tapping “Shop now” opens their site in a new tab, where you can browse and check out securely. Every order helps a small family business grow. 🌱</p></div>
   </div>`;
 }
 
