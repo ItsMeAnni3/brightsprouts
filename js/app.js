@@ -133,6 +133,12 @@ const TAX_NOTE = "Plus sales tax based on your state, calculated at checkout.";
 // In Stripe, set the link's after-payment redirect to: https://brightsprouts.academy/#payment-success
 const STRIPE_PAYMENT_LINK = "https://buy.stripe.com/9B6dR9f5Mfta6o4f9q3gk04";
 
+// ---- Shop checkout ----
+// To take real cart payments, deploy the tiny checkout function (see server/README.md) and paste
+// its public URL here. Until then, the cart works fully and checkout shows a friendly setup note.
+// NEVER put your Stripe SECRET key in this file — it lives only on the server.
+const CHECKOUT_ENDPOINT = "";
+
 // ---- Family codes ----
 // Codes that unlock Premium for free (for family & friends). We store the SHA-256 HASH of each
 // code, never the code itself, so the actual code can't be read by viewing the page source.
@@ -760,7 +766,7 @@ function makeStory(name, friend, settingKey, themeKey, valueKey) {
 function go(view) { if (typeof Speech !== "undefined") Speech.stop(); state.view = view; state.authMsg = ""; state.authOk = ""; render(); window.scrollTo(0, 0); }
 
 function navHtml() {
-  const items = [["home", "🏡 Home"], ["game", "🎮 Game"], ["globe", "🌍 Globe"], ["lessons", "📚 Lessons"], ["stories", "📖 Stories"], ["maker", "✨ Story Maker"], ["pricing", "⭐ Plans"], ["contact", "✉️ Contact"]];
+  const items = [["home", "🏡 Home"], ["game", "🎮 Game"], ["globe", "🌍 Globe"], ["lessons", "📚 Lessons"], ["stories", "📖 Stories"], ["maker", "✨ Story Maker"], ["shop", "🛒 Shop"], ["pricing", "⭐ Plans"], ["contact", "✉️ Contact"]];
   return items.map(([v, l]) => `<button class="${state.view === v ? "active" : ""}" onclick="App.go('${v}')">${l}</button>`).join("");
 }
 function starChip() {
@@ -768,9 +774,14 @@ function starChip() {
   return `<button class="starchip" onclick="App.go('rewards')" title="Your stars, streak and stickers">
     ⭐ <b>${r.stars}</b>${r.streak > 1 ? ` <span class="streakpip">🔥${r.streak}</span>` : ""}</button>`;
 }
+function cartChip() {
+  const n = Cart.count();
+  return `<button class="cartchip${n > 0 ? " has" : ""}" onclick="App.go('cart')" title="Your shopping cart">
+    🛒${n > 0 ? ` <b>${n}</b>` : ""}</button>`;
+}
 function authZoneHtml() {
   const u = currentUser();
-  const chip = starChip();
+  const chip = starChip() + cartChip();
   if (!u) return `${chip}<button class="btn btn-gold btn-sm" onclick="App.goAuth('login')">Log In</button>
                   <button class="btn btn-primary btn-sm" onclick="App.goAuth('signup')">Sign Up Free</button>`;
   const badge = u.plan === "premium" ? `<span class="badge">⭐ Premium</span>` : `<span class="badge free">Free Plan</span>`;
@@ -882,6 +893,85 @@ function globeCountryInfo(id) {
     }));
   }
   return info;
+}
+
+// ---------- Shop ----------
+function shopView() {
+  const filter = state.shopFilter || "all";
+  const list = PRODUCTS.filter(p => filter === "all" || p.type === filter);
+  const cart = Cart.load();
+  const tab = (key, label) => `<button class="${filter === key ? "active" : ""}" onclick="App.shopFilter('${key}')">${label}</button>`;
+  return `<div class="view">
+    <h1>🛒 BrightSprouts Shop</h1>
+    <p class="subtitle">Take the learning off-screen! Instant printable bundles and real, shippable goodies for your little sprouts.</p>
+    <div class="tabs no-print">${tab("all", "✨ All")}${tab("digital", "📥 Digital Downloads")}${tab("physical", "📦 Physical Goods")}</div>
+    <div class="grid grid-3 shopgrid">${list.map(p => {
+      const inCart = cart[p.id] || 0;
+      return `<div class="prodcard">
+        <div class="prodart">${p.art}<span class="ptype ${p.type}">${p.type === "digital" ? "📥 Digital" : "📦 Ships"}</span></div>
+        <h3>${esc(p.name)}</h3>
+        <p class="prodtag">${esc(p.tag)}</p>
+        <p class="proddesc">${esc(p.desc)}</p>
+        <div class="prodfoot">
+          <span class="prodprice">${money(p.price)}</span>
+          ${inCart
+            ? `<button class="btn btn-secondary btn-sm" onclick="App.addToCart('${p.id}')">✓ In cart (${inCart}) · add more</button>`
+            : `<button class="btn btn-primary btn-sm" onclick="App.addToCart('${p.id}')">Add to cart</button>`}
+        </div>
+      </div>`;
+    }).join("")}</div>
+    <div class="bookfoot">${doodle("rocket")}
+      <p><b>How it works:</b> digital bundles download instantly after checkout — print them at home as many times as you like. Physical items ship to your door; shipping &amp; tax are calculated securely at checkout. Every order helps a small family business grow. 🌱</p></div>
+  </div>`;
+}
+
+// ---------- Cart ----------
+function cartView() {
+  const items = Cart.items();
+  if (!items.length) {
+    return `<div class="view">
+      <h1>🛒 Your Cart</h1>
+      <div class="card" style="text-align:center;padding:48px 20px">
+        <div style="font-size:56px">🛒</div>
+        <h2>Your cart is empty</h2>
+        <p class="subtitle">Add some printable bundles or goodies to get started!</p>
+        <button class="btn btn-primary" onclick="App.go('shop')">🛍️ Browse the Shop</button>
+      </div>
+    </div>`;
+  }
+  const subtotal = Cart.subtotal();
+  const connected = !!CHECKOUT_ENDPOINT;
+  return `<div class="view">
+    <button class="btn btn-ghost btn-sm no-print" onclick="App.go('shop')">← Keep shopping</button>
+    <h1 style="margin-top:12px">🛒 Your Cart</h1>
+    <div class="cartwrap">
+      <div class="cartlist">
+        ${items.map(x => `<div class="cartrow">
+          <div class="cartart">${x.product.art}</div>
+          <div class="cartinfo">
+            <h3>${esc(x.product.name)}</h3>
+            <span class="ptype ${x.product.type}">${x.product.type === "digital" ? "📥 Digital download" : "📦 Ships to you"}</span>
+            <button class="cartremove" onclick="App.removeFromCart('${x.product.id}')">Remove</button>
+          </div>
+          <div class="cartqty">
+            <button onclick="App.cartQty('${x.product.id}',-1)" aria-label="Decrease quantity">−</button>
+            <span>${x.qty}</span>
+            <button onclick="App.cartQty('${x.product.id}',1)" aria-label="Increase quantity">+</button>
+          </div>
+          <div class="cartprice">${money(x.product.price * x.qty)}</div>
+        </div>`).join("")}
+      </div>
+      <div class="cartsum">
+        <h3>Order summary</h3>
+        <div class="sumrow"><span>Subtotal</span><b>${money(subtotal)}</b></div>
+        ${Cart.hasPhysical() ? `<div class="sumrow muted"><span>Shipping</span><span>Calculated at checkout</span></div>` : ""}
+        <div class="sumrow muted"><span>Tax</span><span>Calculated at checkout</span></div>
+        <button class="btn btn-primary" style="width:100%;margin-top:12px" onclick="App.checkout()">🔒 Checkout securely</button>
+        <button class="btn btn-ghost btn-sm" style="width:100%;margin-top:8px" onclick="App.clearCart()">Empty cart</button>
+        ${connected ? "" : `<p class="checkoutnote">💳 <b>Payments aren't switched on yet.</b> The cart works — connecting Stripe is a quick setup step (ask me and I'll walk you through it).</p>`}
+      </div>
+    </div>
+  </div>`;
 }
 
 // ---------- Home ----------
@@ -1718,6 +1808,51 @@ const App = {
   },
   globeToGeography() { state.grade = 13; state.subject = "geography"; go("lesson"); },
 
+  // ---- Shop & cart ----
+  shopFilter(f) { state.shopFilter = f; render(); },
+  addToCart(id) {
+    Cart.add(id, 1);
+    const az = document.getElementById("authzone"); if (az) az.innerHTML = authZoneHtml();
+    const p = productById(id);
+    showToast("🛒 Added " + (p ? p.name : "item") + " to cart!");
+    if (state.view === "shop" || state.view === "cart") render();
+  },
+  cartQty(id, delta) {
+    const c = Cart.load();
+    Cart.setQty(id, (c[id] || 0) + delta);
+    const az = document.getElementById("authzone"); if (az) az.innerHTML = authZoneHtml();
+    render();
+  },
+  removeFromCart(id) {
+    Cart.remove(id);
+    const az = document.getElementById("authzone"); if (az) az.innerHTML = authZoneHtml();
+    render();
+  },
+  clearCart() {
+    Cart.clear();
+    const az = document.getElementById("authzone"); if (az) az.innerHTML = authZoneHtml();
+    render();
+  },
+  async checkout() {
+    const items = Cart.items();
+    if (!items.length) { go("shop"); return; }
+    if (!CHECKOUT_ENDPOINT) {
+      showToast("💳 Payments aren't connected yet — see the note in your cart.", true);
+      return;
+    }
+    try {
+      const res = await fetch(CHECKOUT_ENDPOINT, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items: items.map(x => ({ id: x.product.id, qty: x.qty })) })
+      });
+      const data = await res.json();
+      if (data && data.url) { window.location.href = data.url; }
+      else throw new Error((data && data.error) || "No checkout URL returned");
+    } catch (e) {
+      showToast("Sorry — checkout couldn't start. Please try again.");
+    }
+  },
+
   gamePick(slug) { state.game = { plant: slug, stage: 0, water: 0, sun: 0 }; state.gameScreen = "plant"; go("game"); },
   gamePickNew() { state.game = { plant: null, stage: 0, water: 0, sun: 0 }; state.gameScreen = "plant"; render(); window.scrollTo(0, 0); },
   gameReplant() { state.game.stage = 0; state.game.water = 0; state.game.sun = 0; render(); gamePop(); },
@@ -2267,7 +2402,8 @@ function render() {
     home: homeView, lessons: lessonsView, lesson: lessonView,
     stories: storiesView, story: storyView, maker: makerView,
     pricing: pricingView, auth: authView, account: accountView,
-    contact: contactView, game: gameView, rewards: rewardsView, globe: globeView
+    contact: contactView, game: gameView, rewards: rewardsView, globe: globeView,
+    shop: shopView, cart: cartView
   };
   document.getElementById("nav").innerHTML = navHtml();
   document.getElementById("authzone").innerHTML = authZoneHtml();
@@ -2299,7 +2435,7 @@ function applyHash() {
       state.view = "auth";
     }
     history.replaceState(null, "", location.pathname);
-  } else if (["home", "lessons", "stories", "maker", "pricing", "contact", "game", "rewards", "globe"].includes(h)) {
+  } else if (["home", "lessons", "stories", "maker", "pricing", "contact", "game", "rewards", "globe", "shop", "cart"].includes(h)) {
     state.view = h;
   }
 }
