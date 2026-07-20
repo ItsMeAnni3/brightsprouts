@@ -765,9 +765,17 @@ footer{background:var(--purple-dark);color:#cfc6ee;text-align:center;padding:20p
 .dinozone{margin-top:14px;background:#f2fbf3;border:1.5px dashed #b7e6c4;border-radius:14px;padding:12px 14px}
 .dinozone h4{margin:0 0 10px;color:var(--purple-dark);font-size:1rem}
 .dinogrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:10px}
-.dinocard{background:#fff;border-radius:12px;box-shadow:var(--shadow);padding:8px 6px;text-align:center}
-.dinoart svg{width:100%;height:66px;display:block}
-.dinocard span{display:block;font-size:.7rem;font-weight:700;color:#5f5b82;margin-top:5px;line-height:1.2}
+.dinocard{background:#fff;border-radius:12px;box-shadow:var(--shadow);padding:10px 7px;text-align:center}
+.dinoart svg{width:100%;height:66px;display:block;transform-origin:center bottom;
+  animation:dinobob 2.6s ease-in-out infinite}
+@keyframes dinobob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-4px) rotate(-2deg)}}
+.dinocard:nth-child(2n) .dinoart svg{animation-delay:-.5s}
+.dinocard:nth-child(3n) .dinoart svg{animation-delay:-1s}
+.dinocard:nth-child(4n) .dinoart svg{animation-delay:-1.6s}
+.dinocard:nth-child(5n) .dinoart svg{animation-delay:-2.1s}
+.dinoname{display:block;font-size:.72rem;font-weight:800;color:var(--purple-dark);margin-top:5px;line-height:1.15}
+.dinofact{display:block;font-size:.64rem;color:#6f6a90;margin-top:3px;line-height:1.25}
+@media (prefers-reduced-motion:reduce){.dinoart svg{animation:none}}
 .erablurb{margin:0 0 10px;line-height:1.55;color:#4a4770}
 .erafacts{margin:0;padding-left:2px;list-style:none;display:flex;flex-direction:column;gap:5px}
 .erafacts li{font-size:.9rem;background:#f7f5ff;border-radius:10px;padding:7px 12px;color:#544f78}

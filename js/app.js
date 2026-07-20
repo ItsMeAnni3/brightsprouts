@@ -1366,7 +1366,7 @@ function lessonView() {
     const art = (typeof EARTH_ART !== "undefined") ? EARTH_ART : [];
     const dinoGallery = (typeof EARTH_DINOS !== "undefined") ? `<div class="dinozone">
       <h4>🦕 Meet some dinosaurs!</h4>
-      <div class="dinogrid">${EARTH_DINOS.map(d => `<div class="dinocard"><div class="dinoart">${d.svg}</div><span>${esc(d.name)}</span></div>`).join("")}</div>
+      <div class="dinogrid">${EARTH_DINOS.map(d => `<div class="dinocard"><div class="dinoart">${d.svg}</div><span class="dinoname">${esc(d.name)}</span>${d.fact ? `<span class="dinofact">${esc(d.fact)}</span>` : ""}</div>`).join("")}</div>
     </div>` : "";
     body += `<div class="eratl">` + EARTH_ERAS.map((e, i) => `
       <div class="eracard" style="--ec:${e.color}">

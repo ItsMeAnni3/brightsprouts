@@ -76,7 +76,7 @@ const EARTH_ART = [
 
 // Six real dinosaurs, each with its signature feature so kids can tell them apart.
 const EARTH_DINOS = [
-  { name: "Tyrannosaurus rex",
+  { name: "Tyrannosaurus rex", fact: "Teeth as big as bananas!",
     svg: '<svg viewBox="0 0 120 96"><path d="M8 62 Q34 54 54 58 L52 72 Q30 76 10 74 Z" fill="#79c267"/>'
       +'<ellipse cx="66" cy="52" rx="27" ry="26" fill="#79c267"/>'
       +'<path d="M58 76 q-3 12 -9 16 h11 l4 -14 z" fill="#5fa94f"/><path d="M78 76 q3 12 9 16 h-11 l-4 -14 z" fill="#69b559"/>'
@@ -86,7 +86,7 @@ const EARTH_DINOS = [
       +'<path d="M74 55 q7 1 9 8" stroke="#5fa94f" stroke-width="4" fill="none" stroke-linecap="round"/>'
       +'<circle cx="101" cy="41" r="3.4" fill="#2d2a4a"/><circle cx="102.4" cy="39.6" r="1.1" fill="#fff"/></svg>' },
 
-  { name: "Triceratops",
+  { name: "Triceratops", fact: "Three horns and a big bony frill.",
     svg: '<svg viewBox="0 0 120 96"><ellipse cx="50" cy="58" rx="34" ry="20" fill="#e2915a"/>'
       +'<g fill="#cf7f4a"><rect x="26" y="72" width="8" height="16" rx="3"/><rect x="44" y="74" width="8" height="15" rx="3"/><rect x="64" y="74" width="8" height="15" rx="3"/></g>'
       +'<path d="M78 60 q3 12 0 20 h9 l1 -18 z" fill="#d98a52"/>'
@@ -95,7 +95,7 @@ const EARTH_DINOS = [
       +'<path d="M92 44 l16 -11" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/><path d="M90 50 l18 -5" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/><path d="M86 56 l5 7" stroke="#fff" stroke-width="4" stroke-linecap="round"/>'
       +'<circle cx="82" cy="49" r="3" fill="#2d2a4a"/></svg>' },
 
-  { name: "Stegosaurus",
+  { name: "Stegosaurus", fact: "Brain only the size of a walnut!",
     svg: '<svg viewBox="0 0 120 96"><path d="M16 62 Q34 40 62 44 Q92 47 104 62 Q92 74 62 74 Q34 74 16 62 Z" fill="#63b6b0"/>'
       +'<g fill="#e26d5c"><polygon points="40,46 46,26 52,46"/><polygon points="55,44 61,22 67,44"/><polygon points="70,46 76,28 82,46"/></g>'
       +'<g stroke="#2d2a4a" stroke-width="4" stroke-linecap="round"><line x1="18" y1="58" x2="8" y2="50"/><line x1="17" y1="63" x2="5" y2="63"/></g>'
@@ -103,14 +103,14 @@ const EARTH_DINOS = [
       +'<g fill="#4f9f99"><rect x="36" y="72" width="7" height="16" rx="3"/><rect x="54" y="73" width="7" height="16" rx="3"/><rect x="72" y="73" width="7" height="16" rx="3"/><rect x="88" y="70" width="7" height="16" rx="3"/></g>'
       +'<circle cx="110" cy="61" r="2.6" fill="#2d2a4a"/></svg>' },
 
-  { name: "Brachiosaurus",
+  { name: "Brachiosaurus", fact: "As tall as a 4-storey building!",
     svg: '<svg viewBox="0 0 120 96"><path d="M20 62 Q6 60 2 68" stroke="#5b8bd0" stroke-width="9" fill="none" stroke-linecap="round"/>'
       +'<ellipse cx="52" cy="62" rx="30" ry="18" fill="#5b8bd0"/>'
       +'<g fill="#4f7bbf"><rect x="34" y="76" width="8" height="16" rx="4"/><rect x="50" y="78" width="8" height="14" rx="4"/><rect x="64" y="78" width="8" height="14" rx="4"/><rect x="78" y="76" width="8" height="16" rx="4"/></g>'
       +'<path d="M78 56 Q94 40 92 20 Q91 12 99 10" stroke="#5b8bd0" stroke-width="12" fill="none" stroke-linecap="round"/>'
       +'<ellipse cx="101" cy="11" rx="9" ry="6" fill="#5b8bd0"/><circle cx="105" cy="9" r="2.2" fill="#2d2a4a"/></svg>' },
 
-  { name: "Velociraptor",
+  { name: "Velociraptor", fact: "Turkey-sized — and covered in feathers!",
     svg: '<svg viewBox="0 0 120 96"><path d="M10 44 Q34 46 50 56 L46 64 Q28 60 10 58 Z" fill="#f0b04e"/>'
       +'<ellipse cx="60" cy="58" rx="21" ry="18" fill="#f0b04e"/>'
       +'<path d="M52 74 q-6 10 -11 15 l9 3 8 -14 z" fill="#db9c3c"/><path d="M68 74 q6 10 3 17 l-9 -2 -1 -14 z" fill="#e6a745"/>'
@@ -120,11 +120,37 @@ const EARTH_DINOS = [
       +'<path d="M62 60 q9 5 7 14" stroke="#db9c3c" stroke-width="4" fill="none" stroke-linecap="round"/>'
       +'<circle cx="90" cy="51" r="3" fill="#2d2a4a"/><circle cx="91" cy="50" r="1" fill="#fff"/></svg>' },
 
-  { name: "Ankylosaurus",
+  { name: "Ankylosaurus", fact: "Its clubbed tail swung like a hammer.",
     svg: '<svg viewBox="0 0 120 96"><path d="M22 70 Q32 48 62 48 Q94 48 102 68 Q94 78 62 78 Q32 78 22 70 Z" fill="#8a9a5b"/>'
       +'<g fill="#6f7d47"><circle cx="46" cy="56" r="3"/><circle cx="60" cy="52" r="3"/><circle cx="74" cy="54" r="3"/><circle cx="88" cy="60" r="3"/></g>'
       +'<path d="M102 66 q13 0 16 -6" stroke="#6f7d47" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="116" cy="58" r="8" fill="#6f7d47"/>'
       +'<path d="M20 66 q-12 0 -14 7 q9 4 18 -2 z" fill="#8a9a5b"/>'
       +'<g fill="#75824c"><rect x="36" y="76" width="8" height="12" rx="3"/><rect x="54" y="78" width="8" height="12" rx="3"/><rect x="72" y="78" width="8" height="12" rx="3"/><rect x="88" y="76" width="8" height="12" rx="3"/></g>'
-      +'<circle cx="9" cy="67" r="2.4" fill="#2d2a4a"/></svg>' }
+      +'<circle cx="9" cy="67" r="2.4" fill="#2d2a4a"/></svg>' },
+
+  { name: "Spinosaurus", fact: "A fish-eater that loved the water.",
+    svg: '<svg viewBox="0 0 120 96"><path d="M10 62 Q34 56 52 60 L50 72 Q30 76 12 74 Z" fill="#7a5cc0"/>'
+      +'<path d="M40 40 Q54 12 86 40 Q66 34 54 40 Z" fill="#9b7ce0"/>'
+      +'<ellipse cx="60" cy="58" rx="24" ry="22" fill="#7a5cc0"/>'
+      +'<path d="M56 76 q-3 12 -8 15 h10 l3 -13 z" fill="#6a4cb0"/><path d="M72 76 q3 12 8 15 h-10 l-3 -13 z" fill="#7358bc"/>'
+      +'<path d="M78 50 q26 -1 36 8 q-3 6 -12 6 l-26 -4 z" fill="#7a5cc0"/>'
+      +'<g fill="#fff"><polygon points="94,58 96,61 98,58"/><polygon points="102,58 104,61 106,58"/></g>'
+      +'<circle cx="86" cy="48" r="3" fill="#2d2a4a"/><circle cx="87" cy="47" r="1" fill="#fff"/></svg>' },
+
+  { name: "Parasaurolophus", fact: "Its head crest could honk like a horn!",
+    svg: '<svg viewBox="0 0 120 96"><path d="M12 60 Q34 54 52 58 L50 70 Q30 74 14 72 Z" fill="#e08a52"/>'
+      +'<ellipse cx="58" cy="56" rx="24" ry="22" fill="#e08a52"/>'
+      +'<path d="M54 74 q-3 12 -8 16 h10 l3 -14 z" fill="#cf7a44"/><path d="M70 74 q3 12 8 16 h-10 l-3 -14 z" fill="#d9824c"/>'
+      +'<path d="M84 42 Q102 32 110 14" stroke="#f2b98a" stroke-width="8" fill="none" stroke-linecap="round"/>'
+      +'<path d="M76 44 q22 -2 30 8 q-3 6 -13 8 q-10 1 -17 -6 z" fill="#e08a52"/>'
+      +'<circle cx="88" cy="48" r="3" fill="#2d2a4a"/><circle cx="89" cy="47" r="1" fill="#fff"/></svg>' },
+
+  { name: "Pteranodon", fact: "A flying reptile — not a dinosaur!",
+    svg: '<svg viewBox="0 0 120 96"><path d="M58 46 Q30 24 6 42 Q30 48 52 54 Z" fill="#c77ad0"/>'
+      +'<path d="M62 46 Q90 24 114 42 Q90 48 68 54 Z" fill="#b76ac0"/>'
+      +'<ellipse cx="60" cy="54" rx="9" ry="14" fill="#c77ad0"/>'
+      +'<path d="M60 42 l18 4 l-18 6 z" fill="#c77ad0"/>'
+      +'<path d="M60 40 Q50 34 42 36" stroke="#e0a8e6" stroke-width="6" fill="none" stroke-linecap="round"/>'
+      +'<circle cx="64" cy="43" r="2.4" fill="#2d2a4a"/>'
+      +'<g stroke="#a95cb2" stroke-width="3" stroke-linecap="round"><line x1="57" y1="66" x2="53" y2="76"/><line x1="63" y1="66" x2="67" y2="76"/></g></svg>' }
 ];
