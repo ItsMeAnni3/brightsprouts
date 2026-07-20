@@ -168,6 +168,24 @@ LESSONS[19] = {
       "This whole journey happened BEFORE the Stone Age. Humans arrive only at the very, very end — you're about to see just how new we really are!"
     ],
     activity: "🧻 Toilet-Paper Timeline: Roll a whole roll of toilet paper across the floor and let it stand for all 4.5 billion years of Earth. Now measure — every bit of human history fits on just the LAST tiny square. That's how new we are!",
+    questions: [
+      { q: "About how old is the Earth?", a: "About 4.5 billion years old" },
+      { q: "What event marks the very beginning of the universe?", a: "The Big Bang" },
+      { q: "About how long ago did the Big Bang happen?", a: "About 13.8 billion years ago" },
+      { q: "Did the first life on Earth appear in the water or on land?", a: "In the water (the oceans)" },
+      { q: "What were the very first living things like?", a: "Tiny single cells, like bacteria — too small to see" },
+      { q: "What tiny living things slowly filled Earth's air with oxygen?", a: "Cyanobacteria (tiny microbes) using sunlight" },
+      { q: "How was our Moon formed?", a: "A world about the size of Mars crashed into young Earth, and the pieces formed the Moon" },
+      { q: "What sudden burst of new sea animals happened about 540 million years ago?", a: "The Cambrian Explosion" },
+      { q: "Which came onto land first — plants or dinosaurs?", a: "Plants" },
+      { q: "For about how long did the dinosaurs rule the Earth?", a: "More than 150 million years" },
+      { q: "What caused the dinosaurs to die out about 66 million years ago?", a: "A giant asteroid hit the Earth" },
+      { q: "Which animals survived the asteroid and later spread across the world?", a: "Mammals (small, furry ones)" },
+      { q: "On which continent did our earliest human ancestors begin to walk upright?", a: "Africa" },
+      { q: "A billion is how many millions?", a: "A thousand millions (1,000)" },
+      { q: "What do we call the preserved bones and prints of ancient living things?", a: "Fossils" },
+      { q: "Put these in order, oldest first: dinosaurs, the Big Bang, the first human ancestors.", a: "The Big Bang, then the dinosaurs, then the first human ancestors" }
+    ],
     earthTimeline: true
   },
   eras: {

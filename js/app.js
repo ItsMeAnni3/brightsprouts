@@ -1394,7 +1394,8 @@ function lessonView() {
   }
 
   const sheetKey = g + "-" + subj;
-  const noQuiz = lesson.coloringBook || lesson.tracingSheet || lesson.csPlan || lesson.engPlan || lesson.erasTimeline || lesson.earthTimeline;
+  // Note: the Earth's Story timeline (earthTimeline) DOES get a worksheet — it has a questions bank.
+  const noQuiz = lesson.coloringBook || lesson.tracingSheet || lesson.csPlan || lesson.engPlan || lesson.erasTimeline;
   if (!noQuiz && !state.sheetCache[sheetKey]) state.sheetCache[sheetKey] = makeSheet(g, subj, lesson);
   const questions = noQuiz ? [] : state.sheetCache[sheetKey];
   const qHtml = questions.length ? `
