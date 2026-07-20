@@ -29,6 +29,7 @@ const BADGES = [
   { id:"explorer",     e:"🗺️", n:"Explorer",       d:"Score 8 or more in the Flag Quiz" },
   { id:"speller",      e:"🐝", n:"Super Speller",  d:"Get a perfect score in the Spelling Bee" },
   { id:"memory",       e:"🧠", n:"Memory Master",  d:"Win a game of Memory Match" },
+  { id:"builder",      e:"🏗️", n:"Master Builder",  d:"Build every machine in Build It!" },
   { id:"streak5",      e:"🔥", n:"On Fire",        d:"Learn 5 days in a row" },
   { id:"star50",       e:"🌟", n:"Star Collector", d:"Earn 50 stars in total" }
 ];

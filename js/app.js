@@ -1944,11 +1944,17 @@ const App = {
   },
   buildAdd() {   // guided: add the next part in order
     const b = state.build, i = b.added.findIndex(x => !x);
-    if (i >= 0) { b.added[i] = true; b.last = i; render(); if (b.added.some(x => !x)) engineerPop(); }
+    if (i >= 0) {
+      b.added[i] = true; b.last = i; render();
+      if (b.added.some(x => !x)) engineerPop(); else buildRewardIfComplete(b.project);
+    }
   },
   buildAddPart(i) {   // free build: add any part
     const b = state.build;
-    if (b.added && !b.added[i]) { b.added[i] = true; b.last = i; render(); if (b.added.some(x => !x)) engineerPop(); }
+    if (b.added && !b.added[i]) {
+      b.added[i] = true; b.last = i; render();
+      if (b.added.some(x => !x)) engineerPop(); else buildRewardIfComplete(b.project);
+    }
   },
   buildReset() {
     if (state.build) { state.build.added = curProject().parts.map(() => false); state.build.last = -1; }
@@ -2541,6 +2547,16 @@ function engineerPop() {
   s.classList.remove("eng-pop");
   void s.offsetWidth;
   s.classList.add("eng-pop");
+}
+// Award stars the first time each machine is completed; the "builder" badge once all are built.
+function buildRewardIfComplete(project) {
+  const p = ENGINEER_PROJECTS.find(x => x.key === project);
+  if (!p) return;
+  const art = /^[aeiou]/i.test(p.name) ? "an" : "a";
+  rewardOnce("build-" + project, 2, "🔧 +2 stars — you built " + art + " " + p.name.toLowerCase() + "!");
+  let done;
+  try { done = JSON.parse(localStorage.getItem("bs_rw_done")) || {}; } catch (e) { done = {}; }
+  if (ENGINEER_PROJECTS.every(x => done["build-" + x.key])) earnBadge("builder");
 }
 // Called after each water/sun tap: refresh the meters, and when both are full, grow to the next stage.
 function gameCheckGrow() {

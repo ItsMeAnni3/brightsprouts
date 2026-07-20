@@ -128,6 +128,37 @@ const ENGINEER_PROJECTS = [
         svg: '<circle cx="112" cy="64" r="5" fill="#fff"/><circle cx="128" cy="64" r="5" fill="#fff"/><circle cx="112" cy="64" r="2.4" fill="#2d2a4a"/><circle cx="128" cy="64" r="2.4" fill="#2d2a4a"/><path d="M112 74 q8 4 16 0" stroke="#2d2a4a" stroke-width="1.6" fill="none" stroke-linecap="round"/>' }
     ],
     finaleCls: "eng-bob"
+  },
+  {
+    key: "train", name: "Train", emoji: "🚂", doneMsg: "Chugga-chugga — choo choo!",
+    sky: '<rect width="240" height="180" fill="#dff0ff"/><circle cx="205" cy="30" r="14" fill="#ffd166"/><rect y="134" width="240" height="46" fill="#c9b89a"/><rect y="130" width="240" height="5" fill="#8a7a5a"/><g stroke="#a08a62" stroke-width="3"><line x1="24" y1="134" x2="24" y2="142"/><line x1="72" y1="134" x2="72" y2="142"/><line x1="120" y1="134" x2="120" y2="142"/><line x1="168" y1="134" x2="168" y2="142"/><line x1="216" y1="134" x2="216" y2="142"/></g>',
+    parts: [
+      { name: "engine", fact: "The engine pulls the whole train along.",
+        svg: '<rect x="58" y="86" width="72" height="36" rx="4" fill="#c0392b"/><path d="M126 86 q10 2 12 8 v28 h-12 z" fill="#8a271e"/>' },
+      { name: "wheels", fact: "Round wheels roll smoothly along the metal tracks.",
+        svg: '<circle cx="76" cy="124" r="10" fill="#2d2a4a"/><circle cx="112" cy="124" r="10" fill="#2d2a4a"/><circle cx="164" cy="124" r="9" fill="#2d2a4a"/><circle cx="76" cy="124" r="3.5" fill="#ccc"/><circle cx="112" cy="124" r="3.5" fill="#ccc"/><circle cx="164" cy="124" r="3" fill="#ccc"/>' },
+      { name: "cab & funnel", fact: "The driver sits in the cab; the funnel puffs out steam.",
+        svg: '<rect x="58" y="64" width="26" height="24" fill="#8a271e"/><rect x="64" y="70" width="14" height="12" fill="#bfe4ff"/><rect x="112" y="66" width="12" height="22" fill="#5a5468"/><rect x="110" y="62" width="16" height="6" rx="2" fill="#5a5468"/>' },
+      { name: "carriage", fact: "Carriages carry people and cargo behind the engine.",
+        svg: '<rect x="128" y="98" width="6" height="6" fill="#5a5468"/><rect x="140" y="90" width="48" height="30" rx="4" fill="#4d96ff"/><rect x="148" y="98" width="12" height="12" fill="#bfe4ff"/><rect x="168" y="98" width="12" height="12" fill="#bfe4ff"/><circle cx="152" cy="124" r="8" fill="#2d2a4a"/><circle cx="176" cy="124" r="8" fill="#2d2a4a"/>' }
+    ],
+    finaleCls: "eng-drive",
+    inExtra: '<g class="eng-smoke"><circle cx="118" cy="58" r="4" fill="#e6e6ea"/><circle cx="122" cy="48" r="5" fill="#dedee4"/><circle cx="118" cy="38" r="6" fill="#d6d6dc"/></g>'
+  },
+  {
+    key: "helicopter", name: "Helicopter", emoji: "🚁", doneMsg: "The rotor spins — up it hovers!",
+    sky: '<rect width="240" height="180" fill="#bfe3ff"/><circle cx="40" cy="34" r="14" fill="#ffd166"/><g fill="#fff" opacity=".85"><ellipse cx="182" cy="58" rx="22" ry="10"/><ellipse cx="58" cy="120" rx="18" ry="8"/></g>',
+    parts: [
+      { name: "cabin", fact: "The cabin holds the pilot and the passengers.",
+        svg: '<ellipse cx="112" cy="98" rx="34" ry="22" fill="#ffb03a"/><circle cx="128" cy="94" r="11" fill="#bfe4ff"/>' },
+      { name: "tail", fact: "The long tail keeps the helicopter balanced.",
+        svg: '<path d="M140 98 L192 90 L192 98 L140 106 Z" fill="#e09a2a"/><path d="M190 90 L200 78 L196 94 Z" fill="#e09a2a"/>' },
+      { name: "rotor", fact: "The spinning top rotor lifts it straight up into the air!",
+        svg: '<rect x="110" y="66" width="4" height="12" fill="#8a6d2a"/><g class="eng-rotor"><rect x="76" y="63" width="72" height="5" rx="2.5" fill="#5a5468"/></g>' },
+      { name: "skids", fact: "Skids let the helicopter land gently anywhere.",
+        svg: '<g stroke="#5a5468" stroke-width="4" stroke-linecap="round"><line x1="88" y1="122" x2="140" y2="122"/><line x1="98" y1="116" x2="98" y2="122"/><line x1="130" y1="116" x2="130" y2="122"/></g>' }
+    ],
+    finaleCls: "eng-bob"
   }
 ];
 

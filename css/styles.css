@@ -788,8 +788,10 @@ footer{background:var(--purple-dark);color:#cfc6ee;text-align:center;padding:20p
 @keyframes engsmoke{0%{transform:translateY(0);opacity:.7}100%{transform:translateY(-16px);opacity:0}}
 .eng-wave{transform-box:fill-box;transform-origin:0% 50%;animation:engwave .5s ease-in-out infinite}
 @keyframes engwave{0%,100%{transform:scaleX(1) skewY(0)}50%{transform:scaleX(.82) skewY(-5deg)}}
+.eng-rotor{transform-box:fill-box;transform-origin:50% 50%;animation:engrotor .16s linear infinite}
+@keyframes engrotor{0%,100%{transform:scaleX(1)}50%{transform:scaleX(.15)}}
 @media (prefers-reduced-motion:reduce){
-  .eng-pop,.eng-drive,.eng-bob,.eng-launch,.eng-flame,.eng-wave,.eng-smoke circle{animation:none!important}
+  .eng-pop,.eng-drive,.eng-bob,.eng-launch,.eng-flame,.eng-wave,.eng-rotor,.eng-smoke circle{animation:none!important}
 }
 
 /* ============ Historical Eras timeline ============ */
