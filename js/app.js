@@ -1362,6 +1362,19 @@ function lessonView() {
       body += `</div>`;
     });
   }
+  if (lesson.earthTimeline) {
+    body += `<div class="eratl">` + EARTH_ERAS.map(e => `
+      <div class="eracard" style="--ec:${e.color}">
+        <div class="eradot">${e.emoji}</div>
+        <div class="erabody">
+          <div class="erahead"><h3>${esc(e.name)}</h3><span class="erawhen">${esc(e.when)}</span></div>
+          <p class="erablurb">${esc(e.blurb)}</p>
+          <ul class="erafacts">${e.facts.map(f => `<li>${esc(f)}</li>`).join("")}</ul>
+        </div>
+      </div>`).join("") + `</div>`;
+    body += `<div class="bookfoot">${doodle("rocket")}
+      <p><b>How new are we?</b> If all of Earth's history were squeezed into one single day, humans wouldn't show up until the last few SECONDS before midnight! Everything above happened before the very first stone tool. Next stop — the human story: open the <b>Human Story</b> tab. 🌱</p></div>`;
+  }
   if (lesson.erasTimeline) {
     body += `<div class="eratl">` + HIST_ERAS.map(e => `
       <div class="eracard" style="--ec:${e.color}">
@@ -1381,7 +1394,7 @@ function lessonView() {
   }
 
   const sheetKey = g + "-" + subj;
-  const noQuiz = lesson.coloringBook || lesson.tracingSheet || lesson.csPlan || lesson.engPlan || lesson.erasTimeline;
+  const noQuiz = lesson.coloringBook || lesson.tracingSheet || lesson.csPlan || lesson.engPlan || lesson.erasTimeline || lesson.earthTimeline;
   if (!noQuiz && !state.sheetCache[sheetKey]) state.sheetCache[sheetKey] = makeSheet(g, subj, lesson);
   const questions = noQuiz ? [] : state.sheetCache[sheetKey];
   const qHtml = questions.length ? `

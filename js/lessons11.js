@@ -77,11 +77,99 @@ const HIST_ERAS = [
     ] }
 ];
 
+// Earth's deep-time story — from the beginning of the universe up to just before the human Stone Age.
+// Dates are science's standard best estimates (billions/millions of years ago).
+const EARTH_ERAS = [
+  { emoji: "🌌", name: "The Big Bang", when: "About 13.8 billion years ago", color: "#5b3fa0",
+    blurb: "Everything began! In a single instant, all of space, time, and matter burst into being from something smaller than a dot, then grew unbelievably fast. As it spread out and cooled, the first stars and galaxies switched on and lit up the darkness.",
+    facts: [
+      "💥 The entire universe began smaller than a tiny dot, then grew in a flash.",
+      "⭐ The first stars and galaxies formed from giant clouds of gas.",
+      "🧪 Stars cooked simple gases into the materials that later made planets — and you!"
+    ] },
+  { emoji: "☀️", name: "The Sun & Solar System", when: "About 4.6 billion years ago", color: "#f4732a",
+    blurb: "A huge cloud of gas and dust in space slowly squeezed together. At its center it grew so hot and heavy that it burst into light — our Sun was born! The leftover bits circled around and clumped into the planets.",
+    facts: [
+      "☀️ The Sun holds more than 99% of all the stuff in our solar system.",
+      "🪐 Eight planets formed and still circle the Sun today.",
+      "🧲 Gravity pulled the dust together like sticky snowballs."
+    ] },
+  { emoji: "🌋", name: "Earth Is Born", when: "About 4.5 billion years ago", color: "#b5451f",
+    blurb: "Baby Earth was NOT a nice place to live — it was a glowing ball of melted rock, exploding volcanoes, and crashing space rocks. Then a world about the size of Mars smashed into Earth, and the splashed-out pieces came together to form our Moon!",
+    facts: [
+      "🌕 Our Moon was made from a giant collision with the young Earth.",
+      "🌋 Early Earth was so hot that its whole surface was molten (melted) rock.",
+      "☄️ Space rocks crashed down constantly in a time called the 'heavy bombardment'."
+    ] },
+  { emoji: "🌊", name: "Oceans & the First Life", when: "About 3.8 billion years ago", color: "#2e7fd6",
+    blurb: "As Earth cooled, rain fell for ages and filled the first oceans. And there, hidden in the water, something amazing happened — the very first living things appeared. They were tiny single cells, far too small to see.",
+    facts: [
+      "🦠 The first living things were tiny single cells, like bacteria.",
+      "🌊 Life began in the water, not on land.",
+      "🔬 These living specks were much too small to see with just your eyes."
+    ] },
+  { emoji: "🫧", name: "The Air Fills with Oxygen", when: "About 2.4 billion years ago", color: "#2ec4b6",
+    blurb: "For a very long time, Earth's air had no oxygen to breathe. Then tiny living things called cyanobacteria learned to make food from sunlight — and breathed out oxygen as 'waste'. Over millions of years, they filled the sky with the oxygen that animals (and you!) need.",
+    facts: [
+      "🫧 Tiny microbes slowly filled the air with oxygen using sunlight.",
+      "🌬️ Before this, nothing on Earth could breathe air the way we do.",
+      "🌱 Making food from sunlight is called photosynthesis — plants still do it."
+    ] },
+  { emoji: "🐚", name: "Animals Appear in the Sea", when: "About 540 million years ago", color: "#e26d5c",
+    blurb: "For billions of years, life stayed tiny. Then, in a burst that scientists call the 'Cambrian Explosion', the oceans suddenly filled with all kinds of strange animals — creatures with shells, spikes, legs, and the very first eyes! It was the beginning of animals as we know them.",
+    facts: [
+      "👁️ Some of the first animals with eyes appeared during this time.",
+      "🦐 The seas swarmed with early relatives of crabs, worms, and shellfish.",
+      "🐚 Hard shells and skeletons start showing up as fossils from now on."
+    ] },
+  { emoji: "🌿", name: "Life Crawls onto Land", when: "About 470 million years ago", color: "#6bcb77",
+    blurb: "Until now, ALL life lived in the water. Then plants took the brave first step onto bare rock and slowly turned the land green. Insects followed, and eventually the first backboned animals — amphibians — crawled out of the water onto land.",
+    facts: [
+      "🌿 Plants turned the bare, rocky land green for the very first time.",
+      "🐛 Insects were among the first animals to live on land.",
+      "🐸 Amphibians were the first backboned animals to walk on land."
+    ] },
+  { emoji: "🦕", name: "The Age of Dinosaurs", when: "About 230 to 66 million years ago", color: "#7a9a3d",
+    blurb: "Then came the giants! Dinosaurs appeared and ruled the land for over 150 million years — longer than any other animal group. Some were bigger than a bus; others were smaller than a chicken. The first tiny mammals and the first birds also appeared during this age.",
+    facts: [
+      "🦖 Dinosaurs ruled the Earth for more than 150 million years.",
+      "🐦 Birds are actually the living descendants of dinosaurs!",
+      "🐭 The first mammals were small and shy, living alongside the dinosaurs."
+    ] },
+  { emoji: "☄️", name: "The Dinosaurs Vanish", when: "About 66 million years ago", color: "#6b7280",
+    blurb: "One terrible day, a giant asteroid — a space rock about the size of a city — slammed into Earth. It threw up so much dust that the sky went dark and cold for years. Most of the dinosaurs could not survive. But small animals, including little furry mammals, made it through.",
+    facts: [
+      "☄️ A city-sized asteroid struck Earth and changed everything.",
+      "🌑 Dust blocked the Sun, making the world dark and cold.",
+      "🐁 Small mammals survived — and their story was just beginning."
+    ] },
+  { emoji: "🐒", name: "Mammals Rise & the First Ancestors", when: "About 66 to 3 million years ago", color: "#a3763f",
+    blurb: "With the giant dinosaurs gone, mammals grew bigger and spread everywhere — early elephants, big cats, and whales. Then, in Africa, some clever apes began to stand and walk on two legs. Little by little, these were the earliest ancestors of humans… bringing us right up to the doorstep of the Stone Age.",
+    facts: [
+      "🐘 Mammals grew large and spread across the whole planet.",
+      "🚶 Our early ancestors began walking upright on two legs in Africa.",
+      "➡️ The next chapter is the human Stone Age — open the 'Human Story' tab!"
+    ] }
+];
+
 const HIST_SUBJECTS = [
-  { key: "eras", label: "The Timeline", emoji: "⏳" }
+  { key: "earth", label: "Earth's Story", emoji: "🌍" },
+  { key: "eras",  label: "The Human Story", emoji: "⏳" }
 ];
 
 LESSONS[19] = {
+  earth: {
+    title: "Before Us: Earth's Long, Long Story", emoji: "🌍",
+    intro: "Long before the very first humans, Earth had already lived an incredible story — billions of years of it! Let's rewind all the way to the beginning and travel through 'deep time', right up to the moment just before people appeared.",
+    learn: [
+      "Scientists measure Earth's story in millions and even BILLIONS of years. A billion is a thousand millions — a HUGE amount of time!",
+      "We learn about deep time from clues: rocks, the layers in the ground, and fossils (the preserved bones and prints of ancient living things).",
+      "These dates are science's best estimates from lots and lots of evidence. Earth itself is about 4.5 billion years old.",
+      "This whole journey happened BEFORE the Stone Age. Humans arrive only at the very, very end — you're about to see just how new we really are!"
+    ],
+    activity: "🧻 Toilet-Paper Timeline: Roll a whole roll of toilet paper across the floor and let it stand for all 4.5 billion years of Earth. Now measure — every bit of human history fits on just the LAST tiny square. That's how new we are!",
+    earthTimeline: true
+  },
   eras: {
     title: "The Story of Us: Great Eras of History", emoji: "⏳",
     intro: "History is one long, amazing adventure story — the story of people! Travel from the very first humans making stone tools all the way to today's world of smartphones and space rockets. Each stop below is a major era in the human journey.",
