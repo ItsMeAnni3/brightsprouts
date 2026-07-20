@@ -1363,13 +1363,20 @@ function lessonView() {
     });
   }
   if (lesson.earthTimeline) {
-    body += `<div class="eratl">` + EARTH_ERAS.map(e => `
+    const art = (typeof EARTH_ART !== "undefined") ? EARTH_ART : [];
+    const dinoGallery = (typeof EARTH_DINOS !== "undefined") ? `<div class="dinozone">
+      <h4>🦕 Meet some dinosaurs!</h4>
+      <div class="dinogrid">${EARTH_DINOS.map(d => `<div class="dinocard"><div class="dinoart">${d.svg}</div><span>${esc(d.name)}</span></div>`).join("")}</div>
+    </div>` : "";
+    body += `<div class="eratl">` + EARTH_ERAS.map((e, i) => `
       <div class="eracard" style="--ec:${e.color}">
         <div class="eradot">${e.emoji}</div>
         <div class="erabody">
+          ${art[i] ? `<div class="era-illus">${art[i]}</div>` : ""}
           <div class="erahead"><h3>${esc(e.name)}</h3><span class="erawhen">${esc(e.when)}</span></div>
           <p class="erablurb">${esc(e.blurb)}</p>
           <ul class="erafacts">${e.facts.map(f => `<li>${esc(f)}</li>`).join("")}</ul>
+          ${/Age of Dino/i.test(e.name) ? dinoGallery : ""}
         </div>
       </div>`).join("") + `</div>`;
     body += `<div class="bookfoot">${doodle("rocket")}

@@ -760,6 +760,14 @@ footer{background:var(--purple-dark);color:#cfc6ee;text-align:center;padding:20p
 .erahead h3{margin:0;color:var(--purple-dark);font-size:1.25rem}
 .erawhen{font-size:.8rem;font-weight:700;color:#fff;background:var(--ec);
   padding:3px 10px;border-radius:999px;white-space:nowrap}
+.era-illus{border-radius:12px;overflow:hidden;margin-bottom:12px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.05)}
+.era-illus svg{width:100%;height:104px;display:block}
+.dinozone{margin-top:14px;background:#f2fbf3;border:1.5px dashed #b7e6c4;border-radius:14px;padding:12px 14px}
+.dinozone h4{margin:0 0 10px;color:var(--purple-dark);font-size:1rem}
+.dinogrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:10px}
+.dinocard{background:#fff;border-radius:12px;box-shadow:var(--shadow);padding:8px 6px;text-align:center}
+.dinoart svg{width:100%;height:66px;display:block}
+.dinocard span{display:block;font-size:.7rem;font-weight:700;color:#5f5b82;margin-top:5px;line-height:1.2}
 .erablurb{margin:0 0 10px;line-height:1.55;color:#4a4770}
 .erafacts{margin:0;padding-left:2px;list-style:none;display:flex;flex-direction:column;gap:5px}
 .erafacts li{font-size:.9rem;background:#f7f5ff;border-radius:10px;padding:7px 12px;color:#544f78}
