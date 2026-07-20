@@ -71,6 +71,13 @@ const BIO_SUBJECT = { key: "biology", label: "Biology", emoji: "🧬" };
 const CHEM_SUBJECT = { key: "chemistry", label: "Chemistry", emoji: "⚗️" };
 // Physics runs from Grade 9 up (placed right after Chemistry).
 const PHYS_SUBJECT = { key: "physics", label: "Physics", emoji: "⚛️" };
+// Geology (category 20): basic earth science for grade-schoolers — a standalone tile.
+const GEO_SUBJECTS = [
+  { key: "rocks",   label: "Rocks & Minerals", emoji: "🪨" },
+  { key: "cycle",   label: "The Rock Cycle",   emoji: "🔁" },
+  { key: "earth",   label: "Inside the Earth", emoji: "🌋" },
+  { key: "fossils", label: "Fossils & Gems",   emoji: "💎" }
+];
 function subjectsFor(g) {
   if (g === 0) return K_SUBJECTS;
   if (g === 13) return GEN_SUBJECTS;
@@ -80,6 +87,7 @@ function subjectsFor(g) {
   if (g === 17) return CS_SUBJECTS;
   if (g === 18) return ENG_SUBJECTS;
   if (g === 19) return HIST_SUBJECTS;
+  if (g === 20) return GEO_SUBJECTS;
   // Grades 1–12: core subjects (+ Biology after Science from Grade 6) + folded-in extras
   // (+ the creative tools in Grades 1–6 only).
   let core = SUBJECTS.slice();
@@ -106,6 +114,7 @@ function gradeName(g) {
   if (g === 17) return "Computer Science";
   if (g === 18) return "The English Language";
   if (g === 19) return "Historical Eras";
+  if (g === 20) return "Geology";
   return "Grade " + g;
 }
 // Build the creature SVG from the chosen parts. Order matters: back to front.
@@ -1065,11 +1074,11 @@ function homeView() {
 // ---------- Lessons ----------
 function lessonsView() {
   const tiles = [];
-  for (let g = 0; g <= 19; g++) {
+  for (let g = 0; g <= 20; g++) {
     if (g === 15 || g === 16 || g === 17 || g === 18) continue;  // now folded into each grade's tabs
     const locked = !canGrade(g);
     const label = g === 0 ? "🌈 Kindergarten" : g === 13 ? "🌍 General" : g === 14 ? "⚗️ Extras"
-                : g === 19 ? "⏳ History" : "Grade " + g;
+                : g === 19 ? "⏳ History" : g === 20 ? "🪨 Geology" : "Grade " + g;
     tiles.push(`<button class="grade-tile g${g}" onclick="App.openGrade(${g})">${locked ? '<span class="lock">🔒</span>' : ""}${label}</button>`);
   }
   return `<div class="view">
@@ -1101,11 +1110,11 @@ function lessonView() {
       <div class="card" style="text-align:center;padding:44px 22px">
         <div style="font-size:54px">⭐</div>
         <h2>This subject is Premium</h2>
-        <p class="subtitle">Unlock all of ${esc(gradeName(g))} — every subject, worksheet and lesson.<br>📚 <b>Books are free!</b> Tap the <b>Books</b> tab above to start reading right now.</p>
+        <p class="subtitle">Unlock all of ${esc(gradeName(g))} — every subject, worksheet and lesson.${LESSONS[g] && LESSONS[g].books ? "<br>📚 <b>Books are free!</b> Tap the <b>Books</b> tab above to start reading right now." : ""}</p>
         <div class="lesson-tools no-print" style="justify-content:center">
           ${u ? `<button class="btn btn-primary" onclick="App.go('pricing')">⭐ Go Premium</button>`
               : `<button class="btn btn-primary" onclick="App.goAuth('signup')">Create a Free Account</button><button class="btn btn-secondary" onclick="App.go('pricing')">See Plans</button>`}
-          <button class="btn btn-ghost" onclick="App.openSubject('books')">📚 Read free Books</button>
+          ${LESSONS[g] && LESSONS[g].books ? `<button class="btn btn-ghost" onclick="App.openSubject('books')">📚 Read free Books</button>` : ""}
         </div>
       </div>
     </div>`;
@@ -1902,7 +1911,7 @@ const App = {
     state.reading = null;
     const dflt = g === 0 ? "alphabet" : g === 13 ? "geography" : g === 14 ? "periodic"
                : g === 15 ? "readnow" : g === 16 ? "create" : g === 17 ? "csplan"
-               : g === 18 ? "engplan" : g === 19 ? "earth" : "math";
+               : g === 18 ? "engplan" : g === 19 ? "earth" : g === 20 ? "rocks" : "math";
     // Premium grades still open — landing on the free Books tab; other subjects show an upgrade card.
     state.subject = canGrade(g) ? dflt : "books";
     go("lesson");
