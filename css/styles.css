@@ -752,6 +752,10 @@ footer{background:var(--purple-dark);color:#cfc6ee;text-align:center;padding:20p
   padding:8px 16px;font-weight:700;cursor:pointer;font-size:.95rem;transition:transform .12s}
 .engpick button:hover{transform:scale(1.05)}
 .engpick button.on{background:var(--purple);color:#fff}
+.engpick button.built{border-color:var(--green)}
+.engprogress{max-width:440px;margin:0 auto 14px;text-align:center}
+.engprogress span{font-size:.92rem;color:var(--purple-dark);font-weight:600}
+.engprogress .readprog{margin-top:7px}
 .engmode{display:flex;gap:8px;justify-content:center;margin-bottom:14px}
 .engmode button{border:1.5px solid #d9d4ee;background:#fff;color:#6a668c;border-radius:999px;
   padding:6px 15px;font-weight:700;cursor:pointer;font-size:.88rem;transition:.12s}

@@ -2508,8 +2508,16 @@ function engineerBuildHtml() {
     <g class="engbuilt ${complete && p.finaleCls ? p.finaleCls : ""}" id="engbuilt">${built}${complete ? (p.inExtra || "") : ""}</g>
     ${complete ? (p.outExtra || "") : ""}
   </svg>`;
+  let doneMap;
+  try { doneMap = JSON.parse(localStorage.getItem("bs_rw_done")) || {}; } catch (e) { doneMap = {}; }
+  const isBuilt = k => !!doneMap["build-" + k];
+  const builtCount = projs.filter(x => isBuilt(x.key)).length, total = projs.length;
   const pick = projs.map(x =>
-    `<button class="${x.key === p.key ? "on" : ""}" onclick="App.buildPick('${x.key}')">${x.emoji} ${esc(x.name)}</button>`).join("");
+    `<button class="${x.key === p.key ? "on" : ""}${isBuilt(x.key) ? " built" : ""}" onclick="App.buildPick('${x.key}')">${x.emoji} ${esc(x.name)}${isBuilt(x.key) ? " ✓" : ""}</button>`).join("");
+  const hint = `<div class="engprogress no-print">
+    <span>🏗️ <b>Master Builder</b> — ${builtCount >= total ? "you built them all! 🎉" : builtCount + " of " + total + " machines built"}</span>
+    <div class="readprog"><i style="width:${Math.round(builtCount / total * 100)}%"></i></div>
+  </div>`;
   const modeBtns = `<div class="engmode no-print">
     <button class="${b.mode === "guided" ? "on" : ""}" onclick="App.buildMode('guided')">🎯 In order</button>
     <button class="${b.mode === "free" ? "on" : ""}" onclick="App.buildMode('free')">🧩 Free build</button></div>`;
@@ -2531,6 +2539,7 @@ function engineerBuildHtml() {
   }
   return `<div class="engwrap">
     <div class="engpick no-print">${pick}</div>
+    ${hint}
     ${modeBtns}
     <div class="engstage" id="engstage">${scene}</div>
     <div class="engpanel no-print">
