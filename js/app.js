@@ -39,7 +39,7 @@ const ADD_SUBJECTS = [
   { key: "tracing",  label: "Tracing",         emoji: "✏️" },
   { key: "coloring", label: "Colouring Book",  emoji: "🖍️" }
 ];
-const MAKE_SUBJECTS = [{ key: "create", label: "Creature Maker", emoji: "🎨" }];
+const MAKE_SUBJECTS = [{ key: "create", label: "Creature Maker", emoji: "🎨" }, { key: "engineer", label: "Build It!", emoji: "🔧" }];
 const ENG_SUBJECTS = [
   { key: "engplan",      label: "The Plan",  emoji: "🗺️" },
   { key: "engreading",   label: "Reading",   emoji: "📖" },
@@ -1112,6 +1112,9 @@ function lessonView() {
     </div>
     <div class="print-only" style="text-align:center;margin-top:10px"><h2>${esc(m.name)}</h2></div>`;
   }
+  if (lesson.engineerBuild) {
+    body += engineerBuildHtml();
+  }
   if (lesson.engDoodle) {
     body += `<div class="engdoodle">${doodle(lesson.engDoodle)}</div>`;
   }
@@ -1409,7 +1412,7 @@ function lessonView() {
 
   const sheetKey = g + "-" + subj;
   // Note: the Earth's Story timeline (earthTimeline) DOES get a worksheet — it has a questions bank.
-  const noQuiz = lesson.coloringBook || lesson.tracingSheet || lesson.csPlan || lesson.engPlan || lesson.erasTimeline;
+  const noQuiz = lesson.coloringBook || lesson.tracingSheet || lesson.csPlan || lesson.engPlan || lesson.erasTimeline || lesson.engineerBuild;
   if (!noQuiz && !state.sheetCache[sheetKey]) state.sheetCache[sheetKey] = makeSheet(g, subj, lesson);
   const questions = noQuiz ? [] : state.sheetCache[sheetKey];
   const qHtml = questions.length ? `
@@ -1925,6 +1928,18 @@ const App = {
   gamePick(slug) { state.game = { plant: slug, stage: 0, water: 0, sun: 0 }; state.gameScreen = "plant"; go("game"); },
   gamePickNew() { state.game = { plant: null, stage: 0, water: 0, sun: 0 }; state.gameScreen = "plant"; render(); window.scrollTo(0, 0); },
   gameReplant() { state.game.stage = 0; state.game.water = 0; state.game.sun = 0; render(); gamePop(); },
+
+  // ---- Build It! ----
+  buildPick(key) { state.build = { project: key, step: 0 }; render(); },
+  buildAdd() {
+    const p = curProject();
+    if (state.build.step < p.parts.length) {
+      state.build.step++;
+      render();
+      if (state.build.step < p.parts.length) engineerPop();
+    }
+  },
+  buildReset() { if (state.build) state.build.step = 0; render(); },
   gameWater() { if (state.game.water < GAME_NEED) state.game.water++; gameCheckGrow(); },
   gameSun() { if (state.game.sun < GAME_NEED) state.game.sun++; gameCheckGrow(); },
 
@@ -2451,6 +2466,55 @@ function gamePop() {
   s.classList.remove("pg-grow");
   void s.offsetWidth;
   s.classList.add("pg-grow");
+}
+
+// ---- Build It! (little engineers) ----
+function curProject() {
+  return ENGINEER_PROJECTS.find(p => p.key === (state.build && state.build.project)) || ENGINEER_PROJECTS[0];
+}
+function engineerBuildHtml() {
+  if (!state.build || !ENGINEER_PROJECTS.some(p => p.key === state.build.project)) {
+    state.build = { project: ENGINEER_PROJECTS[0].key, step: 0 };
+  }
+  const p = curProject(), b = state.build;
+  const complete = b.step >= p.parts.length;
+  const built = p.parts.slice(0, b.step).map(pt => pt.svg).join("");
+  const scene = `<svg viewBox="0 0 240 180" class="engsvg" role="img" aria-label="Building a ${esc(p.name)}">
+    ${p.sky}
+    <g class="engbuilt ${complete && p.finaleCls ? p.finaleCls : ""}" id="engbuilt">${built}${complete ? (p.inExtra || "") : ""}</g>
+    ${complete ? (p.outExtra || "") : ""}
+  </svg>`;
+  const pick = ENGINEER_PROJECTS.map(x =>
+    `<button class="${x.key === p.key ? "on" : ""}" onclick="App.buildPick('${x.key}')">${x.emoji} ${esc(x.name)}</button>`).join("");
+  const dots = p.parts.map((_, i) => `<span class="engdot ${i < b.step ? "on" : ""}"></span>`).join("");
+  let factHtml, ctrlHtml;
+  if (complete) {
+    factHtml = `<div class="engfact">🎉 <b>You built a ${esc(p.name.toLowerCase())}!</b> ${esc(p.doneMsg)}</div>`;
+    ctrlHtml = `<button class="btn btn-primary" onclick="App.buildReset()">🔁 Build it again</button>`;
+  } else {
+    const last = b.step > 0 ? p.parts[b.step - 1] : null;
+    const next = p.parts[b.step];
+    factHtml = `<div class="engfact">${last ? `<b>${esc(last.name)}:</b> ${esc(last.fact)}` : `Let's build a ${esc(p.name.toLowerCase())}! Add each part one at a time. 🔧`}</div>`;
+    ctrlHtml = `<button class="btn btn-primary" onclick="App.buildAdd()">🔧 Add the ${esc(next.name)}</button>`;
+  }
+  return `<div class="engwrap">
+    <div class="engpick no-print">${pick}</div>
+    <div class="engstage" id="engstage">${scene}</div>
+    <div class="engpanel no-print">
+      <div class="engdots">${dots}</div>
+      ${factHtml}
+      <div class="lesson-tools" style="justify-content:center">${ctrlHtml}
+        <button class="btn btn-secondary" onclick="window.print()">🖨️ Print</button></div>
+    </div>
+    <div class="print-only" style="text-align:center;margin-top:10px"><h2>${p.emoji} My ${esc(p.name)}</h2></div>
+  </div>`;
+}
+function engineerPop() {
+  const s = document.getElementById("engbuilt");
+  if (!s) return;
+  s.classList.remove("eng-pop");
+  void s.offsetWidth;
+  s.classList.add("eng-pop");
 }
 // Called after each water/sun tap: refresh the meters, and when both are full, grow to the next stage.
 function gameCheckGrow() {

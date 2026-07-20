@@ -745,6 +745,43 @@ footer{background:var(--purple-dark);color:#cfc6ee;text-align:center;padding:20p
 
 .listenbtn{background:var(--teal);color:#fff}
 
+/* ============ Build It! (little engineers) ============ */
+.engwrap{margin-top:6px}
+.engpick{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:14px}
+.engpick button{border:2px solid var(--purple);background:#fff;color:var(--purple-dark);border-radius:999px;
+  padding:8px 16px;font-weight:700;cursor:pointer;font-size:.95rem;transition:transform .12s}
+.engpick button:hover{transform:scale(1.05)}
+.engpick button.on{background:var(--purple);color:#fff}
+.engstage{max-width:420px;margin:0 auto;background:linear-gradient(160deg,#fbf7ff,#eef4ff);
+  border-radius:var(--radius);box-shadow:var(--shadow);padding:10px}
+.engsvg{width:100%;height:auto;display:block;border-radius:14px}
+.engpanel{max-width:440px;margin:14px auto 0;text-align:center}
+.engdots{display:flex;gap:7px;justify-content:center;margin-bottom:12px}
+.engdot{width:12px;height:12px;border-radius:50%;background:#e0dbf2;transition:background .2s}
+.engdot.on{background:var(--pink);box-shadow:0 0 8px rgba(255,107,157,.5)}
+.engfact{background:#f4f0ff;border-radius:14px;padding:12px 16px;color:#4a4770;font-size:1rem;
+  margin-bottom:14px;line-height:1.5;min-height:22px}
+.engfact b{color:var(--purple-dark)}
+.engbuilt{transform-box:fill-box;transform-origin:50% 100%}
+.eng-pop{animation:engpop .42s ease}
+@keyframes engpop{0%{transform:scale(.86)}55%{transform:scale(1.06)}100%{transform:scale(1)}}
+.eng-drive{animation:engdrive 3.4s ease-in-out infinite}
+@keyframes engdrive{0%{transform:translateX(-64px)}50%{transform:translateX(64px)}100%{transform:translateX(-64px)}}
+.eng-bob{animation:engbob 2.4s ease-in-out infinite}
+@keyframes engbob{0%,100%{transform:translateY(0) rotate(-2.5deg)}50%{transform:translateY(-6px) rotate(2.5deg)}}
+.eng-launch{animation:englaunch 2.8s ease-in infinite}
+@keyframes englaunch{0%{transform:translateY(0);opacity:1}55%{transform:translateY(-120px);opacity:1}
+  72%{transform:translateY(-170px);opacity:0}73%{transform:translateY(0);opacity:0}100%{transform:translateY(0);opacity:1}}
+.eng-flame{transform-box:fill-box;transform-origin:50% 0%;animation:engflame .16s steps(2) infinite}
+@keyframes engflame{0%{transform:scaleY(1)}100%{transform:scaleY(.78)}}
+.eng-smoke circle{transform-box:fill-box;transform-origin:50% 50%;animation:engsmoke 2.4s ease-in-out infinite}
+.eng-smoke circle:nth-child(2){animation-delay:.5s}
+.eng-smoke circle:nth-child(3){animation-delay:1s}
+@keyframes engsmoke{0%{transform:translateY(0);opacity:.7}100%{transform:translateY(-16px);opacity:0}}
+@media (prefers-reduced-motion:reduce){
+  .eng-pop,.eng-drive,.eng-bob,.eng-launch,.eng-flame,.eng-smoke circle{animation:none!important}
+}
+
 /* ============ Historical Eras timeline ============ */
 .eratl{position:relative;margin:18px 0 6px;padding-left:26px}
 .eratl::before{content:"";position:absolute;left:8px;top:8px;bottom:8px;width:4px;border-radius:4px;
