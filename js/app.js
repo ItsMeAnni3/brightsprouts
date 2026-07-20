@@ -54,6 +54,14 @@ const CS_SUBJECTS = [
   { key: "cs68",   label: "Grades 6–8",   emoji: "🔢" },
   { key: "cs912",  label: "Grades 9–12",  emoji: "🐍" }
 ];
+// Extra subjects added to every Grade 1–12 tab bar (content matched to the grade's level).
+const GRADE_EXTRA = [
+  { key: "compsci",  label: "Computer Science", emoji: "💻" },
+  { key: "english",  label: "English",          emoji: "🗣️" },
+  { key: "books",    label: "Books",            emoji: "📚" },
+  { key: "create",   label: "Creature Maker",   emoji: "🎨" },
+  { key: "engineer", label: "Build It!",        emoji: "🔧" }
+];
 function subjectsFor(g) {
   if (g === 0) return K_SUBJECTS;
   if (g === 13) return GEN_SUBJECTS;
@@ -63,7 +71,7 @@ function subjectsFor(g) {
   if (g === 17) return CS_SUBJECTS;
   if (g === 18) return ENG_SUBJECTS;
   if (g === 19) return HIST_SUBJECTS;
-  return SUBJECTS;
+  return SUBJECTS.concat(GRADE_EXTRA);   // Grades 1–12: core subjects + the folded-in extras
 }
 function gradeName(g) {
   if (g === 0) return "Kindergarten";
@@ -635,6 +643,7 @@ function makeSheet(g, subj, lesson) {
   if (g === 18) return genEng(subj);
   if (g === 14) return genExtra(subj, lesson);
   if (g === 13) return subj === "florafauna" ? genFF() : genGeo(lesson);
+  if (subj === "compsci") return genCS(lesson.csWork);   // Computer Science folded into the grade
   if (subj === "math") return genMath(g);
   if (subj === "spelling") return genSpelling(lesson.spellWords);
   if (subj === "vocabulary") return genVocab(lesson.words);
@@ -1030,15 +1039,15 @@ function homeView() {
 function lessonsView() {
   const tiles = [];
   for (let g = 0; g <= 19; g++) {
+    if (g === 15 || g === 16 || g === 17 || g === 18) continue;  // now folded into each grade's tabs
     const locked = !canGrade(g);
     const label = g === 0 ? "🌈 Kindergarten" : g === 13 ? "🌍 General" : g === 14 ? "⚗️ Extras"
-                : g === 15 ? "📚 Books" : g === 16 ? "🎨 Create" : g === 17 ? "💻 Computer Sci"
-                : g === 18 ? "🗣️ English" : g === 19 ? "⏳ History" : "Grade " + g;
+                : g === 19 ? "⏳ History" : "Grade " + g;
     tiles.push(`<button class="grade-tile g${g}" onclick="App.openGrade(${g})">${locked ? '<span class="lock">🔒</span>' : ""}${label}</button>`);
   }
   return `<div class="view">
     <h1>📚 Pick a Grade</h1>
-    <p class="subtitle">Kindergarten picture lessons, then nine subjects per grade: Math • Reading • Vocabulary • Spelling • Writing • Science • History • Visual Art • Music ${tier() !== "premium" ? "&nbsp;·&nbsp; 🔒 = Premium" : ""}</p>
+    <p class="subtitle">Every grade now packs it all in: Math • Reading • Vocabulary • Spelling • Writing • Science • History • Visual Art • Music • Computer Science • English • Books • Create — each matched to that grade's level ${tier() !== "premium" ? "&nbsp;·&nbsp; 🔒 = Premium" : ""}</p>
     <div class="grid grid-4">${tiles.join("")}</div>
   </div>`;
 }
@@ -1134,6 +1143,19 @@ function lessonView() {
       on this site are the daily practice ground for everything named here; the domain tabs above
       hold the ideas, the games and the endless worksheets.</p></div>`;
   }
+  if (lesson.engBand != null && typeof ENG_PLAN !== "undefined" && ENG_PLAN[lesson.engBand]) {
+    const eb = ENG_PLAN[lesson.engBand];
+    body += `<div class="fband csband">
+      <div class="bandhead" style="border:none;margin:0 0 10px;padding:0">${doodle(eb.doodle)}
+        <div><h3 style="margin:0">${esc(eb.band)}</h3></div></div>
+      <div class="enggrid">${ENG_DOMAINS.map(d => `
+        <div class="engdom"><h4>${d[1]}</h4><ul>${eb[d[0]].map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>`).join("")}
+      </div>
+      <p class="csmile">🏁 <b>Milestone:</b> ${esc(eb.milestone)}</p>
+    </div>
+    <div class="bookfoot">${doodle("speech")}
+      <p><b>Grow all four together:</b> your grade's <b>Reading, Writing, Spelling and Vocabulary</b> tabs are the daily practice ground for everything above — touch a little of each every week.</p></div>`;
+  }
   if (lesson.csPlan) {
     body += CS_PLAN.map((b, i) => `
       <div class="fband csband">
@@ -1155,7 +1177,8 @@ function lessonView() {
     if (state.reading) return readerHtml();
     const bands = { "1-2": "Grades 1–2", "3-5": "Grades 3–5", "6-8": "Grades 6–8", "9-12": "Grades 9–12" };
     const doodles = { "1-2": "openbook", "3-5": "dragon", "6-8": "magnifier", "9-12": "quill" };
-    Object.keys(bands).forEach(bd => {
+    const showBands = lesson.booksBand ? [lesson.booksBand] : Object.keys(bands);
+    showBands.forEach(bd => {
       const list = PD_BOOKS.filter(b => b.b === bd);
       if (!list.length) return;
       body += `<div class="bandhead">${doodle(doodles[bd])}<div><h3>${bands[bd]}</h3>
@@ -1412,7 +1435,7 @@ function lessonView() {
 
   const sheetKey = g + "-" + subj;
   // Note: the Earth's Story timeline (earthTimeline) DOES get a worksheet — it has a questions bank.
-  const noQuiz = lesson.coloringBook || lesson.tracingSheet || lesson.csPlan || lesson.engPlan || lesson.erasTimeline || lesson.engineerBuild;
+  const noQuiz = lesson.coloringBook || lesson.tracingSheet || lesson.csPlan || lesson.engPlan || lesson.erasTimeline || lesson.engineerBuild || (lesson.engBand != null) || lesson.readOnline || lesson.magicMaker || lesson.earthTimeline;
   if (!noQuiz && !state.sheetCache[sheetKey]) state.sheetCache[sheetKey] = makeSheet(g, subj, lesson);
   const questions = noQuiz ? [] : state.sheetCache[sheetKey];
   const qHtml = questions.length ? `
