@@ -798,6 +798,11 @@ footer{background:var(--purple-dark);color:#cfc6ee;text-align:center;padding:20p
   .eng-pop,.eng-drive,.eng-bob,.eng-launch,.eng-flame,.eng-wave,.eng-rotor,.eng-smoke circle{animation:none!important}
 }
 
+/* ============ Biology diagrams ============ */
+.biodiagram{max-width:470px;margin:6px auto 18px;background:#fff;border-radius:16px;
+  box-shadow:var(--shadow);padding:12px;border:1px solid #eee9fa}
+.biodiagram svg{width:100%;height:auto;display:block}
+
 /* ============ Historical Eras timeline ============ */
 .eratl{position:relative;margin:18px 0 6px;padding-left:26px}
 .eratl::before{content:"";position:absolute;left:8px;top:8px;bottom:8px;width:4px;border-radius:4px;

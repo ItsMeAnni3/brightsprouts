@@ -1102,6 +1102,7 @@ function lessonView() {
   }
 
   let body = "";
+  if (lesson.diagram) body += `<div class="biodiagram">${lesson.diagram}</div>`;
   if (lesson.passage) body += `<div class="lesson-tools no-print" style="margin-bottom:10px">${listenBtn("passage-say", "Read this to me")}</div>
     <div class="passage-box" id="passage-say" data-say="${esc(lesson.passage)}"><b>📄 Read this:</b><br><br>${esc(lesson.passage)}</div>`;
   if (lesson.cards) {
