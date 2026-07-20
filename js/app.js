@@ -69,6 +69,8 @@ const CREATE_SUBJECTS_INLINE = [
 const BIO_SUBJECT = { key: "biology", label: "Biology", emoji: "🧬" };
 // Chemistry runs from Grade 9 up (placed right after Biology).
 const CHEM_SUBJECT = { key: "chemistry", label: "Chemistry", emoji: "⚗️" };
+// Physics runs from Grade 9 up (placed right after Chemistry).
+const PHYS_SUBJECT = { key: "physics", label: "Physics", emoji: "⚛️" };
 function subjectsFor(g) {
   if (g === 0) return K_SUBJECTS;
   if (g === 13) return GEN_SUBJECTS;
@@ -86,8 +88,10 @@ function subjectsFor(g) {
     core.splice(i, 0, BIO_SUBJECT);
   }
   if (g >= 9) {
-    const j = core.findIndex(s => s.key === "biology") + 1;   // right after Biology
+    const j = core.findIndex(s => s.key === "biology") + 1;      // Chemistry right after Biology
     core.splice(j, 0, CHEM_SUBJECT);
+    const k = core.findIndex(s => s.key === "chemistry") + 1;    // Physics right after Chemistry
+    core.splice(k, 0, PHYS_SUBJECT);
   }
   let subs = core.concat(GRADE_EXTRA);
   if (g <= 6) subs = subs.concat(CREATE_SUBJECTS_INLINE);
