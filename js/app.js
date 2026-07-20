@@ -1930,16 +1930,30 @@ const App = {
   gameReplant() { state.game.stage = 0; state.game.water = 0; state.game.sun = 0; render(); gamePop(); },
 
   // ---- Build It! ----
-  buildPick(key) { state.build = { project: key, step: 0 }; render(); },
-  buildAdd() {
-    const p = curProject();
-    if (state.build.step < p.parts.length) {
-      state.build.step++;
-      render();
-      if (state.build.step < p.parts.length) engineerPop();
-    }
+  buildPick(key) {
+    const mode = (state.build && state.build.mode) || "guided";
+    state.build = { project: key, mode, added: [], last: -1 };
+    render();
   },
-  buildReset() { if (state.build) state.build.step = 0; render(); },
+  buildMode(mode) {
+    if (!state.build) return;
+    state.build.mode = mode;
+    state.build.added = curProject().parts.map(() => false);
+    state.build.last = -1;
+    render();
+  },
+  buildAdd() {   // guided: add the next part in order
+    const b = state.build, i = b.added.findIndex(x => !x);
+    if (i >= 0) { b.added[i] = true; b.last = i; render(); if (b.added.some(x => !x)) engineerPop(); }
+  },
+  buildAddPart(i) {   // free build: add any part
+    const b = state.build;
+    if (b.added && !b.added[i]) { b.added[i] = true; b.last = i; render(); if (b.added.some(x => !x)) engineerPop(); }
+  },
+  buildReset() {
+    if (state.build) { state.build.added = curProject().parts.map(() => false); state.build.last = -1; }
+    render();
+  },
   gameWater() { if (state.game.water < GAME_NEED) state.game.water++; gameCheckGrow(); },
   gameSun() { if (state.game.sun < GAME_NEED) state.game.sun++; gameCheckGrow(); },
 
@@ -2473,38 +2487,50 @@ function curProject() {
   return ENGINEER_PROJECTS.find(p => p.key === (state.build && state.build.project)) || ENGINEER_PROJECTS[0];
 }
 function engineerBuildHtml() {
-  if (!state.build || !ENGINEER_PROJECTS.some(p => p.key === state.build.project)) {
-    state.build = { project: ENGINEER_PROJECTS[0].key, step: 0 };
+  const projs = ENGINEER_PROJECTS;
+  if (!state.build || !projs.some(p => p.key === state.build.project)) {
+    state.build = { project: projs[0].key, mode: "guided", added: [], last: -1 };
   }
   const p = curProject(), b = state.build;
-  const complete = b.step >= p.parts.length;
-  const built = p.parts.slice(0, b.step).map(pt => pt.svg).join("");
+  if (!b.mode) b.mode = "guided";
+  if (!Array.isArray(b.added) || b.added.length !== p.parts.length) { b.added = p.parts.map(() => false); b.last = -1; }
+  const complete = b.added.every(Boolean);
+  const art = /^[aeiou]/i.test(p.name) ? "an" : "a";
+  const built = p.parts.map((pt, i) => b.added[i] ? pt.svg : "").join("");
   const scene = `<svg viewBox="0 0 240 180" class="engsvg" role="img" aria-label="Building a ${esc(p.name)}">
     ${p.sky}
     <g class="engbuilt ${complete && p.finaleCls ? p.finaleCls : ""}" id="engbuilt">${built}${complete ? (p.inExtra || "") : ""}</g>
     ${complete ? (p.outExtra || "") : ""}
   </svg>`;
-  const pick = ENGINEER_PROJECTS.map(x =>
+  const pick = projs.map(x =>
     `<button class="${x.key === p.key ? "on" : ""}" onclick="App.buildPick('${x.key}')">${x.emoji} ${esc(x.name)}</button>`).join("");
-  const dots = p.parts.map((_, i) => `<span class="engdot ${i < b.step ? "on" : ""}"></span>`).join("");
+  const modeBtns = `<div class="engmode no-print">
+    <button class="${b.mode === "guided" ? "on" : ""}" onclick="App.buildMode('guided')">🎯 In order</button>
+    <button class="${b.mode === "free" ? "on" : ""}" onclick="App.buildMode('free')">🧩 Free build</button></div>`;
+  const dots = p.parts.map((_, i) => `<span class="engdot ${b.added[i] ? "on" : ""}"></span>`).join("");
+  const printBtn = `<button class="btn btn-secondary" onclick="window.print()">🖨️ Print</button>`;
   let factHtml, ctrlHtml;
   if (complete) {
-    factHtml = `<div class="engfact">🎉 <b>You built a ${esc(p.name.toLowerCase())}!</b> ${esc(p.doneMsg)}</div>`;
-    ctrlHtml = `<button class="btn btn-primary" onclick="App.buildReset()">🔁 Build it again</button>`;
+    factHtml = `<div class="engfact">🎉 <b>You built ${art} ${esc(p.name.toLowerCase())}!</b> ${esc(p.doneMsg)}</div>`;
+    ctrlHtml = `<div class="lesson-tools" style="justify-content:center"><button class="btn btn-primary" onclick="App.buildReset()">🔁 Build it again</button>${printBtn}</div>`;
+  } else if (b.mode === "free") {
+    factHtml = `<div class="engfact">${b.last >= 0 ? `<b>${esc(p.parts[b.last].name)}:</b> ${esc(p.parts[b.last].fact)}` : `Free build! Add the parts in ANY order you like. 🧩`}</div>`;
+    ctrlHtml = `<div class="engchips">${p.parts.map((pt, i) => b.added[i] ? "" : `<button onclick="App.buildAddPart(${i})">➕ ${esc(pt.name)}</button>`).join("")}</div>
+      <div class="lesson-tools" style="justify-content:center;margin-top:10px"><button class="btn btn-ghost btn-sm" onclick="App.buildReset()">↺ Start over</button>${printBtn}</div>`;
   } else {
-    const last = b.step > 0 ? p.parts[b.step - 1] : null;
-    const next = p.parts[b.step];
-    factHtml = `<div class="engfact">${last ? `<b>${esc(last.name)}:</b> ${esc(last.fact)}` : `Let's build a ${esc(p.name.toLowerCase())}! Add each part one at a time. 🔧`}</div>`;
-    ctrlHtml = `<button class="btn btn-primary" onclick="App.buildAdd()">🔧 Add the ${esc(next.name)}</button>`;
+    const nextI = b.added.findIndex(x => !x);
+    const last = b.last >= 0 ? p.parts[b.last] : null;
+    factHtml = `<div class="engfact">${last ? `<b>${esc(last.name)}:</b> ${esc(last.fact)}` : `Let's build ${art} ${esc(p.name.toLowerCase())}! Add each part one at a time. 🔧`}</div>`;
+    ctrlHtml = `<div class="lesson-tools" style="justify-content:center"><button class="btn btn-primary" onclick="App.buildAdd()">🔧 Add the ${esc(p.parts[nextI].name)}</button>${printBtn}</div>`;
   }
   return `<div class="engwrap">
     <div class="engpick no-print">${pick}</div>
+    ${modeBtns}
     <div class="engstage" id="engstage">${scene}</div>
     <div class="engpanel no-print">
       <div class="engdots">${dots}</div>
       ${factHtml}
-      <div class="lesson-tools" style="justify-content:center">${ctrlHtml}
-        <button class="btn btn-secondary" onclick="window.print()">🖨️ Print</button></div>
+      ${ctrlHtml}
     </div>
     <div class="print-only" style="text-align:center;margin-top:10px"><h2>${p.emoji} My ${esc(p.name)}</h2></div>
   </div>`;

@@ -752,6 +752,14 @@ footer{background:var(--purple-dark);color:#cfc6ee;text-align:center;padding:20p
   padding:8px 16px;font-weight:700;cursor:pointer;font-size:.95rem;transition:transform .12s}
 .engpick button:hover{transform:scale(1.05)}
 .engpick button.on{background:var(--purple);color:#fff}
+.engmode{display:flex;gap:8px;justify-content:center;margin-bottom:14px}
+.engmode button{border:1.5px solid #d9d4ee;background:#fff;color:#6a668c;border-radius:999px;
+  padding:6px 15px;font-weight:700;cursor:pointer;font-size:.88rem;transition:.12s}
+.engmode button.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.engchips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.engchips button{border:2px dashed var(--pink);background:#fff;color:#c43e78;border-radius:12px;
+  padding:8px 14px;font-weight:700;cursor:pointer;font-size:.92rem;transition:transform .12s}
+.engchips button:hover{transform:scale(1.06);background:#ffe9f1}
 .engstage{max-width:420px;margin:0 auto;background:linear-gradient(160deg,#fbf7ff,#eef4ff);
   border-radius:var(--radius);box-shadow:var(--shadow);padding:10px}
 .engsvg{width:100%;height:auto;display:block;border-radius:14px}
@@ -778,8 +786,10 @@ footer{background:var(--purple-dark);color:#cfc6ee;text-align:center;padding:20p
 .eng-smoke circle:nth-child(2){animation-delay:.5s}
 .eng-smoke circle:nth-child(3){animation-delay:1s}
 @keyframes engsmoke{0%{transform:translateY(0);opacity:.7}100%{transform:translateY(-16px);opacity:0}}
+.eng-wave{transform-box:fill-box;transform-origin:0% 50%;animation:engwave .5s ease-in-out infinite}
+@keyframes engwave{0%,100%{transform:scaleX(1) skewY(0)}50%{transform:scaleX(.82) skewY(-5deg)}}
 @media (prefers-reduced-motion:reduce){
-  .eng-pop,.eng-drive,.eng-bob,.eng-launch,.eng-flame,.eng-smoke circle{animation:none!important}
+  .eng-pop,.eng-drive,.eng-bob,.eng-launch,.eng-flame,.eng-wave,.eng-smoke circle{animation:none!important}
 }
 
 /* ============ Historical Eras timeline ============ */
