@@ -58,7 +58,10 @@ const CS_SUBJECTS = [
 const GRADE_EXTRA = [
   { key: "compsci",  label: "Computer Science", emoji: "💻" },
   { key: "english",  label: "English",          emoji: "🗣️" },
-  { key: "books",    label: "Books",            emoji: "📚" },
+  { key: "books",    label: "Books",            emoji: "📚" }
+];
+// The creative tools appear only in the younger grades (1–6).
+const CREATE_SUBJECTS_INLINE = [
   { key: "create",   label: "Creature Maker",   emoji: "🎨" },
   { key: "engineer", label: "Build It!",        emoji: "🔧" }
 ];
@@ -71,7 +74,8 @@ function subjectsFor(g) {
   if (g === 17) return CS_SUBJECTS;
   if (g === 18) return ENG_SUBJECTS;
   if (g === 19) return HIST_SUBJECTS;
-  return SUBJECTS.concat(GRADE_EXTRA);   // Grades 1–12: core subjects + the folded-in extras
+  // Grades 1–12: core subjects + folded-in extras (+ the creative tools in Grades 1–6 only).
+  return g <= 6 ? SUBJECTS.concat(GRADE_EXTRA, CREATE_SUBJECTS_INLINE) : SUBJECTS.concat(GRADE_EXTRA);
 }
 function gradeName(g) {
   if (g === 0) return "Kindergarten";
