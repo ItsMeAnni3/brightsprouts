@@ -1383,13 +1383,20 @@ function lessonView() {
       <p><b>How new are we?</b> If all of Earth's history were squeezed into one single day, humans wouldn't show up until the last few SECONDS before midnight! Everything above happened before the very first stone tool. Next stop — the human story: open the <b>Human Story</b> tab. 🌱</p></div>`;
   }
   if (lesson.erasTimeline) {
-    body += `<div class="eratl">` + HIST_ERAS.map(e => `
+    const hart = (typeof HUMAN_ART !== "undefined") ? HUMAN_ART : [];
+    const hnot = (typeof HUMAN_NOTABLES !== "undefined") ? HUMAN_NOTABLES : [];
+    body += `<div class="eratl">` + HIST_ERAS.map((e, i) => `
       <div class="eracard" style="--ec:${e.color}">
         <div class="eradot">${e.emoji}</div>
         <div class="erabody">
+          ${hart[i] ? `<div class="era-illus">${hart[i]}</div>` : ""}
           <div class="erahead"><h3>${esc(e.name)}</h3><span class="erawhen">${esc(e.when)}</span></div>
           <p class="erablurb">${esc(e.blurb)}</p>
           <ul class="erafacts">${e.facts.map(f => `<li>${esc(f)}</li>`).join("")}</ul>
+          ${(hnot[i] && hnot[i].length) ? `<div class="dinozone people">
+            <h4>⭐ Notable people &amp; arts</h4>
+            <div class="dinogrid">${hnot[i].map(p => `<div class="dinocard"><div class="dinoart">${p.svg}</div><span class="dinoname">${esc(p.name)}</span>${p.note ? `<span class="dinofact">${esc(p.note)}</span>` : ""}</div>`).join("")}</div>
+          </div>` : ""}
         </div>
       </div>`).join("") + `</div>`;
     body += `<div class="bookfoot">${doodle("rocket")}

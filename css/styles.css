@@ -763,6 +763,7 @@ footer{background:var(--purple-dark);color:#cfc6ee;text-align:center;padding:20p
 .era-illus{border-radius:12px;overflow:hidden;margin-bottom:12px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.05)}
 .era-illus svg{width:100%;height:104px;display:block}
 .dinozone{margin-top:14px;background:#f2fbf3;border:1.5px dashed #b7e6c4;border-radius:14px;padding:12px 14px}
+.dinozone.people{background:#f5f2ff;border-color:#d3c8f0}
 .dinozone h4{margin:0 0 10px;color:var(--purple-dark);font-size:1rem}
 .dinogrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:10px}
 .dinocard{background:#fff;border-radius:12px;box-shadow:var(--shadow);padding:10px 7px;text-align:center}
