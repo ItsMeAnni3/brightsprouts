@@ -235,6 +235,9 @@ function canGrade(g) {
   const r = RULES[tier()];
   return r.grades === "all" || r.grades.includes(g);
 }
+// Books are free in every grade, even premium ones — the reading library is our best giveaway.
+const FREE_SUBJECTS = ["books"];
+function canSubject(g, subj) { return canGrade(g) || FREE_SUBJECTS.includes(subj); }
 function canStory(id) {
   const r = RULES[tier()];
   return r.stories === "all" || id <= r.stories;
@@ -1058,8 +1061,31 @@ function lessonView() {
   let subj = state.subject;
   if (!LESSONS[g] || !LESSONS[g][subj]) subj = state.subject = subjectsFor(g)[0].key;
   const lesson = LESSONS[g][subj];
-  const tabs = subjectsFor(g).map(s =>
-    `<button class="${s.key === subj ? "active" : ""}" onclick="App.openSubject('${s.key}')">${s.emoji} ${s.label}</button>`).join("");
+  const gradeLocked = !canGrade(g);
+  const tabs = subjectsFor(g).map(s => {
+    const locked = gradeLocked && !canSubject(g, s.key);
+    return `<button class="${s.key === subj ? "active" : ""}" onclick="App.openSubject('${s.key}')">${s.emoji} ${s.label}${locked ? " 🔒" : ""}</button>`;
+  }).join("");
+
+  // Premium subject in a locked grade → show an upgrade card (Books stays free, reachable via its tab).
+  if (!canSubject(g, subj)) {
+    const u = currentUser();
+    return `<div class="view">
+      <button class="btn btn-ghost btn-sm no-print" onclick="App.go('lessons')">← All Grades</button>
+      <h1 style="margin-top:14px">${gradeName(g)}</h1>
+      <div class="tabs no-print">${tabs}</div>
+      <div class="card" style="text-align:center;padding:44px 22px">
+        <div style="font-size:54px">⭐</div>
+        <h2>This subject is Premium</h2>
+        <p class="subtitle">Unlock all of ${esc(gradeName(g))} — every subject, worksheet and lesson.<br>📚 <b>Books are free!</b> Tap the <b>Books</b> tab above to start reading right now.</p>
+        <div class="lesson-tools no-print" style="justify-content:center">
+          ${u ? `<button class="btn btn-primary" onclick="App.go('pricing')">⭐ Go Premium</button>`
+              : `<button class="btn btn-primary" onclick="App.goAuth('signup')">Create a Free Account</button><button class="btn btn-secondary" onclick="App.go('pricing')">See Plans</button>`}
+          <button class="btn btn-ghost" onclick="App.openSubject('books')">📚 Read free Books</button>
+        </div>
+      </div>
+    </div>`;
+  }
 
   let body = "";
   if (lesson.passage) body += `<div class="lesson-tools no-print" style="margin-bottom:10px">${listenBtn("passage-say", "Read this to me")}</div>
@@ -1847,16 +1873,13 @@ const App = {
   },
 
   openGrade(g) {
-    if (!canGrade(g)) {
-      if (!currentUser()) { state.authMode = "signup"; state.authMsg = "Create a free account to open more grades — Grades 1 & 2 are free forever!"; go("auth"); }
-      else go("pricing");
-      return;
-    }
     state.grade = g;
     state.reading = null;
-    state.subject = g === 0 ? "alphabet" : g === 13 ? "geography" : g === 14 ? "periodic"
-                  : g === 15 ? "readnow" : g === 16 ? "create" : g === 17 ? "csplan"
-                  : g === 18 ? "engplan" : "math";
+    const dflt = g === 0 ? "alphabet" : g === 13 ? "geography" : g === 14 ? "periodic"
+               : g === 15 ? "readnow" : g === 16 ? "create" : g === 17 ? "csplan"
+               : g === 18 ? "engplan" : g === 19 ? "earth" : "math";
+    // Premium grades still open — landing on the free Books tab; other subjects show an upgrade card.
+    state.subject = canGrade(g) ? dflt : "books";
     go("lesson");
   },
   openSubject(s) {
@@ -2627,7 +2650,7 @@ function applyHash() {
   let m;
   if ((m = h.match(/^lesson-(\d+)-(\w+)$/))) {
     const g = +m[1];
-    if (LESSONS[g] && LESSONS[g][m[2]] && canGrade(g)) { state.grade = g; state.subject = m[2]; state.view = "lesson"; }
+    if (LESSONS[g] && LESSONS[g][m[2]] && canSubject(g, m[2])) { state.grade = g; state.subject = m[2]; state.view = "lesson"; }
   } else if ((m = h.match(/^story-(\d+)$/))) {
     if (canStory(+m[1]) && STORIES.some(s => s.id === +m[1])) { state.currentStory = +m[1]; state.view = "story"; }
   } else if (h === "payment-success") {
