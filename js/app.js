@@ -65,6 +65,8 @@ const CREATE_SUBJECTS_INLINE = [
   { key: "create",   label: "Creature Maker",   emoji: "🎨" },
   { key: "engineer", label: "Build It!",        emoji: "🔧" }
 ];
+// Biology is a dedicated life-science subject from Grade 6 up (placed right after Science).
+const BIO_SUBJECT = { key: "biology", label: "Biology", emoji: "🧬" };
 function subjectsFor(g) {
   if (g === 0) return K_SUBJECTS;
   if (g === 13) return GEN_SUBJECTS;
@@ -74,8 +76,16 @@ function subjectsFor(g) {
   if (g === 17) return CS_SUBJECTS;
   if (g === 18) return ENG_SUBJECTS;
   if (g === 19) return HIST_SUBJECTS;
-  // Grades 1–12: core subjects + folded-in extras (+ the creative tools in Grades 1–6 only).
-  return g <= 6 ? SUBJECTS.concat(GRADE_EXTRA, CREATE_SUBJECTS_INLINE) : SUBJECTS.concat(GRADE_EXTRA);
+  // Grades 1–12: core subjects (+ Biology after Science from Grade 6) + folded-in extras
+  // (+ the creative tools in Grades 1–6 only).
+  let core = SUBJECTS;
+  if (g >= 6) {
+    const i = SUBJECTS.findIndex(s => s.key === "science") + 1;
+    core = SUBJECTS.slice(0, i).concat([BIO_SUBJECT], SUBJECTS.slice(i));
+  }
+  let subs = core.concat(GRADE_EXTRA);
+  if (g <= 6) subs = subs.concat(CREATE_SUBJECTS_INLINE);
+  return subs;
 }
 function gradeName(g) {
   if (g === 0) return "Kindergarten";
