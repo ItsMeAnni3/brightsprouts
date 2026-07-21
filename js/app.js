@@ -159,7 +159,7 @@ function gradeName(g) {
   if (g === 16) return "Create";
   if (g === 17) return "Computer Science";
   if (g === 18) return "The English Language";
-  if (g === 19) return "Historical Eras";
+  if (g === 19) return "History of Us";
   if (g === 20) return "Geology";
   if (g === 21) return "Learn Spanish";
   if (g === 23) return "Time & Money";
@@ -1141,7 +1141,7 @@ function lessonsView() {
     if (g === 15 || g === 16 || g === 17 || g === 18 || g === 22) continue;  // now folded into each grade's tabs
     const locked = !canGrade(g);
     const label = g === 0 ? "🌈 Kindergarten" : g === 13 ? "🌍 Geography" : g === 14 ? "⚗️ Extras"
-                : g === 19 ? "⏳ History" : g === 20 ? "🪨 Geology" : g === 21 ? "💬 Spanish" : g === 23 ? "🕐 Time & Money" : g === 24 ? "🚀 Space" : g === 25 ? "💛 Feelings" : "Grade " + g;
+                : g === 19 ? "⏳ History of Us" : g === 20 ? "🪨 Geology" : g === 21 ? "💬 Spanish" : g === 23 ? "🕐 Time & Money" : g === 24 ? "🚀 Space" : g === 25 ? "💛 Feelings" : "Grade " + g;
     tiles.push(`<button class="grade-tile g${g}" onclick="App.openGrade(${g})">${locked ? '<span class="lock">🔒</span>' : ""}${label}</button>`);
   }
   // The arcade lives here now instead of the top bar. gameHub() so it always opens on the
