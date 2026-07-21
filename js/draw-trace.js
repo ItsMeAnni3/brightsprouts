@@ -110,17 +110,6 @@
     cat.items = cat.items.filter(function (it) { return it.art && it.art.length; });
   });
 
-  LESSONS[14].drawtrace = {
-    title: "Trace & Draw", emoji: "🖌️",
-    intro: "Learn to draw by tracing! Pick a set, follow the dashed lines with your pencil, then draw it yourself in the empty box. Print a page and practise as much as you like.",
-    learn: [
-      "Tracing shows your hand the path a drawing takes — just like tracing letters teaches handwriting.",
-      "Start with the big Shapes: almost every drawing is built from circles, squares and triangles.",
-      "Go slowly and follow the dots. Lift your pencil and start again whenever you need to.",
-      "Once you can trace it, cover the picture and draw it from memory in the 'Your turn' box."
-    ],
-    activity: "🖼️ Draw-Along: Trace a picture, then draw it three more times on your own — a little bigger each time. Colour your favourite and put it on the fridge!",
-    drawTracing: true,
-    groups: DRAW_TRACE
-  };
+  // Published for trace-grades.js, which hands each of K–Grade 2 its own slice of these sets.
+  window.DRAW_TRACE = DRAW_TRACE;
 })();

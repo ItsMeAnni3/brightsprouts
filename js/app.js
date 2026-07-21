@@ -37,8 +37,6 @@ const ADD_SUBJECTS = [
   { key: "abacus",   label: "Abacus",          emoji: "🧮" },
   { key: "formulas", label: "Formulas",        emoji: "📐" },
   { key: "tables",   label: "Maths Tables",    emoji: "🔢" },
-  { key: "tracing",  label: "Tracing",         emoji: "✏️" },
-  { key: "drawtrace",label: "Trace & Draw",    emoji: "🖌️" },
   { key: "coloring", label: "Colouring Book",  emoji: "🖍️" }
 ];
 const MAKE_SUBJECTS = [{ key: "create", label: "Creature Maker", emoji: "🎨" }, { key: "engineer", label: "Build It!", emoji: "🔧" }];
@@ -94,6 +92,11 @@ const SPANISH_SUBJECTS = [
 ];
 // Phonics is folded into Kindergarten–Grade 7 and grows with the child: it starts as decoding
 // and becomes word study once the child can read.
+// Tracing and Trace & Draw now live in K–Grade 2 rather than in Extras.
+const TRACE_SUBJECTS = [
+  { key: "tracing",   label: "Tracing",      emoji: "✏️" },
+  { key: "drawtrace", label: "Trace & Draw", emoji: "🖌️" }
+];
 function phonicsSubject(g) {
   return g <= 3 ? { key: "phonics", label: "Phonics", emoji: "🔤" }
                 : { key: "phonics", label: "Word Study", emoji: "🧩" };
@@ -116,7 +119,7 @@ function subjectsFor(g) {
   if (g === 0) {
     const k = K_SUBJECTS.slice();
     k.splice(1, 0, phonicsSubject(0));   // straight after the Alphabet
-    return k;
+    return k.concat(TRACE_SUBJECTS);     // pencil work rounds off the list
   }
   if (g === 13) return GEN_SUBJECTS;
   if (g === 14) return ADD_SUBJECTS;
@@ -136,6 +139,11 @@ function subjectsFor(g) {
   if (g <= 7) {
     const rd = core.findIndex(x => x.key === "reading") + 1;   // decoding sits with reading
     core.splice(rd, 0, phonicsSubject(g));
+  }
+  if (g <= 2) {
+    // handwriting belongs with Writing; learn-to-draw belongs with Visual Art
+    core.splice(core.findIndex(x => x.key === "writing") + 1, 0, TRACE_SUBJECTS[0]);
+    core.splice(core.findIndex(x => x.key === "art") + 1, 0, TRACE_SUBJECTS[1]);
   }
   if (g >= 6) {
     const i = core.findIndex(s => s.key === "science") + 1;
@@ -1381,6 +1389,14 @@ function lessonView() {
       </svg>`;
     };
     const A = n => String.fromCharCode(65 + n), a = n => String.fromCharCode(97 + n);
+    // each grade offers only its own modes; snap back if the remembered one isn't on offer
+    const modeList = lesson.traceModes
+      ? TRACE_MODES.filter(t => lesson.traceModes.indexOf(t[0]) >= 0)
+      : TRACE_MODES;
+    if (lesson.traceModes && lesson.traceModes.indexOf(state.traceMode) < 0) {
+      state.traceMode = lesson.traceStart || lesson.traceModes[0];
+      state.tracePick = null;
+    }
     const m = state.traceMode;
     let rows = [], grid = false;
     if (m === "upper")      rows = Array.from({ length: 26 }, (_, i) => [A(i), 6]);
@@ -1399,7 +1415,7 @@ function lessonView() {
       rows = state.tracePick.map(c => [c, 6]);
     }
 
-    body += `<div class="trace-bar no-print">` + TRACE_MODES.map(t =>
+    body += `<div class="trace-bar no-print">` + modeList.map(t =>
       `<button class="btn btn-sm ${state.traceMode === t[0] ? "btn-primary" : "btn-ghost"}" onclick="App.traceMode('${t[0]}')">${esc(t[1])}</button>`).join("") + `</div>`;
 
     if (grid) {
