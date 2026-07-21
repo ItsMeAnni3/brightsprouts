@@ -173,11 +173,11 @@ function gradeName(g) {
   if (g === 16) return "Create";
   if (g === 17) return "Computer Science";
   if (g === 18) return "The English Language";
-  if (g === 19) return "Let's Learn History of Us";
+  if (g === 19) return "Let's Learn The History of Us";
   if (g === 20) return "Let's Learn Geology";
   if (g === 21) return "Let's Learn Spanish";
   if (g === 23) return "Let's Learn Time & Money";
-  if (g === 24) return "Space Exploration";
+  if (g === 24) return "Let's Learn Space Exploration";
   if (g === 25) return "Let's Learn Feelings & Kindness";
   return "Grade " + g;
 }
@@ -1155,7 +1155,7 @@ function lessonsView() {
     if (g === 15 || g === 16 || g === 17 || g === 18 || g === 22) continue;  // now folded into each grade's tabs
     const locked = !canGrade(g);
     const label = g === 0 ? "🌈 Kindergarten" : g === 13 ? "🌍 Let's Learn Geography" : g === 14 ? "⚗️ Additional Learning Materials"
-                : g === 19 ? "⏳ Let's Learn History of Us" : g === 20 ? "🪨 Let's Learn Geology" : g === 21 ? "💬 Let's Learn Spanish" : g === 23 ? "🕐 Let's Learn Time & Money" : g === 24 ? "🚀 Space" : g === 25 ? "💛 Let's Learn Feelings" : "Grade " + g;
+                : g === 19 ? "⏳ Let's Learn The History of Us" : g === 20 ? "🪨 Let's Learn Geology" : g === 21 ? "💬 Let's Learn Spanish" : g === 23 ? "🕐 Let's Learn Time & Money" : g === 24 ? "🚀 Let's Learn Space" : g === 25 ? "💛 Let's Learn Feelings" : "Grade " + g;
     tiles.push(`<button class="grade-tile g${g}" onclick="App.openGrade(${g})">${locked ? '<span class="lock">🔒</span>' : ""}${label}</button>`);
   }
   // The arcade lives here now instead of the top bar. gameHub() so it always opens on the
