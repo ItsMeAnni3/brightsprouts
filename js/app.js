@@ -92,6 +92,12 @@ const SPANISH_SUBJECTS = [
   { key: "months",    label: "Months of the Year",  emoji: "🗓️" }
 ];
 // Phonics & Early Reading (category 22): the K–2 decoding foundation — free for everyone.
+const TIME_SUBJECTS = [
+  { key: "clock", label: "Telling Time",         emoji: "🕐" },
+  { key: "units", label: "Hours, Minutes & Days", emoji: "⏳" },
+  { key: "money", label: "Counting Money",       emoji: "💰" },
+  { key: "sense", label: "Money Sense",          emoji: "🏦" }
+];
 const PHONICS_SUBJECTS = [
   { key: "letters",  label: "Letter Sounds",   emoji: "🔤" },
   { key: "blending", label: "Blending Sounds", emoji: "🐱" },
@@ -110,6 +116,7 @@ function subjectsFor(g) {
   if (g === 20) return GEO_SUBJECTS;
   if (g === 21) return SPANISH_SUBJECTS;
   if (g === 22) return PHONICS_SUBJECTS;
+  if (g === 23) return TIME_SUBJECTS;
   // Grades 1–12: core subjects (+ Biology after Science from Grade 6) + folded-in extras
   // (+ the creative tools in Grades 1–6 only).
   let core = SUBJECTS.slice();
@@ -139,6 +146,7 @@ function gradeName(g) {
   if (g === 20) return "Geology";
   if (g === 21) return "Learn Spanish";
   if (g === 22) return "Phonics & Early Reading";
+  if (g === 23) return "Time & Money";
   return "Grade " + g;
 }
 // Build the creature SVG from the chosen parts. Order matters: back to front.
@@ -1099,11 +1107,11 @@ function homeView() {
 // ---------- Lessons ----------
 function lessonsView() {
   const tiles = [];
-  for (let g = 0; g <= 22; g++) {
+  for (let g = 0; g <= 23; g++) {
     if (g === 15 || g === 16 || g === 17 || g === 18) continue;  // now folded into each grade's tabs
     const locked = !canGrade(g);
     const label = g === 0 ? "🌈 Kindergarten" : g === 13 ? "🌍 General" : g === 14 ? "⚗️ Extras"
-                : g === 19 ? "⏳ History" : g === 20 ? "🪨 Geology" : g === 21 ? "💬 Spanish" : g === 22 ? "🔤 Phonics" : "Grade " + g;
+                : g === 19 ? "⏳ History" : g === 20 ? "🪨 Geology" : g === 21 ? "💬 Spanish" : g === 22 ? "🔤 Phonics" : g === 23 ? "🕐 Time & Money" : "Grade " + g;
     tiles.push(`<button class="grade-tile g${g}" onclick="App.openGrade(${g})">${locked ? '<span class="lock">🔒</span>' : ""}${label}</button>`);
   }
   return `<div class="view">
@@ -1118,7 +1126,12 @@ function lessonView() {
   // belt and braces: if state ever holds a subject this grade doesn't have, fall back to its first one
   let subj = state.subject;
   if (!LESSONS[g] || !LESSONS[g][subj]) subj = state.subject = subjectsFor(g)[0].key;
-  const lesson = LESSONS[g][subj];
+  // Money lessons ship per-currency copy (learn/diagram/questions) — merge the chosen one in.
+  const baseLesson = LESSONS[g][subj];
+  const curCcy = state.currency || "uk";
+  const lesson = baseLesson.byCurrency
+    ? Object.assign({}, baseLesson, baseLesson.byCurrency[curCcy] || {})
+    : baseLesson;
   const gradeLocked = !canGrade(g);
   const tabs = subjectsFor(g).map(s => {
     const locked = gradeLocked && !canSubject(g, s.key);
@@ -1146,6 +1159,12 @@ function lessonView() {
   }
 
   let body = "";
+  if (baseLesson.byCurrency) {
+    body += `<div class="trace-bar no-print">
+      <button class="btn btn-sm ${curCcy === "uk" ? "btn-primary" : "btn-ghost"}" onclick="App.setCurrency('uk')">£ Pounds &amp; pence</button>
+      <button class="btn btn-sm ${curCcy === "us" ? "btn-primary" : "btn-ghost"}" onclick="App.setCurrency('us')">$ Dollars &amp; cents</button>
+    </div>`;
+  }
   if (lesson.diagram) body += `<div class="biodiagram">${lesson.diagram}</div>`;
   // Tap-to-hear word list. Spanish lessons speak "es"; everything else speaks English.
   // Each item is { es: shown big, en: shown small, say: spoken text (defaults to es) }.
@@ -1559,7 +1578,7 @@ function lessonView() {
       lesson.words.map(w => `<tr><td class="w">${esc(w[0])}</td><td>${esc(w[1])}</td><td><i>${esc(w[2])}</i></td></tr>`).join("") + `</table>`;
   }
 
-  const sheetKey = g + "-" + subj;
+  const sheetKey = g + "-" + subj + (baseLesson.byCurrency ? "-" + curCcy : "");
   // Note: the Earth's Story timeline (earthTimeline) DOES get a worksheet — it has a questions bank.
   const noQuiz = lesson.coloringBook || lesson.tracingSheet || lesson.drawTracing || lesson.csPlan || lesson.engPlan || lesson.erasTimeline || lesson.engineerBuild || (lesson.engBand != null) || lesson.readOnline || lesson.magicMaker || lesson.earthTimeline;
   if (!noQuiz && !state.sheetCache[sheetKey]) state.sheetCache[sheetKey] = makeSheet(g, subj, lesson);
@@ -1994,7 +2013,7 @@ const App = {
     const dflt = g === 0 ? "alphabet" : g === 13 ? "geography" : g === 14 ? "periodic"
                : g === 15 ? "readnow" : g === 16 ? "create" : g === 17 ? "csplan"
                : g === 18 ? "engplan" : g === 19 ? "earth" : g === 20 ? "rocks"
-               : g === 21 ? "greetings" : g === 22 ? "letters" : "math";
+               : g === 21 ? "greetings" : g === 22 ? "letters" : g === 23 ? "clock" : "math";
     // Premium grades still open — landing on the free Books tab; other subjects show an upgrade card.
     state.subject = canGrade(g) ? dflt : "books";
     go("lesson");
@@ -2242,6 +2261,7 @@ const App = {
   traceMode(m) { state.traceMode = m; state.tracePick = null; render(); },
   newTracePage() { state.tracePick = null; render(); },
   pickDrawCat(k) { state.drawCat = k; render(); },
+  setCurrency(c) { state.currency = c; state.sheetCache = {}; render(); },
   colorTheme(t) { state.colorTheme = t; state.colorPick = null; render(); },
   colorSize(big) { state.colorBig = big; state.colorPick = null; render(); },
   toggleKey(on) {
