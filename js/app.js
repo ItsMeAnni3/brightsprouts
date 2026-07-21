@@ -37,6 +37,7 @@ const ADD_SUBJECTS = [
   { key: "formulas", label: "Formulas",        emoji: "📐" },
   { key: "tables",   label: "Maths Tables",    emoji: "🔢" },
   { key: "tracing",  label: "Tracing",         emoji: "✏️" },
+  { key: "drawtrace",label: "Trace & Draw",    emoji: "🖌️" },
   { key: "coloring", label: "Colouring Book",  emoji: "🖍️" }
 ];
 const MAKE_SUBJECTS = [{ key: "create", label: "Creature Maker", emoji: "🎨" }, { key: "engineer", label: "Build It!", emoji: "🔧" }];
@@ -1374,6 +1375,33 @@ function lessonView() {
        </figure>`).join("") + `</div>`;
     body += `<p class="no-print" style="font-size:.82rem;color:#8a86a8;margin-top:10px">${pool.length} pictures in this theme · press <b>New Pictures</b> for a different set · <b>Print</b> gives you clean outlines with no website around them.</p>`;
   }
+  if (lesson.drawTracing) {
+    const groups = lesson.groups;
+    const cur = groups.find(gr => gr.key === state.drawCat) || groups[0];
+    body += `<div class="tabs no-print">` + groups.map(gr =>
+      `<button class="${gr.key === cur.key ? "active" : ""}" onclick="App.pickDrawCat('${gr.key}')">${gr.emoji} ${esc(gr.label)}</button>`).join("") + `</div>`;
+    body += `<p class="drawtip">✏️ <b>Look</b> at the picture, <b>trace</b> the dashed lines, then draw your own in <b>Your turn</b>!</p>`;
+    const cell = (it, mode) => {
+      if (mode === "blank") {
+        return `<svg viewBox="0 0 100 100" class="drawart" role="img" aria-label="Draw your own ${esc(it.name)}">
+          <rect x="4" y="4" width="92" height="92" rx="6" fill="none" stroke="#e2ddf2" stroke-width="1.5" stroke-dasharray="2 3"/>
+          <circle cx="50" cy="50" r="1.4" fill="#d8d2ec"/></svg>`;
+      }
+      const solid = mode === "look";
+      return `<svg viewBox="0 0 100 100" class="drawart" role="img" aria-label="${solid ? esc(it.name) : "Trace the " + esc(it.name)}">
+        <g fill="none" stroke="${solid ? "#8a86a8" : "#c4bedd"}" stroke-width="2" ${solid ? "" : 'stroke-dasharray="3.5 3"'} stroke-linecap="round" stroke-linejoin="round">${it.art}</g></svg>`;
+    };
+    body += `<div class="drawgrid">` + cur.items.map(it => `
+      <figure class="drawcard">
+        <figcaption class="drawname">${it.emoji || ""} ${esc(it.name)}</figcaption>
+        <div class="drawrow">
+          <div class="drawcell"><span class="drawlbl">Look</span>${cell(it, "look")}</div>
+          <div class="drawcell"><span class="drawlbl">Trace</span>${cell(it, "trace")}</div>
+          <div class="drawcell"><span class="drawlbl">Your turn</span>${cell(it, "blank")}</div>
+        </div>
+      </figure>`).join("") + `</div>`;
+    body += `<p class="no-print" style="font-size:.82rem;color:#8a86a8;margin-top:10px">Pick a set above · press <b>Print</b> for a clean tracing page with no website around it.</p>`;
+  }
   if (lesson.periodicTable) {
     const catColor = {}; ELEM_CATS.forEach(c => catColor[c[0]] = c[2]);
     body += `<div class="legend">` + ELEM_CATS.map(c =>
@@ -1521,7 +1549,7 @@ function lessonView() {
 
   const sheetKey = g + "-" + subj;
   // Note: the Earth's Story timeline (earthTimeline) DOES get a worksheet — it has a questions bank.
-  const noQuiz = lesson.coloringBook || lesson.tracingSheet || lesson.csPlan || lesson.engPlan || lesson.erasTimeline || lesson.engineerBuild || (lesson.engBand != null) || lesson.readOnline || lesson.magicMaker || lesson.earthTimeline;
+  const noQuiz = lesson.coloringBook || lesson.tracingSheet || lesson.drawTracing || lesson.csPlan || lesson.engPlan || lesson.erasTimeline || lesson.engineerBuild || (lesson.engBand != null) || lesson.readOnline || lesson.magicMaker || lesson.earthTimeline;
   if (!noQuiz && !state.sheetCache[sheetKey]) state.sheetCache[sheetKey] = makeSheet(g, subj, lesson);
   const questions = noQuiz ? [] : state.sheetCache[sheetKey];
   const qHtml = questions.length ? `
@@ -1548,7 +1576,7 @@ function lessonView() {
       <div class="lesson-tools no-print">
         ${lesson.coloringBook ? `<button class="btn btn-secondary" onclick="App.newColorPage()">🎲 New Pictures</button>` : ""}
         ${lesson.tracingSheet && state.traceMode === "random" ? `<button class="btn btn-secondary" onclick="App.newTracePage()">🎲 New Practice Set</button>` : ""}
-        <button class="btn btn-primary" onclick="window.print()">🖨️ Print ${lesson.coloringBook ? "Colouring Page" : lesson.tracingSheet ? "Tracing Sheet" : "Worksheet"}</button>
+        <button class="btn btn-primary" onclick="window.print()">🖨️ Print ${lesson.coloringBook ? "Colouring Page" : (lesson.tracingSheet || lesson.drawTracing) ? "Tracing Sheet" : "Worksheet"}</button>
         ${questions.length ? `<label><input type="checkbox" id="key-toggle" onchange="App.toggleKey(this.checked)"> Show / print answer key</label>` : ""}
       </div>
     </div>
@@ -2199,6 +2227,7 @@ const App = {
   },
   traceMode(m) { state.traceMode = m; state.tracePick = null; render(); },
   newTracePage() { state.tracePick = null; render(); },
+  pickDrawCat(k) { state.drawCat = k; render(); },
   colorTheme(t) { state.colorTheme = t; state.colorPick = null; render(); },
   colorSize(big) { state.colorBig = big; state.colorPick = null; render(); },
   toggleKey(on) {
