@@ -162,7 +162,7 @@ function subjectsFor(g) {
 function gradeName(g) {
   if (g === 0) return "Kindergarten";
   if (g === 13) return "Geography";
-  if (g === 14) return "Additional Learning Material";
+  if (g === 14) return "Additional Learning Materials";
   if (g === 15) return "Books";
   if (g === 16) return "Create";
   if (g === 17) return "Computer Science";
@@ -1148,7 +1148,7 @@ function lessonsView() {
   for (let g = 0; g <= 25; g++) {
     if (g === 15 || g === 16 || g === 17 || g === 18 || g === 22) continue;  // now folded into each grade's tabs
     const locked = !canGrade(g);
-    const label = g === 0 ? "🌈 Kindergarten" : g === 13 ? "🌍 Geography" : g === 14 ? "⚗️ Extras"
+    const label = g === 0 ? "🌈 Kindergarten" : g === 13 ? "🌍 Geography" : g === 14 ? "⚗️ Additional Learning Materials"
                 : g === 19 ? "⏳ History of Us" : g === 20 ? "🪨 Geology" : g === 21 ? "💬 Spanish" : g === 23 ? "🕐 Time & Money" : g === 24 ? "🚀 Space" : g === 25 ? "💛 Feelings" : "Grade " + g;
     tiles.push(`<button class="grade-tile g${g}" onclick="App.openGrade(${g})">${locked ? '<span class="lock">🔒</span>' : ""}${label}</button>`);
   }
