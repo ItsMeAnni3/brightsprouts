@@ -1922,7 +1922,7 @@ function pricingView() {
           : `<button class="btn btn-primary" onclick="App.startUpgrade()">Go Premium ⭐</button>`}
       </div>
     </div>
-    <p style="margin-top:22px;color:#8a86a8;font-size:.85rem">${TAX_NOTE}<br>This starter app simulates checkout. See README.md to connect Stripe and collect real payments.</p>
+    <p style="margin-top:22px;color:#8a86a8;font-size:.85rem">${TAX_NOTE}<br>${STRIPE_PAYMENT_LINK ? "Secure checkout by Stripe. Cancel any time." : "Demo checkout — see README.md to connect Stripe and collect real payments."}</p>
   </div>`;
 }
 

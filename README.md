@@ -21,7 +21,7 @@ accounts, lessons, stories, printing. No installation needed.
 | 📖 Story Library | 50 original stories with morals, in 3 themes: Adventures, Kids Helping Strangers, and Helping at Home — each with discussion questions |
 | ✨ Story Maker | Parents enter their child's name, a sidekick, a setting, a theme, and a value — the app writes a personalized story with a moral, ready to print |
 | 👤 Accounts | Sign up / log in / account page. Data is stored in the browser (see "Going live" below) |
-| ⭐ Monetization | Free plan (Grades 1–2, 10 stories, 2 custom stories) vs Premium **$9.99/month + state sales tax** (everything). Locked content shows 🔒 and funnels users to sign up or upgrade |
+| ⭐ Monetization | Free plan (Grades 1–2, 10 stories, 2 custom stories) vs Premium **$7.99/month + state sales tax** (everything). Locked content shows 🔒 and funnels users to sign up or upgrade |
 
 ## 💰 How you earn money with this
 
@@ -29,13 +29,13 @@ The app is already structured as a **freemium subscription business**:
 
 1. **Free plan hooks families in** — Grades 1–2 and 10 stories are genuinely useful, so parents sign up.
 2. **Locks create the upgrade moment** — the instant a parent taps Grade 3 or story #11, they see the Premium page.
-3. **Premium is priced at $9.99/month plus tax** (change `PRICE` and `RULES` at the top of `js/app.js` to adjust pricing or what's free).
+3. **Premium is priced at $7.99/month plus tax** (change `PRICE` and `RULES` at the top of `js/app.js` to adjust pricing or what's free).
 
 ### Turning on REAL payments (the demo checkout → Stripe)
 
 The upgrade button currently simulates a purchase. To collect real money:
 
-1. Create a free account at **stripe.com** → Products → add "Premium Family, $9.99/month subscription".
+1. Create a free account at **stripe.com** → Products → add "Premium Family, $7.99/month subscription".
 2. Create a **Payment Link** for it (no coding needed — Stripe generates a checkout URL). Turn on **Stripe Tax** in the settings — it automatically calculates and collects the correct sales tax for each customer's state (this is exactly the "plus tax depending on state" behavior, handled for you).
 3. In the Payment Link's settings, set **After payment → redirect customers to**: `https://brightsprouts.academy/#payment-success`
 4. In `js/app.js`, paste the link into `STRIPE_PAYMENT_LINK = "..."` near the top. That's the whole switch: the upgrade button now opens real Stripe checkout (with the customer's email pre-filled), and returning customers are auto-upgraded to Premium in that browser.
