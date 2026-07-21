@@ -2045,9 +2045,10 @@ const App = {
     else if (screen === "matharace" || screen === "flagquiz" || screen === "spellbee") {
       state.arcade = { type: screen, i: 0, correct: 0, q: arcadeQuestion(screen), answered: null, done: false };
     }
+    else if (screen === "bee") { state.bee = null; }   // null = show the level picker
     go("game");
   },
-  gameHub() { state.gameScreen = "hub"; state.arcade = null; state.mem = null; go("game"); },
+  gameHub() { state.gameScreen = "hub"; state.arcade = null; state.mem = null; state.bee = null; go("game"); },
 
   // ---- The Globe ----
   globePick(id) {
@@ -2155,6 +2156,51 @@ const App = {
   gameSun() { if (state.game.sun < GAME_NEED) state.game.sun++; gameCheckGrow(); },
 
   // ---- Arcade quiz answer (Math Race / Flag Quiz / Spelling Bee) ----
+  // ---- Spelling Bee: hear the word, type the spelling ----
+  beePick(level) { state.bee = beeNewGame(level); render(); App._beeSpeak(); App._beeFocus(); },
+  beeMenu() { state.bee = null; render(); },
+  beeSay(slow) {
+    const b = state.bee;
+    if (!b || b.done || typeof Speech === "undefined" || !Speech.supported()) return;
+    Speech.speak(b.words[b.i], null, "en", slow ? 0.45 : 0.9);
+  },
+  beeHint() { const b = state.bee; if (!b || b.done) return; b.hint = true; render(); App._beeFocus(); },
+  // fallback for devices with no voice: flash the word, then hide it again
+  beeReveal() {
+    const b = state.bee; if (!b || b.done) return;
+    b.revealed = true; render();
+    setTimeout(function () {
+      if (state.bee === b && b.revealed) { b.revealed = false; render(); App._beeFocus(); }
+    }, 2200);
+  },
+  beeSubmit() {
+    const b = state.bee; if (!b || b.done || b.status) return;
+    const el = document.getElementById("beein");
+    const typed = el ? el.value : "";
+    if (!String(typed).trim()) { if (el) el.focus(); return; }   // an empty box shouldn't cost a word
+    b.typed = typed;
+    const ok = beeMatches(typed, b.words[b.i]);
+    b.status = ok ? "right" : "wrong";
+    if (ok) { b.correct++; b.streak++; if (b.streak > b.best) b.best = b.streak; } else { b.streak = 0; }
+    render();
+  },
+  beeNext() {
+    const b = state.bee; if (!b || b.done) return;
+    b.i++; b.status = null; b.hint = false; b.revealed = false; b.typed = "";
+    if (b.i >= BEE_ROUND) {
+      b.done = true;
+      const stars = arcadeStars(b.correct);
+      if (stars > 0) earn(stars, "⭐ +" + stars + (stars === 1 ? " star!" : " stars!"));
+      if (b.correct === BEE_ROUND) earnBadge("speller");
+      render();
+    } else { render(); App._beeSpeak(); App._beeFocus(); }
+  },
+  _beeSpeak() {
+    const b = state.bee;
+    if (b && !b.done && typeof Speech !== "undefined" && Speech.supported()) Speech.speak(b.words[b.i], null, "en", 0.9);
+  },
+  _beeFocus() { setTimeout(function () { const el = document.getElementById("beein"); if (el) el.focus(); }, 30); },
+
   arcadeAnswer(opt) {
     const a = state.arcade;
     if (!a || a.answered != null || a.done) return;
@@ -2478,6 +2524,7 @@ function gameView() {
   const sc = state.gameScreen || "hub";
   if (sc === "plant") return plantGameView();
   if (sc === "memory") return memoryView();
+  if (sc === "bee") return beeView();
   if (sc === "matharace" || sc === "flagquiz" || sc === "spellbee") return arcadeQuizView();
   return gameHubView();
 }
@@ -2502,7 +2549,77 @@ function gameHubView() {
     <p class="subtitle">Pick a game to play. Every game you play earns you ⭐ stars for your Rewards collection!</p>
     <div class="grid grid-3 gtiles">${plantTile}${arcTiles}</div>
     <div class="bookfoot">${doodle("rocket")}
-      <p><b>Play &amp; learn!</b> Race through sums, guess flags from around the world, spot the correctly spelled word, or test your memory. Win stars, unlock stickers, and earn badges as you go.</p></div>
+      <p><b>Play &amp; learn!</b> Race through sums, guess flags from around the world, spell words in the Spelling Bee, or test your memory. Win stars, unlock stickers, and earn badges as you go.</p></div>
+  </div>`;
+}
+
+// ---- Spelling Bee view: level picker, then listen-and-type rounds ----
+function beeView() {
+  const b = state.bee;
+  const back = `<button class="btn btn-ghost btn-sm no-print" onclick="App.gameHub()">← Arcade</button>`;
+  const canSpeak = typeof Speech !== "undefined" && Speech.supported();
+
+  if (!b) {
+    return `<div class="view">${back}
+      <h1>🐝 Spelling Bee</h1>
+      <p class="subtitle">Listen to the word, then spell it. ${BEE_ROUND} words — how many can you get right?</p>
+      ${canSpeak ? "" : `<div class="beewarn">🔇 This device can't read words aloud, so each word will be <b>shown</b> for a moment instead — look carefully, then spell it from memory!</div>`}
+      <div class="grid grid-3 gtiles">${BEE_LEVELS.map(l => `
+        <div class="gtile" onclick="App.beePick('${l.key}')">
+          <div class="gtemoji">${l.emoji}</div>
+          <h3>${esc(l.name)}</h3><p>${esc(l.desc)}</p>
+          <button class="btn btn-primary btn-sm">Start</button>
+        </div>`).join("")}</div>
+    </div>`;
+  }
+
+  if (b.done) {
+    const stars = arcadeStars(b.correct), perfect = b.correct === BEE_ROUND;
+    return `<div class="view">${back}
+      <div class="card arcdone" style="text-align:center">
+        <div style="font-size:56px">${perfect ? "🏆" : b.correct >= 7 ? "🎉" : "🐝"}</div>
+        <h2>${perfect ? "Perfect spelling!" : b.correct >= 7 ? "Great spelling!" : "Good try!"}</h2>
+        <p class="arcscore">You spelled <b>${b.correct}</b> of ${BEE_ROUND} words correctly</p>
+        ${b.best > 1 ? `<p class="subtitle">Longest streak: 🔥 ${b.best} in a row</p>` : ""}
+        <p>⭐ You earned ${stars} star${stars === 1 ? "" : "s"}</p>
+        ${perfect ? `<p class="subtitle">🐝 Badge unlocked — Super Speller!</p>` : ""}
+        <div class="lesson-tools" style="justify-content:center">
+          <button class="btn btn-primary" onclick="App.beePick('${b.level}')">Play again</button>
+          <button class="btn btn-secondary" onclick="App.beeMenu()">Change level</button>
+        </div>
+      </div></div>`;
+  }
+
+  const word = b.words[b.i];
+  const pct = Math.round((b.i / BEE_ROUND) * 100);
+  const last = b.i + 1 >= BEE_ROUND;
+  return `<div class="view">${back}
+    <div class="arcbar">
+      <span>Word ${b.i + 1} / ${BEE_ROUND} · ⭐ ${b.correct}${b.streak > 1 ? ` · 🔥 ${b.streak} in a row` : ""}</span>
+      <div class="readprog"><i style="width:${pct}%"></i></div>
+    </div>
+    <div class="card beecard">
+      <div class="beebug">🐝</div>
+      <h2>${canSpeak ? "Listen, then spell the word" : "Look, then spell the word"}</h2>
+      <div class="beetools no-print">
+        ${canSpeak ? `<button class="btn btn-secondary" onclick="App.beeSay(0)">🔊 Hear it again</button>
+                      <button class="btn btn-ghost" onclick="App.beeSay(1)">🐢 Say it slowly</button>` : ""}
+        ${canSpeak ? "" : `<button class="btn btn-secondary" onclick="App.beeReveal()">👀 Show the word</button>`}
+        ${b.hint ? "" : `<button class="btn btn-ghost" onclick="App.beeHint()">💡 Hint</button>`}
+      </div>
+      ${b.revealed ? `<div class="beeword">${esc(word)}</div>` : ""}
+      ${b.hint ? `<div class="beehint">${esc(beeHintFor(word))} <span>${word.length} letters</span></div>` : ""}
+      <div class="beeinput">
+        <input id="beein" type="text" value="${esc(b.typed || "")}" ${b.status ? "disabled" : ""}
+               placeholder="type the word…" autocomplete="off" autocorrect="off"
+               autocapitalize="off" spellcheck="false"
+               onkeydown="if(event.key==='Enter'){event.preventDefault();App.beeSubmit();}">
+        ${b.status ? "" : `<button class="btn btn-primary" onclick="App.beeSubmit()">Check ✓</button>`}
+      </div>
+      ${b.status === "right" ? `<div class="beefb ok">✅ Correct — <b>${esc(word)}</b></div>` : ""}
+      ${b.status === "wrong" ? `<div class="beefb no">❌ Not quite. It was <b>${esc(word)}</b></div>` : ""}
+      ${b.status ? `<button class="btn btn-primary" onclick="App.beeNext()">${last ? "See my score →" : "Next word →"}</button>` : ""}
+    </div>
   </div>`;
 }
 

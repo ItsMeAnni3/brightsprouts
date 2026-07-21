@@ -22,7 +22,8 @@ const Speech = {
   },
   stop() { if (this.supported()) window.speechSynthesis.cancel(); },
   // speak plain text; onend() fires when finished or stopped. lang "es" speaks Spanish.
-  speak(text, onend, lang) {
+  // rate overrides the default pace (the Spelling Bee uses a slow one for "say it slowly").
+  speak(text, onend, lang, rate) {
     if (!this.supported() || !text) { if (onend) onend(); return false; }
     this.stop();
     // long texts are chunked by sentence so a child can stop mid-way and browsers don't truncate
@@ -34,7 +35,7 @@ const Speech = {
       if (i >= chunks.length) { if (onend) onend(); return; }
       const u = new SpeechSynthesisUtterance(chunks[i++].trim());
       // a little slower in Spanish — learners need to catch each syllable
-      u.rate = es ? 0.8 : 0.92; u.pitch = 1.05;
+      u.rate = rate || (es ? 0.8 : 0.92); u.pitch = 1.05;
       // with no Spanish voice we still tag the utterance es-ES so the browser can pick its own
       if (v) { u.voice = v; u.lang = v.lang; } else { u.lang = es ? "es-ES" : "en-GB"; }
       u.onend = next;

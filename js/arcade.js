@@ -4,7 +4,8 @@
 const ARCADE_GAMES = [
   { key:"matharace",  name:"Math Race",    emoji:"🧮", desc:"Answer 10 sums as fast as you can!", badge:"mathwhiz" },
   { key:"flagquiz",   name:"Flag Quiz",    emoji:"🚩", desc:"Which country does the flag belong to?", badge:"explorer" },
-  { key:"spellbee",   name:"Spelling Bee", emoji:"🐝", desc:"Pick the word that is spelled correctly.", badge:"speller" },
+  { key:"bee",        name:"Spelling Bee", emoji:"🐝", desc:"Listen to the word — then spell it!", badge:"speller" },
+  { key:"spellbee",   name:"Spot the Spelling", emoji:"🔤", desc:"Pick the word that is spelled correctly.", badge:"speller" },
   { key:"memory",     name:"Memory Match", emoji:"🧠", desc:"Flip the cards and find the matching pairs.", badge:"memory" }
 ];
 const ARCADE_Q = 10;   // questions per quiz game
