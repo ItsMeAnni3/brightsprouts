@@ -26,6 +26,7 @@ const K_SUBJECTS = [
 ];
 const GEN_SUBJECTS = [
   { key: "globe",      label: "The Globe",             emoji: "🌍" },
+  { key: "geocourse",  label: "Geography Course",      emoji: "🧭" },
   { key: "geography",  label: "Countries & Continents", emoji: "🗺️" },
   { key: "florafauna", label: "Flora & Fauna",          emoji: "🌿" }
 ];
@@ -755,7 +756,11 @@ function makeSheet(g, subj, lesson) {
   if (g === 0) return genKinder(subj, lesson);
   if (g === 18) return genEng(subj);
   if (g === 14) return genExtra(subj, lesson);
-  if (g === 13) return subj === "florafauna" ? genFF() : genGeo(lesson);
+  if (g === 13) {
+    if (subj === "florafauna") return genFF();
+    if (subj === "geography") return genGeo(lesson);
+    // the Globe and the Geography Course carry their own question banks — fall through
+  }
   if (subj === "math") return genMath(g);
   if (subj === "spelling") return genSpelling(lesson.spellWords);
   if (subj === "vocabulary") return genVocab(lesson.words);
