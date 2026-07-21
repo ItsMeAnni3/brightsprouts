@@ -91,6 +91,13 @@ const SPANISH_SUBJECTS = [
   { key: "days",      label: "Days of the Week",    emoji: "📅" },
   { key: "months",    label: "Months of the Year",  emoji: "🗓️" }
 ];
+// Phonics & Early Reading (category 22): the K–2 decoding foundation — free for everyone.
+const PHONICS_SUBJECTS = [
+  { key: "letters",  label: "Letter Sounds",   emoji: "🔤" },
+  { key: "blending", label: "Blending Sounds", emoji: "🐱" },
+  { key: "families", label: "Word Families",   emoji: "👪" },
+  { key: "sight",    label: "Sight Words",     emoji: "⭐" }
+];
 function subjectsFor(g) {
   if (g === 0) return K_SUBJECTS;
   if (g === 13) return GEN_SUBJECTS;
@@ -102,6 +109,7 @@ function subjectsFor(g) {
   if (g === 19) return HIST_SUBJECTS;
   if (g === 20) return GEO_SUBJECTS;
   if (g === 21) return SPANISH_SUBJECTS;
+  if (g === 22) return PHONICS_SUBJECTS;
   // Grades 1–12: core subjects (+ Biology after Science from Grade 6) + folded-in extras
   // (+ the creative tools in Grades 1–6 only).
   let core = SUBJECTS.slice();
@@ -130,6 +138,7 @@ function gradeName(g) {
   if (g === 19) return "Historical Eras";
   if (g === 20) return "Geology";
   if (g === 21) return "Learn Spanish";
+  if (g === 22) return "Phonics & Early Reading";
   return "Grade " + g;
 }
 // Build the creature SVG from the chosen parts. Order matters: back to front.
@@ -183,8 +192,9 @@ const THEME_LABELS = {
 // Books (15) are free for everyone: the reading library is the best thing we can give away,
 // and a family that reads here is a family that subscribes later.
 const RULES = {
-  guest:   { grades: [0, 1, 15, 16],    stories: 3,  custom: 0 },
-  free:    { grades: [0, 1, 2, 15, 16], stories: 10, custom: 2 },
+  // Phonics (22) is free for everyone: learning to decode is the foundation the rest of the site rests on.
+  guest:   { grades: [0, 1, 15, 16, 22],    stories: 3,  custom: 0 },
+  free:    { grades: [0, 1, 2, 15, 16, 22], stories: 10, custom: 2 },
   premium: { grades: "all",  stories: "all", custom: "all" }
 };
 const PRICE = "$9.99";
@@ -1089,11 +1099,11 @@ function homeView() {
 // ---------- Lessons ----------
 function lessonsView() {
   const tiles = [];
-  for (let g = 0; g <= 21; g++) {
+  for (let g = 0; g <= 22; g++) {
     if (g === 15 || g === 16 || g === 17 || g === 18) continue;  // now folded into each grade's tabs
     const locked = !canGrade(g);
     const label = g === 0 ? "🌈 Kindergarten" : g === 13 ? "🌍 General" : g === 14 ? "⚗️ Extras"
-                : g === 19 ? "⏳ History" : g === 20 ? "🪨 Geology" : g === 21 ? "💬 Spanish" : "Grade " + g;
+                : g === 19 ? "⏳ History" : g === 20 ? "🪨 Geology" : g === 21 ? "💬 Spanish" : g === 22 ? "🔤 Phonics" : "Grade " + g;
     tiles.push(`<button class="grade-tile g${g}" onclick="App.openGrade(${g})">${locked ? '<span class="lock">🔒</span>' : ""}${label}</button>`);
   }
   return `<div class="view">
@@ -1137,14 +1147,16 @@ function lessonView() {
 
   let body = "";
   if (lesson.diagram) body += `<div class="biodiagram">${lesson.diagram}</div>`;
-  // Spanish word list — tap any word to hear it spoken by the device's Spanish voice.
+  // Tap-to-hear word list. Spanish lessons speak "es"; everything else speaks English.
+  // Each item is { es: shown big, en: shown small, say: spoken text (defaults to es) }.
   if (lesson.vocab) {
-    const noVoice = Speech.supported() && !Speech.hasSpanish();
+    const vlang = lesson.vocabLang || "es";
+    const noVoice = vlang === "es" && Speech.supported() && !Speech.hasSpanish();
     body += `<div class="vocabcard">
-      <h3>🔊 Say it in Spanish</h3>
+      <h3>🔊 ${vlang === "es" ? "Say it in Spanish" : "Tap to hear it"}</h3>
       <p class="vocabhint">${noVoice ? "Tap a word to hear it. (For the best accent, add a Spanish voice in your device's language settings.)" : "Tap any word to hear how it sounds!"}</p>
       <div class="vocabgrid">${lesson.vocab.map(v =>
-        `<button class="vocabword" onclick="App.sayEs(this)" data-es="${esc(v.es)}">
+        `<button class="vocabword" onclick="App.sayWord(this)" data-word="${esc(v.say || v.es)}" data-lang="${vlang}">
            <span class="ves">${esc(v.es)}</span><span class="ven">${esc(v.en)}</span><span class="vspk">🔊</span>
          </button>`).join("")}</div>
     </div>`;
@@ -1960,10 +1972,11 @@ const App = {
     Speech.speak(text, () => { if (btn) btn.innerHTML = "🔊 Listen"; });
   },
 
-  // Speak one Spanish word/phrase aloud; the tapped card lights up while it plays.
-  sayEs(btn) {
+  // Speak one word/phrase aloud in its card's language; the tapped card lights up while it plays.
+  sayWord(btn) {
     if (typeof Speech === "undefined" || !Speech.supported() || !btn) return;
-    const word = btn.getAttribute("data-es") || btn.textContent || "";
+    const word = btn.getAttribute("data-word") || btn.getAttribute("data-es") || btn.textContent || "";
+    const lang = btn.getAttribute("data-lang") === "es" ? "es" : "en";
     const clear = () => document.querySelectorAll(".vocabword.speaking").forEach(b => b.classList.remove("speaking"));
     // tapping the word that's already playing stops it
     const wasOn = btn.classList.contains("speaking");
@@ -1971,8 +1984,9 @@ const App = {
     clear();
     if (wasOn) return;
     btn.classList.add("speaking");
-    Speech.speak(word, clear, "es");
+    Speech.speak(word, clear, lang);
   },
+  sayEs(btn) { App.sayWord(btn); },   // kept so any cached page keeps working
 
   openGrade(g) {
     state.grade = g;
@@ -1980,7 +1994,7 @@ const App = {
     const dflt = g === 0 ? "alphabet" : g === 13 ? "geography" : g === 14 ? "periodic"
                : g === 15 ? "readnow" : g === 16 ? "create" : g === 17 ? "csplan"
                : g === 18 ? "engplan" : g === 19 ? "earth" : g === 20 ? "rocks"
-               : g === 21 ? "greetings" : "math";
+               : g === 21 ? "greetings" : g === 22 ? "letters" : "math";
     // Premium grades still open — landing on the free Books tab; other subjects show an upgrade card.
     state.subject = canGrade(g) ? dflt : "books";
     go("lesson");

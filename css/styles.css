@@ -101,6 +101,7 @@ main{max-width:1100px;margin:0 auto;padding:26px 18px 80px}
 .g19{background:linear-gradient(135deg,#a3763f,#d9a441);color:var(--ink)}
 .g20{background:linear-gradient(135deg,#6b7280,#a3763f)}
 .g21{background:linear-gradient(135deg,#e63946,#f3a712)}
+.g22{background:linear-gradient(135deg,#2ec4b6,#6bcb77)}
 
 /* ---------- Spanish "Say it" word cards (tap to hear) ---------- */
 .vocabcard{max-width:640px;margin:6px auto 18px;background:var(--card);border-radius:16px;
