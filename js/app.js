@@ -98,6 +98,13 @@ const TIME_SUBJECTS = [
   { key: "money", label: "Counting Money",       emoji: "💰" },
   { key: "sense", label: "Money Sense",          emoji: "🏦" }
 ];
+const SEL_SUBJECTS = [
+  { key: "feelings",  label: "Naming Feelings",           emoji: "😊" },
+  { key: "calm",      label: "Calming Big Feelings",      emoji: "🌬️" },
+  { key: "kindness",  label: "Kindness & Empathy",        emoji: "💛" },
+  { key: "friends",   label: "Making Friends",            emoji: "🤝" },
+  { key: "brave",     label: "Speaking Up & Trying Again", emoji: "🦁" }
+];
 const SPACE_SUBJECTS = [
   { key: "solar",      label: "The Solar System",      emoji: "☀️" },
   { key: "moon",       label: "The Moon",              emoji: "🌙" },
@@ -125,6 +132,7 @@ function subjectsFor(g) {
   if (g === 22) return PHONICS_SUBJECTS;
   if (g === 23) return TIME_SUBJECTS;
   if (g === 24) return SPACE_SUBJECTS;
+  if (g === 25) return SEL_SUBJECTS;
   // Grades 1–12: core subjects (+ Biology after Science from Grade 6) + folded-in extras
   // (+ the creative tools in Grades 1–6 only).
   let core = SUBJECTS.slice();
@@ -156,6 +164,7 @@ function gradeName(g) {
   if (g === 22) return "Phonics & Early Reading";
   if (g === 23) return "Time & Money";
   if (g === 24) return "Space Exploration";
+  if (g === 25) return "Feelings & Kindness";
   return "Grade " + g;
 }
 // Build the creature SVG from the chosen parts. Order matters: back to front.
@@ -1116,11 +1125,11 @@ function homeView() {
 // ---------- Lessons ----------
 function lessonsView() {
   const tiles = [];
-  for (let g = 0; g <= 24; g++) {
+  for (let g = 0; g <= 25; g++) {
     if (g === 15 || g === 16 || g === 17 || g === 18) continue;  // now folded into each grade's tabs
     const locked = !canGrade(g);
     const label = g === 0 ? "🌈 Kindergarten" : g === 13 ? "🌍 General" : g === 14 ? "⚗️ Extras"
-                : g === 19 ? "⏳ History" : g === 20 ? "🪨 Geology" : g === 21 ? "💬 Spanish" : g === 22 ? "🔤 Phonics" : g === 23 ? "🕐 Time & Money" : g === 24 ? "🚀 Space" : "Grade " + g;
+                : g === 19 ? "⏳ History" : g === 20 ? "🪨 Geology" : g === 21 ? "💬 Spanish" : g === 22 ? "🔤 Phonics" : g === 23 ? "🕐 Time & Money" : g === 24 ? "🚀 Space" : g === 25 ? "💛 Feelings" : "Grade " + g;
     tiles.push(`<button class="grade-tile g${g}" onclick="App.openGrade(${g})">${locked ? '<span class="lock">🔒</span>' : ""}${label}</button>`);
   }
   return `<div class="view">
@@ -2022,7 +2031,7 @@ const App = {
     const dflt = g === 0 ? "alphabet" : g === 13 ? "geography" : g === 14 ? "periodic"
                : g === 15 ? "readnow" : g === 16 ? "create" : g === 17 ? "csplan"
                : g === 18 ? "engplan" : g === 19 ? "earth" : g === 20 ? "rocks"
-               : g === 21 ? "greetings" : g === 22 ? "letters" : g === 23 ? "clock" : g === 24 ? "solar" : "math";
+               : g === 21 ? "greetings" : g === 22 ? "letters" : g === 23 ? "clock" : g === 24 ? "solar" : g === 25 ? "feelings" : "math";
     // Premium grades still open — landing on the free Books tab; other subjects show an upgrade card.
     state.subject = canGrade(g) ? dflt : "books";
     go("lesson");
