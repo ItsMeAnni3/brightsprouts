@@ -101,6 +101,12 @@ function phonicsSubject(g) {
   return g <= 3 ? { key: "phonics", label: "Phonics", emoji: "🔤" }
                 : { key: "phonics", label: "Word Study", emoji: "🧩" };
 }
+const TIME_SUBJECTS = [
+  { key: "clock", label: "Telling Time",          emoji: "🕐" },
+  { key: "units", label: "Hours, Minutes & Days", emoji: "⏳" },
+  { key: "money", label: "Counting Money",        emoji: "💰" },
+  { key: "sense", label: "Money Sense",           emoji: "🏦" }
+];
 const SEL_SUBJECTS = [
   { key: "feelings",  label: "Naming Feelings",           emoji: "😊" },
   { key: "calm",      label: "Calming Big Feelings",      emoji: "🌬️" },
@@ -161,18 +167,18 @@ function subjectsFor(g) {
 }
 function gradeName(g) {
   if (g === 0) return "Kindergarten";
-  if (g === 13) return "Geography";
+  if (g === 13) return "Let's Learn Geography";
   if (g === 14) return "Additional Learning Materials";
   if (g === 15) return "Books";
   if (g === 16) return "Create";
   if (g === 17) return "Computer Science";
   if (g === 18) return "The English Language";
-  if (g === 19) return "History of Us";
-  if (g === 20) return "Geology";
-  if (g === 21) return "Learn Spanish";
-  if (g === 23) return "Time & Money";
+  if (g === 19) return "Let's Learn History of Us";
+  if (g === 20) return "Let's Learn Geology";
+  if (g === 21) return "Let's Learn Spanish";
+  if (g === 23) return "Let's Learn Time & Money";
   if (g === 24) return "Space Exploration";
-  if (g === 25) return "Feelings & Kindness";
+  if (g === 25) return "Let's Learn Feelings & Kindness";
   return "Grade " + g;
 }
 // Build the creature SVG from the chosen parts. Order matters: back to front.
@@ -1148,8 +1154,8 @@ function lessonsView() {
   for (let g = 0; g <= 25; g++) {
     if (g === 15 || g === 16 || g === 17 || g === 18 || g === 22) continue;  // now folded into each grade's tabs
     const locked = !canGrade(g);
-    const label = g === 0 ? "🌈 Kindergarten" : g === 13 ? "🌍 Geography" : g === 14 ? "⚗️ Additional Learning Materials"
-                : g === 19 ? "⏳ History of Us" : g === 20 ? "🪨 Geology" : g === 21 ? "💬 Spanish" : g === 23 ? "🕐 Time & Money" : g === 24 ? "🚀 Space" : g === 25 ? "💛 Feelings" : "Grade " + g;
+    const label = g === 0 ? "🌈 Kindergarten" : g === 13 ? "🌍 Let's Learn Geography" : g === 14 ? "⚗️ Additional Learning Materials"
+                : g === 19 ? "⏳ Let's Learn History of Us" : g === 20 ? "🪨 Let's Learn Geology" : g === 21 ? "💬 Let's Learn Spanish" : g === 23 ? "🕐 Let's Learn Time & Money" : g === 24 ? "🚀 Space" : g === 25 ? "💛 Let's Learn Feelings" : "Grade " + g;
     tiles.push(`<button class="grade-tile g${g}" onclick="App.openGrade(${g})">${locked ? '<span class="lock">🔒</span>' : ""}${label}</button>`);
   }
   // The arcade lives here now instead of the top bar. gameHub() so it always opens on the
