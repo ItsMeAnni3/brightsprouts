@@ -218,9 +218,11 @@ const THEME_LABELS = {
 // Books (15) are free for everyone: the reading library is the best thing we can give away,
 // and a family that reads here is a family that subscribes later.
 const RULES = {
-  // Phonics (22) is free for everyone: learning to decode is the foundation the rest of the site rests on.
-  guest:   { grades: [0, 1, 15, 16, 22],    stories: 3,  custom: 0 },
-  free:    { grades: [0, 1, 2, 15, 16, 22], stories: 10, custom: 2 },
+  // Free for everyone, on purpose: Phonics (22), because learning to decode is the foundation the
+  // rest of the site rests on — and Feelings & Kindness (25), which carries child-safety guidance
+  // (say stop, walk away, tell a trusted grown-up) that no child should hit a paywall to reach.
+  guest:   { grades: [0, 1, 15, 16, 22, 25],    stories: 3,  custom: 0 },
+  free:    { grades: [0, 1, 2, 15, 16, 22, 25], stories: 10, custom: 2 },
   premium: { grades: "all",  stories: "all", custom: "all" }
 };
 const PRICE = "$9.99";
