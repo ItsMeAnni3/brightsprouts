@@ -1056,3 +1056,7 @@ footer{background:var(--purple-dark);color:#cfc6ee;text-align:center;padding:20p
 .resname{font-family:var(--display);font-weight:700;color:var(--purple-dark);font-size:.98rem}
 .resnote{font-size:.8rem;color:#6a668c;line-height:1.35}
 @media print{.rescard{break-inside:avoid}.resitem{border-color:#ddd;background:#fff}}
+
+/* ---------- Multi-unit subjects (a term of lessons in one tab) ---------- */
+.unitbar{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.unitbar .btn{font-size:.86rem}

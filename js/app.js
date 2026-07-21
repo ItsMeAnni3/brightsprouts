@@ -1182,9 +1182,16 @@ function lessonView() {
   // Money is taught in US dollars and cents. timemoney.js still carries a full pounds-and-pence
   // copy under byCurrency.uk, so switching back is a one-line change if it is ever wanted.
   const curCcy = state.currency || "us";
-  const lesson = baseLesson.byCurrency
+  let lesson = baseLesson.byCurrency
     ? Object.assign({}, baseLesson, baseLesson.byCurrency[curCcy] || {})
     : baseLesson;
+  // A subject may hold several units (a term's worth of lessons). Merge the chosen one in.
+  const unitKey = g + "-" + subj;
+  let unitIdx = 0;
+  if (lesson.units && lesson.units.length) {
+    unitIdx = Math.min(Math.max(0, (state.unitPick || {})[unitKey] || 0), lesson.units.length - 1);
+    lesson = Object.assign({}, lesson, lesson.units[unitIdx]);
+  }
   const gradeLocked = !canGrade(g);
   const tabs = subjectsFor(g).map(s => {
     const locked = gradeLocked && !canSubject(g, s.key);
@@ -1646,7 +1653,7 @@ function lessonView() {
       lesson.words.map(w => `<tr><td class="w">${esc(w[0])}</td><td>${esc(w[1])}</td><td><i>${esc(w[2])}</i></td></tr>`).join("") + `</table>`;
   }
 
-  const sheetKey = g + "-" + subj + (baseLesson.byCurrency ? "-" + curCcy : "");
+  const sheetKey = g + "-" + subj + (baseLesson.byCurrency ? "-" + curCcy : "") + (baseLesson.units ? "-u" + unitIdx : "");
   // Note: the Earth's Story timeline (earthTimeline) DOES get a worksheet — it has a questions bank.
   const noQuiz = lesson.globeBoard || lesson.coloringBook || lesson.tracingSheet || lesson.drawTracing || lesson.csPlan || lesson.engPlan || lesson.erasTimeline || lesson.engineerBuild || (lesson.engBand != null) || lesson.readOnline || lesson.magicMaker || lesson.earthTimeline;
   if (!noQuiz && !state.sheetCache[sheetKey]) state.sheetCache[sheetKey] = makeSheet(g, subj, lesson);
@@ -1664,6 +1671,8 @@ function lessonView() {
     <button class="btn btn-ghost btn-sm no-print" onclick="App.go(${g === 15 ? "'library'" : "'lessons'"})">← ${g === 15 ? "Books &amp; Stories" : "All Grades"}</button>
     <h1 style="margin-top:14px">${gradeName(g)}</h1>
     <div class="tabs no-print">${tabs}</div>
+    ${baseLesson.units && baseLesson.units.length > 1 ? `<div class="unitbar no-print">` + baseLesson.units.map((u, i) =>
+      `<button class="btn btn-sm ${i === unitIdx ? "btn-primary" : "btn-ghost"}" onclick="App.pickUnit('${unitKey}',${i})">${u.emoji || ""} Unit ${i + 1}: ${esc(u.title)}</button>`).join("") + `</div>` : ""}
     <div class="card" id="lesson-card">
       <div class="print-only print-header"><span class="brand">🌱 BrightSprouts Academy — ${gradeName(g)} ${subjectsFor(g).find(s => s.key === subj).label}</span><span>Name: ____________ &nbsp; Date: ________</span></div>
       <div class="lesson-head"><span class="lesson-emoji">${lesson.emoji}</span><h2>${esc(lesson.title)}</h2></div>
@@ -2411,6 +2420,7 @@ const App = {
   traceMode(m) { state.traceMode = m; state.tracePick = null; render(); },
   newTracePage() { state.tracePick = null; render(); },
   pickDrawCat(k) { state.drawCat = k; render(); },
+  pickUnit(key, i) { state.unitPick = state.unitPick || {}; state.unitPick[key] = i; render(); window.scrollTo(0, 0); },
   setCurrency(c) { state.currency = c; state.sheetCache = {}; render(); },
   colorTheme(t) { state.colorTheme = t; state.colorPick = null; render(); },
   colorSize(big) { state.colorBig = big; state.colorPick = null; render(); },
