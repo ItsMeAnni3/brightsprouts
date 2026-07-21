@@ -2,11 +2,11 @@
 // Four games. Three are "pick the right answer" quizzes; one is Memory Match.
 
 const ARCADE_GAMES = [
-  { key:"matharace",  name:"Math Race",    emoji:"🧮", desc:"Answer 10 sums as fast as you can!", badge:"mathwhiz" },
-  { key:"flagquiz",   name:"Flag Quiz",    emoji:"🚩", desc:"Which country does the flag belong to?", badge:"explorer" },
-  { key:"bee",        name:"Spelling Bee", emoji:"🐝", desc:"Listen to the word — then spell it!", badge:"speller" },
-  { key:"spellbee",   name:"Spot the Spelling", emoji:"🔤", desc:"Pick the word that is spelled correctly.", badge:"speller" },
-  { key:"memory",     name:"Memory Match", emoji:"🧠", desc:"Flip the cards and find the matching pairs.", badge:"memory" }
+  { key:"matharace",  name:"Math Race",    emoji:"🧮", desc:"Answer 10 sums as fast as you can!", badge:"mathwhiz", quiz:true, level:"Medium", subject:"Maths" },
+  { key:"flagquiz",   name:"Flag Quiz",    emoji:"🚩", desc:"Which country does the flag belong to?", badge:"explorer", quiz:true, level:"Medium", subject:"Geography" },
+  { key:"bee",        name:"Spelling Bee", emoji:"🐝", desc:"Listen to the word — then spell it!", badge:"speller", level:"Medium", subject:"Spelling" },
+  { key:"spellbee",   name:"Spot the Spelling", emoji:"🔤", desc:"Pick the word that is spelled correctly.", badge:"speller", quiz:true, level:"Easy", subject:"Spelling" },
+  { key:"memory",     name:"Memory Match", emoji:"🧠", desc:"Flip the cards and find the matching pairs.", badge:"memory", level:"Easy", subject:"Thinking" }
 ];
 const ARCADE_Q = 10;   // questions per quiz game
 
@@ -15,6 +15,8 @@ function arcShuffle(a) { const r = a.slice(); for (let i = r.length - 1; i > 0; 
 
 // ---- one quiz question: { prompt (html), promptText, options[4], answer } ----
 function arcadeQuestion(type) {
+  // games2.js registers the extra subject games here
+  if (typeof EXTRA_GAMES !== "undefined" && EXTRA_GAMES[type]) return EXTRA_GAMES[type]();
   if (type === "matharace") {
     const kind = arcRand(0, 3);
     let a, b, q, ans;

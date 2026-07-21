@@ -2121,12 +2121,13 @@ const App = {
     state.gameScreen = screen;
     if (screen === "plant") { if (!state.game) state.game = { plant: null, stage: 0, water: 0, sun: 0 }; }
     else if (screen === "memory") { state.mem = { deck: memoryDeck(6), flipped: [], moves: 0, matched: 0, lock: false, done: false }; }
-    else if (screen === "matharace" || screen === "flagquiz" || screen === "spellbee") {
+    else if ((ARCADE_GAMES.find(x => x.key === screen) || {}).quiz) {
       state.arcade = { type: screen, i: 0, correct: 0, q: arcadeQuestion(screen), answered: null, done: false };
     }
     else if (screen === "bee") { state.bee = null; }   // null = show the level picker
     go("game");
   },
+  gameFilter(l) { state.gameFilter = l; render(); },
   gameHub() { state.gameScreen = "hub"; state.arcade = null; state.mem = null; state.bee = null; go("game"); },
 
   // ---- The Globe ----
@@ -2604,7 +2605,7 @@ function gameView() {
   if (sc === "plant") return plantGameView();
   if (sc === "memory") return memoryView();
   if (sc === "bee") return beeView();
-  if (sc === "matharace" || sc === "flagquiz" || sc === "spellbee") return arcadeQuizView();
+  if ((ARCADE_GAMES.find(x => x.key === sc) || {}).quiz) return arcadeQuizView();
   return gameHubView();
 }
 
@@ -2614,20 +2615,30 @@ function gameHubView() {
       <div class="gtemoji">🌱</div>
       <h3>Plant Life Cycle</h3>
       <p>Grow your own plant from seed to fruit.</p>
+      <div class="gmeta"><span class="glevel easy">Easy</span><span class="gsubj">Science</span></div>
       <button class="btn btn-primary btn-sm">Play</button>
     </div>`;
-  const arcTiles = ARCADE_GAMES.map(a => `
+  const lvl = state.gameFilter || "all";
+  const tile = a => `
     <div class="gtile" onclick="App.openGame('${a.key}')">
       <div class="gtemoji">${a.emoji}</div>
       <h3>${esc(a.name)}</h3>
       <p>${esc(a.desc)}</p>
+      <div class="gmeta"><span class="glevel ${(a.level || "Easy").toLowerCase()}">${a.level || "Easy"}</span><span class="gsubj">${esc(a.subject || "")}</span></div>
       <button class="btn btn-primary btn-sm">Play</button>
-    </div>`).join("");
+    </div>`;
+  const shown = ARCADE_GAMES.filter(a => lvl === "all" || (a.level || "Easy") === lvl);
+  const arcTiles = shown.map(tile).join("");
+  const filterBar = `<div class="color-bar no-print">` +
+    [["all", "🎮 All games"], ["Easy", "🌱 Easy"], ["Medium", "🌤️ Medium"], ["Hard", "🔥 Hard"]].map(f =>
+      `<button class="btn btn-sm ${lvl === f[0] ? "btn-primary" : "btn-ghost"}" onclick="App.gameFilter('${f[0]}')">${f[1]}</button>`).join("") +
+    `</div>`;
   return `<div class="view">
     <button class="btn btn-ghost btn-sm no-print" onclick="App.go('lessons')">← All Grades</button>
     <h1 style="margin-top:14px">🎮 Game Arcade</h1>
-    <p class="subtitle">Pick a game to play. Every game you play earns you ⭐ stars for your Rewards collection!</p>
-    <div class="grid grid-3 gtiles">${plantTile}${arcTiles}</div>
+    <p class="subtitle">Pick a game to play — every one earns ⭐ stars for your Rewards collection. Filter by how tricky you want it!</p>
+    ${filterBar}
+    <div class="grid grid-3 gtiles">${lvl === "all" || lvl === "Easy" ? plantTile : ""}${arcTiles}</div>
     <div class="bookfoot">${doodle("rocket")}
       <p><b>Play &amp; learn!</b> Race through sums, guess flags from around the world, spell words in the Spelling Bee, or test your memory. Win stars, unlock stickers, and earn badges as you go.</p></div>
   </div>`;

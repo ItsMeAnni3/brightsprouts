@@ -1033,3 +1033,12 @@ footer{background:var(--purple-dark);color:#cfc6ee;text-align:center;padding:20p
 .beefb{font-family:var(--display);font-size:1.15rem;border-radius:12px;padding:10px 14px;margin:10px auto 14px;max-width:420px}
 .beefb.ok{background:#e4f7e8;color:#2f6b45}
 .beefb.no{background:#ffe9e6;color:#a83228}
+
+/* ---------- Arcade tile meta (difficulty + subject) ---------- */
+.gmeta{display:flex;align-items:center;justify-content:center;gap:8px;margin:6px 0 10px;flex-wrap:wrap}
+.glevel{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;
+  padding:3px 9px;border-radius:999px;color:#fff}
+.glevel.easy{background:#43aa8b}
+.glevel.medium{background:#e0a94a}
+.glevel.hard{background:#e2453b}
+.gsubj{font-size:.74rem;color:#8a86a8;font-weight:700}
