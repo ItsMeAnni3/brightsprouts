@@ -202,3 +202,22 @@ const Globe = {
     }
   }
 };
+
+
+// The Globe also appears as a tab inside the Geography category (LESSONS[13]).
+// Defined here because LESSONS[13] already exists by the time this file loads.
+if (typeof LESSONS !== "undefined" && LESSONS[13]) {
+  LESSONS[13].globe = {
+    title: "The Globe", emoji: "🌍",
+    intro: "Spin the whole world in your hands! Drag to rotate, zoom in and out, and tap any country to learn its name, capital and flag.",
+    learn: [
+      "A globe is a model of the Earth. Because it is a ball, it shows every country's true shape and size — flat maps always have to stretch something.",
+      "Earth spins once every 24 hours, and that is what gives us day and night.",
+      "The land is divided into seven continents: Africa, Antarctica, Asia, Australia (Oceania), Europe, North America and South America.",
+      "There are around 195 countries, and each one has its own flag and a capital city where its government works.",
+      "Tap any country on the globe to see its flag, capital and continent — you earn a star for every new country you discover!"
+    ],
+    activity: "🌍 Find It Fast: Take turns naming a country and racing to find it on the globe. Then check its flag and capital — who can collect the most?",
+    globeBoard: true
+  };
+}

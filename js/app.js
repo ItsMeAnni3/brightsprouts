@@ -25,8 +25,9 @@ const K_SUBJECTS = [
   { key: "things",   label: "Toys & Things", emoji: "🧸" }
 ];
 const GEN_SUBJECTS = [
-  { key: "geography",  label: "Geography",     emoji: "🌍" },
-  { key: "florafauna", label: "Flora & Fauna", emoji: "🌿" }
+  { key: "globe",      label: "The Globe",             emoji: "🌍" },
+  { key: "geography",  label: "Countries & Continents", emoji: "🗺️" },
+  { key: "florafauna", label: "Flora & Fauna",          emoji: "🌿" }
 ];
 const BOOK_SUBJECTS = [
   { key: "readnow", label: "Read Online", emoji: "📖" }
@@ -152,7 +153,7 @@ function subjectsFor(g) {
 }
 function gradeName(g) {
   if (g === 0) return "Kindergarten";
-  if (g === 13) return "General Knowledge";
+  if (g === 13) return "Geography";
   if (g === 14) return "Additional Learning Material";
   if (g === 15) return "Books";
   if (g === 16) return "Create";
@@ -868,7 +869,7 @@ function makeStory(name, friend, settingKey, themeKey, valueKey) {
 function go(view) { if (typeof Speech !== "undefined") Speech.stop(); state.view = view; state.authMsg = ""; state.authOk = ""; render(); window.scrollTo(0, 0); }
 
 function navHtml() {
-  const items = [["home", "🏡 Home"], ["game", "🎮 Game"], ["globe", "🌍 Globe"], ["lessons", "📚 Lessons"], ["stories", "📖 Stories"], ["maker", "✨ Story Maker"], ["shop", "🛒 Shop"], ["pricing", "⭐ Plans"], ["contact", "✉️ Contact"]];
+  const items = [["home", "🏡 Home"], ["game", "🎮 Game"], ["lessons", "📚 Lessons"], ["stories", "📖 Stories"], ["maker", "✨ Story Maker"], ["shop", "🛒 Shop"], ["pricing", "⭐ Plans"], ["contact", "✉️ Contact"]];
   return items.map(([v, l]) => `<button class="${state.view === v ? "active" : ""}" onclick="App.go('${v}')">${l}</button>`).join("");
 }
 function starChip() {
@@ -935,11 +936,9 @@ function rewardsView() {
 }
 
 // ---------- The Globe ----------
-function globeView() {
-  return `<div class="view">
-    <h1>🌍 The Globe</h1>
-    <p class="subtitle">Spin the whole world in your hands! Drag to rotate, zoom in and out, and tap any country to learn its name, capital and flag.</p>
-    <div class="globewrap">
+// The interactive globe itself — used by the Geography lesson tab (and the legacy #globe route).
+function globeStageHtml() {
+  return `<div class="globewrap">
       <div class="globestage">
         <div id="globe-canvas-wrap" class="globecanvaswrap">
           <canvas id="globe-canvas" aria-label="An interactive 3D globe of Earth"></canvas>
@@ -954,7 +953,13 @@ function globeView() {
         <p id="globe-status" class="globehint no-print"></p>
       </div>
       <div class="globeinfo" id="globe-info">${globeInfoHtml(null)}</div>
-    </div>
+    </div>`;
+}
+function globeView() {
+  return `<div class="view">
+    <h1>🌍 The Globe</h1>
+    <p class="subtitle">Spin the whole world in your hands! Drag to rotate, zoom in and out, and tap any country to learn its name, capital and flag.</p>
+    ${globeStageHtml()}
     <div class="bookfoot">${doodle("rocket")}
       <p><b>Did you know?</b> Earth is the only planet we know of with life. It spins once every 24 hours — that's what gives us day and night! This globe uses real map data, so every coastline and country is where it truly belongs.</p></div>
   </div>`;
@@ -1130,7 +1135,7 @@ function lessonsView() {
   for (let g = 0; g <= 25; g++) {
     if (g === 15 || g === 16 || g === 17 || g === 18) continue;  // now folded into each grade's tabs
     const locked = !canGrade(g);
-    const label = g === 0 ? "🌈 Kindergarten" : g === 13 ? "🌍 General" : g === 14 ? "⚗️ Extras"
+    const label = g === 0 ? "🌈 Kindergarten" : g === 13 ? "🌍 Geography" : g === 14 ? "⚗️ Extras"
                 : g === 19 ? "⏳ History" : g === 20 ? "🪨 Geology" : g === 21 ? "💬 Spanish" : g === 22 ? "🔤 Phonics" : g === 23 ? "🕐 Time & Money" : g === 24 ? "🚀 Space" : g === 25 ? "💛 Feelings" : "Grade " + g;
     tiles.push(`<button class="grade-tile g${g}" onclick="App.openGrade(${g})">${locked ? '<span class="lock">🔒</span>' : ""}${label}</button>`);
   }
@@ -1186,6 +1191,7 @@ function lessonView() {
     </div>`;
   }
   if (lesson.diagram) body += `<div class="biodiagram">${lesson.diagram}</div>`;
+  if (lesson.globeBoard) body += globeStageHtml();
   // Tap-to-hear word list. Spanish lessons speak "es"; everything else speaks English.
   // Each item is { es: shown big, en: shown small, say: spoken text (defaults to es) }.
   if (lesson.vocab) {
@@ -1600,7 +1606,7 @@ function lessonView() {
 
   const sheetKey = g + "-" + subj + (baseLesson.byCurrency ? "-" + curCcy : "");
   // Note: the Earth's Story timeline (earthTimeline) DOES get a worksheet — it has a questions bank.
-  const noQuiz = lesson.coloringBook || lesson.tracingSheet || lesson.drawTracing || lesson.csPlan || lesson.engPlan || lesson.erasTimeline || lesson.engineerBuild || (lesson.engBand != null) || lesson.readOnline || lesson.magicMaker || lesson.earthTimeline;
+  const noQuiz = lesson.globeBoard || lesson.coloringBook || lesson.tracingSheet || lesson.drawTracing || lesson.csPlan || lesson.engPlan || lesson.erasTimeline || lesson.engineerBuild || (lesson.engBand != null) || lesson.readOnline || lesson.magicMaker || lesson.earthTimeline;
   if (!noQuiz && !state.sheetCache[sheetKey]) state.sheetCache[sheetKey] = makeSheet(g, subj, lesson);
   const questions = noQuiz ? [] : state.sheetCache[sheetKey];
   const qHtml = questions.length ? `
@@ -2030,7 +2036,7 @@ const App = {
   openGrade(g) {
     state.grade = g;
     state.reading = null;
-    const dflt = g === 0 ? "alphabet" : g === 13 ? "geography" : g === 14 ? "periodic"
+    const dflt = g === 0 ? "alphabet" : g === 13 ? "globe" : g === 14 ? "periodic"
                : g === 15 ? "readnow" : g === 16 ? "create" : g === 17 ? "csplan"
                : g === 18 ? "engplan" : g === 19 ? "earth" : g === 20 ? "rocks"
                : g === 21 ? "greetings" : g === 22 ? "letters" : g === 23 ? "clock" : g === 24 ? "solar" : g === 25 ? "feelings" : "math";
@@ -2915,7 +2921,9 @@ function render() {
   document.getElementById("app").innerHTML = (views[state.view] || homeView)() + (state.modal ? upgradeModal() : "");
   mmTilt();
   gameTilt();
-  if (state.view === "globe") { if (typeof Globe !== "undefined") Globe.mount(App.globePick); }
+  const onGlobe = state.view === "globe" ||
+    (state.view === "lesson" && state.grade === 13 && state.subject === "globe" && canSubject(13, "globe"));
+  if (onGlobe) { if (typeof Globe !== "undefined") Globe.mount(App.globePick); }
   else if (typeof Globe !== "undefined") Globe.unmount();
 }
 // Optional deep links: #lessons, #stories, #maker, #pricing, #lesson-3-science, #story-12
