@@ -92,13 +92,12 @@ const SPANISH_SUBJECTS = [
   { key: "days",      label: "Days of the Week",    emoji: "📅" },
   { key: "months",    label: "Months of the Year",  emoji: "🗓️" }
 ];
-// Phonics & Early Reading (category 22): the K–2 decoding foundation — free for everyone.
-const TIME_SUBJECTS = [
-  { key: "clock", label: "Telling Time",         emoji: "🕐" },
-  { key: "units", label: "Hours, Minutes & Days", emoji: "⏳" },
-  { key: "money", label: "Counting Money",       emoji: "💰" },
-  { key: "sense", label: "Money Sense",          emoji: "🏦" }
-];
+// Phonics is folded into Kindergarten–Grade 7 and grows with the child: it starts as decoding
+// and becomes word study once the child can read.
+function phonicsSubject(g) {
+  return g <= 3 ? { key: "phonics", label: "Phonics", emoji: "🔤" }
+                : { key: "phonics", label: "Word Study", emoji: "🧩" };
+}
 const SEL_SUBJECTS = [
   { key: "feelings",  label: "Naming Feelings",           emoji: "😊" },
   { key: "calm",      label: "Calming Big Feelings",      emoji: "🌬️" },
@@ -113,14 +112,12 @@ const SPACE_SUBJECTS = [
   { key: "astronauts", label: "Astronauts in Space",   emoji: "👨‍🚀" },
   { key: "explore",    label: "Exploring Further",     emoji: "🔭" }
 ];
-const PHONICS_SUBJECTS = [
-  { key: "letters",  label: "Letter Sounds",   emoji: "🔤" },
-  { key: "blending", label: "Blending Sounds", emoji: "🐱" },
-  { key: "families", label: "Word Families",   emoji: "👪" },
-  { key: "sight",    label: "Sight Words",     emoji: "⭐" }
-];
 function subjectsFor(g) {
-  if (g === 0) return K_SUBJECTS;
+  if (g === 0) {
+    const k = K_SUBJECTS.slice();
+    k.splice(1, 0, phonicsSubject(0));   // straight after the Alphabet
+    return k;
+  }
   if (g === 13) return GEN_SUBJECTS;
   if (g === 14) return ADD_SUBJECTS;
   if (g === 15) return BOOK_SUBJECTS;
@@ -130,13 +127,16 @@ function subjectsFor(g) {
   if (g === 19) return HIST_SUBJECTS;
   if (g === 20) return GEO_SUBJECTS;
   if (g === 21) return SPANISH_SUBJECTS;
-  if (g === 22) return PHONICS_SUBJECTS;
   if (g === 23) return TIME_SUBJECTS;
   if (g === 24) return SPACE_SUBJECTS;
   if (g === 25) return SEL_SUBJECTS;
   // Grades 1–12: core subjects (+ Biology after Science from Grade 6) + folded-in extras
   // (+ the creative tools in Grades 1–6 only).
   let core = SUBJECTS.slice();
+  if (g <= 7) {
+    const rd = core.findIndex(x => x.key === "reading") + 1;   // decoding sits with reading
+    core.splice(rd, 0, phonicsSubject(g));
+  }
   if (g >= 6) {
     const i = core.findIndex(s => s.key === "science") + 1;
     core.splice(i, 0, BIO_SUBJECT);
@@ -162,7 +162,6 @@ function gradeName(g) {
   if (g === 19) return "Historical Eras";
   if (g === 20) return "Geology";
   if (g === 21) return "Learn Spanish";
-  if (g === 22) return "Phonics & Early Reading";
   if (g === 23) return "Time & Money";
   if (g === 24) return "Space Exploration";
   if (g === 25) return "Feelings & Kindness";
@@ -219,11 +218,11 @@ const THEME_LABELS = {
 // Books (15) are free for everyone: the reading library is the best thing we can give away,
 // and a family that reads here is a family that subscribes later.
 const RULES = {
-  // Free for everyone, on purpose: Phonics (22), because learning to decode is the foundation the
-  // rest of the site rests on — and Feelings & Kindness (25), which carries child-safety guidance
+  // Feelings & Kindness (25) is free for everyone: it carries child-safety guidance
   // (say stop, walk away, tell a trusted grown-up) that no child should hit a paywall to reach.
-  guest:   { grades: [0, 1, 15, 16, 22, 25],    stories: 3,  custom: 0 },
-  free:    { grades: [0, 1, 2, 15, 16, 22, 25], stories: 10, custom: 2 },
+  // Phonics is no longer a category — it lives in K–Grade 7 and follows each grade's own access.
+  guest:   { grades: [0, 1, 15, 16, 25],    stories: 3,  custom: 0 },
+  free:    { grades: [0, 1, 2, 15, 16, 25], stories: 10, custom: 2 },
   premium: { grades: "all",  stories: "all", custom: "all" }
 };
 const PRICE = "$9.99";
@@ -728,6 +727,12 @@ function genEng(subj) {
 }
 
 function makeSheet(g, subj, lesson) {
+  // Phonics carries its own bank in every grade — including Kindergarten, whose other
+  // subjects go through the picture-card generator below.
+  if (subj === "phonics") {
+    const pool = (lesson.questions || []).concat(lesson.extraQuestions || []);
+    return shuffleArr(pool).slice(0, Math.min(6, pool.length));
+  }
   if (g === 0) return genKinder(subj, lesson);
   if (g === 17) return genCS(subj);
   if (g === 18) return genEng(subj);
@@ -1133,10 +1138,10 @@ function homeView() {
 function lessonsView() {
   const tiles = [];
   for (let g = 0; g <= 25; g++) {
-    if (g === 15 || g === 16 || g === 17 || g === 18) continue;  // now folded into each grade's tabs
+    if (g === 15 || g === 16 || g === 17 || g === 18 || g === 22) continue;  // now folded into each grade's tabs
     const locked = !canGrade(g);
     const label = g === 0 ? "🌈 Kindergarten" : g === 13 ? "🌍 Geography" : g === 14 ? "⚗️ Extras"
-                : g === 19 ? "⏳ History" : g === 20 ? "🪨 Geology" : g === 21 ? "💬 Spanish" : g === 22 ? "🔤 Phonics" : g === 23 ? "🕐 Time & Money" : g === 24 ? "🚀 Space" : g === 25 ? "💛 Feelings" : "Grade " + g;
+                : g === 19 ? "⏳ History" : g === 20 ? "🪨 Geology" : g === 21 ? "💬 Spanish" : g === 23 ? "🕐 Time & Money" : g === 24 ? "🚀 Space" : g === 25 ? "💛 Feelings" : "Grade " + g;
     tiles.push(`<button class="grade-tile g${g}" onclick="App.openGrade(${g})">${locked ? '<span class="lock">🔒</span>' : ""}${label}</button>`);
   }
   return `<div class="view">
@@ -2039,7 +2044,7 @@ const App = {
     const dflt = g === 0 ? "alphabet" : g === 13 ? "globe" : g === 14 ? "periodic"
                : g === 15 ? "readnow" : g === 16 ? "create" : g === 17 ? "csplan"
                : g === 18 ? "engplan" : g === 19 ? "earth" : g === 20 ? "rocks"
-               : g === 21 ? "greetings" : g === 22 ? "letters" : g === 23 ? "clock" : g === 24 ? "solar" : g === 25 ? "feelings" : "math";
+               : g === 21 ? "greetings" : g === 23 ? "clock" : g === 24 ? "solar" : g === 25 ? "feelings" : "math";
     // Premium grades still open — landing on the free Books tab; other subjects show an upgrade card.
     state.subject = canGrade(g) ? dflt : "books";
     go("lesson");
