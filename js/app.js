@@ -874,7 +874,7 @@ function makeStory(name, friend, settingKey, themeKey, valueKey) {
 function go(view) { if (typeof Speech !== "undefined") Speech.stop(); state.view = view; state.authMsg = ""; state.authOk = ""; render(); window.scrollTo(0, 0); }
 
 function navHtml() {
-  const items = [["home", "🏡 Home"], ["game", "🎮 Game"], ["lessons", "📚 Lessons"], ["stories", "📖 Stories"], ["maker", "✨ Story Maker"], ["shop", "🛒 Shop"], ["pricing", "⭐ Plans"], ["contact", "✉️ Contact"]];
+  const items = [["home", "🏡 Home"], ["lessons", "📚 Lessons"], ["stories", "📖 Stories"], ["maker", "✨ Story Maker"], ["shop", "🛒 Shop"], ["pricing", "⭐ Plans"], ["contact", "✉️ Contact"]];
   return items.map(([v, l]) => `<button class="${state.view === v ? "active" : ""}" onclick="App.go('${v}')">${l}</button>`).join("");
 }
 function starChip() {
@@ -1144,6 +1144,9 @@ function lessonsView() {
                 : g === 19 ? "⏳ History" : g === 20 ? "🪨 Geology" : g === 21 ? "💬 Spanish" : g === 23 ? "🕐 Time & Money" : g === 24 ? "🚀 Space" : g === 25 ? "💛 Feelings" : "Grade " + g;
     tiles.push(`<button class="grade-tile g${g}" onclick="App.openGrade(${g})">${locked ? '<span class="lock">🔒</span>' : ""}${label}</button>`);
   }
+  // The arcade lives here now instead of the top bar. gameHub() so it always opens on the
+  // game list rather than whichever game was left running.
+  tiles.push(`<button class="grade-tile ggames" onclick="App.gameHub()">🎮 Games</button>`);
   return `<div class="view">
     <h1>📚 Pick a Grade</h1>
     <p class="subtitle">Every grade now packs it all in: Math • Reading • Vocabulary • Spelling • Writing • Science • History • Visual Art • Music • Computer Science • English • Books • Create — each matched to that grade's level ${tier() !== "premium" ? "&nbsp;·&nbsp; 🔒 = Premium" : ""}</p>
@@ -2567,7 +2570,8 @@ function gameHubView() {
       <button class="btn btn-primary btn-sm">Play</button>
     </div>`).join("");
   return `<div class="view">
-    <h1>🎮 Game Arcade</h1>
+    <button class="btn btn-ghost btn-sm no-print" onclick="App.go('lessons')">← All Grades</button>
+    <h1 style="margin-top:14px">🎮 Game Arcade</h1>
     <p class="subtitle">Pick a game to play. Every game you play earns you ⭐ stars for your Rewards collection!</p>
     <div class="grid grid-3 gtiles">${plantTile}${arcTiles}</div>
     <div class="bookfoot">${doodle("rocket")}
