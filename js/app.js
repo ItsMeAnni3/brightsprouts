@@ -82,9 +82,13 @@ const GEO_SUBJECTS = [
 const SPANISH_SUBJECTS = [
   { key: "greetings", label: "Greetings & Manners", emoji: "👋" },
   { key: "numbers",   label: "Numbers 1–10",        emoji: "🔢" },
+  { key: "more",      label: "Numbers 11–100",      emoji: "🔟" },
   { key: "colours",   label: "Colours",             emoji: "🌈" },
   { key: "family",    label: "Family",              emoji: "👨‍👩‍👧" },
-  { key: "animals",   label: "Animals",             emoji: "🐶" }
+  { key: "animals",   label: "Animals",             emoji: "🐶" },
+  { key: "food",      label: "Food",                emoji: "🍎" },
+  { key: "days",      label: "Days of the Week",    emoji: "📅" },
+  { key: "months",    label: "Months of the Year",  emoji: "🗓️" }
 ];
 function subjectsFor(g) {
   if (g === 0) return K_SUBJECTS;
@@ -1132,6 +1136,18 @@ function lessonView() {
 
   let body = "";
   if (lesson.diagram) body += `<div class="biodiagram">${lesson.diagram}</div>`;
+  // Spanish word list — tap any word to hear it spoken by the device's Spanish voice.
+  if (lesson.vocab) {
+    const noVoice = Speech.supported() && !Speech.hasSpanish();
+    body += `<div class="vocabcard">
+      <h3>🔊 Say it in Spanish</h3>
+      <p class="vocabhint">${noVoice ? "Tap a word to hear it. (For the best accent, add a Spanish voice in your device's language settings.)" : "Tap any word to hear how it sounds!"}</p>
+      <div class="vocabgrid">${lesson.vocab.map(v =>
+        `<button class="vocabword" onclick="App.sayEs(this)" data-es="${esc(v.es)}">
+           <span class="ves">${esc(v.es)}</span><span class="ven">${esc(v.en)}</span><span class="vspk">🔊</span>
+         </button>`).join("")}</div>
+    </div>`;
+  }
   if (lesson.passage) body += `<div class="lesson-tools no-print" style="margin-bottom:10px">${listenBtn("passage-say", "Read this to me")}</div>
     <div class="passage-box" id="passage-say" data-say="${esc(lesson.passage)}"><b>📄 Read this:</b><br><br>${esc(lesson.passage)}</div>`;
   if (lesson.cards) {
@@ -1914,6 +1930,20 @@ const App = {
     document.querySelectorAll(".listenbtn").forEach(b => b.innerHTML = "🔊 Listen");
     if (btn) btn.innerHTML = "⏹ Stop";
     Speech.speak(text, () => { if (btn) btn.innerHTML = "🔊 Listen"; });
+  },
+
+  // Speak one Spanish word/phrase aloud; the tapped card lights up while it plays.
+  sayEs(btn) {
+    if (typeof Speech === "undefined" || !Speech.supported() || !btn) return;
+    const word = btn.getAttribute("data-es") || btn.textContent || "";
+    const clear = () => document.querySelectorAll(".vocabword.speaking").forEach(b => b.classList.remove("speaking"));
+    // tapping the word that's already playing stops it
+    const wasOn = btn.classList.contains("speaking");
+    Speech.stop();
+    clear();
+    if (wasOn) return;
+    btn.classList.add("speaking");
+    Speech.speak(word, clear, "es");
   },
 
   openGrade(g) {

@@ -102,6 +102,24 @@ main{max-width:1100px;margin:0 auto;padding:26px 18px 80px}
 .g20{background:linear-gradient(135deg,#6b7280,#a3763f)}
 .g21{background:linear-gradient(135deg,#e63946,#f3a712)}
 
+/* ---------- Spanish "Say it" word cards (tap to hear) ---------- */
+.vocabcard{max-width:640px;margin:6px auto 18px;background:var(--card);border-radius:16px;
+  box-shadow:var(--shadow);padding:14px 16px;border:1px solid #eee9fa}
+.vocabcard h3{margin:0 0 2px}
+.vocabhint{margin:0 0 10px;color:#6a668c;font-size:.9rem}
+.vocabgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.vocabword{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:1px;
+  padding:9px 32px 9px 12px;border:2px solid #eee9fa;border-radius:12px;background:#fdfbff;
+  text-align:left;font:inherit;transition:border-color .15s,background .15s,transform .1s}
+.vocabword:hover{border-color:var(--purple);background:#fff}
+.vocabword:active{transform:scale(.97)}
+.vocabword .ves{font-family:var(--display);font-weight:600;font-size:1.02rem;color:var(--ink)}
+.vocabword .ven{font-size:.82rem;color:#6a668c}
+.vocabword .vspk{position:absolute;right:9px;top:50%;transform:translateY(-50%);font-size:.95rem;opacity:.45}
+.vocabword.speaking{border-color:var(--purple);background:#f4ecff;box-shadow:0 0 0 3px rgba(124,92,191,.16)}
+.vocabword.speaking .vspk{opacity:1}
+@media print{.vocabword .vspk{display:none}.vocabword{border-color:#ddd;background:#fff}}
+
 /* ---------- English language plan ---------- */
 .enggrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0 12px}
 .engdom{background:#faf8ff;border:1.5px solid #eee9fa;border-radius:12px;padding:10px 14px}
