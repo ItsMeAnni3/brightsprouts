@@ -874,7 +874,7 @@ function makeStory(name, friend, settingKey, themeKey, valueKey) {
 function go(view) { if (typeof Speech !== "undefined") Speech.stop(); state.view = view; state.authMsg = ""; state.authOk = ""; render(); window.scrollTo(0, 0); }
 
 function navHtml() {
-  const items = [["home", "🏡 Home"], ["lessons", "📚 Lessons"], ["stories", "📖 Stories"], ["maker", "✨ Story Maker"], ["shop", "🛒 Shop"], ["pricing", "⭐ Plans"], ["contact", "✉️ Contact"]];
+  const items = [["home", "🏡 Home"], ["lessons", "📚 Lessons"], ["shop", "🛒 Shop"], ["pricing", "⭐ Plans"], ["contact", "✉️ Contact"]];
   return items.map(([v, l]) => `<button class="${state.view === v ? "active" : ""}" onclick="App.go('${v}')">${l}</button>`).join("");
 }
 function starChip() {
@@ -1146,6 +1146,7 @@ function lessonsView() {
   }
   // The arcade lives here now instead of the top bar. gameHub() so it always opens on the
   // game list rather than whichever game was left running.
+  tiles.push(`<button class="grade-tile glibrary" onclick="App.go('library')">📖 Books &amp; Stories</button>`);
   tiles.push(`<button class="grade-tile ggames" onclick="App.gameHub()">🎮 Games</button>`);
   return `<div class="view">
     <h1>📚 Pick a Grade</h1>
@@ -1175,7 +1176,7 @@ function lessonView() {
   if (!canSubject(g, subj)) {
     const u = currentUser();
     return `<div class="view">
-      <button class="btn btn-ghost btn-sm no-print" onclick="App.go('lessons')">← All Grades</button>
+      <button class="btn btn-ghost btn-sm no-print" onclick="App.go(${g === 15 ? "'library'" : "'lessons'"})">← ${g === 15 ? "Books &amp; Stories" : "All Grades"}</button>
       <h1 style="margin-top:14px">${gradeName(g)}</h1>
       <div class="tabs no-print">${tabs}</div>
       <div class="card" style="text-align:center;padding:44px 22px">
@@ -1627,7 +1628,7 @@ function lessonView() {
     </div>` : "";
 
   return `<div class="view">
-    <button class="btn btn-ghost btn-sm no-print" onclick="App.go('lessons')">← All Grades</button>
+    <button class="btn btn-ghost btn-sm no-print" onclick="App.go(${g === 15 ? "'library'" : "'lessons'"})">← ${g === 15 ? "Books &amp; Stories" : "All Grades"}</button>
     <h1 style="margin-top:14px">${gradeName(g)}</h1>
     <div class="tabs no-print">${tabs}</div>
     <div class="card" id="lesson-card">
@@ -1649,6 +1650,39 @@ function lessonView() {
 }
 
 // ---------- Stories ----------
+// ---------- Books & Stories: one home for reading and story-making ----------
+function libraryView() {
+  const card = (onclick, emoji, title, desc, note) => `
+    <div class="gtile" onclick="${onclick}">
+      <div class="gtemoji">${emoji}</div>
+      <h3>${title}</h3>
+      <p>${desc}</p>
+      ${note ? `<p class="libnote">${note}</p>` : ""}
+      <button class="btn btn-primary btn-sm">Open</button>
+    </div>`;
+  const left = customLeft();
+  return `<div class="view">
+    <button class="btn btn-ghost btn-sm no-print" onclick="App.go('lessons')">← All Grades</button>
+    <h1 style="margin-top:14px">📖 Books &amp; Stories</h1>
+    <p class="subtitle">Everything to read in one place — bedtime stories, a story starring your own child, and a shelf of free classic books.</p>
+    <div class="grid grid-3 gtiles">
+      ${card("App.go('stories')", "📖", "Story Library",
+             "50 read-aloud stories, each with a moral value to talk about together.",
+             tier() !== "premium" ? "Some stories are Premium" : "")}
+      ${card("App.go('maker')", "✨", "Story Maker",
+             "Make your child the hero of a one-of-a-kind story you can print and keep.",
+             left !== Infinity ? `${left} free ${left === 1 ? "story" : "stories"} remaining` : "")}
+      ${card("App.openGrade(15)", "📚", "Free Classic Books",
+             "A shelf of famous children's books to read right here, free — Alice in Wonderland, Peter Pan, The Jungle Book and more.",
+             "Always free")}
+    </div>
+    <div class="bookfoot">${doodle("lamp")}
+      <p><b>Why are the classics free?</b> Every book on that shelf is out of copyright, which means it belongs to
+      everybody now. They come from Project Gutenberg, a volunteer library that has been digitising
+      public-domain books since 1971. Read them, print them, share them — they're yours.</p></div>
+  </div>`;
+}
+
 function storiesView() {
   const filters = [["all", "🌟 All Stories"], ...Object.entries(THEME_LABELS)];
   const fHtml = filters.map(([k, l]) =>
@@ -1665,7 +1699,8 @@ function storiesView() {
     </div>`;
   }).join("");
   return `<div class="view">
-    <h1>📖 Story Library</h1>
+    <button class="btn btn-ghost btn-sm no-print" onclick="App.go('library')">← Books &amp; Stories</button>
+    <h1 style="margin-top:14px">📖 Story Library</h1>
     <p class="subtitle">50 read-aloud stories, each with a moral value to talk about together. ${tier() !== "premium" ? "🔒 = Premium" : ""}</p>
     <div class="story-filters">${fHtml}</div>
     <div class="grid grid-3">${cards}</div>
@@ -1771,7 +1806,8 @@ function makerView() {
       </div>
     </div>` : "";
   return `<div class="view">
-    <h1>✨ Custom Story Maker</h1>
+    <button class="btn btn-ghost btn-sm no-print" onclick="App.go('library')">← Books &amp; Stories</button>
+    <h1 style="margin-top:14px">✨ Custom Story Maker</h1>
     <p class="subtitle">Make your child the hero! Pick the details and we'll write a one-of-a-kind story with a moral.
       ${left !== Infinity ? `<br><b>${left}</b> free custom ${left === 1 ? "story" : "stories"} remaining — <a style="color:var(--pink);cursor:pointer;font-weight:700" onclick="App.go('pricing')">go Premium for unlimited ⭐</a>` : ""}</p>
     <div class="card no-print">
@@ -2920,7 +2956,7 @@ function gameCheckGrow() {
 function render() {
   const views = {
     home: homeView, lessons: lessonsView, lesson: lessonView,
-    stories: storiesView, story: storyView, maker: makerView,
+    stories: storiesView, story: storyView, maker: makerView, library: libraryView,
     pricing: pricingView, auth: authView, account: accountView,
     contact: contactView, game: gameView, rewards: rewardsView, globe: globeView,
     shop: shopView, cart: cartView
@@ -2957,7 +2993,7 @@ function applyHash() {
       state.view = "auth";
     }
     history.replaceState(null, "", location.pathname);
-  } else if (["home", "lessons", "stories", "maker", "pricing", "contact", "game", "rewards", "globe", "shop", "cart"].includes(h)) {
+  } else if (["home", "lessons", "stories", "maker", "library", "pricing", "contact", "game", "rewards", "globe", "shop", "cart"].includes(h)) {
     state.view = h;
   }
 }
