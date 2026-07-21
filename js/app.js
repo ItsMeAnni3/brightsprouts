@@ -1176,7 +1176,9 @@ function lessonView() {
   if (!LESSONS[g] || !LESSONS[g][subj]) subj = state.subject = subjectsFor(g)[0].key;
   // Money lessons ship per-currency copy (learn/diagram/questions) — merge the chosen one in.
   const baseLesson = LESSONS[g][subj];
-  const curCcy = state.currency || "uk";
+  // Money is taught in US dollars and cents. timemoney.js still carries a full pounds-and-pence
+  // copy under byCurrency.uk, so switching back is a one-line change if it is ever wanted.
+  const curCcy = state.currency || "us";
   const lesson = baseLesson.byCurrency
     ? Object.assign({}, baseLesson, baseLesson.byCurrency[curCcy] || {})
     : baseLesson;
@@ -1207,12 +1209,6 @@ function lessonView() {
   }
 
   let body = "";
-  if (baseLesson.byCurrency) {
-    body += `<div class="trace-bar no-print">
-      <button class="btn btn-sm ${curCcy === "uk" ? "btn-primary" : "btn-ghost"}" onclick="App.setCurrency('uk')">£ Pounds &amp; pence</button>
-      <button class="btn btn-sm ${curCcy === "us" ? "btn-primary" : "btn-ghost"}" onclick="App.setCurrency('us')">$ Dollars &amp; cents</button>
-    </div>`;
-  }
   if (lesson.diagram) body += `<div class="biodiagram">${lesson.diagram}</div>`;
   if (lesson.globeBoard) body += globeStageHtml();
   // Tap-to-hear word list. Spanish lessons speak "es"; everything else speaks English.
