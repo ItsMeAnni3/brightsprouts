@@ -47,16 +47,21 @@ const ENG_SUBJECTS = [
   { key: "engspeaking",  label: "Speaking",  emoji: "🎤" },
   { key: "englistening", label: "Listening", emoji: "👂" }
 ];
+// One ladder from Grade 1 to Grade 12, easiest first.
 const CS_SUBJECTS = [
-  { key: "csplan", label: "The Plan",     emoji: "🗺️" },
-  { key: "cs12",   label: "Grades 1–2",   emoji: "🧩" },
-  { key: "cs35",   label: "Grades 3–5",   emoji: "🧱" },
-  { key: "cs68",   label: "Grades 6–8",   emoji: "🔢" },
-  { key: "cs912",  label: "Grades 9–12",  emoji: "🐍" }
+  { key: "basics",       label: "1 · What Is a Computer?", emoji: "💻" },
+  { key: "algorithms",   label: "2 · Algorithms",          emoji: "🪜" },
+  { key: "loops",        label: "3 · Loops",               emoji: "🔁" },
+  { key: "conditionals", label: "4 · If This, Then That",  emoji: "❓" },
+  { key: "variables",    label: "5 · Variables & Data",    emoji: "📦" },
+  { key: "functions",    label: "6 · Functions",           emoji: "🧩" },
+  { key: "scratch",      label: "7 · Build in Scratch",    emoji: "🐱" },
+  { key: "python",       label: "8 · Python",              emoji: "🐍" },
+  { key: "internet",     label: "9 · The Internet",        emoji: "🌐" },
+  { key: "safety",       label: "10 · Safety, Data & AI",  emoji: "🛡️" }
 ];
 // Extra subjects added to every Grade 1–12 tab bar (content matched to the grade's level).
 const GRADE_EXTRA = [
-  { key: "compsci",  label: "Computer Science", emoji: "💻" },
   { key: "english",  label: "English",          emoji: "🗣️" },
   { key: "books",    label: "Books",            emoji: "📚" }
 ];
@@ -171,7 +176,7 @@ function gradeName(g) {
   if (g === 14) return "Additional Learning Materials";
   if (g === 15) return "Books";
   if (g === 16) return "Create";
-  if (g === 17) return "Computer Science";
+  if (g === 17) return "Let's Learn Computer Science";
   if (g === 18) return "The English Language";
   if (g === 19) return "Let's Learn The History of Us";
   if (g === 20) return "Let's Learn Geology";
@@ -748,11 +753,9 @@ function makeSheet(g, subj, lesson) {
     return shuffleArr(pool).slice(0, Math.min(6, pool.length));
   }
   if (g === 0) return genKinder(subj, lesson);
-  if (g === 17) return genCS(subj);
   if (g === 18) return genEng(subj);
   if (g === 14) return genExtra(subj, lesson);
   if (g === 13) return subj === "florafauna" ? genFF() : genGeo(lesson);
-  if (subj === "compsci") return genCS(lesson.csWork);   // Computer Science folded into the grade
   if (subj === "math") return genMath(g);
   if (subj === "spelling") return genSpelling(lesson.spellWords);
   if (subj === "vocabulary") return genVocab(lesson.words);
@@ -1152,9 +1155,9 @@ function homeView() {
 function lessonsView() {
   const tiles = [];
   for (let g = 0; g <= 25; g++) {
-    if (g === 15 || g === 16 || g === 17 || g === 18 || g === 22) continue;  // now folded into each grade's tabs
+    if (g === 15 || g === 16 || g === 18 || g === 22) continue;  // now folded into each grade's tabs
     const locked = !canGrade(g);
-    const label = g === 0 ? "🌈 Kindergarten" : g === 13 ? "🌍 Let's Learn Geography" : g === 14 ? "⚗️ Additional Learning Materials"
+    const label = g === 0 ? "🌈 Kindergarten" : g === 13 ? "🌍 Let's Learn Geography" : g === 14 ? "⚗️ Additional Learning Materials" : g === 17 ? "💻 Let's Learn Computer Science"
                 : g === 19 ? "⏳ Let's Learn The History of Us" : g === 20 ? "🪨 Let's Learn Geology" : g === 21 ? "💬 Let's Learn Spanish" : g === 23 ? "🕐 Let's Learn Time & Money" : g === 24 ? "🚀 Let's Learn Space" : g === 25 ? "💛 Let's Learn Feelings" : "Grade " + g;
     tiles.push(`<button class="grade-tile g${g}" onclick="App.openGrade(${g})">${locked ? '<span class="lock">🔒</span>' : ""}${label}</button>`);
   }
@@ -1211,6 +1214,18 @@ function lessonView() {
   let body = "";
   if (lesson.diagram) body += `<div class="biodiagram">${lesson.diagram}</div>`;
   if (lesson.globeBoard) body += globeStageHtml();
+  if (lesson.band) body += `<p class="csband">👣 Best for <b>${esc(lesson.band)}</b> — but try it whenever you are ready</p>`;
+  if (lesson.resources) {
+    body += `<div class="rescard">
+      <h3>🔗 Try it yourself</h3>
+      <p class="reshint">Free places to practise what you just learned. Always check with a grown-up before visiting a new site.</p>
+      <div class="resgrid">${lesson.resources.map(r => `
+        <a class="resitem" href="${esc(r.url)}" target="_blank" rel="noopener noreferrer">
+          <span class="resname">${esc(r.name)} ↗</span>
+          <span class="resnote">${esc(r.note)}</span>
+        </a>`).join("")}</div>
+    </div>`;
+  }
   // Tap-to-hear word list. Spanish lessons speak "es"; everything else speaks English.
   // Each item is { es: shown big, en: shown small, say: spoken text (defaults to es) }.
   if (lesson.vocab) {
@@ -2099,7 +2114,7 @@ const App = {
     state.grade = g;
     state.reading = null;
     const dflt = g === 0 ? "alphabet" : g === 13 ? "globe" : g === 14 ? "periodic"
-               : g === 15 ? "readnow" : g === 16 ? "create" : g === 17 ? "csplan"
+               : g === 15 ? "readnow" : g === 16 ? "create" : g === 17 ? "basics"
                : g === 18 ? "engplan" : g === 19 ? "earth" : g === 20 ? "rocks"
                : g === 21 ? "greetings" : g === 23 ? "clock" : g === 24 ? "solar" : g === 25 ? "feelings" : "math";
     // Premium grades still open — landing on the free Books tab; other subjects show an upgrade card.

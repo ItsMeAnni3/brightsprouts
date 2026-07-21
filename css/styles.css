@@ -1042,3 +1042,17 @@ footer{background:var(--purple-dark);color:#cfc6ee;text-align:center;padding:20p
 .glevel.medium{background:#e0a94a}
 .glevel.hard{background:#e2453b}
 .gsubj{font-size:.74rem;color:#8a86a8;font-weight:700}
+
+/* ---------- Computer Science: grade band + experiment resources ---------- */
+.csband{background:#eef6ff;border-radius:12px;padding:8px 14px;margin:2px 0 14px;color:#2b6bc4;font-size:.92rem}
+.rescard{max-width:640px;margin:6px auto 18px;background:var(--card);border-radius:16px;
+  box-shadow:var(--shadow);padding:14px 16px;border:1px solid #eee9fa}
+.rescard h3{margin:0 0 2px}
+.reshint{margin:0 0 10px;color:#6a668c;font-size:.9rem}
+.resgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px}
+.resitem{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border:2px solid #eee9fa;
+  border-radius:12px;background:#fdfbff;text-decoration:none;transition:border-color .15s,background .15s}
+.resitem:hover{border-color:var(--blue);background:#fff}
+.resname{font-family:var(--display);font-weight:700;color:var(--purple-dark);font-size:.98rem}
+.resnote{font-size:.8rem;color:#6a668c;line-height:1.35}
+@media print{.rescard{break-inside:avoid}.resitem{border-color:#ddd;background:#fff}}

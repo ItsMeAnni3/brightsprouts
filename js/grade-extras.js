@@ -14,7 +14,6 @@
     var bd = bandOf(g);
 
     // Computer Science — the band lesson for this grade (it carries its own worksheet via csWork).
-    if (LESSONS[17] && LESSONS[17][bd.cs]) LESSONS[g].compsci = LESSONS[17][bd.cs];
 
     // Create — the same creative tools, but only in the younger grades (1–6).
     if (LESSONS[16] && g <= 6) {
