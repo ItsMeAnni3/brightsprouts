@@ -121,6 +121,7 @@ const SEL_SUBJECTS = [
   { key: "brave",     label: "Speaking Up & Trying Again", emoji: "🦁" }
 ];
 const SPACE_SUBJECTS = [
+  { key: "spacecourse", label: "Space Course",         emoji: "🌌" },
   { key: "solar",      label: "The Solar System",      emoji: "☀️" },
   { key: "moon",       label: "The Moon",              emoji: "🌙" },
   { key: "rockets",    label: "Rockets & How We Fly",  emoji: "🚀" },
@@ -2139,7 +2140,7 @@ const App = {
     const dflt = g === 0 ? "alphabet" : g === 13 ? "globe" : g === 14 ? "periodic"
                : g === 15 ? "readnow" : g === 16 ? "create" : g === 17 ? "basics"
                : g === 18 ? "engplan" : g === 19 ? "earth" : g === 20 ? "rocks"
-               : g === 21 ? "greetings" : g === 23 ? "clock" : g === 24 ? "solar" : g === 25 ? "feelings" : "math";
+               : g === 21 ? "greetings" : g === 23 ? "clock" : g === 24 ? "spacecourse" : g === 25 ? "feelings" : "math";
     // Premium grades still open — landing on the free Books tab; other subjects show an upgrade card.
     state.subject = canGrade(g) ? dflt : "books";
     go("lesson");
