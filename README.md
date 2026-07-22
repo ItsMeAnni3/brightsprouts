@@ -1,7 +1,7 @@
 # 🌱 BrightSprouts Academy
 
 A fun, printable learning app for families — **Grades 1–12** lessons in Math, Reading,
-Vocabulary, Science & History, **50 moral-value stories**, and a **custom story maker** —
+Vocabulary, Science & History, **moral-value stories**, and a **custom story maker** —
 with a built-in Free/Premium plan structure so you can earn money from subscriptions.
 
 ## ▶️ How to run it (right now)

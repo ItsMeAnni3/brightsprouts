@@ -1139,15 +1139,17 @@ function homeView() {
   <div class="hero">
     <span class="big-emoji">🌱</span>
     <h1>BrightSprouts Academy</h1>
-    <p>Fun, printable lessons for <b>Kindergarten through Grade 12</b> — picture words, alphabet & counting for little ones, then Math, Reading, Vocabulary, Spelling, Writing, Science & History — plus <b>50 stories</b> that teach kindness, courage, and character. Made for parents. Loved by kids.</p>
+    <p>Everything one family needs for <b>Kindergarten through Grade 12</b> — Math, Reading, Phonics, Vocabulary, Spelling, Writing, Science, Social Studies, Art and Music, plus Biology, Chemistry and Physics for older students. Then ten <b>"Let's Learn" courses</b> — Geography, Space, Computer Science, Spanish, Geology, Time &amp; Money, The History of Us and Feelings &amp; Kindness. Every lesson prints. Made for parents. Loved by kids.</p>
     <button class="btn btn-primary" onclick="App.go('lessons')">🚀 Explore Lessons</button>
-    <button class="btn btn-secondary" onclick="App.go('stories')">📖 Read Stories</button>
+    <button class="btn btn-secondary" onclick="App.go('library')">📖 Books &amp; Stories</button>
   </div>
   <div class="grid grid-3">
-    <div class="feature"><div class="fe">🖨️</div><h3>Print & Learn</h3><p>Every lesson prints as a beautiful worksheet — with an optional answer key for parents.</p></div>
-    <div class="feature"><div class="fe">📖</div><h3>50 Moral Stories</h3><p>Adventures, kids helping strangers, and helping at home — every story teaches a value.</p></div>
-    <div class="feature"><div class="fe">✨</div><h3>Custom Story Maker</h3><p>Put YOUR child in the story! Pick a name, a setting, and a value — we write the tale.</p></div>
-    <div class="feature"><div class="fe">🔢</div><h3>Endless Worksheets</h3><p>Every subject generates a fresh printable worksheet on demand — never the same sheet twice.</p></div>
+    <div class="feature"><div class="fe">🖨️</div><h3>Print &amp; Learn</h3><p>Every lesson prints as a beautiful worksheet — with an optional answer key for parents.</p></div>
+    <div class="feature"><div class="fe">🔢</div><h3>Endless Worksheets</h3><p>Press one button for a brand-new sheet. Maths, spelling and vocabulary never repeat.</p></div>
+    <div class="feature"><div class="fe">🧭</div><h3>Full Courses, Grade by Grade</h3><p>Geography, Space, Computer Science and Social Studies each run Grade 1 to 12, with an activity sheet at every step.</p></div>
+    <div class="feature"><div class="fe">🔤</div><h3>Phonics — Free for Everyone</h3><p>Letter sounds, blending, word families and sight words, growing into word study by Grade 7.</p></div>
+    <div class="feature"><div class="fe">📖</div><h3>Stories &amp; Free Classic Books</h3><p>Moral-value stories to read aloud, plus a shelf of famous children's books to read free.</p></div>
+    <div class="feature"><div class="fe">🎮</div><h3>Games, Globe &amp; Rewards</h3><p>A learning arcade at three difficulty levels, a spinning 3D globe, stars and badges to collect.</p></div>
   </div>
   <div class="card" style="text-align:center">
     <h2>How it works</h2>
@@ -1914,7 +1916,7 @@ function pricingView() {
           <li><b>Activity sheets</b> in every lesson, plus hands-on family activities</li>
           <li>Tap-to-hear Spanish &amp; phonics audio</li>
           <li>Tracing, Trace &amp; Draw and the colouring book</li>
-          <li>All 50 moral-value stories + unlimited custom stories</li>
+          <li>The full moral-story library + unlimited custom stories</li>
           <li>The interactive Globe, all 22 arcade games &amp; the rewards system</li>
           <li>Every new subject and lesson we add — included, always</li>
         </ul>
