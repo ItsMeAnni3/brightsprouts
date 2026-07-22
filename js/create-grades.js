@@ -1,12 +1,12 @@
-// BrightSprouts Academy — Creature Maker and Build It!, made different for each of Grades 1–6.
+// BrightSprouts Academy — Creature Maker and Build It!, made different for each of Grades 1–5.
 //
 // Creature Maker keeps the same toy at every grade (restricting the parts would just make it less
-// fun) but the science around it climbs: describe → habitat → adaptation → classify → life cycle
-// and food web → write a field-guide entry.
+// fun) but the science around it climbs: describe → habitat → adaptation → classify →
+// life cycle and food web.
 //
 // Build It! unlocks machines cumulatively, so a grade always keeps everything it had before:
 //   G1 house, car · G2 +ship, train · G3 +bridge, castle · G4 +airplane, helicopter
-//   G5 +rocket, robot · G6 all ten, focused on the engineering design process.
+//   G5 +rocket, robot — all ten. Both subjects end after Grade 5.
 (function () {
   if (typeof LESSONS === "undefined") return;
 
@@ -74,19 +74,6 @@
         "Every creature has a role in its ecosystem — remove one and the others are affected."
       ],
       activity: "🔄 Activity Sheet — Cycle & Chain: Draw your creature's life cycle in four stages. Then place it in a food chain with at least three links, starting from the Sun.",
-      magicMaker: true
-    },
-    6: {
-      title: "Creature Maker: Field Guide Entry", emoji: "📓",
-      intro: "Real biologists describe a species so precisely that a stranger could identify it. Your turn.",
-      learn: [
-        "A field guide describes a species clearly enough for anyone to recognise it in the wild.",
-        "A scientific name has two parts, the genus and the species — like Homo sapiens.",
-        "A complete entry covers appearance, size, habitat, range, diet and behaviour.",
-        "Scientists write measurements and evidence, not opinions: 'about 30 cm long', not 'quite big'.",
-        "Writing accurately about a living thing is genuine biology, not just description."
-      ],
-      activity: "📓 Activity Sheet — Field Guide Page: Write a full entry for your creature — an invented two-part scientific name, size in centimetres, habitat, range, diet, behaviour, and a labelled drawing.",
       magicMaker: true
     }
   };
@@ -156,23 +143,10 @@
         "Complicated machines are really lots of simpler systems working together."
       ],
       activity: "🚀 Activity Sheet — Design a Robot: Invent a robot that does one real job. Draw it and label its sensor, its power source and its moving part, then write the problem it solves."
-    },
-    6: {
-      title: "Build It!: The Design Process", emoji: "🏗️",
-      projects: ["house", "car", "ship", "train", "bridge", "castle", "airplane", "helicopter", "rocket", "robot"],
-      intro: "Every machine here was built the same way — by a process you can use on any problem.",
-      learn: [
-        "Engineers follow a design process: ask, imagine, plan, create, test, improve.",
-        "Constraints are the limits you have to work inside: materials, size, cost, weight and time.",
-        "Testing is where you find the problems. A design that fails a test has told you something useful.",
-        "Iterating means changing one thing, testing again, and keeping what worked.",
-        "All ten machines are unlocked here — build every one to earn the Master Builder badge."
-      ],
-      activity: "🏗️ Activity Sheet — Full Design Cycle: Pick a real annoyance in your home. Work through all six steps and build a prototype from paper or cardboard. Record exactly what you changed between version 1 and version 2, and why."
     }
   };
 
-  for (var g = 1; g <= 6; g++) {
+  for (var g = 1; g <= 5; g++) {
     if (!LESSONS[g]) continue;
     LESSONS[g].create = CREATE[g];
     var e = ENGINEER[g];

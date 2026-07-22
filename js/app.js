@@ -169,7 +169,7 @@ function subjectsFor(g) {
     core.splice(k, 0, PHYS_SUBJECT);
   }
   let subs = core.concat(GRADE_EXTRA);
-  if (g <= 6) subs = subs.concat(CREATE_SUBJECTS_INLINE);
+  if (g <= 5) subs = subs.concat(CREATE_SUBJECTS_INLINE);   // Creature Maker & Build It! stop after Grade 5
   return subs;
 }
 function gradeName(g) {
