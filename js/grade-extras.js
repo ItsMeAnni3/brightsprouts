@@ -16,10 +16,7 @@
     // Computer Science — the band lesson for this grade (it carries its own worksheet via csWork).
 
     // Create — the same creative tools, but only in the younger grades (1–6).
-    if (LESSONS[16] && g <= 6) {
-      if (LESSONS[16].create) LESSONS[g].create = LESSONS[16].create;
-      if (LESSONS[16].engineer) LESSONS[g].engineer = LESSONS[16].engineer;
-    }
+    // Creature Maker and Build It! are defined per grade in create-grades.js
 
     // Books — only the classics at this grade's reading level.
     LESSONS[g].books = {

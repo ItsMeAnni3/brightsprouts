@@ -1315,7 +1315,7 @@ function lessonView() {
     <div class="print-only" style="text-align:center;margin-top:10px"><h2>${esc(m.name)}</h2></div>`;
   }
   if (lesson.engineerBuild) {
-    body += engineerBuildHtml();
+    body += engineerBuildHtml(lesson.engProjects);
   }
   if (lesson.engDoodle) {
     body += `<div class="engdoodle">${doodle(lesson.engDoodle)}</div>`;
@@ -2935,8 +2935,11 @@ function gamePop() {
 function curProject() {
   return ENGINEER_PROJECTS.find(p => p.key === (state.build && state.build.project)) || ENGINEER_PROJECTS[0];
 }
-function engineerBuildHtml() {
-  const projs = ENGINEER_PROJECTS;
+// allowedKeys lets each grade unlock its own set of machines (see create-grades.js).
+function engineerBuildHtml(allowedKeys) {
+  const projs = (allowedKeys && allowedKeys.length)
+    ? ENGINEER_PROJECTS.filter(p => allowedKeys.indexOf(p.key) >= 0)
+    : ENGINEER_PROJECTS;
   if (!state.build || !projs.some(p => p.key === state.build.project)) {
     state.build = { project: projs[0].key, mode: "guided", added: [], last: -1 };
   }
