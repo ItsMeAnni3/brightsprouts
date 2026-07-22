@@ -1156,7 +1156,11 @@ function homeView() {
     <p style="margin:10px 0 16px;color:#6a668c">1️⃣ Create a free account &nbsp;→&nbsp; 2️⃣ Pick a grade & subject &nbsp;→&nbsp; 3️⃣ Learn on screen or hit Print!</p>
     ${currentUser() ? `<button class="btn btn-primary" onclick="App.go('lessons')">Continue Learning ➜</button>`
       : `<button class="btn btn-primary" onclick="App.goAuth('signup')">Create Free Account</button>`}
-  </div>`;
+  </div>
+  ${typeof MailList !== "undefined" && !MailList.hidden() ? MailList.html() : ""}
+  <p style="text-align:center;margin-top:18px;font-size:.9rem">
+    <a href="learn/index.html" style="color:var(--purple-dark)">Browse every printable worksheet, Kindergarten to Grade 12 →</a>
+  </p>`;
 }
 
 // ---------- Lessons ----------
