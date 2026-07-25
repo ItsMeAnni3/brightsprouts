@@ -14,7 +14,7 @@
 //
 var ANALYTICS = {
   plausible: "",
-  goatcounter: ""
+  goatcounter: "brightsprouts"
 };
 
 (function () {
