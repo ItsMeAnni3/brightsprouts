@@ -9,23 +9,32 @@
 (function () {
   if (typeof window === "undefined") return;
 
-  // ---------- Sprout's face (reused visual identity from the welcome-sprout greeter) ----------
+  // ---------- Sprout's face — a little plant just poking out of the soil, with two big round
+  // baby leaves (cotyledons) and a friendly bud-face on top. ----------
   function avatarSvg(extraClass) {
-    return '<svg class="sb-avatar' + (extraClass ? " " + extraClass : "") + '" viewBox="0 0 120 120" role="img" aria-label="Sprout">' +
-      '<defs><radialGradient id="sb-grad" cx="42%" cy="34%" r="72%">' +
+    return '<svg class="sb-avatar' + (extraClass ? " " + extraClass : "") + '" viewBox="0 0 120 130" role="img" aria-label="Sprout">' +
+      '<defs><radialGradient id="sb-grad" cx="42%" cy="32%" r="72%">' +
         '<stop offset="0" stop-color="#95e3a6"/><stop offset="1" stop-color="#57bd69"/>' +
       '</radialGradient></defs>' +
-      '<path d="M60 34 q0 -10 0 -16" stroke="#54b866" stroke-width="5" fill="none" stroke-linecap="round"/>' +
-      '<path d="M60 22 q-17 -5 -23 -19 q15 -1 23 13 z" fill="#7ed957"/>' +
-      '<path d="M60 22 q17 -5 23 -19 q-15 -1 -23 13 z" fill="#66c778"/>' +
-      '<ellipse cx="60" cy="68" rx="38" ry="36" fill="url(#sb-grad)"/>' +
-      '<ellipse cx="60" cy="80" rx="22" ry="15" fill="#a6ecb4" opacity=".5"/>' +
-      '<circle cx="40" cy="74" r="6" fill="#ff9db0" opacity=".9"/><circle cx="80" cy="74" r="6" fill="#ff9db0" opacity=".9"/>' +
-      '<ellipse class="sb-eye" cx="48" cy="62" rx="5" ry="6.5" fill="#2d2a4a"/>' +
-      '<ellipse class="sb-eye sb-eye2" cx="72" cy="62" rx="5" ry="6.5" fill="#2d2a4a"/>' +
-      '<circle cx="50" cy="59" r="1.8" fill="#fff"/><circle cx="74" cy="59" r="1.8" fill="#fff"/>' +
-      '<path class="sb-smile" d="M48 78 q12 10 24 0" stroke="#2d2a4a" stroke-width="3.2" fill="none" stroke-linecap="round"/>' +
-      '<ellipse class="sb-mouth" cx="60" cy="80" rx="8" ry="3.4" fill="#2d2a4a"/>' +
+      // soil
+      '<ellipse cx="60" cy="119" rx="21" ry="6.5" fill="#8a6a42"/>' +
+      '<ellipse cx="60" cy="116" rx="14" ry="3" fill="#a3763f" opacity=".7"/>' +
+      // stem
+      '<path d="M60 119 L60 70" stroke="#4a9c58" stroke-width="7" fill="none" stroke-linecap="round"/>' +
+      // two big baby leaves (cotyledons)
+      '<path d="M60 90 C36 92 17 76 13 53 C42 55 60 70 60 90 Z" fill="#8fe36a"/>' +
+      '<path d="M56 86 Q33 78 19 57" stroke="#5fae4a" stroke-width="2" fill="none" stroke-linecap="round" opacity=".7"/>' +
+      '<path d="M60 90 C84 92 103 76 107 53 C78 55 60 70 60 90 Z" fill="#72cf5c"/>' +
+      '<path d="M64 86 Q87 78 101 57" stroke="#4f9c52" stroke-width="2" fill="none" stroke-linecap="round" opacity=".7"/>' +
+      // bud head + face
+      '<ellipse cx="60" cy="44" rx="27" ry="26" fill="url(#sb-grad)"/>' +
+      '<ellipse cx="60" cy="54" rx="16" ry="11" fill="#a6ecb4" opacity=".5"/>' +
+      '<circle cx="42" cy="50" r="5" fill="#ff9db0" opacity=".9"/><circle cx="78" cy="50" r="5" fill="#ff9db0" opacity=".9"/>' +
+      '<ellipse class="sb-eye" cx="50" cy="40" rx="4.3" ry="5.6" fill="#2d2a4a"/>' +
+      '<ellipse class="sb-eye sb-eye2" cx="70" cy="40" rx="4.3" ry="5.6" fill="#2d2a4a"/>' +
+      '<circle cx="51.6" cy="37.4" r="1.6" fill="#fff"/><circle cx="71.6" cy="37.4" r="1.6" fill="#fff"/>' +
+      '<path class="sb-smile" d="M50 54 q10 8 20 0" stroke="#2d2a4a" stroke-width="2.8" fill="none" stroke-linecap="round"/>' +
+      '<ellipse class="sb-mouth" cx="60" cy="55" rx="6.5" ry="2.8" fill="#2d2a4a"/>' +
       '</svg>';
   }
 
