@@ -106,6 +106,7 @@ main{max-width:1100px;margin:0 auto;padding:26px 18px 80px}
 .g24{background:linear-gradient(135deg,#141a35,#4d96ff)}
 .g25{background:linear-gradient(135deg,#ff8fb1,#ffd166);color:var(--ink)}
 .g26{background:linear-gradient(135deg,#3f6b4a,#a3763f)}
+.g27{background:linear-gradient(135deg,#1f5a8a,#4d96ff)}
 .ggames{background:linear-gradient(135deg,#8338ec,#2ec4b6)}
 .glibrary{background:linear-gradient(135deg,#e26d5c,#ffd166);color:var(--ink)}
 .libnote{font-size:.78rem;color:#8a86a8;margin-top:-2px}
@@ -265,6 +266,37 @@ main{max-width:1100px;margin:0 auto;padding:26px 18px 80px}
 }
 @media (prefers-reduced-motion: reduce){.paleo3d-scene{animation:none;transform:rotateY(-16deg) rotateX(4deg)}}
 @media print{.paleo3d{display:none}}
+
+/* ---------- Physical Science 3D atom model (auto-turning, screen-only bonus) ---------- */
+.phys3d{margin:14px auto 4px;max-width:230px;text-align:center}
+.phys3d-stage{perspective:520px;padding:14px 4px;border-radius:18px;
+  background:linear-gradient(160deg,#eef4ff,#f6f0ff)}
+.phys3d-scene{position:relative;width:170px;height:170px;margin:0 auto;transform-style:preserve-3d;
+  animation:physWobble 8s ease-in-out infinite}
+.phys3d-nucleus{position:absolute;top:50%;left:50%;width:26px;height:26px;margin:-13px 0 0 -13px;
+  border-radius:50%;background:radial-gradient(circle at 35% 30%, #ffe08a, #e6483d 75%);
+  box-shadow:0 0 14px rgba(230,72,61,.55);z-index:2}
+.phys3d-ring{position:absolute;inset:0;border:2px solid rgba(77,150,255,.5);border-radius:50%}
+.phys3d-r1{transform:rotate3d(1,0,0,70deg)}
+.phys3d-r2{transform:rotate3d(0.5,0.87,0,70deg)}
+.phys3d-r3{transform:rotate3d(-0.5,0.87,0,70deg)}
+.phys3d-spin{position:absolute;inset:-2px;border-radius:50%;animation:physSpin 3s linear infinite}
+.phys3d-r2 .phys3d-spin{animation-duration:4s;animation-direction:reverse}
+.phys3d-r3 .phys3d-spin{animation-duration:5s}
+.phys3d-e{position:absolute;top:-5px;left:50%;width:11px;height:11px;margin-left:-5.5px;
+  border-radius:50%;background:#4d96ff;box-shadow:0 0 6px #4d96ff}
+.phys3d-cap{font-size:.78rem;color:#8a86a8;margin:5px 0 0}
+@keyframes physWobble{
+  0%,100%{transform:rotateY(-20deg) rotateX(4deg)}
+  50%{transform:rotateY(20deg) rotateX(-3deg)}
+}
+@keyframes physSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){
+  .phys3d-scene{animation:none;transform:rotateY(-14deg) rotateX(3deg)}
+  .phys3d-spin,.phys3d-r2 .phys3d-spin,.phys3d-r3 .phys3d-spin{animation:none}
+  .phys3d-r1 .phys3d-e{transform:rotate(0deg)}.phys3d-r2 .phys3d-e{transform:rotate(120deg)}.phys3d-r3 .phys3d-e{transform:rotate(240deg)}
+}
+@media print{.phys3d{display:none}}
 
 /* ---------- Magic Creature Maker (3D pop-out) ---------- */
 .mmwrap{display:grid;grid-template-columns:minmax(300px,1fr) minmax(280px,340px);gap:20px;align-items:start}
