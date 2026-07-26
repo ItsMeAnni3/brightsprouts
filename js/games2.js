@@ -1,4 +1,4 @@
-// BrightSprouts Academy — 19 more arcade games across the subjects, at three difficulty levels.
+// BrightSprouts Academy: 19 more arcade games across the subjects, at three difficulty levels.
 // Each generator returns the same shape the arcade already uses:
 //   { promptText, prompt (html), options[4], answer }
 // Subject quizzes draw on the lesson question banks, so their facts are the ones already checked.
@@ -273,7 +273,7 @@
     { key: "spacequiz", name: "Space Cadet",      emoji: "🚀", desc: "Planets, the Moon, rockets and astronauts.",  level: "Easy",   subject: "Space" },
     { key: "feelquiz",  name: "Feelings & Kindness", emoji: "💛", desc: "Naming feelings, calming down and being kind.", level: "Easy", subject: "Wellbeing" },
     { key: "times",     name: "Times Tables",     emoji: "✖️", desc: "Multiplication and division up to 12.",       level: "Medium", subject: "Maths" },
-    { key: "coincount", name: "Coin Counter",     emoji: "💰", desc: "Add up the coins — how much altogether?",     level: "Medium", subject: "Money" },
+    { key: "coincount", name: "Coin Counter",     emoji: "💰", desc: "Add up the coins: how much altogether?",     level: "Medium", subject: "Money" },
     { key: "rockquiz",  name: "Rock Detective",   emoji: "🪨", desc: "Rocks, the rock cycle, fossils and gems.",    level: "Medium", subject: "Geology" },
     { key: "paleoquiz", name: "Dino Detective",   emoji: "🦖", desc: "Fossils, dinosaurs and prehistoric life.",    level: "Medium", subject: "Paleontology" },
     { key: "physsciquiz", name: "Force Field",    emoji: "⚛️", desc: "Matter, forces, energy, electricity and magnetism.", level: "Medium", subject: "Physical Science" },

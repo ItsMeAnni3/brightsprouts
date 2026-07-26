@@ -1,5 +1,5 @@
-// BrightSprouts Academy — Sprout the Kid Chat Bot.
-// A friendly, animated chat widget for grade-schoolers. It does NOT call any AI/API — it searches
+// BrightSprouts Academy: Sprout the Kid Chat Bot.
+// A friendly, animated chat widget for grade-schoolers. It does NOT call any AI/API; it searches
 // the site's own already-verified lesson content (the LESSONS object, populated by geology.js,
 // paleontology.js, physical-science.js, earth-space-science.js, space.js, history-us.js, etc.)
 // for the closest matching fact, so every answer is something a real lesson on this site already
@@ -9,7 +9,7 @@
 (function () {
   if (typeof window === "undefined") return;
 
-  // ---------- Sprout's face — a little plant just poking out of the soil, with two big round
+  // ---------- Sprout's face: a little plant just poking out of the soil, with two big round
   // baby leaves (cotyledons) and a friendly bud-face on top. ----------
   function avatarSvg(extraClass) {
     return '<svg class="sb-avatar' + (extraClass ? " " + extraClass : "") + '" viewBox="0 0 120 130" role="img" aria-label="Sprout">' +
@@ -47,7 +47,7 @@
   var KB = [];  // { tokens:[...], answer, topic, emoji, grade, subjKey, weight }
 
   var STOP = {};
-  // NOTE: the whole concatenation MUST be parenthesized before .split() — "a" + "b".split(" ")
+  // NOTE: the whole concatenation MUST be parenthesized before .split(), since "a" + "b".split(" ")
   // binds .split() to "b" alone (method calls outrank +), silently dropping every earlier word.
   ("a an the is are was were be been being what whats how why who whom when where which do does did " +
   "i you your yours my me mine we our us they them their he she it its this that these those " +
@@ -57,7 +57,7 @@
   "im ok okay hi hey hello sprout").split(" ").forEach(function (w) { STOP[w] = 1; });
 
   // A tiny "poor man's" stemmer so "magnets"/"magnet" and "oceans"/"ocean" count as the same
-  // token — no real NLP library is available client-side, but bare plural -s is most of the gap.
+  // token; no real NLP library is available client-side, but bare plural -s is most of the gap.
   function stem(w) {
     if (w.length > 4 && /[a-z]s$/.test(w) && !/ss$/.test(w)) return w.slice(0, -1);
     return w;
@@ -93,7 +93,7 @@
     if (!entry || typeof entry !== "object") return;
     var title = entry.title || fallbackTitle || subjKey;
     var emoji = entry.emoji || fallbackEmoji || "🌱";
-    // The intro is a topic's own hand-written summary — the best natural answer to a broad
+    // The intro is a topic's own hand-written summary: the best natural answer to a broad
     // "tell me about X" question, so it's indexed (and, via scoreEntry's title bonus, favoured).
     if (typeof entry.intro === "string") addKbEntry(entry.intro, entry.intro, title, emoji, grade, subjKey, "learn");
     if (Array.isArray(entry.learn)) {
@@ -106,7 +106,7 @@
     }
     // Money-style variants: { byCurrency: { uk:{...}, us:{...} } }. Strip units/byCurrency before
     // recursing, or the merged copy still carries the same array/object and re-triggers this same
-    // branch forever — each level multiplying the entry count instead of just unwrapping once.
+    // branch forever, each level multiplying the entry count instead of just unwrapping once.
     if (entry.byCurrency && typeof entry.byCurrency === "object") {
       Object.keys(entry.byCurrency).forEach(function (k) {
         var variant = {};
@@ -136,13 +136,13 @@
         try { indexEntry(subjects[subjKey], g, subjKey); } catch (e) { /* skip malformed content, never crash the bot */ }
       });
     });
-    // Hand-written "how do I use this site" FAQ — these are the "anything inside the website" answers.
+    // Hand-written "how do I use this site" FAQ: these are the "anything inside the website" answers.
     var FAQ = [
-      { q: "how do I print a worksheet", a: "Open any lesson and press the pink Print Worksheet button — you can also tick 'Show answer key' first if you want it included.", topic: "Using BrightSprouts", emoji: "🖨️" },
-      { q: "how do I get a new worksheet new questions", a: "Press the New Worksheet button on any lesson — math, spelling and vocabulary sheets make a brand new set of questions every time!", topic: "Using BrightSprouts", emoji: "🔄" },
-      { q: "where are the games arcade", a: "Tap Games in the menu, or the Games tile on the Pick a Grade page, to open the arcade — there are lots of quiz games to try!", topic: "Using BrightSprouts", emoji: "🎮" },
-      { q: "how do I make my own story custom story maker", a: "Open Books & Stories and look for the custom story maker — you can pick a hero and a theme and make your very own story!", topic: "Using BrightSprouts", emoji: "📖" },
-      { q: "how do I make a creature creature maker", a: "The Creature Maker lets you mix and match parts to build your own silly creature — find it on the Pick a Grade page!", topic: "Using BrightSprouts", emoji: "🎨" },
+      { q: "how do I print a worksheet", a: "Open any lesson and press the pink Print Worksheet button. You can also tick 'Show answer key' first if you want it included.", topic: "Using BrightSprouts", emoji: "🖨️" },
+      { q: "how do I get a new worksheet new questions", a: "Press the New Worksheet button on any lesson: math, spelling and vocabulary sheets make a brand new set of questions every time!", topic: "Using BrightSprouts", emoji: "🔄" },
+      { q: "where are the games arcade", a: "Tap Games in the menu, or the Games tile on the Pick a Grade page, to open the arcade. There are lots of quiz games to try!", topic: "Using BrightSprouts", emoji: "🎮" },
+      { q: "how do I make my own story custom story maker", a: "Open Books & Stories and look for the custom story maker: you can pick a hero and a theme and make your very own story!", topic: "Using BrightSprouts", emoji: "📖" },
+      { q: "how do I make a creature creature maker", a: "The Creature Maker lets you mix and match parts to build your own silly creature. Find it on the Pick a Grade page!", topic: "Using BrightSprouts", emoji: "🎨" },
       { q: "what is brightsprouts academy", a: "BrightSprouts Academy is a learning website with printable lessons for Kindergarten through Grade 12, plus games, stories and fun extra courses like Geology and Space!", topic: "About BrightSprouts", emoji: "🌱" },
       { q: "how many grades does brightsprouts have", a: "BrightSprouts covers Kindergarten all the way through Grade 12, with a subject for everyone.", topic: "About BrightSprouts", emoji: "🌱" }
     ];
@@ -150,7 +150,7 @@
   }
 
   // ==================== 2. Safety filter ====================
-  // Checked BEFORE any search runs. If matched, Sprout declines — no knowledge lookup happens at all.
+  // Checked BEFORE any search runs. If matched, Sprout declines; no knowledge lookup happens at all.
   var UNSAFE_PATTERNS = [
     /\b(kill|murder|shoot(ing)?|stab(bing)?|gun|rifle|pistol|weapon|bomb|explosive|grenade|torture)\b/i,
     /\b(suicide|self[-\s]?harm|kill myself|hurt myself|want to die|cutting myself)\b/i,
@@ -171,7 +171,7 @@
     var score = 0;
     qTokens.forEach(function (t) {
       // A word matching the LESSON'S OWN TITLE is a much stronger relevance signal than merely
-      // appearing somewhere in one bullet's text — without this, a broad one-word question like
+      // appearing somewhere in one bullet's text; without this, a broad one-word question like
       // "dinosaurs" can tie-break onto any lesson that happens to mention the word once in
       // passing, instead of the lesson that's actually *about* it.
       if (entry.titleTokens.indexOf(t) !== -1) score += 3;
@@ -194,11 +194,11 @@
 
   // ==================== 4. Chat UI ====================
   var FALLBACKS = [
-    "Hmm, I don't know that one yet! I'm great with school stuff though — try asking me about math, reading, science, space, animals or history! 🌟",
+    "Hmm, I don't know that one yet! I'm great with school stuff though, so try asking me about math, reading, science, space, animals or history! 🌟",
     "I haven't learned about that one! Ask me something about a school subject and I'll do my best. 📚",
-    "That's a tricky one for me! I'm best at questions about the lessons on this site — try asking about a subject you're studying. 🌈"
+    "That's a tricky one for me! I'm best at questions about the lessons on this site, so try asking about a subject you're studying. 🌈"
   ];
-  var BLOCK_MSG = "🌱 That's not something Sprout can talk about. Let's stick to school stuff — try asking me about math, reading, science, animals or space! If something's ever bothering you, it's always best to talk to a grown-up you trust.";
+  var BLOCK_MSG = "🌱 That's not something Sprout can talk about. Let's stick to school stuff! Try asking me about math, reading, science, animals or space. If something's ever bothering you, it's always best to talk to a grown-up you trust.";
   var STARTER_CHIPS = [
     "🦖 Tell me about dinosaurs!",
     "🌈 How does a rainbow form?",
@@ -331,7 +331,7 @@
     panel.innerHTML =
       '<div class="sproutbot-head" id="sb-head">' +
         avatarSvg() +
-        '<div class="sb-title"><h3>Sprout</h3><p>Your school buddy — ask me anything!</p></div>' +
+        '<div class="sb-title"><h3>Sprout</h3><p>Your school buddy: ask me anything!</p></div>' +
         '<div class="sb-headbtns">' +
           '<button type="button" id="sb-mute" aria-label="Turn sound off">🔊</button>' +
           '<button type="button" id="sb-close" aria-label="Close chat">✕</button>' +
@@ -370,7 +370,7 @@
       els.chips.appendChild(chip);
     });
 
-    var greeting = "Hi, I'm Sprout! 🌱 I love learning — ask me a question about math, reading, science, history, space, or anything else you're curious about!";
+    var greeting = "Hi, I'm Sprout! 🌱 I love learning, so ask me a question about math, reading, science, history, space, or anything else you're curious about!";
     addMsg(greeting, "bot");
     speak(greeting);
   }
@@ -388,7 +388,7 @@
     els.fab = fab;
   }
 
-  // Small internal test surface (mirrors how Globe/Speech/App are exposed elsewhere in this app) —
+  // Small internal test surface (mirrors how Globe/Speech/App are exposed elsewhere in this app),
   // used only by audit_sproutbot.html to verify the search/safety logic in headless Chrome.
   window.SproutBot = {
     _test: {

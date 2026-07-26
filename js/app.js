@@ -1,5 +1,5 @@
 // ============================================================
-// BrightSprouts Academy — application engine
+// BrightSprouts Academy: application engine
 // Accounts are stored in the browser (localStorage) for this
 // starter version. See README.md for upgrading to a real
 // backend + Stripe payments when you're ready to launch.
@@ -77,14 +77,14 @@ const BIO_SUBJECT = { key: "biology", label: "Biology", emoji: "🧬" };
 const CHEM_SUBJECT = { key: "chemistry", label: "Chemistry", emoji: "⚗️" };
 // Physics runs from Grade 9 up (placed right after Chemistry).
 const PHYS_SUBJECT = { key: "physics", label: "Physics", emoji: "⚛️" };
-// Geology (category 20): basic earth science for grade-schoolers — a standalone tile.
+// Geology (category 20): basic earth science for grade-schoolers, a standalone tile.
 const GEO_SUBJECTS = [
   { key: "rocks",   label: "Rocks & Minerals", emoji: "🪨" },
   { key: "cycle",   label: "The Rock Cycle",   emoji: "🔁" },
   { key: "earth",   label: "Inside the Earth", emoji: "🌋" },
   { key: "fossils", label: "Fossils & Gems",   emoji: "💎" }
 ];
-// Learn Spanish (category 21): basic Spanish for grade-schoolers — a standalone tile.
+// Learn Spanish (category 21): basic Spanish for grade-schoolers, a standalone tile.
 const SPANISH_SUBJECTS = [
   { key: "greetings", label: "Greetings & Manners", emoji: "👋" },
   { key: "numbers",   label: "Numbers 1–10",        emoji: "🔢" },
@@ -128,7 +128,7 @@ const SPACE_SUBJECTS = [
   { key: "astronauts", label: "Astronauts in Space",   emoji: "👨‍🚀" },
   { key: "explore",    label: "Exploring Further",     emoji: "🔭" }
 ];
-// Paleontology (category 26): fossils, dinosaurs & prehistoric life for grade-schoolers — a standalone tile.
+// Paleontology (category 26): fossils, dinosaurs & prehistoric life for grade-schoolers, a standalone tile.
 const PALEO_SUBJECTS = [
   { key: "digsite",    label: "Fossils & Digging Up the Past", emoji: "🦴" },
   { key: "dinosaurs",  label: "Dinosaurs",                     emoji: "🦖" },
@@ -136,7 +136,7 @@ const PALEO_SUBJECTS = [
   { key: "extinction", label: "Extinction & Deep Time",        emoji: "☄️" }
 ];
 // Physical Science (category 27): matter, forces, energy and electricity/magnetism for
-// grade-schoolers — a standalone tile, distinct from the Grade 9+ Physics/Chemistry subjects.
+// grade-schoolers, a standalone tile, distinct from the Grade 9+ Physics/Chemistry subjects.
 const PHYS_SCI_SUBJECTS = [
   { key: "matter",     label: "Matter & Atoms",           emoji: "🧊" },
   { key: "forces",     label: "Forces & Motion",          emoji: "🎢" },
@@ -144,7 +144,7 @@ const PHYS_SCI_SUBJECTS = [
   { key: "electromag", label: "Electricity & Magnetism",  emoji: "🧲" }
 ];
 // Earth & Space Science (category 28): weather, water cycle/oceans, stars/galaxies and Earth's
-// rotation/seasons — deliberately NOT rocks (see Geology) or the solar system/spaceflight
+// rotation/seasons, deliberately NOT rocks (see Geology) or the solar system/spaceflight
 // (see Space), to avoid overlapping those two standalone tiles.
 const EARTHSPACE_SUBJECTS = [
   { key: "weather",    label: "Weather & Sky",            emoji: "🌦️" },
@@ -271,7 +271,7 @@ const THEME_LABELS = {
 const RULES = {
   // Feelings & Kindness (25) is free for everyone: it carries child-safety guidance
   // (say stop, walk away, tell a trusted grown-up) that no child should hit a paywall to reach.
-  // Phonics is no longer a category — it lives in K–Grade 7 and follows each grade's own access.
+  // Phonics is no longer a category; it lives in K–Grade 7 and follows each grade's own access.
   guest:   { grades: [0, 1, 15, 16, 25],    stories: 3,  custom: 0 },
   free:    { grades: [0, 1, 2, 15, 16, 25], stories: 10, custom: 2 },
   premium: { grades: "all",  stories: "all", custom: "all" }
@@ -285,7 +285,7 @@ const STRIPE_PAYMENT_LINK = "https://buy.stripe.com/4gMcN5e1Idl23bS2mE3gk05";
 // ---- Shop checkout ----
 // To take real cart payments, deploy the tiny checkout function (see server/README.md) and paste
 // its public URL here. Until then, the cart works fully and checkout shows a friendly setup note.
-// NEVER put your Stripe SECRET key in this file — it lives only on the server.
+// NEVER put your Stripe SECRET key in this file; it lives only on the server.
 const CHECKOUT_ENDPOINT = "";
 
 // ---- Family codes ----
@@ -318,14 +318,14 @@ async function redeemFamilyCode(raw) {
 
 // ---- Contact form ----
 // Paste the Web3Forms access key (emailed to you from web3forms.com) between the quotes and
-// messages post straight to your inbox — the key stands in for your address, so the form itself
+// messages post straight to your inbox: the key stands in for your address, so the form itself
 // never carries it. While the key is empty, Send falls back to opening the visitor's own email app.
 // See README.md.
 const CONTACT_ACCESS_KEY = "8a53ecc1-cc59-4aa7-9edb-274d34222ad7";
 const CONTACT_ENDPOINT = "https://api.web3forms.com/submit";
 // Only used for the mailto fallback and the "if all else fails, write to us" message. Assembled at
 // runtime rather than written out whole, so the plain address isn't sitting in the file for
-// scrapers to lift. It's a speed bump, not a lock — anyone determined can still read it.
+// scrapers to lift. It's a speed bump, not a lock; anyone determined can still read it.
 const CONTACT_EMAIL = ["ana.d.malone", "outlook.com"].join("@");
 const CONTACT_TOPICS = ["A question about the lessons", "Feedback or a suggestion",
   "I found a mistake in the content", "Something isn't working", "Billing or my subscription", "Something else"];
@@ -361,7 +361,7 @@ function tier() {
   const u = currentUser();
   return u ? (u.plan === "premium" ? "premium" : "free") : "guest";
 }
-function hashPw(pw) { // simple obfuscation for the demo — replace with real auth before launch
+function hashPw(pw) { // simple obfuscation for the demo; replace with real auth before launch
   let h = 5381;
   for (let i = 0; i < pw.length; i++) h = ((h << 5) + h + pw.charCodeAt(i)) >>> 0;
   return "h" + h.toString(36);
@@ -372,7 +372,7 @@ function canGrade(g) {
   const r = RULES[tier()];
   return r.grades === "all" || r.grades.includes(g);
 }
-// Books are free in every grade, even premium ones — the reading library is our best giveaway.
+// Books are free in every grade, even premium ones: the reading library is our best giveaway.
 const FREE_SUBJECTS = ["books"];
 function canSubject(g, subj) { return canGrade(g) || FREE_SUBJECTS.includes(subj); }
 function canStory(id) {
@@ -393,7 +393,7 @@ function rand(n) { return Math.floor(Math.random() * n); }
 function pick(arr) { return arr[rand(arr.length)]; }
 
 // ============================================================
-// MATH WORKSHEET GENERATOR — fresh problems every time!
+// MATH WORKSHEET GENERATOR: fresh problems every time!
 // ============================================================
 function genMath(grade) {
   const qs = [];
@@ -429,7 +429,7 @@ function genMath(grade) {
         break;
       }
       case 6: {
-        // (p * n) / 100 keeps the arithmetic exact — (p / 100) * n rounds twice and prints 7.6000000000000005
+        // (p * n) / 100 keeps the arithmetic exact; (p / 100) * n rounds twice and prints 7.6000000000000005
         if (i % 3 === 0) { const p = pick([10, 20, 25, 50, 75]), n = R(2, 20) * 4; q = `Find ${p}% of ${n}. ____`; a = (p * n) / 100; }
         else if (i % 3 === 1) {
           // reduce x:y to lowest terms first, or the "simplified" answer key isn't simplified (8:8 -> 4:4)
@@ -509,7 +509,7 @@ function genVocab(words) {
       return { q: `Fill in the blank: ${blanked}`, a: w[0] };
     }
     if (kind === 1) return { q: `Unscramble this word: "${scrambleWord(w[0])}"  (hint: ${w[1].split("(")[0].trim()})`, a: w[0] };
-    return { q: `Write your own sentence using the word "${w[0]}"  (meaning: ${w[1].split("(")[0].trim()})`, a: "Sentences will vary — check the word is used correctly." };
+    return { q: `Write your own sentence using the word "${w[0]}"  (meaning: ${w[1].split("(")[0].trim()})`, a: "Sentences will vary; check the word is used correctly." };
   });
 }
 // ---- Spelling generator: endless sheets with auto-generated misspellings ----
@@ -552,7 +552,7 @@ function genSpelling(words) {
       const m1 = misspell(w, [w]), m2 = misspell(w, [w, m1]);
       qs.push({ q: `Circle the correct spelling:   ${shuffleArr([w, m1, m2]).join("     ")}`, a: w });
     } else {
-      qs.push({ q: `🗣️ Spelling test: a grown-up reads answer #${i + 1} from the answer key out loud — you write it!`, a: w });
+      qs.push({ q: `🗣️ Spelling test: a grown-up reads answer #${i + 1} from the answer key out loud, and you write it!`, a: w });
     }
   });
   return qs;
@@ -585,13 +585,13 @@ function genFF() {
     if (kind === 2) {
       const isFlora = rand(2) === 0;
       const sp = isFlora ? pick(p.flora) : pick(p.fauna);
-      return { html: true, q: `FLORA or FAUNA? Is this a plant or an animal? ${spPhoto(sp[1])} <b>${esc(sp[0])}</b>  ______________`, a: isFlora ? "Flora — a plant!" : "Fauna — an animal!" };
+      return { html: true, q: `FLORA or FAUNA? Is this a plant or an animal? ${spPhoto(sp[1])} <b>${esc(sp[0])}</b>  ______________`, a: isFlora ? "Flora: a plant!" : "Fauna: an animal!" };
     }
     if (kind === 3) {
       const isFlora = rand(2) === 0;
       const sp = isFlora ? pick(p.flora) : pick(p.fauna);
       const photo = spPhoto(sp[1], true);
-      if (photo) return { html: true, q: `Name this ${isFlora ? "plant" : "animal"} — it lives in ${flagImg(p.iso)} ${esc(p.country)}:<br>${photo}  ______________`, a: `${sp[0]} (${sp[1]})` };
+      if (photo) return { html: true, q: `Name this ${isFlora ? "plant" : "animal"}, which lives in ${flagImg(p.iso)} ${esc(p.country)}:<br>${photo}  ______________`, a: `${sp[0]} (${sp[1]})` };
     }
     const ic = pick(FF_ICONIC);
     return { html: true, q: `Which country is famous for the ${esc(ic[0])}? ${spPhoto(ic[1])}  ______________`, a: ic[2] };
@@ -624,7 +624,7 @@ function genExtra(subj, lesson) {
         const n = R(2, 4), digits = Array.from({ length: n }, () => R(0, 9)).join("");
         const names = ["ones", "tens", "hundreds", "thousands"];
         qs.push({ q: `Which rods would you use to show ${digits}? (name them right to left)  ______`,
-                  a: names.slice(0, n).join(", ") + ` — ${n} rods` });
+                  a: names.slice(0, n).join(", ") + ` (${n} rods)` });
       }
     }
   } else if (subj === "tables") {
@@ -650,13 +650,13 @@ const CS_ORDER_TASKS = [
   ["wash your hands", ["turn on the tap", "add soap and scrub", "rinse the soap off", "dry your hands"]],
   ["draw a snowman", ["draw a big circle", "draw a smaller circle on top", "add eyes and a carrot nose", "add stick arms"]]
 ];
-const CS_IO = [["keyboard","INPUT — you use it to talk to the computer"],["mouse","INPUT — you use it to talk to the computer"],
-  ["microphone","INPUT — you use it to talk to the computer"],["camera","INPUT — you use it to talk to the computer"],
-  ["scanner","INPUT — you use it to talk to the computer"],["screen (monitor)","OUTPUT — the computer uses it to talk to you"],
-  ["speakers","OUTPUT — the computer uses it to talk to you"],["printer","OUTPUT — the computer uses it to talk to you"],
-  ["headphones","OUTPUT — the computer uses it to talk to you"]];
-const CS_CHIP = [["a laptop","Yes"],["a smartphone","Yes"],["a modern washing machine","Yes — a small chip runs its programs!"],
-  ["a modern car","Yes — dozens of chips!"],["a games console","Yes"],["a wooden spoon","No"],["a teddy bear","No"],
+const CS_IO = [["keyboard","INPUT: you use it to talk to the computer"],["mouse","INPUT: you use it to talk to the computer"],
+  ["microphone","INPUT: you use it to talk to the computer"],["camera","INPUT: you use it to talk to the computer"],
+  ["scanner","INPUT: you use it to talk to the computer"],["screen (monitor)","OUTPUT: the computer uses it to talk to you"],
+  ["speakers","OUTPUT: the computer uses it to talk to you"],["printer","OUTPUT: the computer uses it to talk to you"],
+  ["headphones","OUTPUT: the computer uses it to talk to you"]];
+const CS_CHIP = [["a laptop","Yes"],["a smartphone","Yes"],["a modern washing machine","Yes, a small chip runs its programs!"],
+  ["a modern car","Yes, dozens of chips!"],["a games console","Yes"],["a wooden spoon","No"],["a teddy bear","No"],
   ["a rock","No"],["a paper book","No"],["a bicycle bell","No"]];
 const CS_IF = [
   ["it is raining", "take your umbrella", "It is raining.", true],
@@ -694,7 +694,7 @@ function genCS(subj) {
       if (k === 0) { const n = R(2, 6), m = R(2, 5); qs.push({ q: `A program says: repeat ${n} times [ move ${m} steps ]. How many steps does the robot move in total?  ______`, a: n * m }); }
       else if (k === 1) { const n = R(2, 5), m = R(2, 4); qs.push({ q: `A loop runs ${n} times. Each time it stamps ${m} stars and 1 heart. How many stars, and how many hearts?  ______`, a: `${n * m} stars and ${n} hearts` }); }
       else if (k === 2) { const a = R(2, 6), b = R(2, 6), c = R(1, Math.min(3, a + b - 1)); qs.push({ q: `A robot starts at 0 on a number line. It runs: forward ${a}, forward ${b}, back ${c}. Where does it stop?  ______`, a: a + b - c }); }
-      else { const f = pick(CS_IF); qs.push({ q: `The program says: IF ${f[0]} THEN ${f[1]}. ${f[2]} Does the program do it? (yes/no)  ______`, a: f[3] ? "Yes — the IF is true, so the steps inside run" : "No — the IF is false, so the steps inside are skipped" }); }
+      else { const f = pick(CS_IF); qs.push({ q: `The program says: IF ${f[0]} THEN ${f[1]}. ${f[2]} Does the program do it? (yes/no)  ______`, a: f[3] ? "Yes, the IF is true, so the steps inside run" : "No, the IF is false, so the steps inside are skipped" }); }
     } else if (subj === "cs68") {
       const k = i % 4;
       if (k === 0) { const n = R(2, 31); qs.push({ q: `Change binary ${n.toString(2)} into an ordinary number.  ______`, a: n }); }
@@ -715,7 +715,7 @@ function genCS(subj) {
       else if (k === 4) {
         const nums = [R(1, 9) * 10, R(1, 9) * 10 + 1, R(1, 9) * 10 + 2, R(1, 9) * 10 + 3];
         const idx = R(0, 3);
-        qs.push({ q: `Python:  nums = [${nums.join(", ")}]   then   print(nums[${idx}]).  What is printed? (careful — counting starts at 0!)  ______`, a: nums[idx] });
+        qs.push({ q: `Python:  nums = [${nums.join(", ")}]   then   print(nums[${idx}]).  What is printed? (careful, counting starts at 0!)  ______`, a: nums[idx] });
       }
       else { const b = pick(CS_BOOL); qs.push({ q: `Python:  print(${b[0]})  prints what?  ______`, a: b[1] }); }
     }
@@ -754,7 +754,7 @@ function genEng(subj) {
       else if (k === 2) { const v = pick(ENG_PAST); qs.push({ q: `Time travel the verb: today I ${v[0]}, yesterday I ______`, a: v[1] }); }
       else {
         const topics = ["recess should be longer", "dogs make the best pets", "everyone should learn to swim", "homework should be optional on birthdays", "breakfast is the best meal"];
-        qs.push({ q: `Write ONE persuasive sentence arguing that ${pick(topics)} — a claim plus a because.  ______________`, a: "Sentences will vary — check for a clear claim and at least one reason after 'because'." });
+        qs.push({ q: `Write ONE persuasive sentence arguing that ${pick(topics)}: a claim plus a because.  ______________`, a: "Sentences will vary; check for a clear claim and at least one reason after 'because'." });
       }
     } else if (subj === "engspeaking") {
       qs.push({ q: `🎤 ${pick(ENG_SPEAK_PROMPTS)}`, a: ENG_SPEAK_RUBRIC });
@@ -771,14 +771,14 @@ function genEng(subj) {
         const odd = pick(ENG_RHYMES.filter(r => r !== g1)[R(0, ENG_RHYMES.length - 2)][1]);
         qs.push({ q: `🗣️ A grown-up reads: "${shuffleArr([g1[0], rhymers[0], odd, rhymers[1]]).join(", ")}". Which word does NOT rhyme with the others?  ______`, a: odd });
       }
-      else { const w = pick(ENG_SYLLABLES); qs.push({ q: `🗣️ A grown-up says "${w[0]}" out loud. Clap the beats you hear — how many claps?  ______`, a: w[1] }); }
+      else { const w = pick(ENG_SYLLABLES); qs.push({ q: `🗣️ A grown-up says "${w[0]}" out loud. Clap the beats you hear: how many claps?  ______`, a: w[1] }); }
     }
   }
   return qs;
 }
 
 function makeSheet(g, subj, lesson) {
-  // Phonics carries its own bank in every grade — including Kindergarten, whose other
+  // Phonics carries its own bank in every grade, including Kindergarten, whose other
   // subjects go through the picture-card generator below.
   if (subj === "phonics") {
     const pool = (lesson.questions || []).concat(lesson.extraQuestions || []);
@@ -790,7 +790,7 @@ function makeSheet(g, subj, lesson) {
   if (g === 13) {
     if (subj === "florafauna") return genFF();
     if (subj === "geography") return genGeo(lesson);
-    // the Globe and the Geography Course carry their own question banks — fall through
+    // the Globe and the Geography Course carry their own question banks; fall through
   }
   if (subj === "math") return genMath(g);
   if (subj === "spelling") return genSpelling(lesson.spellWords);
@@ -817,7 +817,7 @@ function genKinder(subj, lesson) {
       const pool = [
         ["How many sides does a triangle have? ____", "3"],
         ["How many sides does a square have? ____", "4"],
-        ["How many corners does a circle have? ____", "0 — it's perfectly round!"],
+        ["How many corners does a circle have? ____", "0, it's perfectly round!"],
         ["How many sides does a rectangle have? ____", "4 (2 long, 2 short)"],
         ["Which shape has 5 points and twinkles in the sky? ____", "A star"],
         ["Which shape means love? ____", "A heart"]
@@ -844,12 +844,12 @@ const SETTINGS_DATA = {
   mountain: { label: "🏔️ Snowy Mountain", place: "Whistletop Mountain", scene: "Snow sparkled like sugar, and every breath made a tiny cloud", path: "the zigzag trail" }
 };
 const VALUES_DATA = {
-  kindness:       { label: "💗 Kindness", moral: "Kindness is never wasted — it always finds its way back." },
+  kindness:       { label: "💗 Kindness", moral: "Kindness is never wasted; it always finds its way back." },
   courage:        { label: "🦁 Courage", moral: "Being brave doesn't mean you aren't scared. It means you try anyway." },
   honesty:        { label: "🌟 Honesty", moral: "The truth is always the strongest place to stand." },
   responsibility: { label: "🎖️ Responsibility", moral: "When people can count on you, you can be proud of yourself." },
   sharing:        { label: "🍰 Sharing", moral: "Whatever is shared becomes twice as good." },
-  perseverance:   { label: "🐢 Perseverance", moral: "Keep trying — the ones who don't quit are the ones who succeed." }
+  perseverance:   { label: "🐢 Perseverance", moral: "Keep trying: the ones who don't quit are the ones who succeed." }
 };
 
 function makeStory(name, friend, settingKey, themeKey, valueKey) {
@@ -866,7 +866,7 @@ function makeStory(name, friend, settingKey, themeKey, valueKey) {
     problem = `But adventures test their heroes. ${pick([
       "The way forward was blocked, and the detour looked dark and twisty",
       "Halfway there, the clue seemed to lead nowhere at all",
-      "A grumpy gatekeeper said, 'You'll never manage it — turn back!'",
+      "A grumpy gatekeeper said, 'You'll never manage it, turn back!'",
       "The final step required doing the one thing " + name + " found hardest"])}. ${friend} looked worried. "What do we do now, ${name}?"`;
   } else if (themeKey === "strangers") {
     middle = `Along ${S.path}, they noticed a stranger who needed help: ${pick([
@@ -874,7 +874,7 @@ function makeStory(name, friend, settingKey, themeKey, valueKey) {
       "a small child who had lost sight of their grandmother in the crowd",
       "a traveler holding a map upside down, turning in slow, confused circles",
       "a musician whose sheet music had blown away in the wind, page by page"])}. Everyone else hurried past, pretending not to see.`;
-    problem = `${name} slowed down. Helping would take time — ${pick([
+    problem = `${name} slowed down. Helping would take time: ${pick([
       "and the fun they had planned was waiting",
       "and it looked like a big, messy job",
       "and strangers can be shy to ask",
@@ -885,7 +885,7 @@ function makeStory(name, friend, settingKey, themeKey, valueKey) {
       "a kitchen stacked with dishes from the family party",
       "a yard buried in leaves, with Grandpa eyeing his rake and sighing",
       "moving boxes stacked to the ceiling, and a very tired Mom"])}. The grown-ups looked exhausted.`;
-    problem = `${name} thought about sneaking off to play — ${pick([
+    problem = `${name} thought about sneaking off to play: ${pick([
       "nobody had actually asked for help, after all",
       "and the chores looked like they would take forever",
       "and it was such a perfect day for anything else",
@@ -893,17 +893,17 @@ function makeStory(name, friend, settingKey, themeKey, valueKey) {
   }
 
   const valueActs = {
-    kindness: `Then ${name} remembered what Grandma always said: "Kind hearts are the quiet heroes." So ${name} smiled big and jumped in to help, and ${friend} — after one sheepish grin — jumped in too.`,
+    kindness: `Then ${name} remembered what Grandma always said: "Kind hearts are the quiet heroes." So ${name} smiled big and jumped in to help, and ${friend}, after one sheepish grin, jumped in too.`,
     courage: `Then ${name} took a deep, brave breath. "Scared is okay," said ${name}. "Quitting is not." And step by wobbly step, ${name} did the hard thing, with ${friend} cheering every step.`,
-    honesty: `Then ${name} stood up tall and told the whole truth about what had happened — no excuses, no wiggling. It was hard for a moment. And then, like a window opening, everything got easier.`,
+    honesty: `Then ${name} stood up tall and told the whole truth about what had happened, no excuses, no wiggling. It was hard for a moment. And then, like a window opening, everything got easier.`,
     responsibility: `Then ${name} squared both shoulders. "If it needs doing, we can do it," said ${name}, and made a plan: first things first, one job at a time, no giving up halfway. ${friend} saluted.`,
-    sharing: `Then ${name} opened the backpack and shared everything in it — snacks, tools, time, and the best idea of the day. "Half for you," said ${name}, "which somehow makes MORE for everyone."`,
-    perseverance: `The first try failed. So did the second. But ${name} dusted off both knees and grinned. "Third tries are the magic ones," said ${name} — and kept going until, at last, it worked.`
+    sharing: `Then ${name} opened the backpack and shared everything in it: snacks, tools, time, and the best idea of the day. "Half for you," said ${name}, "which somehow makes MORE for everyone."`,
+    perseverance: `The first try failed. So did the second. But ${name} dusted off both knees and grinned. "Third tries are the magic ones," said ${name}, and kept going until, at last, it worked.`
   };
   solution = valueActs[valueKey];
 
   const endings = {
-    adventure: `And that is how ${name} and ${friend} solved the mystery of ${S.place} — not with luck, but with heart. They walked home in the golden afternoon, already planning tomorrow's adventure.`,
+    adventure: `And that is how ${name} and ${friend} solved the mystery of ${S.place}, not with luck, but with heart. They walked home in the golden afternoon, already planning tomorrow's adventure.`,
     strangers: `The stranger's thank-you was worth more than gold. "You two are the best part of my whole week," they said. ${name} and ${friend} floated home, taller somehow, though their shoes were the same size.`,
     home: `By sunset the work was done, and the whole family sat down together, tired and happy. "How did we get so lucky?" asked Mom. ${name} and ${friend} just grinned into their cocoa.`
   };
@@ -966,7 +966,7 @@ function rewardsView() {
       <div class="rewardbig"><span class="rbnum">🏅 ${r.badges.length}/${BADGES.length}</span><span class="rblbl">badges</span></div>
     </div>
     ${next ? `<div class="nextsticker">
-      <p>Next sticker: <b>${next.e} ${esc(next.n)}</b> at ${next.cost} stars — ${next.cost - r.stars} to go!</p>
+      <p>Next sticker: <b>${next.e} ${esc(next.n)}</b> at ${next.cost} stars, ${next.cost - r.stars} to go!</p>
       <div class="readprog"><i style="width:${pct}%"></i></div>
     </div>` : `<p class="nextsticker"><b>🎉 You've unlocked every sticker!</b></p>`}
 
@@ -994,7 +994,7 @@ function rewardsView() {
 }
 
 // ---------- The Globe ----------
-// The interactive globe itself — used by the Geography lesson tab (and the legacy #globe route).
+// The interactive globe itself, used by the Geography lesson tab (and the legacy #globe route).
 function globeStageHtml() {
   return `<div class="globewrap">
       <div class="globestage">
@@ -1019,7 +1019,7 @@ function globeView() {
     <p class="subtitle">Spin the whole world in your hands! Drag to rotate, zoom in and out, and tap any country to learn its name, capital and flag.</p>
     ${globeStageHtml()}
     <div class="bookfoot">${doodle("rocket")}
-      <p><b>Did you know?</b> Earth is the only planet we know of with life. It spins once every 24 hours — that's what gives us day and night! This globe uses real map data, so every coastline and country is where it truly belongs.</p></div>
+      <p><b>Did you know?</b> Earth is the only planet we know of with life. It spins once every 24 hours: that's what gives us day and night! This globe uses real map data, so every coastline and country is where it truly belongs.</p></div>
   </div>`;
 }
 function globeInfoHtml(pick) {
@@ -1081,7 +1081,7 @@ function shopView() {
   const tab = (key, label) => `<button class="${filter === key ? "active" : ""}" onclick="App.shopFilter('${key}')">${label}</button>`;
   return `<div class="view">
     <h1>🛒 BrightSprouts Shop</h1>
-    <p class="subtitle">Hand-picked collections of STEM kits, toys and school supplies for curious kids — from our sister shop, Petal &amp; Stone. 🌸</p>
+    <p class="subtitle">Hand-picked collections of STEM kits, toys and school supplies for curious kids, from our sister shop, Petal &amp; Stone. 🌸</p>
     ${showTabs ? `<div class="tabs no-print">${tab("all", "✨ All")}${tab("digital", "📥 Digital Downloads")}${tab("physical", "📦 Physical Goods")}</div>` : ""}
     <div class="grid grid-3 shopgrid">${list.map(p => {
       if (p.url) {
@@ -1157,7 +1157,7 @@ function cartView() {
         <div class="sumrow muted"><span>Tax</span><span>Calculated at checkout</span></div>
         <button class="btn btn-primary" style="width:100%;margin-top:12px" onclick="App.checkout()">🔒 Checkout securely</button>
         <button class="btn btn-ghost btn-sm" style="width:100%;margin-top:8px" onclick="App.clearCart()">Empty cart</button>
-        ${connected ? "" : `<p class="checkoutnote">💳 <b>Payments aren't switched on yet.</b> The cart works — connecting Stripe is a quick setup step (ask me and I'll walk you through it).</p>`}
+        ${connected ? "" : `<p class="checkoutnote">💳 <b>Payments aren't switched on yet.</b> The cart works; connecting Stripe is a quick setup step (ask me and I'll walk you through it).</p>`}
       </div>
     </div>
   </div>`;
@@ -1169,15 +1169,15 @@ function homeView() {
   <div class="hero">
     <span class="big-emoji">🌱</span>
     <h1>BrightSprouts Academy</h1>
-    <p>Everything one family needs for <b>Kindergarten through Grade 12</b> — Math, Reading, Phonics, Vocabulary, Spelling, Writing, Science, Social Studies, Art and Music, plus Biology, Chemistry and Physics for older students. Then thirteen <b>"Let's Learn" courses</b> — Geography, Space, Computer Science, Spanish, Geology, Paleontology, Physical Science, Earth &amp; Space Science, Time &amp; Money, The History of Us and Feelings &amp; Kindness. Every lesson prints. Made for parents. Loved by kids.</p>
+    <p>Everything one family needs for <b>Kindergarten through Grade 12</b>: Math, Reading, Phonics, Vocabulary, Spelling, Writing, Science, Social Studies, Art and Music, plus Biology, Chemistry and Physics for older students. Then thirteen <b>"Let's Learn" courses</b>: Geography, Space, Computer Science, Spanish, Geology, Paleontology, Physical Science, Earth &amp; Space Science, Time &amp; Money, The History of Us and Feelings &amp; Kindness. Every lesson prints. Made for parents. Loved by kids.</p>
     <button class="btn btn-primary" onclick="App.go('lessons')">🚀 Explore Lessons</button>
     <button class="btn btn-secondary" onclick="App.go('library')">📖 Books &amp; Stories</button>
   </div>
   <div class="grid grid-3">
-    <div class="feature"><div class="fe">🖨️</div><h3>Print &amp; Learn</h3><p>Every lesson prints as a beautiful worksheet — with an optional answer key for parents.</p></div>
+    <div class="feature"><div class="fe">🖨️</div><h3>Print &amp; Learn</h3><p>Every lesson prints as a beautiful worksheet, with an optional answer key for parents.</p></div>
     <div class="feature"><div class="fe">🔢</div><h3>Endless Worksheets</h3><p>Press one button for a brand-new sheet. Maths, spelling and vocabulary never repeat.</p></div>
     <div class="feature"><div class="fe">🧭</div><h3>Full Courses, Grade by Grade</h3><p>Geography, Space, Computer Science and Social Studies each run Grade 1 to 12, with an activity sheet at every step.</p></div>
-    <div class="feature"><div class="fe">🔤</div><h3>Phonics — Free for Everyone</h3><p>Letter sounds, blending, word families and sight words, growing into word study by Grade 7.</p></div>
+    <div class="feature"><div class="fe">🔤</div><h3>Phonics: Free for Everyone</h3><p>Letter sounds, blending, word families and sight words, growing into word study by Grade 7.</p></div>
     <div class="feature"><div class="fe">📖</div><h3>Stories &amp; Free Classic Books</h3><p>Moral-value stories to read aloud, plus a shelf of famous children's books to read free.</p></div>
     <div class="feature"><div class="fe">🎮</div><h3>Games, Globe &amp; Rewards</h3><p>A learning arcade at three difficulty levels, a spinning 3D globe, stars and badges to collect.</p></div>
   </div>
@@ -1209,7 +1209,7 @@ function lessonsView() {
   tiles.push(`<button class="grade-tile ggames" onclick="App.gameHub()">🎮 Games</button>`);
   return `<div class="view">
     <h1>📚 Pick a Grade</h1>
-    <p class="subtitle">Every grade now packs it all in: Math • Reading • Vocabulary • Spelling • Writing • Science • History • Visual Art • Music • Computer Science • English • Books • Create — each matched to that grade's level ${tier() !== "premium" ? "&nbsp;·&nbsp; 🔒 = Premium" : ""}</p>
+    <p class="subtitle">Every grade now packs it all in: Math • Reading • Vocabulary • Spelling • Writing • Science • History • Visual Art • Music • Computer Science • English • Books • Create, each matched to that grade's level ${tier() !== "premium" ? "&nbsp;·&nbsp; 🔒 = Premium" : ""}</p>
     <div class="grid grid-4">${tiles.join("")}</div>
   </div>`;
 }
@@ -1219,7 +1219,7 @@ function lessonView() {
   // belt and braces: if state ever holds a subject this grade doesn't have, fall back to its first one
   let subj = state.subject;
   if (!LESSONS[g] || !LESSONS[g][subj]) subj = state.subject = subjectsFor(g)[0].key;
-  // Money lessons ship per-currency copy (learn/diagram/questions) — merge the chosen one in.
+  // Money lessons ship per-currency copy (learn/diagram/questions); merge the chosen one in.
   const baseLesson = LESSONS[g][subj];
   // Money is taught in US dollars and cents. timemoney.js still carries a full pounds-and-pence
   // copy under byCurrency.uk, so switching back is a one-line change if it is ever wanted.
@@ -1250,7 +1250,7 @@ function lessonView() {
       <div class="card" style="text-align:center;padding:44px 22px">
         <div style="font-size:54px">⭐</div>
         <h2>This subject is Premium</h2>
-        <p class="subtitle">Unlock all of ${esc(gradeName(g))} — every subject, worksheet and lesson.${LESSONS[g] && LESSONS[g].books ? "<br>📚 <b>Books are free!</b> Tap the <b>Books</b> tab above to start reading right now." : ""}</p>
+        <p class="subtitle">Unlock all of ${esc(gradeName(g))}: every subject, worksheet and lesson.${LESSONS[g] && LESSONS[g].books ? "<br>📚 <b>Books are free!</b> Tap the <b>Books</b> tab above to start reading right now." : ""}</p>
         <div class="lesson-tools no-print" style="justify-content:center">
           ${u ? `<button class="btn btn-primary" onclick="App.go('pricing')">⭐ Go Premium</button>`
               : `<button class="btn btn-primary" onclick="App.goAuth('signup')">Create a Free Account</button><button class="btn btn-secondary" onclick="App.go('pricing')">See Plans</button>`}
@@ -1263,7 +1263,7 @@ function lessonView() {
   let body = "";
   if (lesson.diagram) body += `<div class="biodiagram">${lesson.diagram}</div>`;
   if (lesson.globeBoard) body += globeStageHtml();
-  if (lesson.band) body += `<p class="csband">👣 Best for <b>${esc(lesson.band)}</b> — but try it whenever you are ready</p>`;
+  if (lesson.band) body += `<p class="csband">👣 Best for <b>${esc(lesson.band)}</b>, but try it whenever you are ready</p>`;
   if (lesson.resources) {
     body += `<div class="rescard">
       <h3>🔗 Try it yourself</h3>
@@ -1317,7 +1317,7 @@ function lessonView() {
                aria-label="A creature called ${esc(m.name)}">${mmSvg(m)}</svg>
         </div>
         <div class="mmshadow"></div>
-        <p class="mmhint no-print">👆 Move your mouse or finger over ${esc(m.name)} — watch them lean out at you!</p>
+        <p class="mmhint no-print">👆 Move your mouse or finger over ${esc(m.name)}, watch them lean out at you!</p>
       </div>
       <div class="mmpanel no-print">
         <div class="field">
@@ -1365,7 +1365,7 @@ function lessonView() {
         <p class="csmile">🏁 <b>Milestone:</b> ${esc(b.milestone)}</p>
       </div>`).join("");
     body += `<div class="bookfoot">${doodle("speech")}
-      <p><b>How to use this plan:</b> the four domains grow together, so touch all four every week —
+      <p><b>How to use this plan:</b> the four domains grow together, so touch all four every week,
       even five minutes of each. The Reading, Writing, Spelling and Vocabulary tabs inside Grades 1–12
       on this site are the daily practice ground for everything named here; the domain tabs above
       hold the ideas, the games and the endless worksheets.</p></div>`;
@@ -1381,7 +1381,7 @@ function lessonView() {
       <p class="csmile">🏁 <b>Milestone:</b> ${esc(eb.milestone)}</p>
     </div>
     <div class="bookfoot">${doodle("speech")}
-      <p><b>Grow all four together:</b> your grade's <b>Reading, Writing, Spelling and Vocabulary</b> tabs are the daily practice ground for everything above — touch a little of each every week.</p></div>`;
+      <p><b>Grow all four together:</b> your grade's <b>Reading, Writing, Spelling and Vocabulary</b> tabs are the daily practice ground for everything above. Touch a little of each every week.</p></div>`;
   }
   if (lesson.csPlan) {
     body += CS_PLAN.map((b, i) => `
@@ -1397,7 +1397,7 @@ function lessonView() {
       </div>`).join("");
     body += `<div class="bookfoot">${doodle("rocket")}
       <p><b>How to use this plan:</b> find your child's band, open that tab above for the lesson,
-      and aim for the milestone — there's no deadline. A child who starts at twelve catches up fast;
+      and aim for the milestone; there's no deadline. A child who starts at twelve catches up fast;
       the bands are about readiness, not a race. Everything named here is free.</p></div>`;
   }
   if (lesson.readOnline) {
@@ -1424,7 +1424,7 @@ function lessonView() {
     body += `<div class="bookfoot">${doodle("lamp")}
       <p><b>Why are these free?</b> Every book here is out of copyright, which means it belongs to
       everybody now. They come from Project Gutenberg, a volunteer library that has been digitising
-      public-domain books since 1971. Read them, print them, share them — they're yours.</p></div>`;
+      public-domain books since 1971. Read them, print them, share them: they're yours.</p></div>`;
   }
   if (lesson.tracingSheet) {
     // A tracing row: three-line handwriting guides, one solid model glyph, then dashed copies.
@@ -1432,7 +1432,7 @@ function lessonView() {
     const FONT = "'Comic Sans MS','Century Gothic','Trebuchet MS',Verdana,sans-serif";
     // Guide lines come from MEASURED Comic Sans ink (canvas actualBoundingBox), not guesses.
     // At 100px: ascender h=78, capital A=72, digit=76, x-height=54, descender g=28. Ink does not scale
-    // perfectly linearly (at 64px the h measures 51, i.e. .797em), so each ratio carries a little margin —
+    // perfectly linearly (at 64px the h measures 51, i.e. .797em), so each ratio carries a little margin;
     // a glyph poking through its own guide line is exactly what a tracing sheet must not do.
     // Top line = ascender, so b/d/h/k/l touch it and capitals sit just beneath, as on real handwriting paper.
     const SIZE = 64, ASC = 0.80 * SIZE, XH = 0.55 * SIZE, DESC = 0.29 * SIZE;
@@ -1471,7 +1471,7 @@ function lessonView() {
     else if (m === "num10") rows = Array.from({ length: 10 }, (_, i) => [String(i + 1), 6]);
     else if (m === "num20") rows = Array.from({ length: 20 }, (_, i) => [String(i + 1), 6]);
     else if (m === "num100") grid = true;
-    else { // random practice set — a handful of glyphs, lots of repetition
+    else { // random practice set: a handful of glyphs, lots of repetition
       if (!state.tracePick) {
         const pool = Array.from({ length: 26 }, (_, i) => A(i))
           .concat(Array.from({ length: 26 }, (_, i) => a(i)))
@@ -1591,11 +1591,11 @@ function lessonView() {
         }).join("")}
       </svg>
       <div class="abacus-key">
-        <p><b>This abacus is showing ${value}.</b> Read it rod by rod, left to right — just like a written number.</p>
+        <p><b>This abacus is showing ${value}.</b> Read it rod by rod, left to right, just like a written number.</p>
         <p><span class="dot pink"></span> Pink bead <b>above</b> the bar = <b>5</b> (only when pushed <i>down</i> to the bar)</p>
         <p><span class="dot teal"></span> Teal beads <b>below</b> the bar = <b>1</b> each (only when pushed <i>up</i> to the bar)</p>
-        <p><span class="dot grey"></span> Grey beads are pushed away from the bar — they count as <b>0</b></p>
-        <p style="margin-top:8px">Example — the hundreds rod shows ${rods[1].h * 5 + rods[1].e}: one 5-bead down${rods[1].e ? ` plus ${rods[1].e} one-bead${rods[1].e > 1 ? "s" : ""} up` : ""}.</p>
+        <p><span class="dot grey"></span> Grey beads are pushed away from the bar; they count as <b>0</b></p>
+        <p style="margin-top:8px">Example: the hundreds rod shows ${rods[1].h * 5 + rods[1].e}: one 5-bead down${rods[1].e ? ` plus ${rods[1].e} one-bead${rods[1].e > 1 ? "s" : ""} up` : ""}.</p>
       </div>
     </div>`;
   }
@@ -1619,7 +1619,7 @@ function lessonView() {
       }
       return h + `</table></div>`;
     };
-    body += grid("Addition Table (1–12)", 12, (r, c) => r + c, "Find a row and a column — where they meet is the answer. 7 + 8 = 15.");
+    body += grid("Addition Table (1–12)", 12, (r, c) => r + c, "Find a row and a column: where they meet is the answer. 7 + 8 = 15.");
     body += grid("Multiplication Table (1–12)", 12, (r, c) => r * c, "The shaded diagonal shows the square numbers: 1, 4, 9, 16, 25 …");
   }
   if (lesson.floraFauna) {
@@ -1641,7 +1641,7 @@ function lessonView() {
     body += `<div class="cont-nav no-print">` + lesson.continents.map((c, i) =>
       `<button class="btn btn-ghost btn-sm" onclick="document.getElementById('cont-${i}').scrollIntoView({behavior:'smooth'})">${c.emoji} ${esc(c.name)}</button>`).join("") + `</div>`;
     lesson.continents.forEach((c, i) => {
-      body += `<div id="cont-${i}"><h3 style="margin:22px 0 6px;font-size:1.3rem">${c.emoji} ${esc(c.name)}${c.countries ? ` — ${c.countries.length} countries` : ""}</h3>
+      body += `<div id="cont-${i}"><h3 style="margin:22px 0 6px;font-size:1.3rem">${c.emoji} ${esc(c.name)}${c.countries ? ` (${c.countries.length} countries)` : ""}</h3>
         <p class="lesson-intro" style="margin-bottom:10px">${esc(c.facts)}</p>`;
       if (c.countries) {
         body += `<div style="overflow-x:auto"><table class="word-table"><tr><th>Flag</th><th>Country</th><th>Capital</th></tr>` +
@@ -1668,7 +1668,7 @@ function lessonView() {
         </div>
       </div>`).join("") + `</div>`;
     body += `<div class="bookfoot">${doodle("rocket")}
-      <p><b>How new are we?</b> If all of Earth's history were squeezed into one single day, humans wouldn't show up until the last few SECONDS before midnight! Everything above happened before the very first stone tool. Next stop — the human story: open the <b>Human Story</b> tab. 🌱</p></div>`;
+      <p><b>How new are we?</b> If all of Earth's history were squeezed into one single day, humans wouldn't show up until the last few SECONDS before midnight! Everything above happened before the very first stone tool. Next stop: the human story. Open the <b>Human Story</b> tab. 🌱</p></div>`;
   }
   if (lesson.erasTimeline) {
     const hart = (typeof HUMAN_ART !== "undefined") ? HUMAN_ART : [];
@@ -1688,7 +1688,7 @@ function lessonView() {
         </div>
       </div>`).join("") + `</div>`;
     body += `<div class="bookfoot">${doodle("rocket")}
-      <p><b>And the story keeps going!</b> Every era was built on the one before it — the tools, ideas, and discoveries all added up to the world we live in today. The next chapter of history hasn't been written yet… and one day it might have YOU in it. 🌱</p></div>`;
+      <p><b>And the story keeps going!</b> Every era was built on the one before it: the tools, ideas, and discoveries all added up to the world we live in today. The next chapter of history hasn't been written yet… and one day it might have YOU in it. 🌱</p></div>`;
   }
   if (lesson.words) {
     body += `<table class="word-table"><tr><th>Word</th><th>Meaning</th><th>Example</th></tr>` +
@@ -1696,7 +1696,7 @@ function lessonView() {
   }
 
   const sheetKey = g + "-" + subj + (baseLesson.byCurrency ? "-" + curCcy : "") + (baseLesson.units ? "-u" + unitIdx : "");
-  // Note: the Earth's Story timeline (earthTimeline) DOES get a worksheet — it has a questions bank.
+  // Note: the Earth's Story timeline (earthTimeline) DOES get a worksheet; it has a questions bank.
   const noQuiz = lesson.globeBoard || lesson.coloringBook || lesson.tracingSheet || lesson.drawTracing || lesson.csPlan || lesson.engPlan || lesson.erasTimeline || lesson.engineerBuild || (lesson.engBand != null) || lesson.readOnline || lesson.magicMaker || lesson.earthTimeline;
   if (!noQuiz && !state.sheetCache[sheetKey]) state.sheetCache[sheetKey] = makeSheet(g, subj, lesson);
   const questions = noQuiz ? [] : state.sheetCache[sheetKey];
@@ -1705,7 +1705,7 @@ function lessonView() {
       ${questions.map((qa, i) => `<div class="q-item">${i + 1}. ${qa.html ? qa.q : esc(qa.q)}${'<span class="write-line print-only"></span>'.repeat(subj === "writing" ? 5 : 1)}</div>`).join("")}
     </div>
     <div class="answers-section answers-page" style="display:none">
-      <h3>✅ Answer Key — ${esc(lesson.title)} (${gradeName(g)})</h3>
+      <h3>✅ Answer Key: ${esc(lesson.title)} (${gradeName(g)})</h3>
       ${questions.map((qa, i) => `<div class="q-item">${i + 1}. ${qa.html ? qa.q : esc(qa.q)}<span class="answer">Answer: ${esc(qa.a)}</span></div>`).join("")}
     </div>` : "";
 
@@ -1716,7 +1716,7 @@ function lessonView() {
     ${baseLesson.units && baseLesson.units.length > 1 ? `<div class="unitbar no-print">` + baseLesson.units.map((u, i) =>
       `<button class="btn btn-sm ${i === unitIdx ? "btn-primary" : "btn-ghost"}" onclick="App.pickUnit('${unitKey}',${i})">${u.emoji || ""} Unit ${i + 1}: ${esc(u.title)}</button>`).join("") + `</div>` : ""}
     <div class="card" id="lesson-card">
-      <div class="print-only print-header"><span class="brand">🌱 BrightSprouts Academy — ${gradeName(g)} ${subjectsFor(g).find(s => s.key === subj).label}</span><span>Name: ____________ &nbsp; Date: ________</span></div>
+      <div class="print-only print-header"><span class="brand">🌱 BrightSprouts Academy: ${gradeName(g)} ${subjectsFor(g).find(s => s.key === subj).label}</span><span>Name: ____________ &nbsp; Date: ________</span></div>
       <div class="lesson-head"><span class="lesson-emoji">${lesson.emoji}</span><h2>${esc(lesson.title)}</h2></div>
       <p class="lesson-intro">${esc(lesson.intro)}</p>
       ${lesson.learn ? `<div class="learn-box"><h3>🧠 Let's Learn!</h3><ul>${lesson.learn.map(l => `<li>${esc(l)}</li>`).join("")}</ul></div>` : ""}
@@ -1748,7 +1748,7 @@ function libraryView() {
   return `<div class="view">
     <button class="btn btn-ghost btn-sm no-print" onclick="App.go('lessons')">← All Grades</button>
     <h1 style="margin-top:14px">📖 Books &amp; Stories</h1>
-    <p class="subtitle">Everything to read in one place — bedtime stories, a story starring your own child, and a shelf of free classic books.</p>
+    <p class="subtitle">Everything to read in one place: bedtime stories, a story starring your own child, and a shelf of free classic books.</p>
     <div class="grid grid-3 gtiles">
       ${card("App.go('stories')", "📖", "Story Library",
              "50 read-aloud stories, each with a moral value to talk about together.",
@@ -1757,13 +1757,13 @@ function libraryView() {
              "Make your child the hero of a one-of-a-kind story you can print and keep.",
              left !== Infinity ? `${left} free ${left === 1 ? "story" : "stories"} remaining` : "")}
       ${card("App.openGrade(15)", "📚", "Free Classic Books",
-             "A shelf of famous children's books to read right here, free — Alice in Wonderland, Peter Pan, The Jungle Book and more.",
+             "A shelf of famous children's books to read right here, free: Alice in Wonderland, Peter Pan, The Jungle Book and more.",
              "Always free")}
     </div>
     <div class="bookfoot">${doodle("lamp")}
       <p><b>Why are the classics free?</b> Every book on that shelf is out of copyright, which means it belongs to
       everybody now. They come from Project Gutenberg, a volunteer library that has been digitising
-      public-domain books since 1971. Read them, print them, share them — they're yours.</p></div>
+      public-domain books since 1971. Read them, print them, share them: they're yours.</p></div>
   </div>`;
 }
 
@@ -1817,7 +1817,7 @@ function readerHtml() {
       <button class="btn btn-secondary btn-sm" onclick="window.print()">🖨️ Print chapter</button>
     </div>
     <div class="card readerpage" style="font-size:${state.readFont}px">
-      <div class="print-only print-header"><span class="brand">🌱 BrightSprouts Academy — Read Online</span><span>${esc(r.book.title)}</span></div>
+      <div class="print-only print-header"><span class="brand">🌱 BrightSprouts Academy: Read Online</span><span>${esc(r.book.title)}</span></div>
       <div class="readhead">
         <h1>${esc(r.book.title)}</h1>
         <p class="subtitle">${esc(r.book.author)} · Chapter ${r.ch + 1} of ${total}</p>
@@ -1855,7 +1855,7 @@ function storyView() {
   return `<div class="view">
     <button class="btn btn-ghost btn-sm no-print" onclick="App.go('stories')">← Story Library</button>
     <div class="card" style="margin-top:14px">
-      <div class="print-only print-header"><span class="brand">🌱 BrightSprouts Academy — Story Time</span><span>${THEME_LABELS[s.theme]}</span></div>
+      <div class="print-only print-header"><span class="brand">🌱 BrightSprouts Academy: Story Time</span><span>${THEME_LABELS[s.theme]}</span></div>
       ${sceneFor(s.id)}
       <h1>${esc(s.title)}</h1>
       <p class="subtitle">${THEME_LABELS[s.theme]} · Ages ${s.ages} · 📖 about ${rt.mins} minutes to read aloud</p>
@@ -1879,7 +1879,7 @@ function makerView() {
   const valueOpts = Object.entries(VALUES_DATA).map(([k, v]) => `<option value="${k}">${v.label}</option>`).join("");
   const madeHtml = state.madeStory ? `
     <div class="card" id="made-story">
-      <div class="print-only print-header"><span class="brand">🌱 BrightSprouts Academy — A Custom Story</span><span>Starring someone special!</span></div>
+      <div class="print-only print-header"><span class="brand">🌱 BrightSprouts Academy: A Custom Story</span><span>Starring someone special!</span></div>
       <h2>✨ ${esc(state.madeStory.title)}</h2>
       <div class="lesson-tools no-print" style="margin-bottom:12px">${listenBtn("made-say", "Read this to me")}</div>
       <div class="story-full" id="made-say" data-say="${esc(state.madeStory.title + ". " + state.madeStory.text + " The moral of the story: " + state.madeStory.moral)}">${esc(state.madeStory.text)}</div>
@@ -1893,7 +1893,7 @@ function makerView() {
     <button class="btn btn-ghost btn-sm no-print" onclick="App.go('library')">← Books &amp; Stories</button>
     <h1 style="margin-top:14px">✨ Custom Story Maker</h1>
     <p class="subtitle">Make your child the hero! Pick the details and we'll write a one-of-a-kind story with a moral.
-      ${left !== Infinity ? `<br><b>${left}</b> free custom ${left === 1 ? "story" : "stories"} remaining — <a style="color:var(--pink);cursor:pointer;font-weight:700" onclick="App.go('pricing')">go Premium for unlimited ⭐</a>` : ""}</p>
+      ${left !== Infinity ? `<br><b>${left}</b> free custom ${left === 1 ? "story" : "stories"} remaining; <a style="color:var(--pink);cursor:pointer;font-weight:700" onclick="App.go('pricing')">go Premium for unlimited ⭐</a>` : ""}</p>
     <div class="card no-print">
       <div class="maker-form">
         <div class="field"><label>⭐ Hero's name (your child!)</label><input id="mk-name" placeholder="e.g. Maya" maxlength="20"></div>
@@ -1917,13 +1917,13 @@ function pricingView() {
   const u = currentUser();
   return `<div class="view" style="text-align:center">
     <h1>⭐ Choose Your Plan</h1>
-    <p class="subtitle">Start free. Upgrade any time for the full library — one plan covers every child in your family.</p>
+    <p class="subtitle">Start free. Upgrade any time for the full library: one plan covers every child in your family.</p>
     <div class="plans">
       <div class="plan">
         <h2>🌱 Free</h2>
         <div class="price">$0<span>/forever</span></div>
         <ul>
-          <li>Kindergarten, Grade 1 &amp; Grade 2 — every subject</li>
+          <li>Kindergarten, Grade 1 &amp; Grade 2: every subject</li>
           <li>Phonics &amp; early reading for those grades</li>
           <li>Feelings &amp; Kindness, free for everyone</li>
           <li>The free classic books library</li>
@@ -1942,23 +1942,23 @@ function pricingView() {
         <h2>⭐ Premium Family</h2>
         <div class="price">${PRICE}<span>/month + tax</span></div>
         <ul>
-          <li><b>Every grade, K–12</b> — Math, Reading, Phonics, Vocabulary, Spelling, Writing, Science, History, Art &amp; Music</li>
-          <li><b>High-school sciences</b> — Biology, Chemistry &amp; Physics</li>
-          <li><b>13 "Let's Learn" categories</b> — Geography, Geology, Paleontology, Physical Science, Earth &amp; Space Science, Spanish, The History of Us, Time &amp; Money, Space, Feelings, Computer Science, Additional Learning Materials &amp; Books</li>
-          <li><b>US-aligned Social Studies</b> — 36 units including US History I, II &amp; III and Civics</li>
-          <li><b>Endless worksheets</b> — press one button for a brand-new sheet, with printable answer keys</li>
+          <li><b>Every grade, K–12</b>: Math, Reading, Phonics, Vocabulary, Spelling, Writing, Science, History, Art &amp; Music</li>
+          <li><b>High-school sciences</b>: Biology, Chemistry &amp; Physics</li>
+          <li><b>13 "Let's Learn" categories</b>: Geography, Geology, Paleontology, Physical Science, Earth &amp; Space Science, Spanish, The History of Us, Time &amp; Money, Space, Feelings, Computer Science, Additional Learning Materials &amp; Books</li>
+          <li><b>US-aligned Social Studies</b>: 36 units including US History I, II &amp; III and Civics</li>
+          <li><b>Endless worksheets</b>: press one button for a brand-new sheet, with printable answer keys</li>
           <li><b>Activity sheets</b> in every lesson, plus hands-on family activities</li>
           <li>Tap-to-hear Spanish &amp; phonics audio</li>
           <li>Tracing, Trace &amp; Draw and the colouring book</li>
           <li>The full moral-story library + unlimited custom stories</li>
           <li>The interactive Globe, all 22 arcade games &amp; the rewards system</li>
-          <li>Every new subject and lesson we add — included, always</li>
+          <li>Every new subject and lesson we add: included, always</li>
         </ul>
         ${u && u.plan === "premium" ? `<button class="btn btn-gold" disabled>⭐ You're Premium!</button>`
           : `<button class="btn btn-primary" onclick="App.startUpgrade()">Go Premium ⭐</button>`}
       </div>
     </div>
-    <p style="margin-top:22px;color:#8a86a8;font-size:.85rem">${TAX_NOTE}<br>${STRIPE_PAYMENT_LINK ? "Secure checkout by Stripe. Cancel any time." : "Demo checkout — see README.md to connect Stripe and collect real payments."}</p>
+    <p style="margin-top:22px;color:#8a86a8;font-size:.85rem">${TAX_NOTE}<br>${STRIPE_PAYMENT_LINK ? "Secure checkout by Stripe. Cancel any time." : "Demo checkout: see README.md to connect Stripe and collect real payments."}</p>
   </div>`;
 }
 
@@ -2001,7 +2001,7 @@ function contactView() {
       <div class="maker-form">
         ${field("name", "Your name *", "text", "e.g. Ana Malone")}
         ${field("email", "Email address *", "email", "you@example.com", "So we can reply to you")}
-        ${field("phone", "Phone number", "tel", "(555) 123-4567", "Optional — only if you'd prefer a call")}
+        ${field("phone", "Phone number", "tel", "(555) 123-4567", "Optional, only if you'd prefer a call")}
         <div class="field">
           <label for="c-topic">What's it about?</label>
           <select id="c-topic">${CONTACT_TOPICS.map(t =>
@@ -2018,7 +2018,7 @@ function contactView() {
         </div>
         <div class="full">
           <button class="btn btn-primary" style="width:100%" onclick="App.sendContact()">✉️ Send Message</button>
-          <p class="privacy-note">🔒 We use your details only to reply to you — never sold, never shared.
+          <p class="privacy-note">🔒 We use your details only to reply to you: never sold, never shared.
           Please don't include passwords or card numbers in your message.
           ${u ? "" : "You don't need an account to write to us."}</p>
         </div>
@@ -2033,7 +2033,7 @@ function authView() {
   return `<div class="view">
     <div class="card auth-card">
       <h1 style="text-align:center">${isLogin ? "👋 Welcome Back!" : "🌱 Join BrightSprouts"}</h1>
-      <p class="subtitle" style="text-align:center">${isLogin ? "Log in to keep learning." : "Free forever plan — no credit card needed."}</p>
+      <p class="subtitle" style="text-align:center">${isLogin ? "Log in to keep learning." : "Free forever plan, no credit card needed."}</p>
       ${state.authMsg ? `<div class="error-msg">${esc(state.authMsg)}</div>` : ""}
       ${state.authOk ? `<div class="ok-msg">${esc(state.authOk)}</div>` : ""}
       ${isLogin ? "" : `<div class="field"><label>Parent's name</label><input id="au-name" placeholder="e.g. Ana Malone"></div>`}
@@ -2068,7 +2068,7 @@ function accountView() {
           <button class="btn btn-primary" onclick="App.redeemCode()">Redeem</button>
         </div>
         <div id="ac-code-msg"></div>
-      </div>` : `<p class="famcode-ok">🎟️ ${u.familyCode ? "Premium unlocked with a family code" : "Premium is active"} — enjoy everything!</p>`}
+      </div>` : `<p class="famcode-ok">🎟️ ${u.familyCode ? "Premium unlocked with a family code" : "Premium is active"}, enjoy everything!</p>`}
       <div style="margin-top:20px;display:flex;gap:10px;flex-direction:column">
         ${u.plan !== "premium" ? `<button class="btn btn-primary" onclick="App.go('pricing')">⭐ Upgrade to Premium</button>` : ""}
         <button class="btn btn-ghost" onclick="App.logout()">Log Out</button>
@@ -2081,9 +2081,9 @@ function accountView() {
 function upgradeModal() {
   return `<div class="modal-back" onclick="if(event.target===this)App.closeModal()">
     <div class="modal">
-      <h2>⭐ Premium Family — ${PRICE}/month + tax</h2>
+      <h2>⭐ Premium Family: ${PRICE}/month + tax</h2>
       <p>${TAX_NOTE}</p>
-      <p>This is a <b>demo checkout</b>. When you launch for real, this button becomes your Stripe payment page (see README.md — it takes about 15 minutes to set up).</p>
+      <p>This is a <b>demo checkout</b>. When you launch for real, this button becomes your Stripe payment page (see README.md; it takes about 15 minutes to set up).</p>
       <button class="btn btn-primary" style="width:100%" onclick="App.completeUpgrade()">✅ Complete Demo Purchase</button>
       <button class="btn btn-ghost" style="width:100%;margin-top:10px" onclick="App.closeModal()">Maybe later</button>
     </div>
@@ -2177,12 +2177,12 @@ const App = {
                : g === 15 ? "readnow" : g === 16 ? "create" : g === 17 ? "basics"
                : g === 18 ? "engplan" : g === 19 ? "earth" : g === 20 ? "rocks"
                : g === 21 ? "greetings" : g === 23 ? "clock" : g === 24 ? "spacecourse" : g === 25 ? "feelings" : g === 26 ? "digsite" : g === 27 ? "matter" : g === 28 ? "weather" : "math";
-    // Premium grades still open — landing on the free Books tab; other subjects show an upgrade card.
+    // Premium grades still open, landing on the free Books tab; other subjects show an upgrade card.
     state.subject = canGrade(g) ? dflt : "books";
     go("lesson");
   },
   openSubject(s) {
-    // never render a subject that doesn't exist for this grade — that used to blank the page
+    // never render a subject that doesn't exist for this grade; that used to blank the page
     if (!LESSONS[state.grade] || !LESSONS[state.grade][s]) return;
     state.reading = null;
     state.subject = s; go("lesson");
@@ -2256,7 +2256,7 @@ const App = {
     const items = Cart.items();
     if (!items.length) { go("shop"); return; }
     if (!CHECKOUT_ENDPOINT) {
-      showToast("💳 Payments aren't connected yet — see the note in your cart.", true);
+      showToast("💳 Payments aren't connected yet; see the note in your cart.", true);
       return;
     }
     try {
@@ -2268,7 +2268,7 @@ const App = {
       if (data && data.url) { window.location.href = data.url; }
       else throw new Error((data && data.error) || "No checkout URL returned");
     } catch (e) {
-      showToast("Sorry — checkout couldn't start. Please try again.");
+      showToast("Sorry, checkout couldn't start. Please try again.");
     }
   },
 
@@ -2395,7 +2395,7 @@ const App = {
         if (m.matched >= m.deck.length / 2) {
           m.done = true;
           const stars = memoryStars(m.deck.length / 2, m.moves);
-          earn(stars, "🧠 +" + stars + " stars — you matched them all!");
+          earn(stars, "🧠 +" + stars + " stars: you matched them all!");
           earnBadge("memory");
         }
         render();
@@ -2427,7 +2427,7 @@ const App = {
         setTimeout(() => URL.revokeObjectURL(a.href), 2000);
       }, "image/png");
     };
-    img.onerror = function () { alert("Sorry — saving didn't work in this browser. Try the Print button instead!"); };
+    img.onerror = function () { alert("Sorry, saving didn't work in this browser. Try the Print button instead!"); };
     img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
     earn(1, "⭐ +1 star for making a creature!"); earnBadge("creator");
   },
@@ -2460,7 +2460,7 @@ const App = {
     r.ch = Math.min(Math.max(0, +i), r.book.chapters.length - 1);
     localStorage.setItem("bs_read_" + r.slug, r.ch);
     rewardOnce("chap-" + r.slug + "-" + r.ch, 1, "⭐ +1 star for reading a chapter!");
-    if (r.ch === r.book.chapters.length - 1) rewardOnce("book-" + r.slug, 3, "📚 +3 stars — you finished a whole book!", "bookworm");
+    if (r.ch === r.book.chapters.length - 1) rewardOnce("book-" + r.slug, 3, "📚 +3 stars: you finished a whole book!", "bookworm");
     render(); window.scrollTo(0, 0);
   },
   readSize(d) {
@@ -2483,7 +2483,7 @@ const App = {
   filterStories(f) { state.storyFilter = f; render(); },
   openStory(id) {
     if (!canStory(id)) {
-      if (!currentUser()) { state.authMode = "signup"; state.authMsg = "Create a free account to unlock more stories — your first 10 are free!"; go("auth"); }
+      if (!currentUser()) { state.authMode = "signup"; state.authMsg = "Create a free account to unlock more stories: your first 10 are free!"; go("auth"); }
       else go("pricing");
       return;
     }
@@ -2493,7 +2493,7 @@ const App = {
 
   createStory() {
     const u = currentUser();
-    if (!u) { state.authMode = "signup"; state.authMsg = "Create a free account to make custom stories — your first 2 are free!"; go("auth"); return; }
+    if (!u) { state.authMode = "signup"; state.authMsg = "Create a free account to make custom stories: your first 2 are free!"; go("auth"); return; }
     if (customLeft() <= 0) { go("pricing"); return; }
     const name = (document.getElementById("mk-name").value || "").trim();
     const friend = (document.getElementById("mk-friend").value || "").trim();
@@ -2523,11 +2523,11 @@ const App = {
     if (!f.name) err.name = "Please tell us your name.";
     else if (f.name.length > 80) err.name = "That name looks too long.";
     if (!f.email) err.email = "We need an email address to reply to.";
-    else if (!validEmail(f.email)) err.email = "That email doesn't look right — check for a typo?";
+    else if (!validEmail(f.email)) err.email = "That email doesn't look right, check for a typo?";
     if (f.phone && !validPhone(f.phone)) err.phone = "That phone number doesn't look right (7–15 digits).";
     if (!f.message) err.message = "Please write your message.";
     else if (f.message.length < 10) err.message = "Could you add a little more detail?";
-    else if (f.message.length > 5000) err.message = "That message is very long — could you shorten it?";
+    else if (f.message.length > 5000) err.message = "That message is very long, could you shorten it?";
     state.contactErr = err;
     if (Object.keys(err).length) { render(); return; }
     // honeypot: real people never fill this hidden field, bots do
@@ -2561,7 +2561,7 @@ const App = {
           state.contactSent = f.email; state.contactForm = {}; render();
         })
         .catch(() => {
-          state.contactMsg = "Sorry — that didn't send. Please email us directly at " + CONTACT_EMAIL + " and we'll get right back to you.";
+          state.contactMsg = "Sorry, that didn't send. Please email us directly at " + CONTACT_EMAIL + " and we'll get right back to you.";
           if (btn) { btn.textContent = "✉️ Send Message"; btn.disabled = false; }
           render();
         });
@@ -2582,7 +2582,7 @@ const App = {
     const codeEl = document.getElementById("au-code");
     const code = codeEl ? (codeEl.value || "").trim() : "";
     if (!name || !email || !pw) { state.authMsg = "Please fill in every field."; render(); return; }
-    if (!/^\S+@\S+\.\S+$/.test(email)) { state.authMsg = "That email doesn't look right — try again?"; render(); return; }
+    if (!/^\S+@\S+\.\S+$/.test(email)) { state.authMsg = "That email doesn't look right, try again?"; render(); return; }
     if (pw.length < 6) { state.authMsg = "Password needs at least 6 characters."; render(); return; }
     const users = loadUsers();
     if (users[email]) { state.authMsg = "That email already has an account. Try logging in!"; render(); return; }
@@ -2593,7 +2593,7 @@ const App = {
     if (code) {
       const unlocked = await redeemFamilyCode(code);
       go(unlocked ? "account" : "home");
-      showToast(unlocked ? "🎉 Family code accepted — Premium unlocked for free!" : "Account created! That family code wasn't recognized — you can add one anytime in My Account.", true);
+      showToast(unlocked ? "🎉 Family code accepted: Premium unlocked for free!" : "Account created! That family code wasn't recognized; you can add one anytime in My Account.", true);
       return;
     }
     go("home");
@@ -2644,7 +2644,7 @@ window.App = App;
 // ============================================================
 // ---- Creature Maker: the "leaning out of the screen" effect ----
 // The scene sits back in 3D space, the creature sits forward. Tilting the whole stage toward the
-// pointer makes the creature swing out past the frame — which is the bit children shriek at.
+// pointer makes the creature swing out past the frame, which is the bit children shriek at.
 function mmTilt() {
   const stage = document.getElementById("mmstage"), scene = document.getElementById("mmscene");
   if (!stage || !scene) return;
@@ -2712,7 +2712,7 @@ function gameHubView() {
   return `<div class="view">
     <button class="btn btn-ghost btn-sm no-print" onclick="App.go('lessons')">← All Grades</button>
     <h1 style="margin-top:14px">🎮 Game Arcade</h1>
-    <p class="subtitle">Pick a game to play — every one earns ⭐ stars for your Rewards collection. Filter by how tricky you want it!</p>
+    <p class="subtitle">Pick a game to play: every one earns ⭐ stars for your Rewards collection. Filter by how tricky you want it!</p>
     ${filterBar}
     <div class="grid grid-3 gtiles">${lvl === "all" || lvl === "Easy" ? plantTile : ""}${arcTiles}</div>
     <div class="bookfoot">${doodle("rocket")}
@@ -2729,8 +2729,8 @@ function beeView() {
   if (!b) {
     return `<div class="view">${back}
       <h1>🐝 Spelling Bee</h1>
-      <p class="subtitle">Listen to the word, then spell it. ${BEE_ROUND} words — how many can you get right?</p>
-      ${canSpeak ? "" : `<div class="beewarn">🔇 This device can't read words aloud, so each word will be <b>shown</b> for a moment instead — look carefully, then spell it from memory!</div>`}
+      <p class="subtitle">Listen to the word, then spell it. ${BEE_ROUND} words: how many can you get right?</p>
+      ${canSpeak ? "" : `<div class="beewarn">🔇 This device can't read words aloud, so each word will be <b>shown</b> for a moment instead. Look carefully, then spell it from memory!</div>`}
       <div class="grid grid-3 gtiles">${BEE_LEVELS.map(l => `
         <div class="gtile" onclick="App.beePick('${l.key}')">
           <div class="gtemoji">${l.emoji}</div>
@@ -2749,7 +2749,7 @@ function beeView() {
         <p class="arcscore">You spelled <b>${b.correct}</b> of ${BEE_ROUND} words correctly</p>
         ${b.best > 1 ? `<p class="subtitle">Longest streak: 🔥 ${b.best} in a row</p>` : ""}
         <p>⭐ You earned ${stars} star${stars === 1 ? "" : "s"}</p>
-        ${perfect ? `<p class="subtitle">🐝 Badge unlocked — Super Speller!</p>` : ""}
+        ${perfect ? `<p class="subtitle">🐝 Badge unlocked: Super Speller!</p>` : ""}
         <div class="lesson-tools" style="justify-content:center">
           <button class="btn btn-primary" onclick="App.beePick('${b.level}')">Play again</button>
           <button class="btn btn-secondary" onclick="App.beeMenu()">Change level</button>
@@ -2783,7 +2783,7 @@ function beeView() {
                onkeydown="if(event.key==='Enter'){event.preventDefault();App.beeSubmit();}">
         ${b.status ? "" : `<button class="btn btn-primary" onclick="App.beeSubmit()">Check ✓</button>`}
       </div>
-      ${b.status === "right" ? `<div class="beefb ok">✅ Correct — <b>${esc(word)}</b></div>` : ""}
+      ${b.status === "right" ? `<div class="beefb ok">✅ Correct: <b>${esc(word)}</b></div>` : ""}
       ${b.status === "wrong" ? `<div class="beefb no">❌ Not quite. It was <b>${esc(word)}</b></div>` : ""}
       ${b.status ? `<button class="btn btn-primary" onclick="App.beeNext()">${last ? "See my score →" : "Next word →"}</button>` : ""}
     </div>
@@ -2877,7 +2877,7 @@ function plantGameView() {
     return `<div class="view">
       <button class="btn btn-ghost btn-sm no-print" onclick="App.gameHub()">← Back to games</button>
       <h1 style="margin-top:12px">🌱 Plant Life Cycle Game</h1>
-      <p class="subtitle">Pick a plant or tree to grow. Water it, give it sunshine, and watch it live its whole life cycle — from a tiny seed to fruit and new seeds!</p>
+      <p class="subtitle">Pick a plant or tree to grow. Water it, give it sunshine, and watch it live its whole life cycle: from a tiny seed to fruit and new seeds!</p>
       <div class="grid grid-3">${PLANTS.map(p => `
         <div class="pgpick" onclick="App.gamePick('${p.slug}')">
           <div class="pgpickart"><svg viewBox="0 0 220 260">${(function(){ const s = plantScene(p, 4); return s.sky + s.art; })()}</svg></div>
@@ -2886,7 +2886,7 @@ function plantGameView() {
           <button class="btn btn-primary btn-sm">🌱 Plant this</button>
         </div>`).join("")}</div>
       <div class="bookfoot">${doodle("rocket")}
-        <p><b>Did you know?</b> Every one of these plants is a "flowering plant" — it grows flowers, and every flower's job is to make new seeds. The apple pip you plant grows a tree that makes more apples, each full of more pips. That's the circle of life, and you're about to run it yourself!</p></div>
+        <p><b>Did you know?</b> Every one of these plants is a "flowering plant": it grows flowers, and every flower's job is to make new seeds. The apple pip you plant grows a tree that makes more apples, each full of more pips. That's the circle of life, and you're about to run it yourself!</p></div>
     </div>`;
   }
   const p = PLANTS.find(x => x.slug === g.plant);
@@ -2908,7 +2908,7 @@ function plantGameView() {
             <g class="pg-plant">${scene.art}</g>
           </svg>
         </div>
-        <p class="mmhint no-print">👆 Move your mouse or finger over your plant — watch it lean out toward you!</p>
+        <p class="mmhint no-print">👆 Move your mouse or finger over your plant, watch it lean out toward you!</p>
       </div>
       <div class="pgpanel no-print">
         <div class="pgdots">${dots}</div>
@@ -2935,7 +2935,7 @@ function plantGameView() {
         </div>
       </div>
     </div>
-    <div class="print-only" style="text-align:center;margin-top:10px"><h2>${p.emoji} ${esc(p.name)} — ${esc(label)}</h2></div>
+    <div class="print-only" style="text-align:center;margin-top:10px"><h2>${p.emoji} ${esc(p.name)}: ${esc(label)}</h2></div>
   </div>`;
 }
 
@@ -2995,7 +2995,7 @@ function engineerBuildHtml(allowedKeys) {
   const pick = projs.map(x =>
     `<button class="${x.key === p.key ? "on" : ""}${isBuilt(x.key) ? " built" : ""}" onclick="App.buildPick('${x.key}')">${x.emoji} ${esc(x.name)}${isBuilt(x.key) ? " ✓" : ""}</button>`).join("");
   const hint = `<div class="engprogress no-print">
-    <span>🏗️ <b>Master Builder</b> — ${builtCount >= total ? "you built them all! 🎉" : builtCount + " of " + total + " machines built"}</span>
+    <span>🏗️ <b>Master Builder</b>: ${builtCount >= total ? "you built them all! 🎉" : builtCount + " of " + total + " machines built"}</span>
     <div class="readprog"><i style="width:${Math.round(builtCount / total * 100)}%"></i></div>
   </div>`;
   const modeBtns = `<div class="engmode no-print">
@@ -3042,7 +3042,7 @@ function buildRewardIfComplete(project) {
   const p = ENGINEER_PROJECTS.find(x => x.key === project);
   if (!p) return;
   const art = /^[aeiou]/i.test(p.name) ? "an" : "a";
-  rewardOnce("build-" + project, 2, "🔧 +2 stars — you built " + art + " " + p.name.toLowerCase() + "!");
+  rewardOnce("build-" + project, 2, "🔧 +2 stars: you built " + art + " " + p.name.toLowerCase() + "!");
   let done;
   try { done = JSON.parse(localStorage.getItem("bs_rw_done")) || {}; } catch (e) { done = {}; }
   if (ENGINEER_PROJECTS.every(x => done["build-" + x.key])) earnBadge("builder");
@@ -3056,7 +3056,7 @@ function gameCheckGrow() {
       g.stage++; g.water = 0; g.sun = 0;
       render();
       gamePop();
-      if (g.stage >= PLANT_STAGES.length - 1) { earn(2, "🌿 +2 stars — your plant is fully grown!"); earnBadge("greenthumb"); }
+      if (g.stage >= PLANT_STAGES.length - 1) { earn(2, "🌿 +2 stars: your plant is fully grown!"); earnBadge("greenthumb"); }
     }, 550);   // a beat so the child sees both meters fill, then the plant leaps to its new stage
   }
 }
