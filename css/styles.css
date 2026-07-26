@@ -1167,6 +1167,83 @@ footer{background:var(--purple-dark);color:#cfc6ee;text-align:center;padding:20p
 @media (max-width:420px){ .installbar .btn{flex:1 1 auto} }
 @media print{ .installbar{display:none} }
 
+/* ---------- Sprout the Kid Chat Bot ---------- */
+.sb-avatar{transform-box:fill-box;transform-origin:50% 100%;animation:sb-sway 3.6s ease-in-out infinite}
+.sb-avatar .sb-eye{transform-box:fill-box;transform-origin:center;animation:sb-blink 4.6s ease-in-out infinite}
+.sb-avatar .sb-eye2{animation-delay:.05s}
+.sb-avatar .sb-mouth{opacity:0}
+.sb-avatar.sb-talking .sb-smile{opacity:0}
+.sb-avatar.sb-talking .sb-mouth{opacity:1;transform-box:fill-box;transform-origin:center;animation:sb-flap .26s ease-in-out infinite alternate}
+@keyframes sb-sway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+@keyframes sb-blink{0%,90%,100%{transform:scaleY(1)}95%{transform:scaleY(.12)}}
+@keyframes sb-flap{from{transform:scaleY(.4)}to{transform:scaleY(1.15)}}
+
+.sproutbot-fab{position:fixed;right:18px;bottom:92px;z-index:950;width:64px;height:64px;border-radius:50%;
+  background:linear-gradient(135deg,#95e3a6,#57bd69);border:3px solid #fff;box-shadow:0 8px 20px rgba(45,42,74,.3);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;
+  animation:sb-bob 3s ease-in-out infinite}
+.sproutbot-fab:hover{transform:scale(1.08)}
+.sproutbot-fab svg{width:48px;height:48px;overflow:visible}
+.sproutbot-fab .sb-fabbadge{position:absolute;top:-2px;right:-2px;background:#ff6b9d;color:#fff;font-size:10px;font-weight:700;
+  border-radius:999px;padding:2px 6px;box-shadow:0 2px 6px rgba(0,0,0,.25);font-family:var(--display)}
+@keyframes sb-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.sproutbot-fab.sb-hide{display:none}
+
+.sproutbot-panel{position:fixed;right:18px;bottom:168px;z-index:951;width:352px;max-width:calc(100vw - 28px);
+  height:min(520px, calc(100vh - 190px));background:#fff;border-radius:22px;box-shadow:0 18px 44px rgba(45,42,74,.38);
+  display:flex;flex-direction:column;overflow:hidden;transform-origin:bottom right;animation:sb-pop .3s cubic-bezier(.34,1.56,.64,1)}
+@keyframes sb-pop{0%{transform:scale(.55) translateY(24px);opacity:0}100%{transform:scale(1) translateY(0);opacity:1}}
+
+.sproutbot-head{background:linear-gradient(135deg,#7c5cbf,#ff6b9d);color:#fff;padding:12px 12px;display:flex;align-items:center;gap:10px;flex:0 0 auto}
+.sproutbot-head .sb-avatar{width:44px;height:44px;flex:0 0 auto}
+.sproutbot-head .sb-avatar svg{width:44px;height:44px;overflow:visible}
+.sproutbot-head .sb-title{flex:1;min-width:0}
+.sproutbot-head h3{margin:0;font-family:var(--display);font-size:1.05rem;line-height:1.2}
+.sproutbot-head p{margin:1px 0 0;font-size:.74rem;opacity:.92}
+.sproutbot-head .sb-headbtns{display:flex;gap:6px;flex:0 0 auto}
+.sproutbot-head button{background:rgba(255,255,255,.25);border:none;color:#fff;width:30px;height:30px;border-radius:50%;
+  font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.sproutbot-head button:hover{background:rgba(255,255,255,.4)}
+
+.sproutbot-body{flex:1;overflow-y:auto;padding:14px;background:linear-gradient(180deg,#fdf6ff,#f2fff4);display:flex;flex-direction:column;gap:10px}
+.sb-msg{max-width:84%;padding:10px 13px;border-radius:16px;font-size:.9rem;line-height:1.5;animation:sb-msgin .25s ease;white-space:pre-line}
+@keyframes sb-msgin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.sb-msg.sb-bot{align-self:flex-start;background:#fff;border:2px solid #eee9fa;border-bottom-left-radius:4px;color:var(--ink)}
+.sb-msg.sb-user{align-self:flex-end;background:var(--purple);color:#fff;border-bottom-right-radius:4px}
+.sb-msg.sb-block{border-color:#ffc94d;background:#fff8e8}
+.sb-msg .sb-tag{display:block;font-size:.72rem;color:#8a86a8;margin-top:6px}
+.sb-lesson-link{display:inline-flex;align-items:center;gap:5px;margin-top:8px;background:var(--teal);color:#fff;
+  border:none;border-radius:999px;padding:6px 12px;font-size:.78rem;cursor:pointer;font-family:var(--display);font-weight:700}
+.sb-lesson-link:hover{filter:brightness(1.08)}
+
+.sb-chipswrap{padding:0 14px 10px;flex:0 0 auto}
+.sb-chips{display:flex;flex-wrap:wrap;gap:6px}
+.sb-chip{background:#fff;border:1.5px solid #e6e0f5;border-radius:999px;padding:6px 12px;font-size:.78rem;cursor:pointer;color:var(--purple-dark);font-family:inherit}
+.sb-chip:hover{border-color:var(--purple);background:#fdfbff}
+
+.sb-typing{display:flex;gap:4px;padding:11px 14px;background:#fff;border:2px solid #eee9fa;border-radius:16px;
+  border-bottom-left-radius:4px;align-self:flex-start;width:fit-content}
+.sb-typing i{width:7px;height:7px;border-radius:50%;background:#c9c2e6;display:block;animation:sb-typedot 1s ease-in-out infinite}
+.sb-typing i:nth-child(2){animation-delay:.15s}.sb-typing i:nth-child(3){animation-delay:.3s}
+@keyframes sb-typedot{0%,80%,100%{opacity:.3;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+
+.sproutbot-foot{padding:10px;border-top:2px solid #f0ecfa;display:flex;gap:8px;background:#fff;flex:0 0 auto}
+.sproutbot-foot input{flex:1;min-width:0;border:2px solid #e6e0f5;border-radius:999px;padding:9px 14px;font-family:inherit;font-size:.9rem}
+.sproutbot-foot input:focus{outline:none;border-color:var(--purple)}
+.sproutbot-foot button{background:var(--pink);color:#fff;border:none;width:40px;height:40px;border-radius:50%;font-size:16px;cursor:pointer;flex:0 0 auto;display:flex;align-items:center;justify-content:center}
+.sproutbot-foot button:disabled{opacity:.5;cursor:default}
+
+@media (max-width:460px){
+  .sproutbot-panel{right:10px;left:10px;width:auto;bottom:100px;height:min(60vh, calc(100vh - 170px))}
+  .sproutbot-fab{right:14px;bottom:80px}
+}
+@media (prefers-reduced-motion: reduce){
+  .sproutbot-fab{animation:none}
+  .sb-avatar{animation:none}
+  .sb-avatar .sb-eye{animation:none}
+}
+@media print{.sproutbot-fab,.sproutbot-panel{display:none}}
+
 /* ---------- Legal / supplemental-use disclaimer in the footer ---------- */
 .disclaimer{
   max-width:820px;margin:14px auto 0;padding-top:12px;
