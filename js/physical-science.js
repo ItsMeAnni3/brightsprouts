@@ -1,6 +1,6 @@
-// BrightSprouts Academy — Physical Science category (LESSONS[27]): matter, forces, energy and
+// BrightSprouts Academy: Physical Science category (LESSONS[27]): matter, forces, energy and
 // electricity/magnetism for grade-schoolers, K-12 appropriate. Distinct from the Grade 9+
-// Physics/Chemistry subjects — this is the earlier, hands-on foundation, same role Geology plays
+// Physics/Chemistry subjects, this is the earlier, hands-on foundation, same role Geology plays
 // for earth science. Facts checked against Britannica, NASA, EIA/Energy Kids, and standard physics
 // curricula (six simple machines, Newton's three laws, four states of matter, conservation of
 // energy, and how electromagnets work).
@@ -8,7 +8,7 @@
   if (typeof LESSONS === "undefined") return;
   var LB = 'font-family="Fredoka, system-ui, sans-serif" font-size="12" fill="#2d2a4a"';
 
-  // A tiny auto-turning 3D atom model — three electron rings tilted in 3D space, each spinning
+  // A tiny auto-turning 3D atom model: three electron rings tilted in 3D space, each spinning
   // at its own speed, held together in one wobbling scene (see .phys3d in styles.css).
   var ATOM_3D = '<div class="phys3d no-print" aria-hidden="true"><div class="phys3d-stage"><div class="phys3d-scene">'
     + '<div class="phys3d-nucleus"></div>'
@@ -20,13 +20,13 @@
   LESSONS[27] = {
     matter: {
       title: "Matter & Atoms", emoji: "🧊",
-      intro: "Everything around you — this page, the air you breathe, even you — is made of matter. Let's zoom into atoms and see how matter changes state.",
+      intro: "Everything around you is made of matter: this page, the air you breathe, even you. Let's zoom into atoms and see how matter changes state.",
       learn: [
-        "Matter is anything that takes up space and has mass — solids, liquids and gases are all matter.",
+        "Matter is anything that takes up space and has mass: solids, liquids and gases are all matter.",
         "Solids keep their own shape and volume. Liquids keep their volume but take the shape of their container. Gases spread out to fill any container they're in.",
-        "Plasma is a fourth state of matter — an electrically charged gas found in lightning, neon signs and stars. It's actually the most common state of matter in the whole universe!",
-        "All matter is made of tiny building blocks called atoms, which join together to form molecules — like two hydrogen atoms and one oxygen atom joining to make water.",
-        "Heating or cooling matter can change its state: ice (solid) melts into water (liquid), and water boils into water vapor (gas). This is a physical change — it's still the same substance."
+        "Plasma is a fourth state of matter: an electrically charged gas found in lightning, neon signs and stars. It's actually the most common state of matter in the whole universe!",
+        "All matter is made of tiny building blocks called atoms, which join together to form molecules, like two hydrogen atoms and one oxygen atom joining to make water.",
+        "Heating or cooling matter can change its state: ice (solid) melts into water (liquid), and water boils into water vapor (gas). This is a physical change; it's still the same substance."
       ],
       activity: "🧊 Melting Race: Put an ice cube in the sun and another in the shade. Time how long each takes to melt completely. Which state change happened faster, and why?",
       diagram: '<svg viewBox="0 0 340 158"><rect width="340" height="158" rx="14" fill="#f7f4ee"/>'
@@ -73,10 +73,10 @@
         "A force is a push or a pull. Forces can start, stop, speed up, slow down, or change the direction of motion.",
         "Newton's first law: an object at rest stays at rest, and an object in motion keeps moving at the same speed and direction, unless a force acts on it. This is called inertia.",
         "Newton's second law: a bigger force makes an object speed up more, and heavier objects need more force to speed up by the same amount.",
-        "Newton's third law: for every action force, there's an equal and opposite reaction force — like a rocket pushing gas backward while the gas pushes the rocket forward.",
-        "Gravity pulls objects toward each other; friction is a force between touching surfaces that slows motion down. Simple machines — like the lever, wheel and axle, pulley, inclined plane, wedge and screw — help us do work using less force."
+        "Newton's third law: for every action force, there's an equal and opposite reaction force, like a rocket pushing gas backward while the gas pushes the rocket forward.",
+        "Gravity pulls objects toward each other; friction is a force between touching surfaces that slows motion down. Simple machines (like the lever, wheel and axle, pulley, inclined plane, wedge and screw) help us do work using less force."
       ],
-      activity: "🎢 Marble Ramp: Prop up a book with a ruler to make a ramp. Roll a marble down onto carpet, then onto a smooth floor. Which surface has more friction — where does the marble travel farther?",
+      activity: "🎢 Marble Ramp: Prop up a book with a ruler to make a ramp. Roll a marble down onto carpet, then onto a smooth floor. Which surface has more friction: where does the marble travel farther?",
       diagram: '<svg viewBox="0 0 340 158"><rect width="340" height="158" rx="14" fill="#f7f4ee"/>'
         + '<g><path d="M30 96 L150 96" stroke="#8a7566" stroke-width="10" stroke-linecap="round"/><path d="M78 96 L98 118 L118 96 Z" fill="#6a668c"/>'
         + '<path d="M40 70 L40 92" stroke="#e63946" stroke-width="3" marker-end="url(#fA1)"/><rect x="128" y="66" width="24" height="24" rx="4" fill="#7fae5a"/>'
@@ -105,15 +105,15 @@
     },
     energy: {
       title: "Energy", emoji: "⚡",
-      intro: "Energy makes everything happen — from a bouncing ball to a glowing lightbulb. It never disappears; it just changes from one form to another.",
+      intro: "Energy makes everything happen: from a bouncing ball to a glowing lightbulb. It never disappears; it just changes from one form to another.",
       learn: [
         "Energy is the ability to do work or cause change. It comes in many forms: kinetic (motion), potential (stored), thermal (heat), light, sound and electrical energy.",
-        "Kinetic energy is the energy of motion — a rolling ball has kinetic energy. Potential energy is stored energy, like a ball held up high or a stretched rubber band.",
-        "As a ball falls, its stored potential energy changes into motion — kinetic energy. Energy is always changing form.",
+        "Kinetic energy is the energy of motion: a rolling ball has kinetic energy. Potential energy is stored energy, like a ball held up high or a stretched rubber band.",
+        "As a ball falls, its stored potential energy changes into motion: kinetic energy. Energy is always changing form.",
         "The law of conservation of energy says energy can't be created or destroyed, only changed from one form into another.",
-        "Heat naturally flows from warmer things to cooler things — that's why hot cocoa cools down and ice cream melts in your hand."
+        "Heat naturally flows from warmer things to cooler things, that's why hot cocoa cools down and ice cream melts in your hand."
       ],
-      activity: "⚡ Energy Hunt: Walk around your home and find 5 examples of energy changing form — like a toaster (electrical to heat) or a flashlight (electrical to light). Write down what you find!",
+      activity: "⚡ Energy Hunt: Walk around your home and find 5 examples of energy changing form, like a toaster (electrical to heat) or a flashlight (electrical to light). Write down what you find!",
       diagram: '<svg viewBox="0 0 340 168"><rect width="340" height="168" rx="14" fill="#f7f4ee"/>'
         + '<path d="M20 130 Q120 20 320 130" fill="none" stroke="#8a86a8" stroke-width="3" stroke-dasharray="1 8" stroke-linecap="round"/>'
         + '<circle cx="70" cy="55" r="16" fill="#ff8a3d"/><circle cx="280" cy="112" r="16" fill="#4d96ff"/>'
@@ -127,7 +127,7 @@
         { q: "Stored energy, like a ball held up high, is called ____ energy.", a: "Potential" },
         { q: "As a ball falls, its potential energy changes into ____ energy.", a: "Kinetic" },
         { q: "The rule that energy can't be created or destroyed is the law of ____.", a: "Conservation of energy" },
-        { q: "Energy can never be destroyed — it can only change ____.", a: "Form" },
+        { q: "Energy can never be destroyed; it can only change ____.", a: "Form" },
         { q: "Heat naturally flows from warmer things to ____ things.", a: "Cooler" },
         { q: "Name a form of energy you can hear.", a: "Sound" },
         { q: "Name a form of energy given off by the sun that you can see.", a: "Light" },
@@ -138,13 +138,13 @@
     },
     electromag: {
       title: "Electricity & Magnetism", emoji: "🧲",
-      intro: "Flip a switch and a room fills with light. Wave a magnet near a paperclip and — snap — it jumps! Electricity and magnetism are secretly best friends.",
+      intro: "Flip a switch and a room fills with light. Wave a magnet near a paperclip and snap, it jumps! Electricity and magnetism are secretly best friends.",
       learn: [
         "Electric current is the flow of tiny charged particles called electrons through a material. Metals let electricity flow easily and are called conductors; rubber and plastic block it and are called insulators.",
-        "A circuit is a complete loop that lets electric current flow. If the loop breaks — an open circuit — the current stops and the light goes out.",
+        "A circuit is a complete loop that lets electric current flow. If the loop breaks (an open circuit), the current stops and the light goes out.",
         "Static electricity happens when charges build up on a surface instead of flowing, like when a balloon rubbed on hair makes your hair stand up.",
         "Magnets have two poles, north and south. Like poles repel (push apart), and opposite poles attract (pull together).",
-        "Electricity and magnetism are linked: an electric current flowing through a coil of wire creates a magnetic field, making an electromagnet — used in speakers, doorbells and electric motors."
+        "Electricity and magnetism are linked: an electric current flowing through a coil of wire creates a magnetic field, making an electromagnet, used in speakers, doorbells and electric motors."
       ],
       activity: "🧲 Paperclip Pickup: See how many paperclips a magnet can pick up in a chain. Then, with an adult, wrap a wire coil around a nail and connect it to a battery to make your own simple electromagnet!",
       diagram: '<svg viewBox="0 0 340 158"><rect width="340" height="158" rx="14" fill="#f7f4ee"/>'

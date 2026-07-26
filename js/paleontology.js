@@ -1,13 +1,13 @@
-// BrightSprouts Academy — Paleontology category (LESSONS[26]): fossils, dinosaurs & prehistoric
+// BrightSprouts Academy: Paleontology category (LESSONS[26]): fossils, dinosaurs & prehistoric
 // life for grade-schoolers, K-12 appropriate. Facts checked against Britannica, USGS, NHM London,
 // Smithsonian and current paleontology research (Mesozoic dates, K-Pg impact, dinosaur/bird lineage,
-// and the "not a dinosaur" groups — pterosaurs and marine reptiles — are common misconceptions).
+// and the "not a dinosaur" groups (pterosaurs and marine reptiles) are common misconceptions).
 (function () {
   if (typeof LESSONS === "undefined") return;
   var LB = 'font-family="Fredoka, system-ui, sans-serif" font-size="12" fill="#2d2a4a"';
 
   // A tiny auto-turning 3D diorama built from three flat SVG layers held apart in Z and spun
-  // together with a CSS keyframe (see .paleo3d in styles.css) — no drag needed, screen-only bonus.
+  // together with a CSS keyframe (see .paleo3d in styles.css); no drag needed, screen-only bonus.
   var DINO_3D = '<div class="paleo3d no-print" aria-hidden="true"><div class="paleo3d-stage"><div class="paleo3d-scene">'
     + '<div class="p3-layer p3-back"><svg viewBox="0 0 240 170">'
     + '<defs><linearGradient id="p3sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bfe3ff"/><stop offset="1" stop-color="#eaf7ff"/></linearGradient></defs>'
@@ -28,20 +28,20 @@
     + '<ellipse cx="190" cy="164" rx="34" ry="10" fill="#8a6a42"/>'
     + '<g fill="#f4efe4"><ellipse cx="185" cy="156" rx="6" ry="5"/><ellipse cx="205" cy="156" rx="6" ry="5"/><rect x="183" y="153" width="24" height="6" rx="3"/></g>'
     + '</svg></div>'
-    + '</div></div><p class="paleo3d-cap">🦖 A little 3D scene — watch it turn!</p></div>';
+    + '</div></div><p class="paleo3d-cap">🦖 A little 3D scene: watch it turn!</p></div>';
 
   LESSONS[26] = {
     digsite: {
       title: "Fossils & Digging Up the Past", emoji: "🦴",
       intro: "Every fossil is a message from the deep past. Paleontologists are scientists who dig them up, piece them together, and read the story they tell about ancient life.",
       learn: [
-        "A fossil is the preserved remains or trace of a living thing from long ago — bones, shells, footprints, even leaf prints in stone.",
+        "A fossil is the preserved remains or trace of a living thing from long ago: bones, shells, footprints, even leaf prints in stone.",
         "Most fossils form in sedimentary rock: a plant or animal is buried in mud, sand or ash, and minerals slowly replace it over thousands or millions of years.",
-        "Body fossils preserve an actual part of the organism, like a bone or shell. Trace fossils preserve evidence it left behind, like footprints, burrows — even fossilized poop, called a coprolite!",
-        "The deepest, oldest rock layers were laid down first, so fossils found deeper are usually older — a rule called the law of superposition.",
+        "Body fossils preserve an actual part of the organism, like a bone or shell. Trace fossils preserve evidence it left behind, like footprints, burrows, even fossilized poop, called a coprolite!",
+        "The deepest, oldest rock layers were laid down first, so fossils found deeper are usually older, a rule called the law of superposition.",
         "Paleontologists carefully dig fossils out, wrap fragile bones in protective plaster jackets, then study and rebuild them in a laboratory or museum."
       ],
-      activity: "🦴 Cookie-Dough Excavation (with an adult): Freeze a few chocolate chips or small toys inside a block of ice, or bury them in a tray of flour. Use a toothpick and a small paintbrush to carefully dig them out — just like a real fossil dig!",
+      activity: "🦴 Cookie-Dough Excavation (with an adult): Freeze a few chocolate chips or small toys inside a block of ice, or bury them in a tray of flour. Use a toothpick and a small paintbrush to carefully dig them out, just like a real fossil dig!",
       diagram: '<svg viewBox="0 0 340 170"><rect width="340" height="170" rx="14" fill="#f7f4ee"/>'
         + '<rect x="20" y="18" width="230" height="32" rx="6" fill="#e7d9b8"/><rect x="20" y="50" width="230" height="32" rx="6" fill="#d9b46a"/>'
         + '<rect x="20" y="82" width="230" height="32" rx="6" fill="#b5905a"/><rect x="20" y="114" width="230" height="32" rx="6" fill="#8a6a42"/>'
@@ -67,15 +67,15 @@
     },
     dinosaurs: {
       title: "Dinosaurs", emoji: "🦖",
-      intro: "Dinosaurs walked the Earth for over 160 million years — far longer than humans have existed! Let's meet some famous ones and clear up a few myths.",
+      intro: "Dinosaurs walked the Earth for over 160 million years, far longer than humans have existed! Let's meet some famous ones and clear up a few myths.",
       learn: [
         "Dinosaurs lived during the Mesozoic Era, from about 252 to 66 million years ago, split into three periods: the Triassic, Jurassic and Cretaceous.",
-        "Dinosaurs came in every size, from chicken-sized hunters to massive long-necked giants — not all of them were huge!",
+        "Dinosaurs came in every size, from chicken-sized hunters to massive long-necked giants: not all of them were huge!",
         "Meat-eating dinosaurs, called theropods, include Tyrannosaurus rex and the much smaller, turkey-sized Velociraptor. Plant-eaters like Triceratops and Stegosaurus defended themselves with horns, plates or frills instead.",
-        "Non-avian dinosaurs died out about 66 million years ago — long before the first humans existed, so people and T. rex never actually met.",
-        "Fossils of small feathered theropods show that birds are the living descendants of meat-eating dinosaurs — so in a real sense, birds are dinosaurs too!"
+        "Non-avian dinosaurs died out about 66 million years ago, long before the first humans existed, so people and T. rex never actually met.",
+        "Fossils of small feathered theropods show that birds are the living descendants of meat-eating dinosaurs, so in a real sense, birds are dinosaurs too!"
       ],
-      activity: "🦕 Dino Sort: Draw or cut out pictures of dinosaurs and sort them into two piles — 'meat-eater' (sharp teeth) and 'plant-eater' (flat teeth, horns, or plates). Which pile is bigger?",
+      activity: "🦕 Dino Sort: Draw or cut out pictures of dinosaurs and sort them into two piles: 'meat-eater' (sharp teeth) and 'plant-eater' (flat teeth, horns, or plates). Which pile is bigger?",
       diagram: '<svg viewBox="0 0 340 158"><rect width="340" height="158" rx="14" fill="#f7f4ee"/>'
         + '<g><path d="M46 120 L18 96 L58 104 Z" fill="#8a7566"/><ellipse cx="96" cy="98" rx="34" ry="24" fill="#9a8676"/>'
         + '<rect x="86" y="120" width="14" height="28" rx="5" fill="#7a6656"/><ellipse cx="140" cy="76" rx="19" ry="15" fill="#9a8676"/>'
@@ -106,15 +106,15 @@
     },
     prehistoric: {
       title: "Prehistoric Life", emoji: "🐚",
-      intro: "Not every prehistoric creature was a dinosaur! Long before — and long after — the dinosaurs, other amazing animals ruled the land, sea and sky.",
+      intro: "Not every prehistoric creature was a dinosaur! Long before, and long after, the dinosaurs, other amazing animals ruled the land, sea and sky.",
       learn: [
         "Trilobites were hard-shelled sea creatures that appeared over 500 million years ago, hundreds of millions of years before the first dinosaurs, and died out about 252 million years ago.",
-        "Plesiosaurs (long-necked) and ichthyosaurs (dolphin-shaped) were marine reptiles that swam the seas alongside the dinosaurs — but they were not dinosaurs themselves.",
+        "Plesiosaurs (long-necked) and ichthyosaurs (dolphin-shaped) were marine reptiles that swam the seas alongside the dinosaurs, but they were not dinosaurs themselves.",
         "Mosasaurs were giant marine lizards, close relatives of today's monitor lizards, like the Komodo dragon.",
-        "Pterosaurs, like Pteranodon, were flying reptiles — not dinosaurs — with wings made of skin stretched along one very long finger bone.",
+        "Pterosaurs, like Pteranodon, were flying reptiles, not dinosaurs, with wings made of skin stretched along one very long finger bone.",
         "Long after the dinosaurs were gone, the Ice Age brought woolly mammoths, saber-toothed cats and giant ground sloths, which lived alongside early humans."
       ],
-      activity: "🐾 Timeline Ribbon: On a long strip of paper, mark trilobites near one end, dinosaurs and marine and flying reptiles in the middle, and Ice Age mammals near the other end. Measure the gaps — that's how much time separates them!",
+      activity: "🐾 Timeline Ribbon: On a long strip of paper, mark trilobites near one end, dinosaurs and marine and flying reptiles in the middle, and Ice Age mammals near the other end. Measure the gaps: that's how much time separates them!",
       diagram: '<svg viewBox="0 0 340 150"><rect width="340" height="150" rx="14" fill="#f7f4ee"/>'
         + '<rect x="20" y="90" width="90" height="20" rx="8" fill="#8aa9c9"/><rect x="110" y="90" width="140" height="20" rx="8" fill="#7fae5a"/>'
         + '<rect x="250" y="90" width="70" height="20" rx="8" fill="#d9b46a"/>'
@@ -140,13 +140,13 @@
     },
     extinction: {
       title: "Extinction & Deep Time", emoji: "☄️",
-      intro: "Earth is about 4.6 billion years old, and life's story is written in fossils and rock layers. Sometimes that story includes disaster — huge mass extinctions that changed life forever.",
+      intro: "Earth is about 4.6 billion years old, and life's story is written in fossils and rock layers. Sometimes that story includes disaster: huge mass extinctions that changed life forever.",
       learn: [
         "A mass extinction is when a very large share of Earth's species die out in a relatively short span of geologic time.",
         "The worst mass extinction ever, the End-Permian extinction (sometimes called 'the Great Dying'), happened about 252 million years ago and wiped out roughly 90% of species.",
         "The extinction that ended the age of dinosaurs, about 66 million years ago, was caused mainly by a massive asteroid that struck what is now Mexico.",
-        "That impact left behind a giant crater called Chicxulub and a thin layer of the rare metal iridium found in rock all over the world — a worldwide clue to what happened.",
-        "After each mass extinction, surviving species evolved and diversified to fill the empty niches — after the dinosaurs' extinction, mammals grew larger and far more varied."
+        "That impact left behind a giant crater called Chicxulub and a thin layer of the rare metal iridium found in rock all over the world, a worldwide clue to what happened.",
+        "After each mass extinction, surviving species evolved and diversified to fill the empty niches. After the dinosaurs' extinction, mammals grew larger and far more varied."
       ],
       activity: "☄️ Impact Splash: Drop a marble into a shallow tray of flour or cocoa powder from different heights and watch how the size of the 'crater' changes. That's a tiny model of what a huge asteroid strike can do!",
       diagram: '<svg viewBox="0 0 340 190"><rect width="340" height="190" rx="14" fill="#12193a"/>'
@@ -155,7 +155,7 @@
         + '<g font-family="Fredoka, system-ui, sans-serif" text-anchor="middle" fill="#fff" font-size="11">'
         + '<text x="150" y="158">Chicxulub crater</text><text x="150" y="172" font-size="9" fill="#ffd166">Iridium layer (worldwide clue)</text></g>'
         + '<g font-family="Fredoka, system-ui, sans-serif" font-size="10" fill="#c9d6ff">'
-        + '<text x="16" y="20">252 mya — the Great Dying</text><text x="16" y="184">66 mya — dinosaurs\' end</text></g></svg>',
+        + '<text x="16" y="20">252 mya: the Great Dying</text><text x="16" y="184">66 mya: dinosaurs\' end</text></g></svg>',
       questions: [
         { q: "About how old is planet Earth?", a: "About 4.6 billion years" },
         { q: "A very large die-off of species in a short geologic time is a ____.", a: "Mass extinction" },

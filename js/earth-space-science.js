@@ -1,4 +1,4 @@
-// BrightSprouts Academy — Earth & Space Science category (LESSONS[28]): weather, water cycle and
+// BrightSprouts Academy: Earth & Space Science category (LESSONS[28]): weather, water cycle and
 // oceans, stars and galaxies, and Earth's rotation/seasons for grade-schoolers, K-12 appropriate.
 // Deliberately does NOT cover rocks/plate tectonics (see Geology, LESSONS[20]) or the solar
 // system/spaceflight (see Space, LESSONS[24]) to avoid duplicating those standalone categories.
@@ -8,12 +8,12 @@
 (function () {
   if (typeof LESSONS === "undefined") return;
   var LB = 'font-family="Fredoka, system-ui, sans-serif" font-size="12" fill="#2d2a4a"';
-  // Light-on-dark label, for the two night-sky diagrams below — LB's fill is baked in, so a
+  // Light-on-dark label, for the two night-sky diagrams below; LB's fill is baked in, so a
   // separately-appended fill="..." after it becomes a duplicate attribute (first one wins).
   var LBW = 'font-family="Fredoka, system-ui, sans-serif" font-size="12" fill="#fff"';
 
   // A tiny auto-turning 3D scene: a starfield + sun sit behind a globe that spins continuously
-  // around its own tilted axis (see .earth3d in styles.css — same rotate3d technique validated
+  // around its own tilted axis (see .earth3d in styles.css, same rotate3d technique validated
   // on the Physical Science atom model, applied to a single tilted spin axis instead of 3 rings).
   var EARTH_3D = '<div class="earth3d no-print" aria-hidden="true"><div class="earth3d-stage"><div class="earth3d-scene">'
     + '<div class="e3-back"><svg viewBox="0 0 200 200"><circle cx="168" cy="28" r="15" fill="#ffe08a"/>'
@@ -26,12 +26,12 @@
   LESSONS[28] = {
     weather: {
       title: "Weather & Sky", emoji: "🌦️",
-      intro: "Look up! The sky is always doing something — sunny, cloudy, rainy or stormy. Let's learn what makes our weather, and how it's different from climate.",
+      intro: "Look up! The sky is always doing something: sunny, cloudy, rainy or stormy. Let's learn what makes our weather, and how it's different from climate.",
       learn: [
-        "Weather is what's happening in the atmosphere right now or over the next few days — sunny, rainy, windy, hot or cold. Climate is the average weather a place has over many years.",
+        "Weather is what's happening in the atmosphere right now or over the next few days: sunny, rainy, windy, hot or cold. Climate is the average weather a place has over many years.",
         "The atmosphere is the blanket of air surrounding Earth. It's mostly nitrogen and oxygen gas, and it's where all our weather happens.",
         "Clouds form when water vapor in the air cools and condenses into tiny droplets. Puffy cumulus clouds often mean fair weather; tall, dark cumulonimbus clouds can bring thunderstorms.",
-        "Precipitation is water falling from clouds — as rain, snow, sleet or hail, depending on the temperature of the air it falls through.",
+        "Precipitation is water falling from clouds, as rain, snow, sleet or hail, depending on the temperature of the air it falls through.",
         "Wind is simply air moving from areas of high pressure to areas of low pressure. Big pressure differences make strong winds, and can power storms like hurricanes."
       ],
       activity: "🌦️ Cloud Watch: Lie back and watch the clouds for 10 minutes. Sketch the shapes you see. Are they flat and layered, puffy like cotton, or wispy and thin? Try to guess what kind of weather is coming.",
@@ -60,13 +60,13 @@
     },
     watercycle: {
       title: "Water Cycle & Oceans", emoji: "🌊",
-      intro: "Water is always on the move — rising into clouds, falling as rain, and flowing back to the sea. Let's follow the water cycle and meet Earth's five oceans.",
+      intro: "Water is always on the move: rising into clouds, falling as rain, and flowing back to the sea. Let's follow the water cycle and meet Earth's five oceans.",
       learn: [
         "The water cycle has four main stages: evaporation (water heats up and rises as vapor), condensation (vapor cools and forms clouds), precipitation (water falls as rain, snow, sleet or hail), and collection (water gathers in rivers, lakes and oceans).",
-        "The Sun powers the whole water cycle by heating water and causing evaporation — mostly from the oceans, since they cover most of Earth's surface.",
+        "The Sun powers the whole water cycle by heating water and causing evaporation, mostly from the oceans, since they cover most of Earth's surface.",
         "Earth has five oceans: the Pacific, Atlantic, Indian, Southern and Arctic. The Pacific is the largest and deepest of them all.",
         "About 97% of Earth's water is salty ocean water; only about 3% is freshwater, and most of that is locked up in ice and glaciers.",
-        "Water keeps cycling forever — the same water molecules that fell as rain long ago are still moving through the cycle today."
+        "Water keeps cycling forever, the same water molecules that fell as rain long ago are still moving through the cycle today."
       ],
       activity: "🌊 Water Cycle in a Bag: Fill a sealable plastic bag with a little water, tape it to a sunny window, and watch over a day or two. You'll see 'evaporation' and 'condensation' happening right on the bag!",
       diagram: '<svg viewBox="0 0 340 200"><rect width="340" height="200" rx="14" fill="#eaf5ff"/>'
@@ -100,13 +100,13 @@
       title: "Stars & Galaxies", emoji: "✨",
       intro: "On a clear night, the sky fills with thousands of tiny lights. Each one is a star like our Sun, and they're grouped into enormous islands called galaxies.",
       learn: [
-        "A star is a giant ball of hot, glowing gas that makes its own light and heat through a process called nuclear fusion. Our Sun is a star — just much closer than the others.",
-        "Stars look tiny only because they're incredibly far away. Distances in space are so huge that scientists measure them in light-years — the distance light travels in one year.",
-        "The nearest star system to our Sun, Alpha Centauri, is about 4.2 light-years away. That's roughly 25 trillion miles — and it's still our closest neighbor!",
+        "A star is a giant ball of hot, glowing gas that makes its own light and heat through a process called nuclear fusion. Our Sun is a star, just much closer than the others.",
+        "Stars look tiny only because they're incredibly far away. Distances in space are so huge that scientists measure them in light-years, the distance light travels in one year.",
+        "The nearest star system to our Sun, Alpha Centauri, is about 4.2 light-years away. That's roughly 25 trillion miles; and it's still our closest neighbor!",
         "A galaxy is a huge collection of stars, gas and dust held together by gravity. Our solar system is inside a galaxy called the Milky Way, home to an estimated 100 to 400 billion stars.",
-        "The Milky Way is just one of billions of galaxies in the universe. On a clear, dark night, patterns of stars called constellations — like Orion or the Big Dipper — can help you find your way around the sky."
+        "The Milky Way is just one of billions of galaxies in the universe. On a clear, dark night, patterns of stars called constellations (like Orion or the Big Dipper) can help you find your way around the sky."
       ],
-      activity: "✨ Star Count: On the next clear night, find a dark spot outside and count how many stars you can see in one small patch of sky (about the size of your fist held at arm's length). Try again another night — does the number change?",
+      activity: "✨ Star Count: On the next clear night, find a dark spot outside and count how many stars you can see in one small patch of sky (about the size of your fist held at arm's length). Try again another night: does the number change?",
       diagram: '<svg viewBox="0 0 340 170"><rect width="340" height="170" rx="14" fill="#0f1730"/>'
         + '<g fill="#fff"><circle cx="30" cy="30" r="1.6"/><circle cx="70" cy="18" r="1.3"/><circle cx="110" cy="40" r="1.5"/><circle cx="150" cy="15" r="1.4"/>'
         + '<circle cx="200" cy="30" r="1.6"/><circle cx="250" cy="18" r="1.3"/><circle cx="290" cy="42" r="1.5"/><circle cx="320" cy="20" r="1.4"/>'
@@ -132,15 +132,15 @@
     },
     rotation: {
       title: "Earth's Rotation & Seasons", emoji: "🍂",
-      intro: "Earth is never standing still — it's always spinning and racing around the Sun. That non-stop motion gives us day and night, and the four seasons.",
+      intro: "Earth is never standing still: it's always spinning and racing around the Sun. That non-stop motion gives us day and night, and the four seasons.",
       learn: [
-        "Earth spins all the way around on its axis once every 24 hours — that spin is what gives us day and night. The side facing the Sun has day; the side facing away has night.",
-        "Earth also travels all the way around the Sun once every year — about 365.25 days. That's why we add a leap day every four years, to keep our calendar in sync.",
-        "Earth's axis is tilted about 23.5 degrees. As Earth orbits the Sun, that tilt means different parts of Earth get more or less direct sunlight at different times of year — and that's what causes the seasons, not how close or far Earth is from the Sun.",
-        "When the Northern Hemisphere is tilted toward the Sun, it's summer there — and winter in the Southern Hemisphere, which is tilted away at the same time.",
+        "Earth spins all the way around on its axis once every 24 hours: that spin is what gives us day and night. The side facing the Sun has day; the side facing away has night.",
+        "Earth also travels all the way around the Sun once every year, about 365.25 days. That's why we add a leap day every four years, to keep our calendar in sync.",
+        "Earth's axis is tilted about 23.5 degrees. As Earth orbits the Sun, that tilt means different parts of Earth get more or less direct sunlight at different times of year, and that's what causes the seasons, not how close or far Earth is from the Sun.",
+        "When the Northern Hemisphere is tilted toward the Sun, it's summer there, and winter in the Southern Hemisphere, which is tilted away at the same time.",
         "The equinoxes (spring and fall) are the two days a year when neither hemisphere is tilted toward or away from the Sun, so day and night are close to equal length almost everywhere."
       ],
-      activity: "🍂 Tilt a Flashlight: Shine a flashlight straight down onto a piece of paper, then shine it at an angle from the same distance. See how the light spreads out and looks dimmer at an angle? That's why tilted parts of Earth get less direct — and cooler — sunlight.",
+      activity: "🍂 Tilt a Flashlight: Shine a flashlight straight down onto a piece of paper, then shine it at an angle from the same distance. See how the light spreads out and looks dimmer at an angle? That's why tilted parts of Earth get less direct, cooler sunlight.",
       diagram: '<svg viewBox="0 0 340 190"><rect width="340" height="190" rx="14" fill="#0f1730"/>'
         + '<ellipse cx="170" cy="100" rx="130" ry="55" fill="none" stroke="#4d5b8a" stroke-width="1.5" stroke-dasharray="3 5"/>'
         + '<circle cx="170" cy="100" r="18" fill="#ffd166"/>'

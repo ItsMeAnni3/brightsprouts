@@ -1,5 +1,5 @@
-// BrightSprouts Academy — Geology category (LESSONS[20]): basic earth science for grade-schoolers.
-// Rocks & minerals, the rock cycle, inside the Earth, and fossils & gems — each with a diagram.
+// BrightSprouts Academy: Geology category (LESSONS[20]): basic earth science for grade-schoolers.
+// Rocks & minerals, the rock cycle, inside the Earth, and fossils & gems, each with a diagram.
 (function () {
   if (typeof LESSONS === "undefined") return;
   var LB = 'font-family="Fredoka, system-ui, sans-serif" font-size="12" fill="#2d2a4a"';
@@ -7,13 +7,13 @@
   LESSONS[20] = {
     rocks: {
       title: "Rocks & Minerals", emoji: "🪨",
-      intro: "The ground beneath your feet is made of rock — and every rock has a story. Let's meet the three kinds and learn how to tell them apart.",
+      intro: "The ground beneath your feet is made of rock, and every rock has a story. Let's meet the three kinds and learn how to tell them apart.",
       learn: [
         "Rocks are made of natural materials called minerals.",
         "There are three main types of rock, grouped by HOW they form: igneous, sedimentary and metamorphic.",
-        "Igneous rock forms when hot melted rock cools and hardens — like granite and basalt.",
-        "Sedimentary rock forms from layers of sand, mud and shells pressed together over time — like sandstone and limestone. Fossils hide here!",
-        "Metamorphic rock forms when heat and pressure change an existing rock — like marble (from limestone). A mineral's hardness is rated 1–10 on the Mohs scale, from soft talc to hard diamond."
+        "Igneous rock forms when hot melted rock cools and hardens, like granite and basalt.",
+        "Sedimentary rock forms from layers of sand, mud and shells pressed together over time, like sandstone and limestone. Fossils hide here!",
+        "Metamorphic rock forms when heat and pressure change an existing rock, like marble (from limestone). A mineral's hardness is rated 1–10 on the Mohs scale, from soft talc to hard diamond."
       ],
       activity: "🪨 Rock Hunt: Collect 5 rocks from outside. Are they smooth or rough? Do they have layers, sparkly crystals, or holes? Sort them and guess which type each might be!",
       diagram: '<svg viewBox="0 0 340 158"><rect width="340" height="158" rx="14" fill="#f7f4ee"/>'
@@ -44,13 +44,13 @@
       title: "The Rock Cycle", emoji: "🔁",
       intro: "Here's a secret: rocks are never finished! Over millions of years, any rock can slowly turn into another kind. That journey is the rock cycle.",
       learn: [
-        "Rocks change — very slowly — from one type to another in a never-ending loop called the rock cycle.",
+        "Rocks change, very slowly, from one type to another in a never-ending loop called the rock cycle.",
         "Melting turns rock into magma; when it cools, it becomes igneous rock.",
         "Weathering and erosion break rocks into tiny bits called sediment, which pile up and press into sedimentary rock.",
         "Heat and pressure deep underground squeeze rocks into metamorphic rock; enough heat melts them back into magma.",
         "The rock cycle is powered by Earth's inner heat and by the Sun, wind and water on the surface."
       ],
-      activity: "🔁 Crayon Rock Cycle (with an adult): Shave old crayons (sediment), press them (sedimentary), warm them gently (metamorphic), then melt and cool them (igneous) — the rock cycle in colour!",
+      activity: "🔁 Crayon Rock Cycle (with an adult): Shave old crayons (sediment), press them (sedimentary), warm them gently (metamorphic), then melt and cool them (igneous): the rock cycle in colour!",
       diagram: '<svg viewBox="0 0 340 210"><rect width="340" height="210" rx="14" fill="#fdf6ef"/>'
         + '<defs><marker id="rc" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="#8a86a8"/></marker></defs>'
         + '<g fill="none" stroke="#8a86a8" stroke-width="2.5" marker-end="url(#rc)">'
@@ -72,18 +72,18 @@
         { q: "Does the rock cycle happen quickly or very slowly?", a: "Very slowly, over long times" },
         { q: "Which surface forces break rocks apart?", a: "Wind, water, and ice" },
         { q: "The rock cycle is powered by Earth's inner heat and the ____.", a: "Sun" },
-        { q: "Can a metamorphic rock become a sedimentary rock?", a: "Yes — in the rock cycle any type can become another" }
+        { q: "Can a metamorphic rock become a sedimentary rock?", a: "Yes, in the rock cycle any type can become another" }
       ]
     },
     earth: {
       title: "Inside the Earth", emoji: "🌋",
-      intro: "What's under your feet, all the way down? Let's slice the Earth open like a giant peach and meet its layers — plus the volcanoes and earthquakes they cause.",
+      intro: "What's under your feet, all the way down? Let's slice the Earth open like a giant peach and meet its layers, plus the volcanoes and earthquakes they cause.",
       learn: [
         "Earth is made of layers: the thin crust we live on, the hot thick mantle below, and the metal core at the center.",
-        "The crust is cracked into giant pieces called tectonic plates that move very slowly — only a few centimeters a year.",
-        "When plates push, pull or slide past each other, they can cause earthquakes — sudden shaking of the ground.",
+        "The crust is cracked into giant pieces called tectonic plates that move very slowly: only a few centimeters a year.",
+        "When plates push, pull or slide past each other, they can cause earthquakes: sudden shaking of the ground.",
         "Volcanoes are openings where magma, ash and gases erupt from below; many form where plates meet.",
-        "The very center (the inner core) is solid metal and incredibly hot — thousands of degrees!"
+        "The very center (the inner core) is solid metal and incredibly hot: thousands of degrees!"
       ],
       activity: "🌋 Baking-Soda Volcano (with an adult): Build a mound around a small cup, add baking soda, then pour in vinegar with red colouring. The 'eruption' shows how gas pushes material up and out!",
       diagram: '<svg viewBox="0 0 340 200"><rect width="340" height="200" rx="14" fill="#f4f8ff"/>'
@@ -101,7 +101,7 @@
         { q: "The giant moving pieces of the crust are called tectonic ____.", a: "Plates" },
         { q: "Sudden shaking of the ground when plates move is an ____.", a: "Earthquake" },
         { q: "An opening where magma and ash erupt is a ____.", a: "Volcano" },
-        { q: "About how fast do tectonic plates move?", a: "Very slowly — a few centimeters a year" },
+        { q: "About how fast do tectonic plates move?", a: "Very slowly, a few centimeters a year" },
         { q: "Is Earth's inner core hot or cold?", a: "Extremely hot (thousands of degrees)" },
         { q: "Melted rock that erupts from a volcano is called ____.", a: "Lava" },
         { q: "Many volcanoes and earthquakes happen where plates ____.", a: "Meet (push, pull or slide)" },
@@ -112,11 +112,11 @@
       title: "Fossils & Gems", emoji: "💎",
       intro: "Rocks can hide treasures: the footprints of dinosaurs, and sparkling gems! Let's dig into fossils and crystals.",
       learn: [
-        "A fossil is the preserved remains or trace of a living thing from long ago — like bones, shells, footprints or leaves.",
+        "A fossil is the preserved remains or trace of a living thing from long ago, like bones, shells, footprints or leaves.",
         "Most fossils form in sedimentary rock: a plant or animal is buried in mud or sand that slowly hardens around it over thousands of years.",
         "Scientists who study fossils are called palaeontologists; fossils are clues about life in the past, including dinosaurs.",
         "Minerals can grow into beautiful crystals with flat sides and sharp edges, like quartz.",
-        "Gemstones are rare, pretty minerals cut and polished for jewellery — like diamonds, rubies and emeralds."
+        "Gemstones are rare, pretty minerals cut and polished for jewellery, like diamonds, rubies and emeralds."
       ],
       activity: "🦴 Make a Fossil: Press a shell or a leaf into playdough or clay to leave an imprint, then let it dry. That's how a 'trace fossil' captures a shape without the object itself!",
       diagram: '<svg viewBox="0 0 340 158"><rect width="340" height="158" rx="14" fill="#f7f4ee"/>'
