@@ -1,11 +1,11 @@
-// BrightSprouts Academy — Lesson data, Grades 1-6
+// BrightSprouts Academy: Lesson data, Grades 1-6
 // Math lessons use the auto worksheet generator in app.js (fresh problems every time!)
 const LESSONS = {
 
 1: {
   math: {
     title: "Counting & Adding to 20", emoji: "🔢",
-    intro: "Numbers are everywhere — on cakes, clocks, and even your fingers! Today we practice counting and adding small numbers.",
+    intro: "Numbers are everywhere: on cakes, clocks, and even your fingers! Today we practice counting and adding small numbers.",
     learn: [
       "Adding means putting groups together. 2 apples + 3 apples = 5 apples!",
       "You can count on your fingers, or draw dots and count them all.",
@@ -35,7 +35,7 @@ const LESSONS = {
   },
   vocabulary: {
     title: "My First Word Collection", emoji: "🦋",
-    intro: "Collecting new words is like collecting butterflies — each one is beautiful and makes you smarter!",
+    intro: "Collecting new words is like collecting butterflies: each one is beautiful and makes you smarter!",
     words: [
       ["happy", "feeling very good inside", "I am happy when we play outside."],
       ["giant", "very, very big", "The giant pumpkin won a prize."],
@@ -52,11 +52,11 @@ const LESSONS = {
     title: "My Five Amazing Senses", emoji: "👀",
     intro: "Your body has five super-tools called senses. They help you explore the whole world!",
     learn: [
-      "SEE with your eyes 👀 — colors, shapes, and light.",
-      "HEAR with your ears 👂 — music, voices, and birds.",
-      "SMELL with your nose 👃 — cookies, flowers, and rain.",
-      "TASTE with your tongue 👅 — sweet, salty, sour, and bitter.",
-      "TOUCH with your skin ✋ — soft, rough, hot, and cold."
+      "SEE with your eyes 👀: colors, shapes, and light.",
+      "HEAR with your ears 👂: music, voices, and birds.",
+      "SMELL with your nose 👃: cookies, flowers, and rain.",
+      "TASTE with your tongue 👅: sweet, salty, sour, and bitter.",
+      "TOUCH with your skin ✋: soft, rough, hot, and cold."
     ],
     questions: [
       { q: "Which sense do you use to enjoy music?", a: "Hearing (ears)" },
@@ -69,19 +69,19 @@ const LESSONS = {
   },
   history: {
     title: "My Family's Story", emoji: "🏠",
-    intro: "History isn't just about kings and castles — YOUR family has a history too, full of stories waiting to be discovered!",
+    intro: "History isn't just about kings and castles: YOUR family has a history too, full of stories waiting to be discovered!",
     learn: [
-      "History means true stories about the past — things that already happened.",
+      "History means true stories about the past: things that already happened.",
       "Your grandparents were once kids! They played different games and watched different shows.",
       "A family tree shows how everyone in a family is connected, like branches.",
-      "Old photos, letters, and recipes are 'artifacts' — treasures that tell stories."
+      "Old photos, letters, and recipes are 'artifacts': treasures that tell stories."
     ],
     questions: [
       { q: "What does 'history' mean?", a: "True stories about the past" },
       { q: "What does a family tree show?", a: "How family members are connected" },
       { q: "Name one 'artifact' a family might keep.", a: "Examples: old photos, letters, a recipe, a toy" },
       { q: "Were your grandparents ever children?", a: "Yes! Everyone was a child once." },
-      { q: "Ask a grown-up: what game did they love as a kid?", a: "Answers will vary — that's family history!" }
+      { q: "Ask a grown-up: what game did they love as a kid?", a: "Answers will vary; that's family history!" }
     ],
     activity: "🌳 Draw your family tree with you at the bottom and grandparents at the top. Add a fun fact about each person!"
   }
@@ -101,11 +101,11 @@ const LESSONS = {
   },
   reading: {
     title: "Story Order: First, Next, Last", emoji: "🎬",
-    intro: "Stories are like train rides — they go in order! Knowing what happens first, next, and last makes you a super reader.",
+    intro: "Stories are like train rides: they go in order! Knowing what happens first, next, and last makes you a super reader.",
     learn: [
       "Every story has a beginning, a middle, and an end.",
       "Clue words help: first, then, next, after that, finally.",
-      "If you mix up the order, the story stops making sense — you can't eat the cake before you bake it!",
+      "If you mix up the order, the story stops making sense: you can't eat the cake before you bake it!",
       "After reading, try retelling the story in your own words, in order."
     ],
     passage: "First, Mia planted a seed in a cup of dirt. Next, she watered it every morning and set it by the sunny window. After a week, a green sprout popped up! Then it grew taller and taller. Finally, a yellow flower bloomed. Mia gave the flower to her grandma, who smiled all day.",
@@ -116,7 +116,7 @@ const LESSONS = {
       { q: "What happened LAST in the story?", a: "Mia gave the flower to her grandma" },
       { q: "Which clue words show order? Name two.", a: "First, next, then, after, finally" }
     ],
-    activity: "🥪 Sandwich Steps: Tell someone how to make a sandwich using 'first, next, then, finally' — don't skip a step!"
+    activity: "🥪 Sandwich Steps: Tell someone how to make a sandwich using 'first, next, then, finally'; don't skip a step!"
   },
   vocabulary: {
     title: "Wonderful Describing Words", emoji: "🌈",
@@ -135,7 +135,7 @@ const LESSONS = {
   },
   science: {
     title: "Plants & Their Life Cycle", emoji: "🌱",
-    intro: "A giant oak tree starts as a tiny acorn. How? Plants have a life cycle — a circle of growing that never stops!",
+    intro: "A giant oak tree starts as a tiny acorn. How? Plants have a life cycle: a circle of growing that never stops!",
     learn: [
       "The cycle: seed → sprout (seedling) → young plant → flower → new seeds!",
       "Plants need 4 things: sunlight, water, air, and soil (with nutrients).",
@@ -153,7 +153,7 @@ const LESSONS = {
   },
   history: {
     title: "Community Helpers, Then & Now", emoji: "🚒",
-    intro: "Long ago, firefighters raced to fires in horse-drawn wagons! Communities have always had helpers — but their tools sure have changed.",
+    intro: "Long ago, firefighters raced to fires in horse-drawn wagons! Communities have always had helpers, but their tools sure have changed.",
     learn: [
       "A community is a place where people live, work, and help each other.",
       "Helpers include firefighters, doctors, teachers, farmers, and mail carriers.",
@@ -164,7 +164,7 @@ const LESSONS = {
       { q: "Name three community helpers.", a: "Examples: firefighter, doctor, teacher, farmer, mail carrier, police officer" },
       { q: "How did mail travel long ago?", a: "By horse (like the Pony Express)" },
       { q: "What was different about schools long ago?", a: "Many had only one room for all ages" },
-      { q: "What do historians love to compare?", a: "Then and now — the past and the present" },
+      { q: "What do historians love to compare?", a: "Then and now: the past and the present" },
       { q: "Which helper would you like to be, and why?", a: "Answers will vary" }
     ],
     activity: "📬 Thank a Helper: Draw a thank-you card for a community helper you know, and deliver it with a grown-up!"
@@ -174,14 +174,14 @@ const LESSONS = {
 3: {
   math: {
     title: "Multiplication Magic", emoji: "✖️",
-    intro: "Multiplication is a shortcut for adding the same number again and again. 4 bags with 3 candies each? That's 4 × 3 = 12 candies — no counting one-by-one!",
+    intro: "Multiplication is a shortcut for adding the same number again and again. 4 bags with 3 candies each? That's 4 × 3 = 12 candies, no counting one-by-one!",
     learn: [
-      "3 × 4 means '3 groups of 4' — draw 3 circles with 4 dots inside each.",
+      "3 × 4 means '3 groups of 4': draw 3 circles with 4 dots inside each.",
       "Order doesn't matter: 3 × 4 = 4 × 3. That cuts your memorizing in half!",
       "Tricks: ×2 is doubling, ×5 ends in 0 or 5, ×10 just adds a zero.",
-      "For 9s, use your fingers: for 9 × 4, bend your 4th finger — 3 fingers left, 6 right = 36!"
+      "For 9s, use your fingers: for 9 × 4, bend your 4th finger: 3 fingers left, 6 right = 36!"
     ],
-    activity: "🥚 Array Hunt: Find arrays around the house — egg cartons (2×6), muffin tins, window panes. Write the multiplication for each!"
+    activity: "🥚 Array Hunt: Find arrays around the house: egg cartons (2×6), muffin tins, window panes. Write the multiplication for each!"
   },
   reading: {
     title: "Finding the Main Idea", emoji: "🎯",
@@ -200,11 +200,11 @@ const LESSONS = {
       { q: "Why can octopuses fit through tiny cracks?", a: "Their bodies are soft" },
       { q: "Which sentence states the main idea?", a: "The first sentence" }
     ],
-    activity: "📰 One-Line News: After dinner, tell your family about your day in exactly ONE sentence — that's your day's main idea!"
+    activity: "📰 One-Line News: After dinner, tell your family about your day in exactly ONE sentence; that's your day's main idea!"
   },
   vocabulary: {
     title: "Powerful Verbs & Word Families", emoji: "⚡",
-    intro: "Verbs are action words — the engines of every sentence! Strong verbs make writing zoom, sparkle, and pounce.",
+    intro: "Verbs are action words: the engines of every sentence! Strong verbs make writing zoom, sparkle, and pounce.",
     words: [
       ["whisper", "to speak very softly", "She whispered the secret to her friend."],
       ["gobble", "to eat fast and greedily", "The turkey gobbled the corn in seconds."],
@@ -217,11 +217,11 @@ const LESSONS = {
       ["announce", "to tell everyone officially", "The principal announced a snow day!"],
       ["explore", "to travel and discover", "We explored the trail behind the park."]
     ],
-    activity: "🎬 Verb Charades: Act out 'soar', 'stumble', and 'gobble' — can your family guess each verb?"
+    activity: "🎬 Verb Charades: Act out 'soar', 'stumble', and 'gobble'; can your family guess each verb?"
   },
   science: {
     title: "Solids, Liquids & Gases", emoji: "🧊",
-    intro: "Everything around you — juice, air, your shoes — is made of matter. Matter comes in three main forms, and it can transform like magic!",
+    intro: "Everything around you, juice, air, your shoes, is made of matter. Matter comes in three main forms, and it can transform like magic!",
     learn: [
       "SOLIDS keep their shape: ice, rocks, pencils.",
       "LIQUIDS flow and take the shape of their container: water, milk, honey.",
@@ -267,24 +267,24 @@ const LESSONS = {
       "A fraction like 3/4 means 3 pieces out of 4 equal pieces. Bottom number (denominator) = total pieces; top (numerator) = pieces you have.",
       "Bigger denominator = smaller pieces! 1/8 of a pizza is smaller than 1/4."
     ],
-    activity: "🍕 Fraction Feast: At your next meal, cut something (toast, quesadilla) into 4 equal parts. Eat one part — say what fraction is left!"
+    activity: "🍕 Fraction Feast: At your next meal, cut something (toast, quesadilla) into 4 equal parts. Eat one part, then say what fraction is left!"
   },
   reading: {
     title: "Context Clues: Word Detective", emoji: "🔍",
-    intro: "Stuck on a hard word? Don't panic — the sentences around it are dropping clues like breadcrumbs. Follow them!",
+    intro: "Stuck on a hard word? Don't panic: the sentences around it are dropping clues like breadcrumbs. Follow them!",
     learn: [
       "Context clues are hints in nearby words that reveal a word's meaning.",
       "Definition clue: 'The canine, or dog, barked.' The meaning is right there!",
-      "Example clue: 'Reptiles, such as snakes and lizards...' — examples show the meaning.",
+      "Example clue: 'Reptiles, such as snakes and lizards...'; examples show the meaning.",
       "Contrast clue: 'Unlike his messy sister, Ben was tidy.' Opposites reveal meaning too."
     ],
-    passage: "The hikers reached the summit, the very top of the mountain, just before noon. They were famished — they hadn't eaten since dawn, and their stomachs growled like bears. Luca opened his pack and distributed the sandwiches, handing one to each hiker. From that height, the village below looked minuscule, tinier than a toy town.",
+    passage: "The hikers reached the summit, the very top of the mountain, just before noon. They were famished: they hadn't eaten since dawn, and their stomachs growled like bears. Luca opened his pack and distributed the sandwiches, handing one to each hiker. From that height, the village below looked minuscule, tinier than a toy town.",
     questions: [
       { q: "What does 'summit' mean? What clue told you?", a: "The very top of a mountain; the definition follows the comma" },
-      { q: "What does 'famished' mean?", a: "Extremely hungry — clue: they hadn't eaten since dawn, stomachs growled" },
+      { q: "What does 'famished' mean?", a: "Extremely hungry; clue: they hadn't eaten since dawn, stomachs growled" },
       { q: "What does 'distributed' mean?", a: "Handed out / gave to each person" },
-      { q: "What does 'minuscule' mean?", a: "Very tiny — clue: 'tinier than a toy town'" },
-      { q: "Which type of clue explains 'summit' — definition, example, or contrast?", a: "Definition clue" }
+      { q: "What does 'minuscule' mean?", a: "Very tiny; clue: 'tinier than a toy town'" },
+      { q: "Which type of clue explains 'summit': definition, example, or contrast?", a: "Definition clue" }
     ],
     activity: "🕵️ Clue Hunt: Find one unfamiliar word in any book tonight. Write your guess from context, then check a dictionary. Were you close?"
   },
@@ -307,33 +307,33 @@ const LESSONS = {
   },
   science: {
     title: "Ecosystems & Food Chains", emoji: "🦉",
-    intro: "In nature, everything is connected — every leaf, bug, and owl plays a part in one giant web of life.",
+    intro: "In nature, everything is connected: every leaf, bug, and owl plays a part in one giant web of life.",
     learn: [
       "An ecosystem is a community of living things plus their home (forest, pond, desert).",
       "A food chain shows who eats whom: grass → grasshopper → frog → hawk.",
       "Producers (plants) make their own food from sunlight. Consumers (animals) must eat. Decomposers (mushrooms, worms) recycle dead things into soil.",
-      "Remove one link and the whole chain feels it — that's why every creature matters!"
+      "Remove one link and the whole chain feels it; that's why every creature matters!"
     ],
     questions: [
       { q: "What is an ecosystem?", a: "A community of living things and their environment" },
       { q: "In the chain grass → rabbit → fox, which is the producer?", a: "Grass" },
       { q: "What job do decomposers do?", a: "They break down dead things and recycle them into soil" },
-      { q: "Why can't animals be producers?", a: "They can't make food from sunlight — they must eat" },
+      { q: "Why can't animals be producers?", a: "They can't make food from sunlight; they must eat" },
       { q: "What might happen if all frogs vanished from a pond?", a: "Insects they ate would multiply; animals that eat frogs would go hungry" }
     ],
     activity: "🍂 Backyard Safari: Spend 10 minutes outside and list every living thing you spot. Try to link three of them in a food chain!"
   },
   history: {
     title: "Ancient Greece: Olympics & Big Ideas", emoji: "🏛️",
-    intro: "Ancient Greece gave us the Olympics, theaters, and the idea that people should vote — pretty impressive for 2,500 years ago!",
+    intro: "Ancient Greece gave us the Olympics, theaters, and the idea that people should vote: pretty impressive for 2,500 years ago!",
     learn: [
       "Greece was made of city-states like Athens (lovers of learning) and Sparta (mighty warriors).",
-      "Athens invented democracy — rule by the people — where citizens voted on laws.",
+      "Athens invented democracy, rule by the people, where citizens voted on laws.",
       "The first Olympic Games (776 BC) honored the god Zeus, with running, wrestling, and chariot races.",
       "Greek thinkers like Socrates and Aristotle asked big questions we still discuss today. Greek myths told of gods like Zeus, Athena, and Poseidon."
     ],
     questions: [
-      { q: "What is a democracy?", a: "Rule by the people — citizens vote on laws and leaders" },
+      { q: "What is a democracy?", a: "Rule by the people; citizens vote on laws and leaders" },
       { q: "Which two famous city-states were very different?", a: "Athens (learning) and Sparta (warriors)" },
       { q: "Why were the first Olympics held?", a: "To honor the god Zeus" },
       { q: "Name a famous Greek thinker.", a: "Socrates, Plato, or Aristotle" },
@@ -357,18 +357,18 @@ const LESSONS = {
   },
   reading: {
     title: "Making Inferences: Read Between the Lines", emoji: "🧩",
-    intro: "Great readers are like detectives — authors don't tell you everything, they leave clues and trust YOU to figure the rest out.",
+    intro: "Great readers are like detectives: authors don't tell you everything, they leave clues and trust YOU to figure the rest out.",
     learn: [
       "An inference = clues from the text + what you already know.",
-      "If a character slams a door and won't talk, the author doesn't need to say 'she was angry' — you infer it!",
+      "If a character slams a door and won't talk, the author doesn't need to say 'she was angry'; you infer it!",
       "Look for clues in actions, dialogue, and descriptions.",
       "Always ask: 'What is the author showing me without saying it?'"
     ],
     passage: "Dev pressed his nose against the window for the tenth time that hour. The driveway was still empty. He checked that the banner was straight, rearranged the balloons again, and shushed his giggling cousins behind the couch. When headlights finally swept across the wall, his heart did a somersault. 'Places, everyone!' he whispered, and clicked off the lights.",
     questions: [
-      { q: "What event is about to happen? What clues tell you?", a: "A surprise party — banner, balloons, people hiding, lights off" },
+      { q: "What event is about to happen? What clues tell you?", a: "A surprise party: banner, balloons, people hiding, lights off" },
       { q: "Who is the party probably for?", a: "Whoever is arriving in the car (someone Dev is excited to surprise)" },
-      { q: "How does Dev feel? Which words show it?", a: "Excited/nervous — checking the window ten times, heart 'did a somersault'" },
+      { q: "How does Dev feel? Which words show it?", a: "Excited/nervous; checking the window ten times, heart 'did a somersault'" },
       { q: "Why does Dev turn off the lights?", a: "So the arriving person won't suspect the surprise" },
       { q: "What do you predict happens next?", a: "The person walks in and everyone yells 'Surprise!'" }
     ],
@@ -376,7 +376,7 @@ const LESSONS = {
   },
   vocabulary: {
     title: "Synonyms, Antonyms & Shades of Meaning", emoji: "🎨",
-    intro: "Why say 'good' when you could say 'superb'? Words have flavors — learn to pick the perfect one.",
+    intro: "Why say 'good' when you could say 'superb'? Words have flavors; learn to pick the perfect one.",
     words: [
       ["ancient", "extremely old (synonym: antique; antonym: modern)", "The ancient map showed a forgotten island."],
       ["rapid", "very fast (synonym: swift; antonym: sluggish)", "The rapid current carried the raft downstream."],
@@ -395,19 +395,19 @@ const LESSONS = {
     title: "Our Solar System Adventure", emoji: "🪐",
     intro: "Strap in, space explorer! Eight planets, one blazing star, and billions of miles of mystery are waiting.",
     learn: [
-      "The Sun is a star — a giant ball of burning gas that gives us light and heat.",
+      "The Sun is a star: a giant ball of burning gas that gives us light and heat.",
       "Order of planets: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune. (Trick: 'My Very Excited Mother Just Served Us Nachos!')",
       "Inner planets (Mercury–Mars) are small and rocky; outer planets (Jupiter–Neptune) are giant balls of gas and ice.",
       "Earth orbits the Sun in one year, spins once a day, and the Moon orbits Earth in about a month."
     ],
     questions: [
-      { q: "What is the Sun?", a: "A star — a giant ball of burning gas" },
+      { q: "What is the Sun?", a: "A star: a giant ball of burning gas" },
       { q: "Which planet is third from the Sun?", a: "Earth" },
       { q: "Name the largest planet.", a: "Jupiter" },
       { q: "What makes day and night?", a: "Earth spinning (rotating) once every 24 hours" },
       { q: "Which planets are the rocky 'inner planets'?", a: "Mercury, Venus, Earth, and Mars" }
     ],
-    activity: "🌌 Backyard Planet Walk: Place 8 objects across a room or yard to model planet spacing — notice how far Neptune is from the Sun!"
+    activity: "🌌 Backyard Planet Walk: Place 8 objects across a room or yard to model planet spacing; notice how far Neptune is from the Sun!"
   },
   history: {
     title: "Explorers & the Age of Discovery", emoji: "⛵",
@@ -416,7 +416,7 @@ const LESSONS = {
       "In the 1400s–1500s, European explorers sailed to find new trade routes for spices, silk, and gold.",
       "Columbus reached the Americas in 1492 (though people already lived there!). Magellan's crew first sailed all the way around the world.",
       "Sailors navigated with compasses, the stars, and maps that were often wrong or half-empty.",
-      "Exploration connected continents but also brought hardship to native peoples — history has both bright and dark sides."
+      "Exploration connected continents but also brought hardship to native peoples; history has both bright and dark sides."
     ],
     questions: [
       { q: "Why did explorers set sail in the 1400s?", a: "To find new trade routes for spices, silk, and gold" },
@@ -432,31 +432,31 @@ const LESSONS = {
 6: {
   math: {
     title: "Ratios, Rates & Percents", emoji: "📊",
-    intro: "Ratios and percents run the real world — recipes, sales, sports stats, and your phone battery. Time to speak their language!",
+    intro: "Ratios and percents run the real world: recipes, sales, sports stats, and your phone battery. Time to speak their language!",
     learn: [
       "A ratio compares two amounts: 2 cups flour to 1 cup sugar is 2:1.",
       "A rate compares different units: 120 miles in 2 hours = 60 miles per hour.",
       "'Percent' means 'out of 100'. 45% = 45/100 = 0.45.",
       "To find 20% of 50: convert to decimal (0.20) and multiply: 0.20 × 50 = 10. Or find 10% (5) and double it!"
     ],
-    activity: "🧃 Juice Lab: Mix juice and water in a 1:3 ratio, then a 1:1 ratio. Taste-test — which ratio wins in your family?"
+    activity: "🧃 Juice Lab: Mix juice and water in a 1:3 ratio, then a 1:1 ratio. Taste-test to see which ratio wins in your family!"
   },
   reading: {
     title: "Theme: The Message Behind the Story", emoji: "💡",
-    intro: "The theme is a story's hidden treasure — the life lesson the author buried for you to dig up.",
+    intro: "The theme is a story's hidden treasure: the life lesson the author buried for you to dig up.",
     learn: [
       "Theme is the big life message: 'true friendship takes work', 'honesty wins in the end'.",
       "Theme is NOT the topic. Topic: 'a dog'. Theme: 'loyalty means staying even when it's hard.'",
       "Find it by asking: How did the main character change? What did they learn?",
       "A summary retells key events in order; the theme is what those events teach."
     ],
-    passage: "Kira had practiced her solo for weeks, but at the auditions she heard Amara — the new girl — warming up, and her voice was extraordinary. Kira's stomach twisted. During Amara's turn, the music track glitched and stopped. The room went silent. Kira knew the song; she had practiced to it a hundred times. She stood, walked to the piano, and played so Amara could finish. Amara won the solo. But when the choir director created a duet just for the two of them, Kira understood she hadn't lost anything at all.",
+    passage: "Kira had practiced her solo for weeks, but at the auditions she heard Amara, the new girl, warming up, and her voice was extraordinary. Kira's stomach twisted. During Amara's turn, the music track glitched and stopped. The room went silent. Kira knew the song; she had practiced to it a hundred times. She stood, walked to the piano, and played so Amara could finish. Amara won the solo. But when the choir director created a duet just for the two of them, Kira understood she hadn't lost anything at all.",
     questions: [
       { q: "What difficult choice does Kira face?", a: "Whether to help her rival, Amara, when the music stopped" },
       { q: "What does Kira do, and what does it cost her?", a: "She plays piano so Amara can finish; Amara wins the solo Kira wanted" },
       { q: "How is Kira rewarded in the end?", a: "The director creates a duet for both girls" },
       { q: "What is the THEME of this story?", a: "Examples: kindness matters more than winning; helping others brings unexpected rewards" },
-      { q: "Why is 'a singing contest' NOT the theme?", a: "That's the topic — the theme is the life lesson the events teach" }
+      { q: "Why is 'a singing contest' NOT the theme?", a: "That's the topic; the theme is the life lesson the events teach" }
     ],
     activity: "🎬 Theme Detective: Watch any short film or favorite movie scene tonight and state its theme in one sentence. Compare answers with your family!"
   },
@@ -479,9 +479,9 @@ const LESSONS = {
   },
   science: {
     title: "Cells: The Building Blocks of Life", emoji: "🔬",
-    intro: "You are built from about 37 TRILLION microscopic living bricks called cells — and each one is busier than a city!",
+    intro: "You are built from about 37 TRILLION microscopic living bricks called cells, and each one is busier than a city!",
     learn: [
-      "All living things are made of cells — the smallest unit of life. Bacteria have one cell; you have trillions!",
+      "All living things are made of cells: the smallest unit of life. Bacteria have one cell; you have trillions!",
       "Cell city parts: the nucleus is city hall (holds DNA instructions), mitochondria are power plants (make energy), the membrane is the city wall (controls what enters).",
       "Plant cells have extras: a stiff cell wall and chloroplasts, the green solar panels that make food.",
       "Cells team up: similar cells form tissues → tissues form organs → organs form YOU."
@@ -489,15 +489,15 @@ const LESSONS = {
     questions: [
       { q: "What is the smallest unit of life?", a: "The cell" },
       { q: "Which part of the cell holds the DNA instructions?", a: "The nucleus" },
-      { q: "What do mitochondria do?", a: "Make energy — the cell's power plants" },
+      { q: "What do mitochondria do?", a: "Make energy: the cell's power plants" },
       { q: "Name two parts plant cells have that animal cells don't.", a: "Cell wall and chloroplasts" },
       { q: "Put in order from smallest to largest: organ, cell, tissue.", a: "Cell → tissue → organ" }
     ],
-    activity: "🍰 Edible Cell: Design a cell model from snacks — a cookie cell with a grape nucleus and sprinkle mitochondria. Label, then eat your science!"
+    activity: "🍰 Edible Cell: Design a cell model from snacks: a cookie cell with a grape nucleus and sprinkle mitochondria. Label, then eat your science!"
   },
   history: {
     title: "The Middle Ages: Castles & Knights", emoji: "🏰",
-    intro: "Drawbridges, jousting knights, and castle feasts — the Middle Ages were dramatic, dangerous, and fascinating!",
+    intro: "Drawbridges, jousting knights, and castle feasts: the Middle Ages were dramatic, dangerous, and fascinating!",
     learn: [
       "The Middle Ages (about 500–1500 AD) came after the Roman Empire fell in Europe.",
       "Feudalism was the deal of the day: kings gave land to lords, lords gave protection to peasants, and peasants farmed the land.",
@@ -507,7 +507,7 @@ const LESSONS = {
     questions: [
       { q: "When were the Middle Ages?", a: "About 500 to 1500 AD" },
       { q: "In feudalism, what did peasants give and receive?", a: "They farmed the land and received protection" },
-      { q: "What was chivalry?", a: "The knight's code of honor — bravery, loyalty, protecting the weak" },
+      { q: "What was chivalry?", a: "The knight's code of honor: bravery, loyalty, protecting the weak" },
       { q: "What were the steps to become a knight?", a: "Page, then squire, then knight" },
       { q: "Name two castle defenses.", a: "Moat, drawbridge, thick walls, towers" }
     ],
