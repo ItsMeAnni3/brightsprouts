@@ -143,6 +143,15 @@ const PHYS_SCI_SUBJECTS = [
   { key: "energy",     label: "Energy",                   emoji: "⚡" },
   { key: "electromag", label: "Electricity & Magnetism",  emoji: "🧲" }
 ];
+// Earth & Space Science (category 28): weather, water cycle/oceans, stars/galaxies and Earth's
+// rotation/seasons — deliberately NOT rocks (see Geology) or the solar system/spaceflight
+// (see Space), to avoid overlapping those two standalone tiles.
+const EARTHSPACE_SUBJECTS = [
+  { key: "weather",    label: "Weather & Sky",            emoji: "🌦️" },
+  { key: "watercycle", label: "Water Cycle & Oceans",     emoji: "🌊" },
+  { key: "stars",      label: "Stars & Galaxies",         emoji: "✨" },
+  { key: "rotation",   label: "Earth's Rotation & Seasons", emoji: "🍂" }
+];
 function subjectsFor(g) {
   if (g === 0) {
     const k = K_SUBJECTS.slice();
@@ -163,6 +172,7 @@ function subjectsFor(g) {
   if (g === 25) return SEL_SUBJECTS;
   if (g === 26) return PALEO_SUBJECTS;
   if (g === 27) return PHYS_SCI_SUBJECTS;
+  if (g === 28) return EARTHSPACE_SUBJECTS;
   // Grades 1–12: core subjects (+ Biology after Science from Grade 6) + folded-in extras
   // (+ the creative tools in Grades 1–6 only).
   let core = SUBJECTS.slice();
@@ -205,6 +215,7 @@ function gradeName(g) {
   if (g === 25) return "Let's Learn Feelings & Kindness";
   if (g === 26) return "Let's Learn Paleontology";
   if (g === 27) return "Let's Learn Physical Science";
+  if (g === 28) return "Let's Learn Earth & Space Science";
   return "Grade " + g;
 }
 // Build the creature SVG from the chosen parts. Order matters: back to front.
@@ -1158,7 +1169,7 @@ function homeView() {
   <div class="hero">
     <span class="big-emoji">🌱</span>
     <h1>BrightSprouts Academy</h1>
-    <p>Everything one family needs for <b>Kindergarten through Grade 12</b> — Math, Reading, Phonics, Vocabulary, Spelling, Writing, Science, Social Studies, Art and Music, plus Biology, Chemistry and Physics for older students. Then twelve <b>"Let's Learn" courses</b> — Geography, Space, Computer Science, Spanish, Geology, Paleontology, Physical Science, Time &amp; Money, The History of Us and Feelings &amp; Kindness. Every lesson prints. Made for parents. Loved by kids.</p>
+    <p>Everything one family needs for <b>Kindergarten through Grade 12</b> — Math, Reading, Phonics, Vocabulary, Spelling, Writing, Science, Social Studies, Art and Music, plus Biology, Chemistry and Physics for older students. Then thirteen <b>"Let's Learn" courses</b> — Geography, Space, Computer Science, Spanish, Geology, Paleontology, Physical Science, Earth &amp; Space Science, Time &amp; Money, The History of Us and Feelings &amp; Kindness. Every lesson prints. Made for parents. Loved by kids.</p>
     <button class="btn btn-primary" onclick="App.go('lessons')">🚀 Explore Lessons</button>
     <button class="btn btn-secondary" onclick="App.go('library')">📖 Books &amp; Stories</button>
   </div>
@@ -1185,11 +1196,11 @@ function homeView() {
 // ---------- Lessons ----------
 function lessonsView() {
   const tiles = [];
-  for (let g = 0; g <= 27; g++) {
+  for (let g = 0; g <= 28; g++) {
     if (g === 15 || g === 16 || g === 18 || g === 22) continue;  // now folded into each grade's tabs
     const locked = !canGrade(g);
     const label = g === 0 ? "🌈 Kindergarten" : g === 13 ? "🌍 Let's Learn Geography" : g === 14 ? "⚗️ Additional Learning Materials" : g === 17 ? "💻 Let's Learn Computer Science"
-                : g === 19 ? "⏳ Let's Learn The History of Us" : g === 20 ? "🪨 Let's Learn Geology" : g === 21 ? "💬 Let's Learn Spanish" : g === 23 ? "🕐 Let's Learn Time & Money" : g === 24 ? "🚀 Let's Learn Space" : g === 25 ? "💛 Let's Learn Feelings" : g === 26 ? "🦖 Let's Learn Paleontology" : g === 27 ? "⚛️ Let's Learn Physical Science" : "Grade " + g;
+                : g === 19 ? "⏳ Let's Learn The History of Us" : g === 20 ? "🪨 Let's Learn Geology" : g === 21 ? "💬 Let's Learn Spanish" : g === 23 ? "🕐 Let's Learn Time & Money" : g === 24 ? "🚀 Let's Learn Space" : g === 25 ? "💛 Let's Learn Feelings" : g === 26 ? "🦖 Let's Learn Paleontology" : g === 27 ? "⚛️ Let's Learn Physical Science" : g === 28 ? "🛰️ Let's Learn Earth & Space Science" : "Grade " + g;
     tiles.push(`<button class="grade-tile g${g}" onclick="App.openGrade(${g})">${locked ? '<span class="lock">🔒</span>' : ""}${label}</button>`);
   }
   // The arcade lives here now instead of the top bar. gameHub() so it always opens on the
@@ -1917,11 +1928,11 @@ function pricingView() {
           <li>Feelings &amp; Kindness, free for everyone</li>
           <li>The free classic books library</li>
           <li>Creature Maker &amp; Build It!</li>
-          <li>All 24 arcade games</li>
+          <li>All 25 arcade games</li>
           <li>10 moral-value stories · 2 custom stories</li>
           <li>Printable worksheets &amp; answer keys</li>
           <li class="no">Grades 3–12</li>
-          <li class="no">The 12 "Let's Learn" subject categories</li>
+          <li class="no">The 13 "Let's Learn" subject categories</li>
         </ul>
         ${u ? `<button class="btn btn-ghost" disabled>Your current plan${u.plan === "premium" ? " was this once!" : ""}</button>`
           : `<button class="btn btn-secondary" onclick="App.goAuth('signup')">Sign Up Free</button>`}
@@ -1933,7 +1944,7 @@ function pricingView() {
         <ul>
           <li><b>Every grade, K–12</b> — Math, Reading, Phonics, Vocabulary, Spelling, Writing, Science, History, Art &amp; Music</li>
           <li><b>High-school sciences</b> — Biology, Chemistry &amp; Physics</li>
-          <li><b>12 "Let's Learn" categories</b> — Geography, Geology, Paleontology, Physical Science, Spanish, The History of Us, Time &amp; Money, Space, Feelings, Computer Science, Additional Learning Materials &amp; Books</li>
+          <li><b>13 "Let's Learn" categories</b> — Geography, Geology, Paleontology, Physical Science, Earth &amp; Space Science, Spanish, The History of Us, Time &amp; Money, Space, Feelings, Computer Science, Additional Learning Materials &amp; Books</li>
           <li><b>US-aligned Social Studies</b> — 36 units including US History I, II &amp; III and Civics</li>
           <li><b>Endless worksheets</b> — press one button for a brand-new sheet, with printable answer keys</li>
           <li><b>Activity sheets</b> in every lesson, plus hands-on family activities</li>
@@ -2165,7 +2176,7 @@ const App = {
     const dflt = g === 0 ? "alphabet" : g === 13 ? "globe" : g === 14 ? "periodic"
                : g === 15 ? "readnow" : g === 16 ? "create" : g === 17 ? "basics"
                : g === 18 ? "engplan" : g === 19 ? "earth" : g === 20 ? "rocks"
-               : g === 21 ? "greetings" : g === 23 ? "clock" : g === 24 ? "spacecourse" : g === 25 ? "feelings" : g === 26 ? "digsite" : g === 27 ? "matter" : "math";
+               : g === 21 ? "greetings" : g === 23 ? "clock" : g === 24 ? "spacecourse" : g === 25 ? "feelings" : g === 26 ? "digsite" : g === 27 ? "matter" : g === 28 ? "weather" : "math";
     // Premium grades still open — landing on the free Books tab; other subjects show an upgrade card.
     state.subject = canGrade(g) ? dflt : "books";
     go("lesson");

@@ -153,7 +153,7 @@
         + '<circle cx="95" cy="40" r="12" fill="#ffd166" stroke="#e6483d" stroke-width="2"/>'
         + '<g ' + LB + ' text-anchor="middle"><text x="95" y="140">Closed circuit (bulb lights up)</text></g>'
         + '<rect x="230" y="65" width="80" height="28" rx="4" fill="#e63946"/><rect x="270" y="65" width="40" height="28" rx="4" fill="#4d96ff"/>'
-        + '<g ' + LB + ' text-anchor="middle" font-size="13" fill="#fff"><text x="250" y="84">N</text><text x="290" y="84">S</text></g>'
+        + '<g font-family="Fredoka, system-ui, sans-serif" text-anchor="middle" font-size="13" fill="#fff"><text x="250" y="84">N</text><text x="290" y="84">S</text></g>'
         + '<g fill="none" stroke="#8a86a8" stroke-width="1.5"><path d="M230 79 Q195 40 230 20 Q260 5 270 30"/><path d="M310 79 Q345 40 310 20 Q280 5 270 30"/></g>'
         + '<g ' + LB + ' text-anchor="middle"><text x="270" y="140">Magnet with field lines</text></g></svg>',
       questions: [
