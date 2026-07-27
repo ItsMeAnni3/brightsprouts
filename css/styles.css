@@ -109,6 +109,7 @@ main{max-width:1100px;margin:0 auto;padding:26px 18px 80px}
 .g27{background:linear-gradient(135deg,#1f5a8a,#4d96ff)}
 .g28{background:linear-gradient(135deg,#0f1730,#2ec4b6)}
 .g29{background:linear-gradient(135deg,#ff6b9d,#f2b705)}
+.g30{background:linear-gradient(135deg,#0e7490,#8ce99a)}
 .ggames{background:linear-gradient(135deg,#8338ec,#2ec4b6)}
 .glibrary{background:linear-gradient(135deg,#e26d5c,#ffd166);color:var(--ink)}
 .libnote{font-size:.78rem;color:#8a86a8;margin-top:-2px}
@@ -1462,3 +1463,77 @@ footer{background:var(--purple-dark);color:#cfc6ee;text-align:center;padding:20p
   .jk-hahas i{animation:none;opacity:1;transform:translate(12px,-26px)}
 }
 @media print{.jk-room{display:none}}
+
+/* ============ Paper Activity Studio (category 30) ============
+   On screen: a filterable grid of cards, and one open activity at a time. On paper: the grid and
+   filters disappear and the full booklet of all 100 prints instead, one activity per block. */
+.pa-studio{margin-top:16px}
+.pa-filters{display:flex;flex-direction:column;gap:8px;margin-bottom:6px}
+.pa-chips{display:flex;flex-wrap:wrap;gap:7px;justify-content:center}
+.pa-chip{--pac:var(--purple);cursor:pointer;background:#fff;border:2px solid #e6e0f5;border-radius:999px;
+  padding:6px 13px;font-family:var(--display);font-weight:700;font-size:.82rem;color:var(--ink);
+  transition:transform .12s}
+.pa-chip:hover{transform:translateY(-2px)}
+.pa-chip.active{background:var(--pac);border-color:var(--pac);color:#fff}
+.pa-levels .pa-chip.lv-easy{--pac:#2f9e44}
+.pa-levels .pa-chip.lv-medium{--pac:#c9822a}
+.pa-levels .pa-chip.lv-hard{--pac:#e2453b}
+.pa-count{text-align:center;color:#6c6790;font-size:.86rem;margin:12px 0}
+.pa-empty{text-align:center;color:#6c6790;padding:26px}
+
+.pa-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:14px}
+.pa-card{--pac:var(--purple);display:flex;flex-direction:column;align-items:stretch;gap:3px;cursor:pointer;
+  background:var(--card);border:none;border-top:5px solid var(--pac);border-radius:14px;padding:10px;
+  box-shadow:var(--shadow);text-align:center;transition:transform .14s}
+.pa-card:hover{transform:translateY(-4px)}
+.pa-art{width:100%;height:auto;display:block;border-radius:9px}
+.pa-name{font-family:var(--display);font-weight:700;font-size:.94rem;color:var(--ink);margin-top:6px}
+.pa-meta{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;align-items:center}
+.pa-lvl{font-style:normal;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;
+  padding:2px 8px;border-radius:999px;color:#fff}
+.pa-lvl.easy{background:#2f9e44} .pa-lvl.medium{background:#c9822a} .pa-lvl.hard{background:#e2453b}
+.pa-mins{font-style:normal;font-size:.74rem;color:#8a86a8;font-weight:700}
+.pa-theme{font-size:.72rem;color:var(--pac);font-weight:700}
+
+/* one activity, opened */
+.pa-detail{--pac:var(--purple);background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
+  border-top:6px solid var(--pac);padding:16px 18px 20px;margin-top:14px}
+.pa-back{border:none;background:none;color:var(--purple-dark);font-family:var(--display);font-weight:700;
+  cursor:pointer;padding:0 0 10px;font-size:.9rem}
+.pa-back:hover{color:var(--pink)}
+.pa-dhead{display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.pa-dart{flex:0 0 236px;max-width:100%}
+.pa-dinfo{flex:1 1 240px;min-width:0}
+.pa-dinfo h3{margin:2px 0 6px;color:var(--ink);font-size:1.3rem}
+.pa-blurb{color:#57547a;font-size:.92rem;line-height:1.5;margin-bottom:8px}
+.pa-cols{display:grid;grid-template-columns:1fr 2fr;gap:18px;margin-top:18px}
+.pa-needs,.pa-steps{background:#fbf9ff;border-radius:14px;padding:12px 16px}
+.pa-needs h4,.pa-steps h4{font-family:var(--display);color:var(--pac);margin-bottom:8px;font-size:1rem}
+.pa-needs ul{margin:0;padding-left:18px} .pa-needs li{margin:5px 0;line-height:1.45;font-size:.9rem}
+.pa-steps ol{margin:0;padding-left:20px} .pa-steps li{margin:8px 0;line-height:1.55}
+.pa-tip{margin-top:14px;background:#fff8e1;border-radius:12px;padding:10px 14px;font-size:.9rem;line-height:1.5}
+.pa-dtools{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+
+/* the printable booklet */
+.pa-book{display:none}
+.pa-booksec{--pac:var(--purple);margin-bottom:18px}
+.pa-booksec h3{color:var(--pac);border-bottom:2px solid var(--pac);padding-bottom:4px;margin-bottom:10px}
+.pa-booksec h3 span{display:block;font-family:"Segoe UI",Verdana,Arial,sans-serif;font-size:.75rem;
+  font-weight:400;color:#6c6790}
+.pa-bookitem{display:flex;gap:14px;margin-bottom:14px;break-inside:avoid;page-break-inside:avoid}
+.pa-bookart{flex:0 0 150px}
+.pa-bookbody{flex:1 1 auto;min-width:0}
+.pa-bookbody h4{font-family:var(--display);font-size:1rem;color:var(--ink);margin-bottom:4px}
+.pa-bneeds{font-size:.82rem;color:#57547a;margin-bottom:5px}
+.pa-bookbody ol{margin:0;padding-left:18px} .pa-bookbody li{font-size:.85rem;line-height:1.45;margin:3px 0}
+.pa-btip{font-size:.82rem;color:#6c6790;margin-top:4px;font-style:italic}
+
+@media (max-width:640px){
+  .pa-cols{grid-template-columns:1fr}
+  .pa-grid{grid-template-columns:repeat(auto-fill,minmax(146px,1fr));gap:10px}
+  .pa-dart{flex:1 1 100%}
+}
+@media print{
+  .pa-book{display:block}
+  .pa-bookitem{display:flex}
+}
