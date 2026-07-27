@@ -152,6 +152,13 @@ const EARTHSPACE_SUBJECTS = [
   { key: "stars",      label: "Stars & Galaxies",         emoji: "✨" },
   { key: "rotation",   label: "Earth's Rotation & Seasons", emoji: "🍂" }
 ];
+// Kids & Family Jokes (category 29): the joke show, the printable book, and a real little
+// lesson on how jokes are built — so the category earns its place next to the others.
+const JOKE_SUBJECTS = [
+  { key: "jokeshow",     label: "The Joke Show",    emoji: "📺" },
+  { key: "jokebook",     label: "The Joke Book",    emoji: "📖" },
+  { key: "howjokeswork", label: "How Jokes Work",   emoji: "🎭" }
+];
 function subjectsFor(g) {
   if (g === 0) {
     const k = K_SUBJECTS.slice();
@@ -173,6 +180,7 @@ function subjectsFor(g) {
   if (g === 26) return PALEO_SUBJECTS;
   if (g === 27) return PHYS_SCI_SUBJECTS;
   if (g === 28) return EARTHSPACE_SUBJECTS;
+  if (g === 29) return JOKE_SUBJECTS;
   // Grades 1–12: core subjects (+ Biology after Science from Grade 6) + folded-in extras
   // (+ the creative tools in Grades 1–6 only).
   let core = SUBJECTS.slice();
@@ -216,6 +224,7 @@ function gradeName(g) {
   if (g === 26) return "Let's Learn Paleontology";
   if (g === 27) return "Let's Learn Physical Science";
   if (g === 28) return "Let's Learn Earth & Space Science";
+  if (g === 29) return "Kids & Family Jokes";
   return "Grade " + g;
 }
 // Build the creature SVG from the chosen parts. Order matters: back to front.
@@ -1203,11 +1212,11 @@ function homeView() {
 // ---------- Lessons ----------
 function lessonsView() {
   const tiles = [];
-  for (let g = 0; g <= 28; g++) {
+  for (let g = 0; g <= 29; g++) {
     if (g === 15 || g === 16 || g === 18 || g === 22) continue;  // now folded into each grade's tabs
     const locked = !canGrade(g);
     const label = g === 0 ? "🌈 Kindergarten" : g === 13 ? "🌍 Let's Learn Geography" : g === 14 ? "⚗️ Additional Learning Materials" : g === 17 ? "💻 Let's Learn Computer Science"
-                : g === 19 ? "⏳ Let's Learn The History of Us" : g === 20 ? "🪨 Let's Learn Geology" : g === 21 ? "💬 Let's Learn Spanish" : g === 23 ? "🕐 Let's Learn Time & Money" : g === 24 ? "🚀 Let's Learn Space" : g === 25 ? "💛 Let's Learn Feelings" : g === 26 ? "🦖 Let's Learn Paleontology" : g === 27 ? "⚛️ Let's Learn Physical Science" : g === 28 ? "🛰️ Let's Learn Earth & Space Science" : "Grade " + g;
+                : g === 19 ? "⏳ Let's Learn The History of Us" : g === 20 ? "🪨 Let's Learn Geology" : g === 21 ? "💬 Let's Learn Spanish" : g === 23 ? "🕐 Let's Learn Time & Money" : g === 24 ? "🚀 Let's Learn Space" : g === 25 ? "💛 Let's Learn Feelings" : g === 26 ? "🦖 Let's Learn Paleontology" : g === 27 ? "⚛️ Let's Learn Physical Science" : g === 28 ? "🛰️ Let's Learn Earth & Space Science" : g === 29 ? "😂 Kids &amp; Family Jokes" : "Grade " + g;
     tiles.push(`<button class="grade-tile g${g}" onclick="App.openGrade(${g})">${locked ? '<span class="lock">🔒</span>' : ""}${label}</button>`);
   }
   // The arcade lives here now instead of the top bar. gameHub() so it always opens on the
@@ -1697,6 +1706,10 @@ function lessonView() {
     body += `<div class="bookfoot">${doodle("rocket")}
       <p><b>And the story keeps going!</b> Every era was built on the one before it: the tools, ideas, and discoveries all added up to the world we live in today. The next chapter of history hasn't been written yet… and one day it might have YOU in it. 🌱</p></div>`;
   }
+  // The joke show and the joke book both live in js/jokes.js. The show is mounted after paint
+  // (see App.afterRender) because its controller needs the screen elements to exist first.
+  if (lesson.jokeTv && typeof JokeTv !== "undefined") body += JokeTv._html();
+  if (lesson.jokeBook && typeof JokeTv !== "undefined") body += JokeTv._bookHtml();
   if (lesson.words) {
     body += `<table class="word-table"><tr><th>Word</th><th>Meaning</th><th>Example</th></tr>` +
       lesson.words.map(w => `<tr><td class="w">${esc(w[0])}</td><td>${esc(w[1])}</td><td><i>${esc(w[2])}</i></td></tr>`).join("") + `</table>`;
@@ -1704,7 +1717,7 @@ function lessonView() {
 
   const sheetKey = g + "-" + subj + (baseLesson.byCurrency ? "-" + curCcy : "") + (baseLesson.units ? "-u" + unitIdx : "");
   // Note: the Earth's Story timeline (earthTimeline) DOES get a worksheet; it has a questions bank.
-  const noQuiz = lesson.globeBoard || lesson.coloringBook || lesson.tracingSheet || lesson.drawTracing || lesson.csPlan || lesson.engPlan || lesson.erasTimeline || lesson.engineerBuild || (lesson.engBand != null) || lesson.readOnline || lesson.magicMaker || lesson.earthTimeline;
+  const noQuiz = lesson.globeBoard || lesson.coloringBook || lesson.tracingSheet || lesson.drawTracing || lesson.csPlan || lesson.engPlan || lesson.erasTimeline || lesson.engineerBuild || (lesson.engBand != null) || lesson.readOnline || lesson.magicMaker || lesson.earthTimeline || lesson.jokeTv || lesson.jokeBook;
   if (!noQuiz && !state.sheetCache[sheetKey]) state.sheetCache[sheetKey] = makeSheet(g, subj, lesson);
   const questions = noQuiz ? [] : state.sheetCache[sheetKey];
   const qHtml = questions.length ? `
@@ -1939,7 +1952,7 @@ function pricingView() {
           <li>10 moral-value stories · 2 custom stories</li>
           <li>Printable worksheets &amp; answer keys</li>
           <li class="no">Grades 3–12</li>
-          <li class="no">The 13 "Let's Learn" subject categories</li>
+          <li class="no">The 14 "Let's Learn" subject categories</li>
         </ul>
         ${u ? `<button class="btn btn-ghost" disabled>Your current plan${u.plan === "premium" ? " was this once!" : ""}</button>`
           : `<button class="btn btn-secondary" onclick="App.goAuth('signup')">Sign Up Free</button>`}
@@ -1951,7 +1964,7 @@ function pricingView() {
         <ul>
           <li><b>Every grade, K–12</b>: Math, Reading, Phonics, Vocabulary, Spelling, Writing, Science, History, Art &amp; Music</li>
           <li><b>High-school sciences</b>: Biology, Chemistry &amp; Physics</li>
-          <li><b>13 "Let's Learn" categories</b>: Geography, Geology, Paleontology, Physical Science, Earth &amp; Space Science, Spanish, The History of Us, Time &amp; Money, Space, Feelings, Computer Science, Additional Learning Materials &amp; Books</li>
+          <li><b>14 "Let's Learn" categories</b>: Geography, Geology, Paleontology, Physical Science, Earth &amp; Space Science, Spanish, The History of Us, Time &amp; Money, Space, Feelings, Computer Science, Kids &amp; Family Jokes, Additional Learning Materials &amp; Books</li>
           <li><b>US-aligned Social Studies</b>: 36 units including US History I, II &amp; III and Civics</li>
           <li><b>Endless worksheets</b>: press one button for a brand-new sheet, with printable answer keys</li>
           <li><b>Activity sheets</b> in every lesson, plus hands-on family activities</li>
@@ -2183,7 +2196,7 @@ const App = {
     const dflt = g === 0 ? "alphabet" : g === 13 ? "globe" : g === 14 ? "periodic"
                : g === 15 ? "readnow" : g === 16 ? "create" : g === 17 ? "basics"
                : g === 18 ? "engplan" : g === 19 ? "earth" : g === 20 ? "rocks"
-               : g === 21 ? "greetings" : g === 23 ? "clock" : g === 24 ? "spacecourse" : g === 25 ? "feelings" : g === 26 ? "digsite" : g === 27 ? "matter" : g === 28 ? "weather" : "math";
+               : g === 21 ? "greetings" : g === 23 ? "clock" : g === 24 ? "spacecourse" : g === 25 ? "feelings" : g === 26 ? "digsite" : g === 27 ? "matter" : g === 28 ? "weather" : g === 29 ? "jokeshow" : "math";
     // Premium grades still open, landing on the free Books tab; other subjects show an upgrade card.
     state.subject = canGrade(g) ? dflt : "books";
     go("lesson");
@@ -3100,6 +3113,8 @@ function render() {
     (state.view === "lesson" && state.grade === 13 && state.subject === "globe" && canSubject(13, "globe"));
   if (onGlobe) { if (typeof Globe !== "undefined") Globe.mount(App.globePick); }
   else if (typeof Globe !== "undefined") Globe.unmount();
+  // The joke show's controller needs its screen on the page before it can deal the first joke.
+  if (typeof JokeTv !== "undefined") JokeTv.mount();
 }
 // Optional deep links: #lessons, #stories, #maker, #pricing, #lesson-3-science, #story-12
 function applyHash() {

@@ -108,6 +108,7 @@ main{max-width:1100px;margin:0 auto;padding:26px 18px 80px}
 .g26{background:linear-gradient(135deg,#3f6b4a,#a3763f)}
 .g27{background:linear-gradient(135deg,#1f5a8a,#4d96ff)}
 .g28{background:linear-gradient(135deg,#0f1730,#2ec4b6)}
+.g29{background:linear-gradient(135deg,#ff6b9d,#f2b705)}
 .ggames{background:linear-gradient(135deg,#8338ec,#2ec4b6)}
 .glibrary{background:linear-gradient(135deg,#e26d5c,#ffd166);color:var(--ink)}
 .libnote{font-size:.78rem;color:#8a86a8;margin-top:-2px}
@@ -1326,3 +1327,128 @@ footer{background:var(--purple-dark);color:#cfc6ee;text-align:center;padding:20p
 .mlclose{position:absolute;top:10px;right:12px;border:none;background:none;color:#b8b2cc;font-size:1rem;padding:4px}
 .mlclose:hover{color:var(--ink)}
 @media print{.mlcard{display:none}}
+
+/* ============ Kids & Family Jokes (category 29) ============
+   An old tube television: wood-grain case, a curved glass screen with scanlines and a glare
+   sweep, chunky dials and a speaker grille. Sprout hosts from the left, Bud giggles on the
+   right. Everything here is decoration except .jk-screen, which holds the actual joke. */
+.jk-room{margin:18px 0 6px}
+.jk-tv{max-width:560px;margin:0 auto;position:relative}
+
+/* ---- aerial ---- */
+.jk-aerial{height:52px;position:relative}
+.jk-aerial i{position:absolute;left:50%;bottom:0;width:4px;height:52px;border-radius:4px;
+  background:linear-gradient(180deg,#c9cbd6,#8f93a3);transform-origin:bottom center}
+.jk-aerial i:first-child{transform:rotate(-27deg)}
+.jk-aerial i:last-child{transform:rotate(27deg)}
+.jk-aerial::after{content:"";position:absolute;left:50%;bottom:-6px;width:26px;height:14px;
+  margin-left:-13px;border-radius:6px 6px 3px 3px;background:#6f7382}
+
+/* ---- the case ---- */
+.jk-case{background:linear-gradient(160deg,#a3763f 0%,#8a5f2e 46%,#6d4c22 100%);
+  border-radius:26px;padding:18px 18px 14px;
+  box-shadow:0 16px 34px rgba(45,42,74,.34), inset 0 2px 0 rgba(255,255,255,.18)}
+.jk-screenwrap{position:relative;border-radius:20px;overflow:hidden;background:#12131c;padding:12px;
+  box-shadow:inset 0 0 0 6px #2a2c3b, inset 0 0 26px rgba(0,0,0,.75)}
+.jk-screen{position:relative;border-radius:14px;min-height:308px;padding:10px 14px 14px;
+  background:radial-gradient(120% 100% at 50% 18%, #1d5b7a 0%, #0e2f45 62%, #071a28 100%);
+  display:flex;flex-direction:column;align-items:center;overflow:hidden}
+/* curved-glass glare, and the faint horizontal lines of a CRT */
+.jk-glass{position:absolute;inset:12px;border-radius:14px;pointer-events:none;
+  background:linear-gradient(128deg,rgba(255,255,255,.20) 0%,rgba(255,255,255,.05) 26%,rgba(255,255,255,0) 46%)}
+.jk-scan{position:absolute;inset:12px;border-radius:14px;pointer-events:none;opacity:.28;
+  background:repeating-linear-gradient(180deg,rgba(0,0,0,.5) 0 1px,rgba(0,0,0,0) 1px 4px)}
+
+.jk-badge{align-self:flex-start;font-family:var(--display);font-weight:700;font-size:.76rem;
+  letter-spacing:.03em;color:#fff;background:rgba(255,255,255,.18);padding:3px 11px;border-radius:999px}
+.jk-stage{display:flex;align-items:flex-end;justify-content:center;gap:10px;margin-top:-2px}
+.jk-host{position:relative;text-align:center}
+.jk-host svg{width:128px;height:140px;display:block}
+.jk-name{display:block;font-family:var(--display);font-weight:700;font-size:.72rem;color:#cfe9ff;margin-top:-4px}
+.jk-sprout .jk-micarm{transform-origin:60px 88px;animation:jkMic 3.4s ease-in-out infinite}
+@keyframes jkMic{0%,100%{transform:rotate(0)}50%{transform:rotate(-7deg)}}
+.jk-bud .jk-petals{transform-origin:60px 42px;animation:jkPetal 5s ease-in-out infinite}
+@keyframes jkPetal{0%,100%{transform:rotate(0)}50%{transform:rotate(9deg)}}
+
+/* Bud's laugh: the whole flower doubles over and the petals whirl. */
+.jk-buddy.jk-laughing .jk-bud{animation:jkLaugh .42s ease-in-out 6}
+@keyframes jkLaugh{
+  0%,100%{transform:translateY(0) rotate(0)}
+  30%    {transform:translateY(5px) rotate(-8deg)}
+  65%    {transform:translateY(-3px) rotate(7deg)}
+}
+.jk-buddy.jk-laughing .jk-petals{animation:jkSpin 1.1s linear 3}
+@keyframes jkSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.jk-buddy.jk-laughing .jk-budmouth{transform-origin:60px 50px;animation:jkChomp .42s ease-in-out 6}
+@keyframes jkChomp{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.5)}}
+.jk-hahas{position:absolute;left:50%;top:-6px;width:0;height:0}
+.jk-hahas i{position:absolute;left:0;top:0;font-family:var(--display);font-weight:700;font-style:normal;
+  font-size:1rem;color:#ffd166;white-space:nowrap;opacity:0;animation:jkHa 1.5s ease-out forwards}
+.jk-hahas i:nth-child(2){color:#ff9f68}
+.jk-hahas i:nth-child(3){color:#8fe36a}
+@keyframes jkHa{
+  0%  {opacity:0;transform:translate(-10px,10px) scale(.6) rotate(-8deg)}
+  25% {opacity:1}
+  100%{opacity:0;transform:translate(34px,-52px) scale(1.25) rotate(14deg)}
+}
+
+.jk-speech{margin-top:8px;background:#fffdf7;color:var(--ink);border-radius:14px;padding:9px 13px;
+  font-weight:700;font-size:.94rem;line-height:1.45;text-align:center;max-width:94%;
+  box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.jk-punch{margin-top:8px;background:linear-gradient(135deg,var(--yellow),var(--orange));color:#3a2c05;
+  border-radius:14px;padding:9px 13px;font-family:var(--display);font-weight:700;font-size:1.06rem;
+  line-height:1.4;text-align:center;max-width:94%;animation:jkPop .38s cubic-bezier(.2,1.5,.4,1)}
+@keyframes jkPop{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+
+/* ---- controls below the screen ---- */
+.jk-panel{display:flex;align-items:center;gap:12px;margin-top:12px}
+.jk-knobs{display:flex;flex-direction:column;gap:8px;flex:0 0 auto}
+.jk-knobs i{display:block;width:26px;height:26px;border-radius:50%;
+  background:radial-gradient(circle at 34% 30%,#4a4560,#26233a);box-shadow:inset 0 -2px 3px rgba(0,0,0,.5)}
+.jk-buttons{flex:1;display:flex;gap:8px;align-items:center;min-width:0}
+.jk-btn{border:none;border-radius:999px;font-family:var(--display);font-weight:700;cursor:pointer}
+.jk-go{flex:1;min-width:0;background:linear-gradient(135deg,#6bcb77,#2f9e44);color:#fff;
+  padding:12px 14px;font-size:1rem;box-shadow:0 4px 0 #24702f}
+.jk-go:active{transform:translateY(2px);box-shadow:0 2px 0 #24702f}
+.jk-sound{width:42px;height:42px;flex:0 0 auto;background:#4a4560;color:#fff;font-size:16px}
+.jk-grille{flex:0 0 auto;width:44px;height:34px;border-radius:6px;
+  background:repeating-linear-gradient(180deg,#5c4526 0 3px,#3f2f19 3px 6px)}
+.jk-legs{display:flex;justify-content:space-between;padding:0 46px}
+.jk-legs i{display:block;width:16px;height:16px;border-radius:0 0 6px 6px;background:#5c4526}
+
+/* ---- channel picker ---- */
+.jk-tuner{text-align:center;font-weight:700;color:var(--purple-dark);margin:16px 0 8px}
+.jk-channels{display:grid;grid-template-columns:repeat(auto-fit,minmax(122px,1fr));gap:8px;max-width:620px;margin:0 auto}
+.jk-ch{--jkc:var(--purple);display:flex;align-items:center;gap:7px;cursor:pointer;background:#fff;
+  border:2px solid #e6e0f5;border-radius:999px;padding:7px 12px;font-family:var(--display);
+  font-weight:700;font-size:.82rem;color:var(--ink);transition:transform .12s}
+.jk-ch:hover{transform:translateY(-2px)}
+.jk-ch.active{background:var(--jkc);border-color:var(--jkc);color:#fff}
+.jk-chall{--jkc:var(--purple-dark)}
+.jk-chnum{font-size:1.05rem;line-height:1}
+.jk-chname{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.jk-count{text-align:center;color:#6c6790;font-size:.85rem;margin-top:12px}
+
+/* ---- the printable joke book ---- */
+.jk-book{margin-top:10px}
+.jk-booksec{--jkc:var(--purple);border-left:5px solid var(--jkc);border-radius:12px;
+  background:#fdfbff;padding:12px 16px;margin-bottom:16px;break-inside:avoid}
+.jk-booksec h3{color:var(--jkc);margin-bottom:8px}
+.jk-booksec h3 span{display:block;font-family:"Segoe UI",Verdana,Arial,sans-serif;
+  font-size:.76rem;font-weight:400;color:#6c6790}
+.jk-booksec ol{margin:0;padding-left:22px}
+.jk-booksec li{margin-bottom:9px;line-height:1.45;break-inside:avoid}
+.jk-q{display:block;font-weight:700;color:var(--ink)}
+.jk-a{display:block;color:var(--purple-dark);font-style:italic}
+
+@media (max-width:520px){
+  .jk-host svg{width:96px;height:105px}
+  .jk-screen{min-height:274px}
+  .jk-channels{grid-template-columns:repeat(auto-fit,minmax(108px,1fr))}
+}
+@media (prefers-reduced-motion: reduce){
+  .jk-sprout .jk-micarm,.jk-bud .jk-petals,.jk-buddy.jk-laughing .jk-bud,
+  .jk-buddy.jk-laughing .jk-petals,.jk-buddy.jk-laughing .jk-budmouth,.jk-punch{animation:none}
+  .jk-hahas i{animation:none;opacity:1;transform:translate(12px,-26px)}
+}
+@media print{.jk-room{display:none}}

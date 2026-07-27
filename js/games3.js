@@ -407,6 +407,7 @@
     },
 
     csquiz:    function () { return orFallback(bankQuestion(poolOfCategory(17))); },
+    jokequiz:  function () { return orFallback(bankQuestion(poolOfCategory(29))); },
     moneyquiz: function () { return orFallback(bankQuestion(poolOfCategory(23))); },
 
     // Flora & Fauna: match a common name to its scientific name (the per-country species lists).
@@ -576,6 +577,7 @@
     { key: "artquiz",      name: "Art Studio",         emoji: "🖼️", desc: "Colours, lines, shapes and how artists mix them.", level: "Easy", subject: "Visual Art",      theme: "sunrise" },
     { key: "sciencequiz",  name: "Science Sprout",     emoji: "🔬", desc: "Senses, plants, weather, animals and matter.",   level: "Easy",   subject: "Science",          theme: "forest" },
     { key: "timeunits",    name: "Time Traveller",     emoji: "⏳", desc: "Seconds, minutes, hours, days and years.",       level: "Easy",   subject: "Time",             theme: "sand" },
+    { key: "jokequiz",     name: "Joke Detective",     emoji: "🎭", desc: "Set-ups, punchlines, puns and what makes them funny.", level: "Easy", subject: "Jokes",         theme: "candy" },
 
     { key: "placevalue",   name: "Place Value Pro",    emoji: "🏷️", desc: "Ones, tens, hundreds — what is each digit worth?", level: "Medium", subject: "Maths",          theme: "ocean" },
     { key: "rounding",     name: "Round It Off",       emoji: "🎯", desc: "Round to the nearest 10, 100 or 1000.",          level: "Medium", subject: "Maths",            theme: "sky" },
