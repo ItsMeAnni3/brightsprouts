@@ -1273,6 +1273,20 @@ footer{background:var(--purple-dark);color:#cfc6ee;text-align:center;padding:20p
 .sproutbot-foot input:focus{outline:none;border-color:var(--purple)}
 .sproutbot-foot button{background:var(--pink);color:#fff;border:none;width:40px;height:40px;border-radius:50%;font-size:16px;cursor:pointer;flex:0 0 auto;display:flex;align-items:center;justify-content:center}
 .sproutbot-foot button:disabled{opacity:.5;cursor:default}
+/* Ask-out-loud microphone. Teal at rest so it reads as a separate action from pink Send;
+   while it listens it turns red and pulses, which is the only cue a pre-reader gets that the
+   microphone is live — so it must never be subtle. */
+.sproutbot-foot button.sb-mic{background:var(--teal);font-size:15px}
+/* Recording red, deliberately not the pink of Send — side by side at 40px a child has to be able
+   to tell the two buttons apart at a glance. */
+.sproutbot-foot button.sb-mic.sb-listening{background:#e2453b;animation:sbPulse 1.1s ease-in-out infinite}
+@keyframes sbPulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(226,69,59,.55)}
+  50%    {box-shadow:0 0 0 9px rgba(226,69,59,0)}
+}
+@media (prefers-reduced-motion: reduce){
+  .sproutbot-foot button.sb-mic.sb-listening{animation:none;box-shadow:0 0 0 4px rgba(226,69,59,.45)}
+}
 
 @media (max-width:460px){
   .sproutbot-fab{right:14px;bottom:76px;width:84px;height:84px}

@@ -300,6 +300,58 @@
     }, delay);
   }
 
+  // ---- Microphone: ask Sprout out loud instead of typing ----
+  // A child who cannot spell "photosynthesis" can still say it, so the mic is the main way in
+  // for younger children. It only ever runs between a tap and one recognised sentence.
+  var MIC_ERRORS = {
+    "not-allowed": "I can't hear you yet! A grown-up needs to let this page use the microphone. You can always type your question instead. 🌱",
+    "service-not-allowed": "I can't hear you yet! A grown-up needs to let this page use the microphone. You can always type your question instead. 🌱",
+    "no-speech": "I didn't catch that! Tap the microphone and try again, a bit closer. 🎤",
+    "audio-capture": "I can't find a microphone on this device, but you can type your question and I'll still answer! ⌨️",
+    "network": "My listening ears need the internet and it looks offline. Try typing your question instead! 🌱"
+  };
+  var listening = false;
+
+  function setMicState(on) {
+    listening = on;
+    if (!els.micBtn) return;
+    els.micBtn.classList.toggle("sb-listening", on);
+    els.micBtn.textContent = on ? "⏹" : "🎤";
+    els.micBtn.setAttribute("aria-label", on ? "Stop listening" : "Ask out loud");
+    els.micBtn.title = on ? "Stop listening" : "Ask out loud";
+    if (els.input) {
+      els.input.placeholder = on ? "Listening… say your question!" : "Ask Sprout something...";
+      els.input.setAttribute("aria-live", on ? "polite" : "off");
+    }
+  }
+
+  function stopMic() {
+    if (typeof Listen !== "undefined") Listen.stop();
+    setMicState(false);
+  }
+
+  function toggleMic() {
+    if (listening) { stopMic(); return; }
+    if (typeof Listen === "undefined" || !Listen.supported()) return;
+    if (els.input) els.input.value = "";
+    setMicState(true);
+    Listen.start({
+      // show the words landing in the box so the child can see they are being heard
+      onPartial: function (text) { if (els.input) els.input.value = text; },
+      onResult: function (text) {
+        stopMic();
+        if (els.input) els.input.value = text;
+        respondTo(text);          // spoken questions send themselves; no second tap needed
+      },
+      onError: function (code) {
+        stopMic();
+        if (els.input) els.input.value = "";
+        addMsg(MIC_ERRORS[code] || "My listening ears aren't working just now, but you can type your question! 🌱", "bot");
+      },
+      onEnd: function () { setMicState(false); }
+    });
+  }
+
   function openPanel() {
     if (!mounted) mount();
     open = true;
@@ -312,6 +364,7 @@
     open = false;
     if (els.panel) els.panel.style.display = "none";
     if (els.fab) els.fab.classList.remove("sb-hide");
+    stopMic();                                    // never leave the microphone live behind a closed window
     if (typeof Speech !== "undefined") Speech.stop();
     document.removeEventListener("keydown", onEscape);
   }
@@ -341,6 +394,7 @@
       '<div class="sb-chipswrap" id="sb-chipswrap"><div class="sb-chips" id="sb-chips"></div></div>' +
       '<div class="sproutbot-foot">' +
         '<input type="text" id="sb-input" maxlength="120" autocomplete="off" placeholder="Ask Sprout something..." aria-label="Ask Sprout a question">' +
+        '<button type="button" id="sb-mic" class="sb-mic" aria-label="Ask out loud" title="Ask out loud">🎤</button>' +
         '<button type="button" id="sb-send" aria-label="Send">➤</button>' +
       '</div>';
     document.body.appendChild(panel);
@@ -351,6 +405,7 @@
     els.chipsWrap = document.getElementById("sb-chipswrap");
     els.chips = document.getElementById("sb-chips");
     els.input = document.getElementById("sb-input");
+    els.micBtn = document.getElementById("sb-mic");
     els.sendBtn = document.getElementById("sb-send");
     els.muteBtn = document.getElementById("sb-mute");
     els.closeBtn = document.getElementById("sb-close");
@@ -360,6 +415,16 @@
     els.closeBtn.addEventListener("click", closePanel);
     els.sendBtn.addEventListener("click", function () { respondTo(els.input.value); });
     els.input.addEventListener("keydown", function (e) { if (e.key === "Enter") respondTo(els.input.value); });
+
+    // A button that does nothing is worse than no button, so on a browser without speech
+    // recognition (Firefox, most in-app browsers) the microphone simply is not offered.
+    if (typeof Listen !== "undefined" && Listen.supported()) {
+      els.micBtn.addEventListener("click", toggleMic);
+      els.input.addEventListener("input", function () { if (listening) stopMic(); });
+    } else {
+      els.micBtn.parentNode.removeChild(els.micBtn);
+      els.micBtn = null;
+    }
 
     STARTER_CHIPS.forEach(function (c) {
       var chip = document.createElement("button");

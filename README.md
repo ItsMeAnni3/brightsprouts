@@ -112,6 +112,19 @@ Factual data is verified against outside sources rather than trusted from memory
 
 **Known limitation:** prose facts in the science/history lessons and reading-comprehension answer keys are human-written and not machine-verifiable.
 
+## 🎤 The microphone in Sprout's chat (what to tell families)
+
+Children can tap the microphone in Sprout's chat window and ask a question out loud instead of typing it. **Read this before you write your privacy policy**, because the two halves of the browser's speech feature behave very differently:
+
+| Feature | Where it runs |
+|---|---|
+| **Read Aloud** (Sprout's voice, lesson audio, Spelling Bee) | Entirely on the device. The voice ships with the operating system; nothing leaves the computer. |
+| **The microphone** (asking Sprout out loud) | **Not local.** Chrome and Edge stream the recorded audio to a cloud speech service to turn it into text. Safari does more of it on-device. |
+
+The app is built to keep that as small as possible: the microphone is never on at page load, it starts only when a child taps the button, it stops as soon as it has one sentence, it stops when the chat window closes, and BrightSprouts itself never records, stores or transmits any audio. But the audio does reach the browser vendor, and on a children's site that is worth saying plainly in your privacy policy.
+
+Browsers without speech recognition (Firefox, some in-app browsers) simply don't show the microphone button — typing still works everywhere. To remove the feature entirely, delete the `sb-mic` button from `js/sprout-bot.js`.
+
 ## 📁 Files
 
 ```
