@@ -1,7 +1,7 @@
 // BrightSprouts Academy — service worker.
 // Makes the installed app open instantly and keep working with no internet.
 // Bump CACHE whenever you deploy so users pick up the new version.
-const CACHE = "brightsprouts-v12";
+const CACHE = "brightsprouts-v13";
 
 const PRECACHE = [
   "./",
@@ -31,6 +31,7 @@ const PRECACHE = [
   "./js/arcade.js",
   "./js/spelling-bee.js",
   "./js/games2.js",
+  "./js/games3.js",
   "./js/speech.js",
   "./js/globe-data.js",
   "./js/globe.js",

@@ -824,13 +824,41 @@ footer{background:var(--purple-dark);color:#cfc6ee;text-align:center;padding:20p
   padding:22px 16px;text-align:center;border-top:6px solid var(--teal);cursor:pointer;
   transition:transform .15s}
 .gtile:hover{transform:translateY(-4px)}
-.gtile:nth-child(2){border-top-color:var(--pink)}
-.gtile:nth-child(3){border-top-color:var(--yellow)}
-.gtile:nth-child(4){border-top-color:var(--blue)}
-.gtile:nth-child(5){border-top-color:var(--orange)}
 .gtemoji{font-size:2.6rem;line-height:1}
 .gtile h3{margin:8px 0 4px;color:var(--purple-dark)}
 .gtile p{font-size:.85rem;color:#6c6790;margin-bottom:12px}
+
+/* ---------- Per-game colour themes ----------
+   Every arcade game carries a `theme` (see js/games3.js), which becomes a .gt-* class on both
+   its hub tile and its game screen. Each theme only sets four variables; the rules below turn
+   those into the border, wash, headings and answer buttons, so a new theme is four colours.
+   The optional fifth, --gt-on1, is the text colour that reads on --gt-1: the pale themes take
+   dark ink instead of white so the Play button keeps its contrast. */
+.gt-lemon  {--gt-1:#f2b705;--gt-2:#ffd166;--gt-ink:#8a6300;--gt-soft:#fff8e1;--gt-on1:var(--ink)}
+.gt-sky    {--gt-1:#4d96ff;--gt-2:#7fc4ff;--gt-ink:#1b5fbf;--gt-soft:#eaf3ff;--gt-on1:var(--ink)}
+.gt-mint   {--gt-1:#2ec4b6;--gt-2:#7ee0d3;--gt-ink:#16736a;--gt-soft:#e6faf7;--gt-on1:var(--ink)}
+.gt-candy  {--gt-1:#ff6b9d;--gt-2:#ffb3cd;--gt-ink:#b52f63;--gt-soft:#fff0f5;--gt-on1:var(--ink)}
+.gt-berry  {--gt-1:#d6336c;--gt-2:#ff8fb1;--gt-ink:#8f1d47;--gt-soft:#ffeef3}
+.gt-grape  {--gt-1:#7c5cbf;--gt-2:#b39ddb;--gt-ink:#5d3fa0;--gt-soft:#f3eefc}
+.gt-sunrise{--gt-1:#ff9f68;--gt-2:#ffcf9e;--gt-ink:#b45a1c;--gt-soft:#fff2e6;--gt-on1:var(--ink)}
+.gt-forest {--gt-1:#237a35;--gt-2:#8ce99a;--gt-ink:#1e6b2c;--gt-soft:#eaf9ec}
+.gt-sand   {--gt-1:#c9a227;--gt-2:#e8cf7a;--gt-ink:#7d6210;--gt-soft:#fbf5e2;--gt-on1:var(--ink)}
+.gt-ocean  {--gt-1:#1f6feb;--gt-2:#6fb0ff;--gt-ink:#12447f;--gt-soft:#e9f1ff}
+.gt-slate  {--gt-1:#5a6b8c;--gt-2:#9fb0c9;--gt-ink:#37455e;--gt-soft:#eef1f6}
+.gt-clay   {--gt-1:#8a5f2e;--gt-2:#d6ab7c;--gt-ink:#6d4c22;--gt-soft:#f8f0e6}
+.gt-galaxy {--gt-1:#5b21b6;--gt-2:#a78bfa;--gt-ink:#3b1478;--gt-soft:#f1ebff}
+.gt-jungle {--gt-1:#4a7c1f;--gt-2:#9ccc65;--gt-ink:#2f5411;--gt-soft:#f0f7e6}
+.gt-flame  {--gt-1:#cf332a;--gt-2:#ff8a7a;--gt-ink:#9e2019;--gt-soft:#ffeeec}
+.gt-frost  {--gt-1:#0e7490;--gt-2:#67e8f9;--gt-ink:#0a5266;--gt-soft:#e6f8fb}
+
+.gtile[class*="gt-"]{border-top-color:var(--gt-1);
+  background:linear-gradient(180deg,var(--gt-soft) 0%,var(--card) 58%)}
+.gtile[class*="gt-"] h3{color:var(--gt-ink)}
+.gtile[class*="gt-"] .gtemoji{display:inline-flex;align-items:center;justify-content:center;
+  width:74px;height:74px;border-radius:50%;background:var(--gt-soft);
+  box-shadow:inset 0 0 0 3px var(--gt-2)}
+.gtile[class*="gt-"] .gsubj{color:var(--gt-ink);opacity:.85}
+.gtile[class*="gt-"] .btn-primary{background:var(--gt-1);color:var(--gt-on1,#fff)}
 
 /* ============ Arcade games ============ */
 .arcgame{background:var(--card);box-shadow:var(--shadow);border-radius:var(--radius);
@@ -858,6 +886,19 @@ footer{background:var(--purple-dark);color:#cfc6ee;text-align:center;padding:20p
 .arcresult h1{margin:6px 0;color:var(--purple-dark)}
 .arcscore{font-size:1.1rem;color:#6c6790}
 .arcstars{font-size:1.3rem;font-weight:800;color:var(--orange);margin:8px 0 20px}
+
+/* The game screen picks up the same theme as its tile. .arcopt.correct/.wrong are defined
+   above with two classes, so the right/wrong colours still win over the theme tint. */
+.arcgame[class*="gt-"],.arcresult[class*="gt-"]{border-top:6px solid var(--gt-1)}
+.arcgame[class*="gt-"] .archead{color:var(--gt-ink)}
+.arcgame[class*="gt-"] .arcprogress{background:var(--gt-soft)}
+.arcgame[class*="gt-"] .arcprogress i{background:linear-gradient(90deg,var(--gt-2),var(--gt-1))}
+.arcgame[class*="gt-"] .arcbig,.arcgame[class*="gt-"] .arcmid{color:var(--gt-ink)}
+.arcgame[class*="gt-"] .arcopt:not(.correct):not(.wrong){border-color:var(--gt-1);color:var(--gt-ink)}
+.arcgame[class*="gt-"] .arcopt:hover:not(:disabled){background:var(--gt-soft)}
+.arcresult[class*="gt-"] h1{color:var(--gt-ink)}
+.arcresult[class*="gt-"] .arcbadge{display:inline-flex;align-items:center;justify-content:center;
+  width:96px;height:96px;border-radius:50%;background:var(--gt-soft);box-shadow:inset 0 0 0 4px var(--gt-2)}
 .arcactions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 
 /* ============ Memory Match ============ */

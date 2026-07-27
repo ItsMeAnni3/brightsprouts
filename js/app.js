@@ -537,7 +537,14 @@ function misspellOnce(w) {
 }
 function misspell(w, avoid) {
   for (let t = 0; t < 20; t++) { const m = misspellOnce(w); if (m !== w && !avoid.includes(m)) return m; }
-  return w + w[w.length - 1];
+  // Short words ("and", "cat") run out of random variants, and the old fallback could hand back
+  // a misspelling already in `avoid` — which showed up in the arcade as two identical buttons.
+  // Walk a deterministic list of doubled letters instead; one of them is always still free.
+  const tries = [w[0] + w];
+  for (let i = 1; i < w.length; i++) tries.push(w.slice(0, i) + w[i] + w.slice(i));
+  for (let n = 1; n <= avoid.length + 2; n++) tries.push(w + w[w.length - 1].repeat(n));
+  for (const m of tries) if (m !== w && !avoid.includes(m)) return m;
+  return w + "e".repeat(avoid.length + 1);
 }
 function genSpelling(words) {
   const qs = [];
@@ -1928,7 +1935,7 @@ function pricingView() {
           <li>Feelings &amp; Kindness, free for everyone</li>
           <li>The free classic books library</li>
           <li>Creature Maker &amp; Build It!</li>
-          <li>All 25 arcade games</li>
+          <li>All ${gameCount()} arcade games</li>
           <li>10 moral-value stories · 2 custom stories</li>
           <li>Printable worksheets &amp; answer keys</li>
           <li class="no">Grades 3–12</li>
@@ -1951,7 +1958,7 @@ function pricingView() {
           <li>Tap-to-hear Spanish &amp; phonics audio</li>
           <li>Tracing, Trace &amp; Draw and the colouring book</li>
           <li>The full moral-story library + unlimited custom stories</li>
-          <li>The interactive Globe, all 22 arcade games &amp; the rewards system</li>
+          <li>The interactive Globe, all ${gameCount()} arcade games &amp; the rewards system</li>
           <li>Every new subject and lesson we add: included, always</li>
         </ul>
         ${u && u.plan === "premium" ? `<button class="btn btn-gold" disabled>⭐ You're Premium!</button>`
@@ -2685,9 +2692,21 @@ function gameView() {
   return gameHubView();
 }
 
+// Every game carries a `theme` (games3.js); it becomes a .gt-* class that colours the tile
+// and, later, the game screen itself.
+// Everything in the arcade hub: the quiz/memory games plus the Plant Life Cycle tile.
+// Quoted in the pricing copy, so it can never drift out of date as games are added.
+function gameCount() { return ARCADE_GAMES.length + 1; }
+
+function gameTheme(key) {
+  const g = ARCADE_GAMES.find(x => x.key === key);
+  const t = (g && g.theme) || (typeof ARCADE_THEME_BY_KEY !== "undefined" && ARCADE_THEME_BY_KEY[key]);
+  return t ? ` gt-${t}` : "";
+}
+
 function gameHubView() {
   const plantTile = `
-    <div class="gtile" onclick="App.openGame('plant')">
+    <div class="gtile${gameTheme("plant")}" onclick="App.openGame('plant')">
       <div class="gtemoji">🌱</div>
       <h3>Plant Life Cycle</h3>
       <p>Grow your own plant from seed to fruit.</p>
@@ -2696,7 +2715,7 @@ function gameHubView() {
     </div>`;
   const lvl = state.gameFilter || "all";
   const tile = a => `
-    <div class="gtile" onclick="App.openGame('${a.key}')">
+    <div class="gtile${a.theme ? ` gt-${a.theme}` : ""}" onclick="App.openGame('${a.key}')">
       <div class="gtemoji">${a.emoji}</div>
       <h3>${esc(a.name)}</h3>
       <p>${esc(a.desc)}</p>
@@ -2712,7 +2731,8 @@ function gameHubView() {
   return `<div class="view">
     <button class="btn btn-ghost btn-sm no-print" onclick="App.go('lessons')">← All Grades</button>
     <h1 style="margin-top:14px">🎮 Game Arcade</h1>
-    <p class="subtitle">Pick a game to play: every one earns ⭐ stars for your Rewards collection. Filter by how tricky you want it!</p>
+    <p class="subtitle">${gameCount()} games, each with its own colours, pulled from lessons all over the site.
+      Every one earns ⭐ stars for your Rewards collection — filter by how tricky you want it!</p>
     ${filterBar}
     <div class="grid grid-3 gtiles">${lvl === "all" || lvl === "Easy" ? plantTile : ""}${arcTiles}</div>
     <div class="bookfoot">${doodle("rocket")}
@@ -2731,8 +2751,8 @@ function beeView() {
       <h1>🐝 Spelling Bee</h1>
       <p class="subtitle">Listen to the word, then spell it. ${BEE_ROUND} words: how many can you get right?</p>
       ${canSpeak ? "" : `<div class="beewarn">🔇 This device can't read words aloud, so each word will be <b>shown</b> for a moment instead. Look carefully, then spell it from memory!</div>`}
-      <div class="grid grid-3 gtiles">${BEE_LEVELS.map(l => `
-        <div class="gtile" onclick="App.beePick('${l.key}')">
+      <div class="grid grid-3 gtiles">${BEE_LEVELS.map((l, i) => `
+        <div class="gtile gt-${["forest", "sand", "flame"][i] || "lemon"}" onclick="App.beePick('${l.key}')">
           <div class="gtemoji">${l.emoji}</div>
           <h3>${esc(l.name)}</h3><p>${esc(l.desc)}</p>
           <button class="btn btn-primary btn-sm">Start</button>
@@ -2794,12 +2814,13 @@ function beeView() {
 function arcadeQuizView() {
   const a = state.arcade;
   const meta = ARCADE_GAMES.find(x => x.key === a.type) || { name: "Game", emoji: "🎮" };
+  const th = gameTheme(a.type);
   if (a.done) {
     const stars = arcadeStars(a.correct);
     const perfect = a.correct === ARCADE_Q;
     return `<div class="view">
       <button class="btn btn-ghost btn-sm no-print" onclick="App.gameHub()">← Back to games</button>
-      <div class="arcresult">
+      <div class="arcresult${th}">
         <div class="arcbadge">${perfect ? "🏆" : meta.emoji}</div>
         <h1>${perfect ? "Perfect!" : "Nice work!"}</h1>
         <p class="arcscore">You got <b>${a.correct}</b> out of ${ARCADE_Q} right</p>
@@ -2824,7 +2845,7 @@ function arcadeQuizView() {
   const pct = Math.round((a.i / ARCADE_Q) * 100);
   return `<div class="view">
     <button class="btn btn-ghost btn-sm no-print" onclick="App.gameHub()">← Back to games</button>
-    <div class="arcgame">
+    <div class="arcgame${th}">
       <div class="archead">
         <span>${meta.emoji} ${esc(meta.name)}</span>
         <span>Question ${a.i + 1} / ${ARCADE_Q} · ⭐ ${a.correct}</span>
@@ -2840,11 +2861,12 @@ function arcadeQuizView() {
 function memoryView() {
   const m = state.mem;
   const pairs = m.deck.length / 2;
+  const th = gameTheme("memory");
   if (m.done) {
     const stars = memoryStars(pairs, m.moves);
     return `<div class="view">
       <button class="btn btn-ghost btn-sm no-print" onclick="App.gameHub()">← Back to games</button>
-      <div class="arcresult">
+      <div class="arcresult${th}">
         <div class="arcbadge">🧠</div>
         <h1>You did it!</h1>
         <p class="arcscore">All ${pairs} pairs matched in <b>${m.moves}</b> tries</p>
@@ -2863,7 +2885,7 @@ function memoryView() {
   }).join("");
   return `<div class="view">
     <button class="btn btn-ghost btn-sm no-print" onclick="App.gameHub()">← Back to games</button>
-    <div class="arcgame">
+    <div class="arcgame${th}">
       <div class="archead"><span>🧠 Memory Match</span><span>Tries: ${m.moves} · Pairs: ${m.matched}/${pairs}</span></div>
       <p class="mmhint">Flip two cards. If they match, they stay! Find all ${pairs} pairs.</p>
       <div class="memgrid">${cards}</div>
