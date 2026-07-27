@@ -1,15 +1,15 @@
-// BrightSprouts Academy — Writing lessons (Grades 1-12) + extra question banks
+// BrightSprouts Academy: Writing lessons (Grades 1-12) + extra question banks
 // The extra questions let every subject generate fresh, shuffled worksheets endlessly.
 
 const WRITING = {
 1: {
   title: "Sentences That Sparkle", emoji: "✏️",
-  intro: "A sentence is a complete thought — like a tiny package with a beginning and an end. Let's build some beautiful ones!",
+  intro: "A sentence is a complete thought: like a tiny package with a beginning and an end. Let's build some beautiful ones!",
   learn: [
     "Every sentence starts with a CAPITAL letter.",
     "Every sentence ends with a period (.), question mark (?), or exclamation point (!).",
-    "A sentence tells a complete thought: 'The dog runs.' — not just 'the dog'.",
-    "Say your sentence out loud before you write it — your ears are great editors!"
+    "A sentence tells a complete thought: 'The dog runs.', not just 'the dog'.",
+    "Say your sentence out loud before you write it; your ears are great editors!"
   ],
   activity: "🖍️ Sentence Hunt: Find one sentence in your favorite book. Point to the capital letter at the start and the period at the end!",
   rubric: "Check for: a capital letter at the start, an end mark, and a complete thought.",
@@ -31,7 +31,7 @@ const WRITING = {
     "Stretch a sentence by adding WHERE, WHEN, or HOW: 'The frog jumped' → 'The frog jumped into the cold pond at night.'",
     "Join two short sentences with 'and' or 'but': 'I like dogs, but cats make me sneeze.'",
     "A little story has 3 parts: beginning (who and where), middle (what happens), end (how it turns out).",
-    "Read your writing out loud — if you run out of breath, you might need a period!"
+    "Read your writing out loud; if you run out of breath, you might need a period!"
   ],
   activity: "🎲 Stretch-a-Sentence: Someone says a tiny sentence ('The cat sat.'). Take turns adding one detail at a time until it's hilariously long!",
   rubric: "Check for: complete sentences, a joining word (and/but), and a beginning-middle-end.",
@@ -50,12 +50,12 @@ const WRITING = {
   title: "Paragraph Power", emoji: "🧱",
   intro: "A paragraph is a team of sentences all working on the same idea. Learn the team positions and you can write about anything!",
   learn: [
-    "The TOPIC SENTENCE goes first — it announces the big idea: 'Autumn is the best season of all.'",
+    "The TOPIC SENTENCE goes first; it announces the big idea: 'Autumn is the best season of all.'",
     "Then come 3 DETAIL sentences that prove it: crunchy leaves, cozy sweaters, pumpkin everything.",
     "The CLOSING sentence wraps it up: 'That's why I count the days until fall!'",
-    "Stay on topic — a sentence about your birthday doesn't belong in a paragraph about autumn."
+    "Stay on topic; a sentence about your birthday doesn't belong in a paragraph about autumn."
   ],
-  activity: "🍔 Paragraph Burger: Draw a burger — top bun (topic sentence), three fillings (details), bottom bun (closing). Write a paragraph to match!",
+  activity: "🍔 Paragraph Burger: Draw a burger: top bun (topic sentence), three fillings (details), bottom bun (closing). Write a paragraph to match!",
   rubric: "Check for: a topic sentence, at least 3 details that stay on topic, and a closing sentence.",
   prompts: [
     "Write a paragraph about the best season of the year.",
@@ -82,7 +82,7 @@ const WRITING = {
   prompts: [
     "Describe a beach using at least 3 of your five senses.",
     "Rewrite 'The dog was happy' by SHOWING it with actions.",
-    "Describe an old house so it feels creepy — without using the words 'scary' or 'spooky'.",
+    "Describe an old house so it feels creepy, without using the words 'scary' or 'spooky'.",
     "Describe your favorite meal so the reader's mouth waters.",
     "Describe a thunderstorm using sound words.",
     "Show 'nervous before a big test' without saying 'nervous'.",
@@ -94,19 +94,19 @@ const WRITING = {
   title: "Personal Narratives: Your Story Matters", emoji: "📖",
   intro: "You've lived stories no one else can tell. A personal narrative turns one of your real moments into writing that pulls readers in.",
   learn: [
-    "Start with a HOOK — action, sound, or dialogue: '\"Jump!\" my cousin yelled from the dock.'",
+    "Start with a HOOK: action, sound, or dialogue: '\"Jump!\" my cousin yelled from the dock.'",
     "Zoom in on ONE small moment. Ten minutes of your life, told well, beats a whole summer summarized.",
-    "Use dialogue to make people come alive — new speaker, new line, quotation marks around spoken words.",
+    "Use dialogue to make people come alive: new speaker, new line, quotation marks around spoken words.",
     "End with what the moment meant: what changed, or what you understood after."
   ],
-  activity: "🎥 Memory Movie: Close your eyes and replay a favorite memory like a film. Jot every detail you 'see' — that's your narrative outline!",
+  activity: "🎥 Memory Movie: Close your eyes and replay a favorite memory like a film. Jot every detail you 'see'; that's your narrative outline!",
   rubric: "Check for: a hook opening, one zoomed-in moment, at least one line of dialogue, and an ending that says what it meant.",
   prompts: [
     "Write about a time you tried something new. Start with a hook!",
     "Describe ten minutes of this morning like a movie scene.",
-    "Write about a time you helped someone — include what you were thinking.",
+    "Write about a time you helped someone, including what you were thinking.",
     "Write a scene with dialogue between you and a talking animal.",
-    "Write 'The Day Everything Went Wrong' — make the first line grab us.",
+    "Write 'The Day Everything Went Wrong', and make the first line grab us.",
     "Write about a memory with a grandparent or older relative.",
     "Describe the scariest ride, game, or dare you ever tried.",
     "Write about a first day (new school, new team, new house)."
@@ -117,8 +117,8 @@ const WRITING = {
   intro: "Persuasive writing is a friendly argument on paper: you state what you believe, back it with reasons, and win your reader over.",
   learn: [
     "Start with a clear CLAIM: 'Our school should start recycling in every classroom.'",
-    "Give 3 REASONS, each backed by an example or fact — reasons are the muscles of your argument.",
-    "Address the other side: 'Some say bins cost money, but...' — it makes YOU look fair and smart.",
+    "Give 3 REASONS, each backed by an example or fact; reasons are the muscles of your argument.",
+    "Address the other side: 'Some say bins cost money, but...'; it makes YOU look fair and smart.",
     "End with a call to action: tell readers exactly what to do next."
   ],
   activity: "⚖️ Persuasion Duel: Pick a silly debate (pancakes vs. waffles). Each person gets 60 seconds to argue. Family votes for the most convincing!",
@@ -138,10 +138,10 @@ const WRITING = {
   title: "Building the Five-Paragraph Essay", emoji: "🏗️",
   intro: "The five-paragraph essay is the blueprint behind most school writing: one idea, three proofs, one strong finish. Master the blueprint and every essay gets easier.",
   learn: [
-    "The INTRO starts with a hook and ends with your THESIS — the one sentence your whole essay proves.",
+    "The INTRO starts with a hook and ends with your THESIS: the one sentence your whole essay proves.",
     "Each BODY paragraph = one reason: topic sentence → evidence/example → explain how it proves your thesis.",
     "Use transitions to glue paragraphs together: 'furthermore', 'in addition', 'however', 'as a result'.",
-    "The CONCLUSION restates the thesis in fresh words and answers 'so what?' — why it matters."
+    "The CONCLUSION restates the thesis in fresh words and answers 'so what?': why it matters."
   ],
   activity: "🗂️ Essay Skeleton: Take any opinion you hold (best movie, best sport) and outline it: thesis + three topic sentences + closing line. Ten minutes, no full paragraphs!",
   rubric: "Check for: a clear thesis, topic sentences that each give one reason, evidence in every body paragraph, and transitions.",
@@ -152,7 +152,7 @@ const WRITING = {
     "Write one body paragraph with evidence: 'Sports teach life skills.'",
     "Write just the CONCLUSION for an essay on social media age limits.",
     "Outline a compare-and-contrast essay on two seasons.",
-    "Plan an essay: 'A person who changed history' — thesis + 3 reasons.",
+    "Plan an essay: 'A person who changed history', with thesis + 3 reasons.",
     "Fix this weak thesis: 'Pollution is bad.' Make it specific and arguable."
   ]
 },
@@ -172,7 +172,7 @@ const WRITING = {
     "Write an opening scene where conflict appears in the first paragraph.",
     "Write a scene told ONLY in dialogue between two rivals.",
     "Draw and label a plot mountain for a heist story.",
-    "Rewrite the ending of a famous fairy tale — change one choice.",
+    "Rewrite the ending of a famous fairy tale, changing one choice.",
     "Write a setting paragraph that creates a mood (cozy, tense, or eerie).",
     "Write a twist ending for a story called 'The Locked Door'.",
     "Write a villain's monologue that makes us understand (not forgive!) them."
@@ -180,32 +180,32 @@ const WRITING = {
 },
 9: {
   title: "Argument Essays with Real Evidence", emoji: "⚖️",
-  intro: "High-school arguments run on evidence, not volume. Learn to claim, prove, concede, and rebut — the four moves of every strong argument.",
+  intro: "High-school arguments run on evidence, not volume. Learn to claim, prove, concede, and rebut: the four moves of every strong argument.",
   learn: [
     "A strong claim is specific and debatable: not 'social media is bad' but 'schools should teach social media literacy in 9th grade.'",
     "Evidence ranks: peer-reviewed studies > expert statements > statistics > anecdotes. Cite where it came from.",
     "Concede honestly ('Critics rightly note...'), then rebut ('However, the data shows...'). It builds trust.",
-    "Watch for fallacies in your OWN writing: bandwagon, straw man, false dilemma — cut them before your reader finds them."
+    "Watch for fallacies in your OWN writing: bandwagon, straw man, false dilemma; cut them before your reader finds them."
   ],
-  activity: "🔍 Evidence Audit: Find one claim in an ad or post today. List what evidence it offers — then rank how strong that evidence really is.",
+  activity: "🔍 Evidence Audit: Find one claim in an ad or post today. List what evidence it offers, then rank how strong that evidence really is.",
   rubric: "Check for: a specific debatable claim, cited evidence, a fair concession with rebuttal, and no logical fallacies.",
   prompts: [
     "Write a claim + two pieces of evidence + one counterargument on: 'Should AI tools be allowed for homework?'",
     "Write a rebuttal to: 'Homework should be banned completely.'",
     "Write one paragraph each using ethos, pathos, and logos for a seatbelt safety message.",
     "Outline an argument essay on later school start times, with evidence types you'd need.",
-    "This claim has a fallacy — find and fix it: 'Everyone is buying this app, so it must be safe.'",
+    "This claim has a fallacy; find and fix it: 'Everyone is buying this app, so it must be safe.'",
     "Write a hook and thesis for an essay on teens and social media.",
     "Argue for or against a minimum wage for student internships.",
-    "Take a rule at your school and argue to change it — with evidence."
+    "Take a rule at your school and argue to change it, with evidence."
   ]
 },
 10: {
   title: "Analytical Writing: Proving What a Text Means", emoji: "🔬",
-  intro: "Analysis is writing about writing: you make a claim about what a text does, quote your proof, and explain the connection. Claim, quote, explain — the analytical heartbeat.",
+  intro: "Analysis is writing about writing: you make a claim about what a text does, quote your proof, and explain the connection. Claim, quote, explain: the analytical heartbeat.",
   learn: [
     "The TEA paragraph: Topic sentence (your claim) → Evidence (short quote) → Analysis (HOW the quote proves it). Analysis should be twice as long as the quote.",
-    "Integrate quotes into your own sentence: The narrator calls the city 'indifferent,' suggesting... — never plop a quote alone.",
+    "Integrate quotes into your own sentence: The narrator calls the city 'indifferent,' suggesting...; never plop a quote alone.",
     "Analyze word choice: WHY 'trudged' instead of 'walked'? Authors choose on purpose; your job is to say what the choice does.",
     "Avoid summary. Summary says what happens; analysis says why it matters and how it works."
   ],
@@ -214,12 +214,12 @@ const WRITING = {
   prompts: [
     "Analyze a metaphor from any song: quote it, then explain what it does.",
     "Write one paragraph that integrates a quotation smoothly into your own sentence.",
-    "Compare how two ads persuade — what does each want you to feel, and how?",
+    "Compare how two ads persuade: what does each want you to feel, and how?",
     "Analyze the tone of a real news headline: which words create it?",
     "Write three topic sentences for an essay about a symbol in a book you know.",
     "Pick a paragraph from any book and explain how its word choice builds mood.",
     "Write a full TEA paragraph about a character's defining moment.",
-    "Analyze one famous speech line — what technique makes it memorable?"
+    "Analyze one famous speech line: what technique makes it memorable?"
   ]
 },
 11: {
@@ -228,16 +228,16 @@ const WRITING = {
   learn: [
     "Specific beats general: 'I collect broken watches' says more about you than 'I am a curious person.'",
     "Small topics, deep digging: a 300-word essay about your family's Sunday dumplings can reveal more than a mission trip summary.",
-    "Cut clichés at the root: 'passion', 'journey', 'comfort zone' — replace each with the actual thing you mean.",
+    "Cut clichés at the root: 'passion', 'journey', 'comfort zone'; replace each with the actual thing you mean.",
     "Revision is where voice appears: write hot, edit cold. Read aloud; anything you'd never SAY, rewrite."
   ],
-  activity: "🎙️ Voice Test: Record yourself telling a story out loud, then transcribe 3 sentences of it. Compare with your written draft — which sounds more alive?",
+  activity: "🎙️ Voice Test: Record yourself telling a story out loud, then transcribe 3 sentences of it. Compare with your written draft: which sounds more alive?",
   rubric: "Check for: specific concrete details, a small topic dug deep, no clichés, and sentences that sound like a real person.",
   prompts: [
     "Write 300 words about a moment that changed how you think.",
     "Write the opening line of your personal essay five different ways.",
     "Describe your bedroom so a stranger could guess three things about your character.",
-    "Write about a failure — spend most of the words on what it taught you.",
+    "Write about a failure, spending most of the words on what it taught you.",
     "Write about something you're obsessed with, using at least five specific details.",
     "Rewrite these clichés as real statements: 'I stepped out of my comfort zone.' 'It was a rollercoaster of emotions.'",
     "Complete and defend a personal metaphor: 'I am a ____.'",
@@ -246,10 +246,10 @@ const WRITING = {
 },
 12: {
   title: "Research & Professional Writing", emoji: "💼",
-  intro: "After graduation, writing gets real: research papers, cover letters, professional emails. Same skills, higher stakes — let's make them automatic.",
+  intro: "After graduation, writing gets real: research papers, cover letters, professional emails. Same skills, higher stakes; let's make them automatic.",
   learn: [
     "A research question drives the paper: narrow ('How did the 1936 Olympics shape propaganda?') beats broad ('Sports and politics').",
-    "Cite as you draft — quote, paraphrase, or summarize, but always credit. Paraphrase means YOUR words and sentence structure, not synonyms swapped in.",
+    "Cite as you draft: quote, paraphrase, or summarize, but always credit. Paraphrase means YOUR words and sentence structure, not synonyms swapped in.",
     "Professional emails: informative subject line, greeting, one-screen message, clear ask, sign-off. Proofread twice.",
     "Cover letters answer one question: 'Why are you right for THIS role?' Match your one or two best stories to their needs."
   ],
@@ -258,7 +258,7 @@ const WRITING = {
   prompts: [
     "Write a research question plus three types of sources you would need to answer it.",
     "Write an abstract of your last week in exactly 150 words.",
-    "Write a cover letter paragraph for your dream job — match one real skill to their needs.",
+    "Write a cover letter paragraph for your dream job, matching one real skill to their needs.",
     "Write a formal email to a professor requesting a meeting.",
     "Take any paragraph from a news article: quote one line, then paraphrase it properly with credit.",
     "Write an annotated bibliography entry for any book or article you know.",
@@ -375,7 +375,7 @@ const EXTRAS = {
     { q: "What food does the speech call 'not a food group'?", a: "Vending machine snacks (neon cheese puffs)" }
   ],
   science: [
-    { q: "Which law explains why you lurch forward when a car brakes?", a: "Newton's 1st Law — inertia" },
+    { q: "Which law explains why you lurch forward when a car brakes?", a: "Newton's 1st Law: inertia" },
     { q: "What force pulls you toward Earth at 9.8 m/s²?", a: "Gravity" }
   ],
   history: [
@@ -385,7 +385,7 @@ const EXTRAS = {
 },
 9: {
   reading: [
-    { q: "Where did Maya move the plant, and why there?", a: "To the window — the only spot with direct light each day" },
+    { q: "Where did Maya move the plant, and why there?", a: "To the window; the only spot with direct light each day" },
     { q: "What did Maya tape beside the new leaf?", a: "A photo of her first city friend" }
   ],
   science: [
@@ -403,7 +403,7 @@ const EXTRAS = {
     { q: "How many districts had already solved the bus problem?", a: "Forty districts in the state" }
   ],
   science: [
-    { q: "Which group of elements barely reacts at all?", a: "Group 18 — the noble gases" },
+    { q: "Which group of elements barely reacts at all?", a: "Group 18: the noble gases" },
     { q: "In H₂O, what type of bond holds the atoms together?", a: "Covalent (electrons are shared)" }
   ],
   history: [
@@ -418,7 +418,7 @@ const EXTRAS = {
   ],
   science: [
     { q: "What kind of energy does food contain?", a: "Chemical energy" },
-    { q: "In a series circuit, what happens when one bulb burns out?", a: "All the bulbs go out — there's only one path" }
+    { q: "In a series circuit, what happens when one bulb burns out?", a: "All the bulbs go out; there's only one path" }
   ],
   history: [
     { q: "What wall divided a city from 1961 to 1989?", a: "The Berlin Wall" },
