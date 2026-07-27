@@ -1,4 +1,4 @@
-// BrightSprouts Academy — Music subject for Grades 1–12.
+// BrightSprouts Academy: Music subject for Grades 1–12.
 // A progressive music curriculum: high/low & loud/soft → beat & rhythm → the musical alphabet →
 // reading notes on the staff → time signatures → dynamics & tempo → scales → instruments →
 // music history → harmony & chords → forms, genres & careers.
@@ -8,7 +8,7 @@
   var MUS = {
     1: {
       title: "High & Low, Loud & Soft", emoji: "🔊",
-      intro: "Music is everywhere — in birds, bells, and your own voice! Let's explore high and low, loud and soft.",
+      intro: "Music is everywhere: in birds, bells, and your own voice! Let's explore high and low, loud and soft.",
       learn: [
         "Music is sound organized in time. We can make it by singing, clapping, and playing.",
         "Pitch is how high or low a sound is. A bird tweets high; a big drum booms low.",
@@ -33,7 +33,7 @@
       title: "Beat & Rhythm", emoji: "🥁",
       intro: "Every song has a heartbeat. Feel the beat and clap out rhythms!",
       learn: [
-        "The beat is the steady pulse of the music — it never changes.",
+        "The beat is the steady pulse of the music; it never changes.",
         "Rhythm is the pattern of long and short sounds played on top of the beat.",
         "Tempo is how fast or slow the music goes.",
         "You can keep the beat by clapping, tapping, or marching."
@@ -48,17 +48,17 @@
         { q: "Clapping a pattern of long and short claps makes a ____.", a: "Rhythm" },
         { q: "The beat is steady; the rhythm is the ____ on top of it.", a: "Pattern" },
         { q: "A gentle lullaby usually has a slow ____.", a: "Tempo" },
-        { q: "True or False: beat and rhythm are exactly the same thing.", a: "False — the beat is the steady pulse, the rhythm is the pattern" },
+        { q: "True or False: beat and rhythm are exactly the same thing.", a: "False, the beat is the steady pulse, the rhythm is the pattern" },
         { q: "Tapping along with a clock's tick-tock helps you feel the ____.", a: "Beat" }
       ]
     },
     3: {
       title: "The Musical Alphabet & Melody", emoji: "🔤",
-      intro: "Music has its own alphabet — only seven letters. Let's learn them and sing a melody.",
+      intro: "Music has its own alphabet, only seven letters. Let's learn them and sing a melody.",
       learn: [
         "The musical alphabet uses only 7 letters: A B C D E F G, then it repeats.",
         "After G, the alphabet starts again at A.",
-        "A melody is a tune — a line of notes you can sing, one after another.",
+        "A melody is a tune: a line of notes you can sing, one after another.",
         "When a melody's pitches go up, we say it goes higher; when they go down, lower."
       ],
       activity: "🎤 Name That Note: Sing 'A-B-C-D-E-F-G' going up like stairs, then back down. Now make up a short melody using those letters.",
@@ -67,7 +67,7 @@
         { q: "List the musical alphabet.", a: "A, B, C, D, E, F, G" },
         { q: "After the note G, the musical alphabet starts again at ____.", a: "A" },
         { q: "A tune you can sing, made of a line of notes, is a ____.", a: "Melody" },
-        { q: "Does the musical alphabet use the letter H?", a: "No — it stops at G" },
+        { q: "Does the musical alphabet use the letter H?", a: "No, it stops at G" },
         { q: "When a melody moves from a low note to a high note, the pitch goes ____.", a: "Up" },
         { q: "Which letter comes right after B in the musical alphabet?", a: "C" },
         { q: "The main tune of a song is called its ____.", a: "Melody" },
@@ -84,7 +84,7 @@
         "The musical staff has 5 lines and 4 spaces.",
         "The longer the note's value, the longer you hold the sound."
       ],
-      activity: "✏️ Rhythm Cards: Draw a whole note, a half note, and a quarter note. Clap each one for the right number of beats — 4, then 2, then 1!",
+      activity: "✏️ Rhythm Cards: Draw a whole note, a half note, and a quarter note. Clap each one for the right number of beats: 4, then 2, then 1!",
       questions: [
         { q: "How many beats does a whole note get in 4/4 time?", a: "4" },
         { q: "How many beats does a half note get?", a: "2" },
@@ -100,11 +100,11 @@
     },
     5: {
       title: "The Staff & Treble Clef", emoji: "🎼",
-      intro: "Time to read music. Meet the staff and the treble clef — and spell a secret word: FACE!",
+      intro: "Time to read music. Meet the staff and the treble clef, and spell a secret word: FACE!",
       learn: [
         "The treble clef (also called the G clef) is used for higher notes; the bass clef (F clef) is used for lower notes.",
         "The notes in the treble-clef SPACES spell the word FACE (from bottom to top).",
-        "The treble-clef LINES are E G B D F — remember 'Every Good Boy Does Fine'.",
+        "The treble-clef LINES are E G B D F, remember 'Every Good Boy Does Fine'.",
         "The staff has 5 lines and 4 spaces, and each one stands for a different note."
       ],
       activity: "🎼 FACE Race: Draw a treble-clef staff and label the four space notes F-A-C-E. Then find those notes on a real or app keyboard.",
@@ -126,11 +126,11 @@
       intro: "Count me in! Learn how time signatures organize the beat into measures.",
       learn: [
         "A time signature (like 4/4) appears at the start of the music. The top number tells how many beats are in each measure.",
-        "4/4 means four beats per measure — it's so common it's nicknamed 'common time'.",
+        "4/4 means four beats per measure; it's so common it's nicknamed 'common time'.",
         "A measure (or bar) is a group of beats between two bar lines.",
         "Two eighth notes last as long as one quarter note; an eighth note gets half a beat."
       ],
-      activity: "🕒 Make a Measure: Tap 4/4 time — count '1-2-3-4' over and over, clapping on beat 1. Then try 3/4 time, which feels like a waltz.",
+      activity: "🕒 Make a Measure: Tap 4/4 time: count '1-2-3-4' over and over, clapping on beat 1. Then try 3/4 time, which feels like a waltz.",
       questions: [
         { q: "In a time signature like 4/4, what does the TOP number tell you?", a: "How many beats are in each measure" },
         { q: "How many beats are in one measure of 4/4 time?", a: "4" },
@@ -146,14 +146,14 @@
     },
     7: {
       title: "Dynamics & Tempo", emoji: "🔉",
-      intro: "Should it be soft as a whisper or loud as a lion? Learn the words that tell us how — dynamics and tempo.",
+      intro: "Should it be soft as a whisper or loud as a lion? Learn the words that tell us how: dynamics and tempo.",
       learn: [
         "Dynamics means how loud or soft to play. 'piano' (p) = soft; 'forte' (f) = loud; 'mezzo' = medium.",
         "A crescendo means gradually get louder; a diminuendo (decrescendo) means gradually get softer.",
         "Tempo means how fast or slow to play.",
         "Common tempo words: 'allegro' = fast, 'andante' = a walking pace, 'adagio' = slow."
       ],
-      activity: "🔊 Loud & Soft Story: 'Perform' one sentence three ways — piano (soft), forte (loud), then with a crescendo getting louder. How does the feeling change?",
+      activity: "🔊 Loud & Soft Story: 'Perform' one sentence three ways: piano (soft), forte (loud), then with a crescendo getting louder. How does the feeling change?",
       questions: [
         { q: "In music, 'piano' (p) means to play ____.", a: "Soft (quiet)" },
         { q: "In music, 'forte' (f) means to play ____.", a: "Loud" },
@@ -172,7 +172,7 @@
       intro: "Do-re-mi! Discover scales, the octave, and how sharps and flats change a note.",
       learn: [
         "A scale is a set of notes in order, going up or down.",
-        "An octave is the distance from one note to the next note with the same name — 8 notes apart.",
+        "An octave is the distance from one note to the next note with the same name: 8 notes apart.",
         "The C major scale uses only the white piano keys: C D E F G A B C, with no sharps or flats.",
         "A sharp (#) raises a note by a half step; a flat (b) lowers a note by a half step. The solfège syllables are do-re-mi-fa-sol-la-ti-do."
       ],
@@ -199,7 +199,7 @@
         "Woodwinds (flute, clarinet, oboe, bassoon) and brass (trumpet, trombone, French horn, tuba) are blown.",
         "Percussion (drums, cymbals, xylophone) is played by hitting or shaking."
       ],
-      activity: "🎻 Family Sort: Listen to orchestra clips and sort the instruments you hear into the four families — strings, woodwinds, brass, and percussion.",
+      activity: "🎻 Family Sort: Listen to orchestra clips and sort the instruments you hear into the four families: strings, woodwinds, brass, and percussion.",
       questions: [
         { q: "Name the four instrument families of the orchestra.", a: "Strings, woodwinds, brass, and percussion" },
         { q: "Which family does the violin belong to?", a: "Strings" },
@@ -215,7 +215,7 @@
     },
     10: {
       title: "Music History: Periods & Composers", emoji: "🎼",
-      intro: "Take a journey through time — from Bach to Tchaikovsky — and meet the great composers.",
+      intro: "Take a journey through time, from Bach to Tchaikovsky, and meet the great composers.",
       learn: [
         "Western music history has four main periods, in order: Baroque, Classical, Romantic, and Modern.",
         "Baroque (about 1600–1750): Johann Sebastian Bach and Antonio Vivaldi ('The Four Seasons').",
@@ -243,7 +243,7 @@
         "Harmony is notes played together at the same time.",
         "A chord is 3 or more notes sounded together. A triad is a 3-note chord.",
         "Major chords usually sound bright and happy; minor chords usually sound sad.",
-        "An interval is the distance between two notes — for example, one octave is 8 notes apart."
+        "An interval is the distance between two notes; for example, one octave is 8 notes apart."
       ],
       activity: "🎹 Happy or Sad: Play (or find online) a major chord and a minor chord. Which sounds happy? Which sounds sad? Write down how each one makes you feel.",
       questions: [
@@ -261,14 +261,14 @@
     },
     12: {
       title: "Musical Forms, Genres & Careers", emoji: "🎤",
-      intro: "Put it all together — how songs are built, the many styles of music, and the jobs music can become.",
+      intro: "Put it all together: how songs are built, the many styles of music, and the jobs music can become.",
       learn: [
         "Form is the structure of a piece. Common forms: verse-chorus (songs), ABA (ternary), and theme and variations.",
         "Genres (styles) include classical, jazz, rock, pop, hip-hop, folk, and the blues.",
-        "Jazz is famous for improvisation — making up music on the spot. The blues helped create jazz and rock and roll.",
+        "Jazz is famous for improvisation: making up music on the spot. The blues helped create jazz and rock and roll.",
         "Music careers include performer, composer, conductor, producer, teacher, and sound engineer."
       ],
-      activity: "🎶 Song Map: Pick a favorite song and map out its form — label the verses and choruses. Then name which genre (style) it belongs to.",
+      activity: "🎶 Song Map: Pick a favorite song and map out its form: label the verses and choruses. Then name which genre (style) it belongs to.",
       questions: [
         { q: "The overall structure or 'plan' of a piece of music is its ____.", a: "Form" },
         { q: "Many pop songs are built with a ____-chorus form.", a: "Verse" },

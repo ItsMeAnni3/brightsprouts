@@ -1,4 +1,4 @@
-// BrightSprouts Academy — Visual Art subject for Grades 1–12.
+// BrightSprouts Academy: Visual Art subject for Grades 1–12.
 // A progressive art curriculum: colours & lines → colour theory → elements & principles →
 // space, perspective & proportion → art history → media, composition & critique.
 // Each grade has a hands-on project (activity) and a bank of verifiable art-concept questions
@@ -7,14 +7,14 @@
   var ART = {
     1: {
       title: "Colors, Lines & Shapes", emoji: "🖍️",
-      intro: "Every great artist starts with colors, lines, and shapes — the ABCs of art. Let's make some marks!",
+      intro: "Every great artist starts with colors, lines, and shapes: the ABCs of art. Let's make some marks!",
       learn: [
         "The three primary colors are red, yellow, and blue. You can't mix other colors to make them.",
         "Lines come in many kinds: straight, curvy, zigzag, and dotted.",
-        "A shape is a flat, closed outline — like a circle, square, or triangle.",
+        "A shape is a flat, closed outline, like a circle, square, or triangle.",
         "Art is for everyone. There is no single 'right' way to make it!"
       ],
-      activity: "🦁 Line Zoo: Draw an animal using only lines — straight legs, a curvy tail, zigzag teeth. How many kinds of line can you fit in?",
+      activity: "🦁 Line Zoo: Draw an animal using only lines: straight legs, a curvy tail, zigzag teeth. How many kinds of line can you fit in?",
       questions: [
         { q: "Name the three primary colors.", a: "Red, yellow, and blue" },
         { q: "What do we call a line that goes back and forth in sharp points, like /\\/\\ ?", a: "A zigzag line" },
@@ -37,7 +37,7 @@
         "The three secondary colors are orange, green, and purple.",
         "A pattern is a design that repeats, like stripes or polka dots."
       ],
-      activity: "🎨 Mixing Magic: Using red, yellow, and blue paint (or overlapping markers), make orange, green, and purple yourself — then paint a rainbow!",
+      activity: "🎨 Mixing Magic: Using red, yellow, and blue paint (or overlapping markers), make orange, green, and purple yourself, then paint a rainbow!",
       questions: [
         { q: "Red + yellow = ?", a: "Orange" },
         { q: "Blue + yellow = ?", a: "Green" },
@@ -56,11 +56,11 @@
       intro: "Colors have feelings! Meet the color wheel and discover warm and cool colors.",
       learn: [
         "The color wheel arranges colors in a circle to show how they relate.",
-        "Warm colors are red, orange, and yellow — they remind us of fire and sunshine.",
-        "Cool colors are blue, green, and purple — they remind us of water and grass.",
+        "Warm colors are red, orange, and yellow; they remind us of fire and sunshine.",
+        "Cool colors are blue, green, and purple; they remind us of water and grass.",
         "Artists choose warm or cool colors to give a picture a certain feeling."
       ],
-      activity: "🌗 Warm & Cool Split: Fold a paper in half and draw the same simple picture twice — one side using only warm colors, the other only cool. How do they feel different?",
+      activity: "🌗 Warm & Cool Split: Fold a paper in half and draw the same simple picture twice: one side using only warm colors, the other only cool. How do they feel different?",
       questions: [
         { q: "Is blue a warm or a cool color?", a: "Cool" },
         { q: "Is red a warm or a cool color?", a: "Warm" },
@@ -76,7 +76,7 @@
     },
     4: {
       title: "Elements of Art: Tints & Shades", emoji: "🧊",
-      intro: "Learn the building blocks every artist uses — the Elements of Art — and make colors lighter and darker.",
+      intro: "Learn the building blocks every artist uses, the Elements of Art, and make colors lighter and darker.",
       learn: [
         "The Elements of Art are: line, shape, form, color, value, texture, and space.",
         "A shape is flat (2D); a form is solid (3D). A circle is a shape; a ball (sphere) is a form.",
@@ -102,7 +102,7 @@
       intro: "Give your drawings a glow-up! Value and shading make flat pictures pop into 3D.",
       learn: [
         "Value is how light or dark a color is. Using many values makes art look real.",
-        "Shading adds value gradually to make drawings look 3D — like one side of a ball.",
+        "Shading adds value gradually to make drawings look 3D, like one side of a ball.",
         "Complementary colors are opposite on the color wheel: red & green, blue & orange, yellow & purple.",
         "Placed side by side, complementary colors make each other look brighter."
       ],
@@ -127,7 +127,7 @@
         "If the Elements are the ingredients, the Principles of Design are the recipe for arranging them.",
         "Key principles include: balance, contrast, pattern, emphasis (a focal point), rhythm/movement, and unity.",
         "Symmetry is a kind of balance where both sides match, like a butterfly.",
-        "Contrast means big differences — such as light next to dark — that grab your eye."
+        "Contrast means big differences, such as light next to dark, that grab your eye."
       ],
       activity: "🦋 Symmetry Butterfly: Paint one wing, fold the paper while the paint is wet, and press. The mirror print makes a perfectly symmetrical butterfly!",
       questions: [
@@ -152,7 +152,7 @@
         "One-point perspective uses a horizon line and a single vanishing point where lines meet.",
         "Overlapping one object in front of another shows which one is closer."
       ],
-      activity: "🛤️ Road to Nowhere: Draw a horizon line and one dot (the vanishing point). Draw a road and fence posts that shrink toward the dot — instant 3D depth!",
+      activity: "🛤️ Road to Nowhere: Draw a horizon line and one dot (the vanishing point). Draw a road and fence posts that shrink toward the dot: instant 3D depth!",
       questions: [
         { q: "In a landscape, the part closest to you is the ____.", a: "Foreground" },
         { q: "Faraway objects are drawn ____ than near ones.", a: "Smaller" },
@@ -170,9 +170,9 @@
       title: "Proportion & Drawing People", emoji: "🧍",
       intro: "Draw people and objects that look believable using proportion and gesture.",
       learn: [
-        "Proportion is the size of the parts compared to the whole — like a head compared to a body.",
+        "Proportion is the size of the parts compared to the whole, like a head compared to a body.",
         "A simple rule: a typical adult body is about 7 to 8 heads tall.",
-        "On a face, the eyes sit about halfway down the head — not near the top!",
+        "On a face, the eyes sit about halfway down the head, not near the top!",
         "Gesture drawing captures a pose quickly with loose lines before you add details."
       ],
       activity: "🙂 Face Map: Lightly draw an oval, then a line across the MIDDLE for the eyes. Add the nose and mouth in the lower half. Correct proportions make it look real!",
@@ -183,9 +183,9 @@
         { q: "A quick, loose drawing of a pose is a ____ drawing.", a: "Gesture" },
         { q: "A drawing of arranged everyday objects (fruit, jars) is called a ____.", a: "Still life" },
         { q: "If a hand is drawn far too big for the arm, the ____ is wrong.", a: "Proportion" },
-        { q: "True or False: eyes belong near the very top of the head.", a: "False — they're about halfway down" },
+        { q: "True or False: eyes belong near the very top of the head.", a: "False, they're about halfway down" },
         { q: "Comparing head size to body size checks the ____.", a: "Proportion" },
-        { q: "Loose lines first, details later — that quick first sketch is the ____.", a: "Gesture sketch" },
+        { q: "Loose lines first, details later; that quick first sketch is the ____.", a: "Gesture sketch" },
         { q: "A bowl of fruit arranged to draw is an example of a ____.", a: "Still life" }
       ]
     },
@@ -214,14 +214,14 @@
     },
     10: {
       title: "Modern Art Movements", emoji: "🖼️",
-      intro: "Meet the rebels of modern art — the movements that changed how we see the world.",
+      intro: "Meet the rebels of modern art, the movements that changed how we see the world.",
       learn: [
         "Impressionism (Claude Monet) used quick, visible brushstrokes to capture light and a moment.",
         "Post-Impressionism: Vincent van Gogh painted swirling, emotional works like The Starry Night.",
         "Cubism (Pablo Picasso & Georges Braque) broke objects into shapes seen from many angles at once.",
         "Surrealism (Salvador Dalí) painted dreamlike scenes, such as melting clocks."
       ],
-      activity: "🌀 Starry Style: Paint a night sky using swirling, visible brushstrokes like Van Gogh — let every brushstroke show!",
+      activity: "🌀 Starry Style: Paint a night sky using swirling, visible brushstrokes like Van Gogh; let every brushstroke show!",
       questions: [
         { q: "Who painted The Starry Night?", a: "Vincent van Gogh" },
         { q: "Which movement, led by Monet, captured light with quick brushstrokes?", a: "Impressionism" },
@@ -244,7 +244,7 @@
         "Color schemes: analogous colors sit next to each other on the wheel; triadic uses three evenly spaced colors; monochromatic uses one color's tints and shades.",
         "Sculpture is 3D art you can walk around; printmaking makes copies from a carved or inked plate."
       ],
-      activity: "🎭 Three Ways: Draw the same object three times — once in analogous colors, once monochromatic, once triadic. Which color mood do you like best?",
+      activity: "🎭 Three Ways: Draw the same object three times: once in analogous colors, once monochromatic, once triadic. Which color mood do you like best?",
       questions: [
         { q: "A color scheme using colors next to each other on the wheel is ____.", a: "Analogous" },
         { q: "A color scheme using only one color's tints and shades is ____.", a: "Monochromatic" },
@@ -260,12 +260,12 @@
     },
     12: {
       title: "Composition, Critique & Portfolio", emoji: "📐",
-      intro: "Put it all together — composition, critique, and building an art portfolio for the future.",
+      intro: "Put it all together: composition, critique, and building an art portfolio for the future.",
       learn: [
         "Composition is how you arrange everything within the frame.",
         "The rule of thirds splits the frame into a 3×3 grid and places key parts along the lines for a pleasing layout.",
         "Art critique has four steps (Feldman's method): Describe, Analyze, Interpret, and Judge.",
-        "A portfolio is a collection of your best, varied work — useful for art school and careers like illustrator, animator, designer, or architect."
+        "A portfolio is a collection of your best, varied work, useful for art school and careers like illustrator, animator, designer, or architect."
       ],
       activity: "📸 Rule of Thirds: Take or draw a scene with the main subject on a thirds line (not dead center). Then write a 4-step critique of your own artwork.",
       questions: [
