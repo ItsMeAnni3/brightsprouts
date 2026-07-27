@@ -1322,6 +1322,16 @@ footer{background:var(--purple-dark);color:#cfc6ee;text-align:center;padding:20p
 .mlform input{flex:1 1 220px;min-width:0;font:inherit;font-size:1rem;padding:11px 14px;
   border:2px solid #e0dcf0;border-radius:12px;background:#fdfbff;color:var(--ink)}
 .mlform input:focus{outline:none;border-color:var(--purple);background:#fff}
+/* Grade picker sits ahead of the email box: packs are made per grade, so it is the first choice
+   a parent makes. Fixed basis so it never squeezes the email field down to nothing. */
+.mlform select{flex:0 1 190px;min-width:0;font:inherit;font-size:1rem;padding:11px 12px;
+  border:2px solid #e6e0f5;border-radius:12px;background:#faf8ff;color:var(--ink);cursor:pointer}
+.mlform select:focus{outline:none;border-color:var(--purple);background:#fff}
+.mlnote{font-size:.8rem;color:#6a668c;margin-top:9px;line-height:1.45}
+.mlswitch{font-size:.82rem;color:#6a668c;margin-top:10px;display:block}
+.mllink{border:none;background:none;padding:0;font:inherit;font-size:.82rem;font-weight:700;
+  color:var(--purple-dark);text-decoration:underline;cursor:pointer}
+.mllink:hover{color:var(--pink)}
 .mlmsg{font-size:.85rem;margin-top:8px;min-height:1em}
 .mlmsg.ok{color:#2f6b45} .mlmsg.bad{color:#c0392b}
 .mlclose{position:absolute;top:10px;right:12px;border:none;background:none;color:#b8b2cc;font-size:1rem;padding:4px}

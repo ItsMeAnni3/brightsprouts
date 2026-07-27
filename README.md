@@ -95,6 +95,30 @@ you directly, rather than silently swallowing their message.
 makes a lot of people abandon it, and you reply by email anyway. To make it required, add
 `if (!f.phone) err.phone = "..."` in `sendContact()`.
 
+## 📬 The mailing list — one grade per family
+
+The "Get free printable packs by email" card asks a parent for two things: **their email** and
+**which grade** the packs are for. It posts through the same Web3Forms key as the contact form, so
+there's nothing extra to set up.
+
+A family gets **one grade at a time**. They can switch whenever their child moves up (or to sign up
+for a sibling instead) — switching *replaces* their grade, it never adds a second. Switch signups
+arrive with `(grade switch)` in the subject and the old grade named in the body.
+
+**How the rule is actually enforced — please read.** The browser only remembers what *that browser*
+did. A second device, a different browser, or a cleared cache all start fresh, and nothing stops
+someone signing up twice from two phones. The real enforcement is **at your end: keep one row per
+email address.** That's why every signup email carries the grade in its own field, in the subject
+line, and in the body, along with a reminder to update the existing row rather than add another.
+
+Practically: filter your inbox on `mailing list signup`, and when you move signups into Buttondown /
+ConvertKit / Mailchimp, use the address as the unique key and the grade as a tag or segment. Then
+sending "Grade 3 pack" to everyone tagged Grade 3 is one click.
+
+**COPPA:** this form asks a parent for their address and a grade level, and nothing else. It never
+asks for a child's name, age, birthday or school — keep it that way. A grade band is not personal
+information about a child; a name or birthday is.
+
 ## ✅ Content accuracy
 
 Factual data is verified against outside sources rather than trusted from memory:
