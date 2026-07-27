@@ -1,4 +1,4 @@
-// BrightSprouts Academy — Phonics & Word Study, folded into Kindergarten through Grade 7.
+// BrightSprouts Academy: Phonics & Word Study, folded into Kindergarten through Grade 7.
 // The real developmental arc: letter sounds → blending → digraphs & silent e → vowel teams &
 // syllables → affixes → Greek/Latin roots → spelling patterns → word origins.
 // Every list is tap-to-hear (English) so a child hears the sound, not just sees it.
@@ -45,7 +45,7 @@
   }
   var pairs = [["hop", "hope"], ["kit", "kite"], ["cap", "cape"], ["tub", "tube"]];
   var silentDia = '<svg viewBox="0 0 340 186"><rect width="340" height="186" rx="14" fill="#f3fbf4"/>'
-    + '<text x="170" y="24" text-anchor="middle" ' + FA + ' font-size="13" fill="#5d3fa0">Add a silent e — the vowel says its name</text>'
+    + '<text x="170" y="24" text-anchor="middle" ' + FA + ' font-size="13" fill="#5d3fa0">Add a silent e, the vowel says its name</text>'
     + '<defs><marker id="se" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#43aa8b"/></marker></defs>';
   for (var i = 0; i < 4; i++) {
     var y = 38 + i * 36;
@@ -131,12 +131,12 @@
       intro: "Every letter makes a sound. Once you know the sounds, you can start unlocking words all by yourself!",
       learn: [
         "Letters have a NAME and a SOUND. For reading, the sound matters most: 's' is named \"ess\" but says \"sss\" like a snake.",
-        "Keep each sound short and crisp — 'b' says \"b\", not \"buh\".",
+        "Keep each sound short and crisp: 'b' says \"b\", not \"buh\".",
         "The five short vowel sounds: a (apple), e (egg), i (igloo), o (octopus), u (umbrella).",
         "Every word starts with a sound. Listen hard for the very first one you hear.",
         "Words that rhyme end with the same sound: cat, hat, bat."
       ],
-      activity: "🔎 Sound Hunt: Pick a letter sound, then race around the house finding three things that start with it. 'b' — ball, book, banana!",
+      activity: "🔎 Sound Hunt: Pick a letter sound, then race around the house finding three things that start with it. 'b': ball, book, banana!",
       diagram: vowelDia, vocabLang: "en",
       vocab: [{ es: "Aa", en: "apple", say: "apple" }, { es: "Bb", en: "ball", say: "ball" },
               { es: "Cc", en: "cat", say: "cat" }, { es: "Dd", en: "dog", say: "dog" },
@@ -145,7 +145,7 @@
               { es: "Ss", en: "sun", say: "sun" }, { es: "Tt", en: "top", say: "top" }],
       questions: [
         { q: "Does the letter 's' say \"sss\" or \"buh\"?", a: "Sss" },
-        { q: "Which matters most for reading — a letter's name or its sound?", a: "Its sound" },
+        { q: "Which matters most for reading, a letter's name or its sound?", a: "Its sound" },
         { q: "Name the five short vowels.", a: "a, e, i, o, u" },
         { q: "What sound does 'ball' start with?", a: "The 'b' sound" },
         { q: "What sound does 'sun' start with?", a: "The 's' sound" },
@@ -155,7 +155,7 @@
         { q: "Do 'cat' and 'hat' rhyme?", a: "Yes" },
         { q: "Name a word that rhymes with 'bug'.", a: "e.g. rug, hug, mug" },
         { q: "What sound does 'fish' start with?", a: "The 'f' sound" },
-        { q: "Should you say 'b' as \"b\" or as \"buh\"?", a: "\"b\" — short and crisp" }
+        { q: "Should you say 'b' as \"b\" or as \"buh\"?", a: "\"b\", short and crisp" }
       ]
     },
     1: {
@@ -166,9 +166,9 @@
         "Say each sound in order, then blend them faster until they snap into a word.",
         "Change the FIRST sound to make a new word: cat → hat → bat → sat.",
         "A word family shares its ending: -at, -an, -ig, -op, -ug. Learn one and you can read them all.",
-        "Some words turn up everywhere but don't sound out — sight words like the, and, is, you, was, said. We learn those by heart."
+        "Some words turn up everywhere but don't sound out: sight words like the, and, is, you, was, said. We learn those by heart."
       ],
-      activity: "🐌 Slow Then Fast: Say a word slowly, sound by sound, and let your child snap it together fast. Then swap — they stretch, you blend!",
+      activity: "🐌 Slow Then Fast: Say a word slowly, sound by sound, and let your child snap it together fast. Then swap; they stretch, you blend!",
       diagram: blendDia, vocabLang: "en",
       vocab: [{ es: "cat", en: "c – a – t" }, { es: "dog", en: "d – o – g" }, { es: "sun", en: "s – u – n" },
               { es: "hat", en: "-at family" }, { es: "pig", en: "-ig family" }, { es: "bed", en: "b – e – d" },
@@ -186,18 +186,18 @@
         { q: "Name two words in the -ug family.", a: "e.g. bug, rug, hug, mug" },
         { q: "What do we call words we learn by heart instead of sounding out?", a: "Sight words (tricky words)" },
         { q: "Name a sight word.", a: "e.g. the, and, is, you, was, said" },
-        { q: "Is 'said' spelled the way it sounds?", a: "No — it is a tricky word" }
+        { q: "Is 'said' spelled the way it sounds?", a: "No, it is a tricky word" }
       ]
     },
     2: {
       title: "Digraphs, Blends & Silent e", emoji: "🔡",
-      intro: "Now letters start teaming up. Two letters can make one brand-new sound — and a silent e at the end changes everything.",
+      intro: "Now letters start teaming up. Two letters can make one brand-new sound, and a silent e at the end changes everything.",
       learn: [
         "A digraph is two letters making ONE sound: sh (ship), ch (chip), th (thin), wh (when).",
         "A blend is two letters you can still hear separately: bl (black), st (stop), fr (frog), sk (skip).",
         "Silent e sits at the end of a word, says nothing, and makes the vowel say its own name: hop → hope, kit → kite.",
         "That is why 'cap' and 'cape' look so similar but sound so different.",
-        "Keep collecting sight words — they appear in almost every sentence you read."
+        "Keep collecting sight words; they appear in almost every sentence you read."
       ],
       activity: "🔡 Silent e Switch: Write hop, kit, cap and tub on cards. Add an 'e' card to the end of each and read the new word. Magic!",
       diagram: silentDia, vocabLang: "en",
@@ -215,17 +215,17 @@
         { q: "What does a silent e do to the vowel before it?", a: "Makes it say its own name (a long vowel)" },
         { q: "Add a silent e to 'hop'. What word do you get?", a: "hope" },
         { q: "Add a silent e to 'kit'. What word do you get?", a: "kite" },
-        { q: "Do you say the 'e' in 'cape' out loud?", a: "No — it is silent" },
+        { q: "Do you say the 'e' in 'cape' out loud?", a: "No, it is silent" },
         { q: "Is 'sh' a digraph or a blend?", a: "A digraph" },
         { q: "Is 'bl' a digraph or a blend?", a: "A blend" }
       ]
     },
     3: {
       title: "Vowel Teams & Syllables", emoji: "🎵",
-      intro: "Vowels love working in pairs — and every word has a beat you can clap. Both tricks help you read longer words.",
+      intro: "Vowels love working in pairs, and every word has a beat you can clap. Both tricks help you read longer words.",
       learn: [
         "A vowel team is two vowels making one sound: ai (rain), ay (day), ee (tree), ea (sea), oa (boat), oo (book).",
-        "You may hear \"when two vowels go walking, the first does the talking\" — it often works, but there are lots of exceptions, so always check the word makes sense.",
+        "You may hear \"when two vowels go walking, the first does the talking\"; it often works, but there are lots of exceptions, so always check the word makes sense.",
         "R-controlled vowels are bossed about by the r: ar (star), or (fork), er (her), ir (bird), ur (turn).",
         "A syllable is a beat in a word, and every syllable has exactly one vowel sound.",
         "Clap the beats to split a long word: but•ter•fly is 3 claps, so it is 3 syllables."
@@ -240,7 +240,7 @@
         { q: "Which vowel team is in 'rain'?", a: "ai" },
         { q: "Which vowel team is in 'boat'?", a: "oa" },
         { q: "Which vowel team is in 'tree'?", a: "ee" },
-        { q: "Does 'when two vowels go walking' always work?", a: "No — it often works, but there are many exceptions" },
+        { q: "Does 'when two vowels go walking' always work?", a: "No, it often works, but there are many exceptions" },
         { q: "What letter bosses the vowel in 'star' and 'bird'?", a: "r" },
         { q: "What is a syllable?", a: "A beat in a word" },
         { q: "How many vowel sounds does each syllable have?", a: "One" },
@@ -252,7 +252,7 @@
     },
     4: {
       title: "Prefixes, Suffixes & Compounds", emoji: "🧩",
-      intro: "Long words aren't scary — they're built from pieces. Learn the pieces and you can take any word apart.",
+      intro: "Long words aren't scary; they're built from pieces. Learn the pieces and you can take any word apart.",
       learn: [
         "The base word is the main part. A prefix goes on the front and a suffix goes on the end.",
         "Prefixes change the meaning: un- (not), re- (again), pre- (before), dis- (not), mis- (wrongly).",
@@ -314,12 +314,12 @@
     },
     6: {
       title: "Silent Letters & Spelling Rules", emoji: "🧠",
-      intro: "English spelling has some odd habits — letters that stay silent and rules with exceptions. Here's how to handle them.",
+      intro: "English spelling has some odd habits: letters that stay silent and rules with exceptions. Here's how to handle them.",
       learn: [
         "Some letters are written but never said: kn (knee, knight), wr (write, wrong), mb (lamb, thumb), gh (ghost), and the b in 'debt'.",
         "Plurals: usually add -s; add -es after s, x, z, ch or sh (boxes, brushes); a consonant + y becomes -ies (baby → babies).",
-        "You may be taught \"i before e except after c\" — it is only a rough guide, and words like their, weird, science and height break it.",
-        "The schwa is the lazy 'uh' sound in unstressed syllables (banana, problem, pencil) — it is the most common vowel sound in English.",
+        "You may be taught \"i before e except after c\"; it is only a rough guide, and words like their, weird, science and height break it.",
+        "The schwa is the lazy 'uh' sound in unstressed syllables (banana, problem, pencil); it is the most common vowel sound in English.",
         "When a rule and a real word disagree, the word wins. Reading widely teaches spelling better than any rule."
       ],
       activity: "🧠 Silent Letter Hunt: Find ten words with silent letters in a book. Which silent letter shows up the most?",
@@ -332,11 +332,11 @@
         { q: "Which letter is silent in 'knee'?", a: "The k" },
         { q: "Which letter is silent in 'write'?", a: "The w" },
         { q: "Which letter is silent in 'lamb'?", a: "The b" },
-        { q: "How do you make 'box' plural?", a: "boxes — add -es after x" },
-        { q: "How do you make 'baby' plural?", a: "babies — the y becomes ies" },
-        { q: "How do you make 'cat' plural?", a: "cats — just add -s" },
+        { q: "How do you make 'box' plural?", a: "boxes, add -es after x" },
+        { q: "How do you make 'baby' plural?", a: "babies, the y becomes ies" },
+        { q: "How do you make 'cat' plural?", a: "cats, just add -s" },
         { q: "After which letters do we add -es?", a: "s, x, z, ch and sh" },
-        { q: "Is \"i before e except after c\" always true?", a: "No — it is only a rough guide with many exceptions" },
+        { q: "Is \"i before e except after c\" always true?", a: "No, it is only a rough guide with many exceptions" },
         { q: "Name a word that breaks the i-before-e rule.", a: "e.g. their, weird, science, height" },
         { q: "What is the schwa?", a: "The lazy 'uh' sound in unstressed syllables" },
         { q: "Name a word containing a schwa sound.", a: "e.g. banana, problem, pencil" },
@@ -345,13 +345,13 @@
     },
     7: {
       title: "Word Origins & Word Study", emoji: "📜",
-      intro: "Every word has a history. English has borrowed from all over the world — and knowing where words come from makes you a sharper reader.",
+      intro: "Every word has a history. English has borrowed from all over the world, and knowing where words come from makes you a sharper reader.",
       learn: [
         "Etymology is the study of where words come from and how their meanings changed over time.",
         "English is a magpie language. It has borrowed chocolate (from Nahuatl, via Spanish), algebra (Arabic), piano (Italian), shampoo (Hindi), tsunami (Japanese) and kindergarten (German).",
         "Homophones sound the same but are spelled differently and mean different things: their / there / they're.",
         "Homographs are spelled the same but differ in meaning, and sometimes in sound: a 'bow' in your hair, to 'bow' on stage, the 'bow' of a ship.",
-        "Break unfamiliar academic words into root, prefix and suffix — that, plus context, will usually get you the meaning without a dictionary."
+        "Break unfamiliar academic words into root, prefix and suffix; that, plus context, will usually get you the meaning without a dictionary."
       ],
       activity: "📜 Word Detective: Look up the origin of your favourite word in a dictionary. Which language did it come from, and has its meaning shifted?",
       diagram: originDia, vocabLang: "en",
@@ -373,7 +373,7 @@
         { q: "Which language does 'piano' come from?", a: "Italian" },
         { q: "Which language does 'shampoo' come from?", a: "Hindi" },
         { q: "Name three parts you can break a long word into.", a: "Prefix, root (base) and suffix" },
-        { q: "Besides word parts, what else helps you work out a new word?", a: "The context — the sentence around it" }
+        { q: "Besides word parts, what else helps you work out a new word?", a: "The context: the sentence around it" }
       ]
     }
   };
