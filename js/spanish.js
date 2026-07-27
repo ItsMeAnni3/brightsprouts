@@ -1,5 +1,5 @@
-// BrightSprouts Academy — Learn Spanish category (LESSONS[21]): basic Spanish for grade-schoolers.
-// Greetings, numbers, colours, family and animals — each with a labeled picture-vocabulary diagram.
+// BrightSprouts Academy: Learn Spanish category (LESSONS[21]): basic Spanish for grade-schoolers.
+// Greetings, numbers, colours, family and animals, each with a labeled picture-vocabulary diagram.
 (function () {
   if (typeof LESSONS === "undefined") return;
   var LB = 'font-family="Fredoka, system-ui, sans-serif" font-size="12" fill="#2d2a4a"';
@@ -22,7 +22,7 @@
                              ["16","dieciséis"],["17","diecisiete"],["18","dieciocho"],["19","diecinueve"],["20","veinte"]],
                             "#f0fbf3", "#43aa8b", 10);
 
-  // Colours — a swatch of each colour with the Spanish word beneath (two rows of five).
+  // Colours: a swatch of each colour with the Spanish word beneath (two rows of five).
   var cols = [["#e63946","rojo"],["#4d96ff","azul"],["#ffd166","amarillo"],["#43aa8b","verde"],["#f3722c","naranja"],
               ["#7c5cbf","morado"],["#ff8fb1","rosa"],["#8a5a2b","marrón"],["#2b2b2b","negro"],["#ffffff","blanco"]];
   var colDia = '<svg viewBox="0 0 340 168"><rect width="340" height="168" rx="14" fill="#faf7ff"/>';
@@ -33,7 +33,7 @@
   }
   colDia += '</svg>';
 
-  // Family — a simple labeled figure for each of six family words (two rows of three).
+  // Family: a simple labeled figure for each of six family words (two rows of three).
   function person(px, py, col, lbl) {
     return '<circle cx="' + px + '" cy="' + py + '" r="13" fill="' + col + '"/>'
       + '<path d="M' + (px - 17) + ' ' + (py + 40) + ' Q' + px + ' ' + (py + 10) + ' ' + (px + 17) + ' ' + (py + 40) + ' Z" fill="' + col + '"/>'
@@ -44,7 +44,7 @@
     + person(70, 116, "#e0a94a", "hermana") + person(170, 116, "#7c5cbf", "abuelo") + person(270, 116, "#d06a6a", "abuela")
     + '</svg>';
 
-  // Greetings — two speech bubbles with translations.
+  // Greetings: two speech bubbles with translations.
   var greetDia = '<svg viewBox="0 0 340 150"><rect width="340" height="150" rx="14" fill="#fff6ee"/>'
     + '<g><rect x="26" y="26" width="130" height="56" rx="16" fill="#ffd6a5" stroke="#f0a04a" stroke-width="2"/>'
     + '<path d="M58 80 l-8 22 l26 -18 z" fill="#ffd6a5" stroke="#f0a04a" stroke-width="2"/>'
@@ -55,7 +55,7 @@
     + '<text x="249" y="62" text-anchor="middle" ' + FA + ' font-size="21" fill="#2b6bc4">¡Adiós!</text></g>'
     + '<text x="249" y="128" text-anchor="middle" ' + LB + '>= Goodbye</text></svg>';
 
-  // Animals — four simple labeled creatures.
+  // Animals: four simple labeled creatures.
   var aniDia = '<svg viewBox="0 0 340 118"><rect width="340" height="118" rx="14" fill="#eefaf0"/>'
     // pez (fish)
     + '<ellipse cx="52" cy="52" rx="26" ry="16" fill="#4da6ff"/><path d="M78 52 l18 -12 v24 z" fill="#4da6ff"/><circle cx="42" cy="47" r="3" fill="#123"/>'
@@ -67,7 +67,7 @@
     + '<circle cx="295" cy="54" r="18" fill="#c99a6a"/><ellipse cx="279" cy="52" rx="6" ry="12" fill="#a6774a"/><ellipse cx="311" cy="52" rx="6" ry="12" fill="#a6774a"/><circle cx="289" cy="52" r="2.5" fill="#123"/><circle cx="301" cy="52" r="2.5" fill="#123"/><ellipse cx="295" cy="62" rx="4" ry="3" fill="#5a3d24"/>'
     + '<g ' + LB + ' text-anchor="middle"><text x="52" y="104">pez</text><text x="133" y="104">pájaro</text><text x="214" y="104">gato</text><text x="295" y="104">perro</text></g></svg>';
 
-  // Food — four labeled everyday foods.
+  // Food: four labeled everyday foods.
   var foodDia = '<svg viewBox="0 0 340 122"><rect width="340" height="122" rx="14" fill="#fff6ee"/>'
     // la manzana (apple)
     + '<rect x="50" y="26" width="4" height="12" rx="2" fill="#7a5230"/>'
@@ -84,7 +84,7 @@
     + '<path d="M284 48 h22 l-4 26 h-14 z" fill="#eff5ff"/>'
     + '<g ' + LB + ' text-anchor="middle"><text x="52" y="106">manzana</text><text x="133" y="106">plátano</text><text x="214" y="106">pan</text><text x="295" y="106">leche</text></g></svg>';
 
-  // Days of the week — a strip of seven rows, weekend in a warmer colour.
+  // Days of the week: a strip of seven rows, weekend in a warmer colour.
   var days = [["lunes","Monday"],["martes","Tuesday"],["miércoles","Wednesday"],["jueves","Thursday"],
               ["viernes","Friday"],["sábado","Saturday"],["domingo","Sunday"]];
   var dayDia = '<svg viewBox="0 0 340 212"><rect width="340" height="212" rx="14" fill="#f5f2ff"/>';
@@ -96,7 +96,7 @@
   }
   dayDia += '</svg>';
 
-  // Months — twelve chips, four per row, a colour band per row.
+  // Months: twelve chips, four per row, a colour band per row.
   var months = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
   var mRow = ["#bfe3ff", "#ffe6a3", "#d8f0c8"];
   var monDia = '<svg viewBox="0 0 340 172"><rect width="340" height="172" rx="14" fill="#fdfaff"/>';
@@ -110,13 +110,13 @@
   LESSONS[21] = {
     greetings: {
       title: "Greetings & Manners", emoji: "👋",
-      intro: "¡Hola! That means 'hello' — you just spoke Spanish! Let's learn the friendly words to greet people and be polite.",
+      intro: "¡Hola! That means 'hello', you just spoke Spanish! Let's learn the friendly words to greet people and be polite.",
       learn: [
-        "\"Hola\" means hello — the h is silent, so it sounds like OH-lah.",
+        "\"Hola\" means hello; the h is silent, so it sounds like OH-lah.",
         "\"Adiós\" means goodbye. \"Buenos días\" means good morning (good day).",
         "\"Buenas tardes\" means good afternoon; \"Buenas noches\" means good evening / good night.",
         "To be polite: \"por favor\" = please, \"gracias\" = thank you, \"de nada\" = you're welcome.",
-        "\"Sí\" means yes and \"no\" means no. \"¿Cómo estás?\" means \"How are you?\" — you can answer \"Bien\" (good)."
+        "\"Sí\" means yes and \"no\" means no. \"¿Cómo estás?\" means \"How are you?\"; you can answer \"Bien\" (good)."
       ],
       activity: "👋 Greeting Game: All week, greet your family with '¡Buenos días!' and say '¡Gracias!' whenever someone helps you. Count how many times you use Spanish in a day!",
       diagram: greetDia,
@@ -140,7 +140,7 @@
         { q: "'Buenas noches' means ____.", a: "Good evening / good night" },
         { q: "What does '¿Cómo estás?' mean?", a: "How are you?" },
         { q: "How do you answer that you feel good?", a: "Bien" },
-        { q: "Is the 'h' in 'hola' spoken out loud?", a: "No — it is silent" }
+        { q: "Is the 'h' in 'hola' spoken out loud?", a: "No, it is silent" }
       ]
     },
     numbers: {
@@ -153,7 +153,7 @@
         "10 = diez. Try clapping once for each number as you say it!",
         "\"¿Cuántos?\" means \"How many?\""
       ],
-      activity: "🔢 Count It Out: Count your toys, the stairs, or your snacks in Spanish — 'uno, dos, tres...' up to diez. Then teach someone in your family to count to 10!",
+      activity: "🔢 Count It Out: Count your toys, the stairs, or your snacks in Spanish: 'uno, dos, tres...' up to diez. Then teach someone in your family to count to 10!",
       diagram: numDia,
       vocab: [
         { es: "uno", en: "one" }, { es: "dos", en: "two" }, { es: "tres", en: "three" },
@@ -186,7 +186,7 @@
         "negro = black, blanco = white.",
         "\"¿De qué color es?\" means \"What colour is it?\""
       ],
-      activity: "🌈 Colour Hunt: Walk around your home and point at things, naming each colour in Spanish — '¡Rojo!' for an apple, '¡Azul!' for the sky. Find something for every colour you learned!",
+      activity: "🌈 Colour Hunt: Walk around your home and point at things, naming each colour in Spanish: '¡Rojo!' for an apple, '¡Azul!' for the sky. Find something for every colour you learned!",
       diagram: colDia,
       vocab: [
         { es: "rojo", en: "red" }, { es: "azul", en: "blue" }, { es: "amarillo", en: "yellow" },
@@ -219,7 +219,7 @@
         "hijo = son; hija = daughter.",
         "\"familia\" = family. Many Spanish words end in -o for boys/men and -a for girls/women."
       ],
-      activity: "👨‍👩‍👧 Family Portrait: Draw your family and label each person in Spanish — 'mamá', 'papá', 'hermano', 'hermana'. Then show your picture and say who everyone is en español!",
+      activity: "👨‍👩‍👧 Family Portrait: Draw your family and label each person in Spanish: 'mamá', 'papá', 'hermano', 'hermana'. Then show your picture and say who everyone is en español!",
       diagram: famDia,
       vocab: [
         { es: "familia", en: "family" }, { es: "madre", en: "mother" }, { es: "mamá", en: "mom" },
@@ -244,7 +244,7 @@
     },
     animals: {
       title: "Animals", emoji: "🐶",
-      intro: "El perro says woof and el gato says meow! Let's meet the animals — los animales — in Spanish.",
+      intro: "El perro says woof and el gato says meow! Let's meet the animals, los animales, in Spanish.",
       learn: [
         "perro = dog; gato = cat.",
         "pájaro = bird; pez = fish.",
@@ -252,7 +252,7 @@
         "pato = duck; cerdo = pig.",
         "\"animal\" is spelled the same but sounds different (ah-nee-MAL). \"¿Qué animal es?\" = \"What animal is it?\""
       ],
-      activity: "🐶 Animal Sounds: Point to animals in a book or out the window and name them in Spanish — 'perro', 'gato', 'pájaro'. Make each animal's sound after you say its Spanish name!",
+      activity: "🐶 Animal Sounds: Point to animals in a book or out the window and name them in Spanish: 'perro', 'gato', 'pájaro'. Make each animal's sound after you say its Spanish name!",
       diagram: aniDia,
       vocab: [
         { es: "el perro", en: "the dog" }, { es: "el gato", en: "the cat" }, { es: "el pájaro", en: "the bird" },
@@ -282,9 +282,9 @@
         "el pan = bread; el queso = cheese; el huevo = egg.",
         "la leche = milk; el agua = water; el jugo = juice.",
         "el arroz = rice; el pollo = chicken; el pescado = fish (to eat).",
-        "\"el\" and \"la\" both mean \"the\" — \"el\" for boy-words and \"la\" for girl-words. \"Tengo hambre\" = I'm hungry; \"¡Qué rico!\" = How tasty!"
+        "\"el\" and \"la\" both mean \"the\": \"el\" for boy-words and \"la\" for girl-words. \"Tengo hambre\" = I'm hungry; \"¡Qué rico!\" = How tasty!"
       ],
-      activity: "🍎 Snack Time en Español: At your next meal, name each food in Spanish before you eat it — 'la manzana', 'el pan', 'la leche'. Say '¡Qué rico!' if you like it!",
+      activity: "🍎 Snack Time en Español: At your next meal, name each food in Spanish before you eat it: 'la manzana', 'el pan', 'la leche'. Say '¡Qué rico!' if you like it!",
       diagram: foodDia,
       vocab: [
         { es: "la manzana", en: "apple" }, { es: "el plátano", en: "banana" }, { es: "la naranja", en: "orange" },
@@ -309,11 +309,11 @@
     },
     days: {
       title: "Days of the Week", emoji: "📅",
-      intro: "Seven days make una semana — a week. Let's learn to say each one, from lunes all the way to domingo.",
+      intro: "Seven days make una semana, a week. Let's learn to say each one, from lunes all the way to domingo.",
       learn: [
         "lunes = Monday; martes = Tuesday; miércoles = Wednesday.",
         "jueves = Thursday; viernes = Friday.",
-        "sábado = Saturday; domingo = Sunday — el fin de semana (the weekend)!",
+        "sábado = Saturday; domingo = Sunday: el fin de semana (the weekend)!",
         "\"la semana\" = the week, and it usually starts on lunes (Monday) in Spanish-speaking countries.",
         "Days are NOT capitalized in Spanish. \"Hoy es lunes\" = \"Today is Monday.\""
       ],
@@ -342,7 +342,7 @@
     },
     months: {
       title: "Months of the Year", emoji: "🗓️",
-      intro: "Twelve months make un año — a year. Many of them sound a lot like English, so you already know more than you think!",
+      intro: "Twelve months make un año, a year. Many of them sound a lot like English, so you already know more than you think!",
       learn: [
         "enero = January; febrero = February; marzo = March.",
         "abril = April; mayo = May; junio = June.",
@@ -376,7 +376,7 @@
     },
     more: {
       title: "Numbers 11–100", emoji: "🔟",
-      intro: "You can already count to diez. Now let's go all the way to cien — one hundred!",
+      intro: "You can already count to diez. Now let's go all the way to cien: one hundred!",
       learn: [
         "11 = once, 12 = doce, 13 = trece, 14 = catorce, 15 = quince.",
         "16 = dieciséis, 17 = diecisiete, 18 = dieciocho, 19 = diecinueve, 20 = veinte.",
@@ -384,7 +384,7 @@
         "60 = sesenta, 70 = setenta, 80 = ochenta, 90 = noventa, 100 = cien.",
         "For the numbers in between, join them with \"y\" (and): 31 = treinta y uno, 45 = cuarenta y cinco."
       ],
-      activity: "🔟 Count by Tens: Count 10, 20, 30... all the way to 100 in Spanish — 'diez, veinte, treinta...'. Then say your age and your house number en español!",
+      activity: "🔟 Count by Tens: Count 10, 20, 30... all the way to 100 in Spanish: 'diez, veinte, treinta...'. Then say your age and your house number en español!",
       diagram: num2Dia,
       vocab: [
         { es: "once", en: "eleven" }, { es: "doce", en: "twelve" }, { es: "trece", en: "thirteen" },
