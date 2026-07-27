@@ -1,4 +1,4 @@
-// BrightSprouts Academy — Space Exploration category (LESSONS[24]) for grade-schoolers.
+// BrightSprouts Academy: Space Exploration category (LESSONS[24]) for grade-schoolers.
 // Solar system → the Moon → rockets → astronauts → robot explorers.
 // Facts kept to the stable, textbook kind (no moon counts or distances that change with new discoveries).
 (function () {
@@ -53,7 +53,7 @@
     moonDia += moonPhase(mx, 50, 16, mi)
       + '<text x="' + mx + '" y="' + (mi % 2 ? 94 : 82) + '" text-anchor="middle" ' + FA + ' font-size="9" fill="#dfe6ff">' + phaseNames[mi] + '</text>';
   }
-  moonDia += '<text x="170" y="118" text-anchor="middle" ' + FA + ' font-size="11.5" fill="#fff">The Moon\'s phases — about a month from new to new</text></svg>';
+  moonDia += '<text x="170" y="118" text-anchor="middle" ' + FA + ' font-size="11.5" fill="#fff">The Moon\'s phases: about a month from new to new</text></svg>';
 
   // ---- rocket: thrust pushes down, rocket goes up ----
   var rocketDia = '<svg viewBox="0 0 340 214"><rect width="340" height="214" rx="14" fill="#eef3ff"/>'
@@ -114,15 +114,15 @@
   LESSONS[24] = {
     solar: {
       title: "The Solar System", emoji: "☀️",
-      intro: "Our address in space! The Sun sits in the middle, and everything else — planets, moons and asteroids — travels around it.",
+      intro: "Our address in space! The Sun sits in the middle, and everything else, planets, moons and asteroids, travels around it.",
       learn: [
         "The Sun is a star, and it sits at the centre of our solar system. Everything else orbits (travels around) it.",
         "There are eight planets. In order from the Sun: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune.",
         "The four closest planets are small and rocky. The four farthest are giants, made mostly of gas and ice.",
-        "Jupiter is the biggest planet and Mercury is the smallest. Venus is the hottest — even hotter than Mercury, because its thick clouds trap the heat.",
-        "A belt of asteroids orbits between Mars and Jupiter. Earth takes 365 days to travel once around the Sun — that is one year."
+        "Jupiter is the biggest planet and Mercury is the smallest. Venus is the hottest, even hotter than Mercury, because its thick clouds trap the heat.",
+        "A belt of asteroids orbits between Mars and Jupiter. Earth takes 365 days to travel once around the Sun; that is one year."
       ],
-      activity: "🌞 Planet Parade: Write the eight planets on cards and line them up in order. Learn the sentence 'My Very Educated Mother Just Served Us Noodles' — the first letters give you the planets!",
+      activity: "🌞 Planet Parade: Write the eight planets on cards and line them up in order. Learn the sentence 'My Very Educated Mother Just Served Us Noodles': the first letters give you the planets!",
       diagram: solarDia,
       questions: [
         { q: "What is at the centre of our solar system?", a: "The Sun" },
@@ -135,13 +135,13 @@
         { q: "Which planet is famous for its bright rings?", a: "Saturn" },
         { q: "Going outwards, which planet comes right after Earth?", a: "Mars" },
         { q: "What orbits between Mars and Jupiter?", a: "The asteroid belt" },
-        { q: "Is Pluto one of the eight planets?", a: "No — it is a dwarf planet" },
+        { q: "Is Pluto one of the eight planets?", a: "No, it is a dwarf planet" },
         { q: "How long does Earth take to orbit the Sun once?", a: "365 days (one year)" }
       ]
     },
     moon: {
       title: "The Moon", emoji: "🌙",
-      intro: "The Moon is our closest neighbour in space — and the only other world people have ever walked on.",
+      intro: "The Moon is our closest neighbour in space, and the only other world people have ever walked on.",
       learn: [
         "The Moon orbits Earth, taking about a month to travel all the way round.",
         "The Moon does not make its own light. It shines because sunlight bounces off it.",
@@ -154,7 +154,7 @@
       questions: [
         { q: "What does the Moon orbit?", a: "Earth" },
         { q: "About how long does the Moon take to orbit Earth?", a: "About a month" },
-        { q: "Does the Moon make its own light?", a: "No — it reflects sunlight" },
+        { q: "Does the Moon make its own light?", a: "No, it reflects sunlight" },
         { q: "What do we call the different shapes of the Moon?", a: "Phases" },
         { q: "What is it called when we cannot see the lit Moon at all?", a: "A new moon" },
         { q: "What is it called when the whole face is lit up?", a: "A full moon" },
@@ -168,15 +168,15 @@
     },
     rockets: {
       title: "Rockets & How We Fly", emoji: "🚀",
-      intro: "How do you leave a whole planet? You need a rocket — and one very clever push.",
+      intro: "How do you leave a whole planet? You need a rocket, and one very clever push.",
       learn: [
         "To reach space, a rocket must travel extremely fast to escape Earth's gravity.",
-        "A rocket burns fuel and pushes hot gas out of the bottom. The gas pushes down, so the rocket pushes up — every action has an equal and opposite reaction.",
+        "A rocket burns fuel and pushes hot gas out of the bottom. The gas pushes down, so the rocket pushes up: every action has an equal and opposite reaction.",
         "There is no air in space, so a rocket must carry its own oxygen to burn its fuel.",
         "Big rockets are built in stages. When a stage runs out of fuel it drops away, making the rocket lighter.",
         "Satellites are machines we place in orbit around Earth. They help with weather forecasts, television, maps and phone calls."
       ],
-      activity: "🎈 Balloon Rocket: Thread a string through a straw and tie it across the room. Tape a blown-up balloon to the straw and let go — the air rushes out one way and the balloon shoots the other, exactly like a rocket!",
+      activity: "🎈 Balloon Rocket: Thread a string through a straw and tie it across the room. Tape a blown-up balloon to the straw and let go: the air rushes out one way and the balloon shoots the other, exactly like a rocket!",
       diagram: rocketDia,
       questions: [
         { q: "What must a rocket escape to reach space?", a: "Earth's gravity" },
@@ -201,7 +201,7 @@
         "Space has no air, so astronauts wear spacesuits that supply oxygen, keep the pressure right, and protect them from heat and cold.",
         "On a space station everything floats. The station and everyone inside are falling around the Earth together, which makes it all feel weightless.",
         "The International Space Station orbits about 400 kilometres above Earth, and astronauts from many countries live and work on board.",
-        "Floating is fun, but it weakens bones and muscles — so astronauts exercise every day. They sleep in sleeping bags strapped down so they don't drift away!"
+        "Floating is fun, but it weakens bones and muscles, so astronauts exercise every day. They sleep in sleeping bags strapped down so they don't drift away!"
       ],
       activity: "👨‍🚀 Space Menu: Plan a meal an astronaut could eat with no crumbs and no spills. Why would floating crumbs be a real problem on a space station?",
       diagram: astroDia,
@@ -216,13 +216,13 @@
         { q: "How do astronauts sleep in space?", a: "In sleeping bags strapped down so they don't float away" },
         { q: "Is there air to breathe in space?", a: "No" },
         { q: "Why would crumbs cause trouble in space?", a: "They would float around and get into eyes and equipment" },
-        { q: "Do astronauts come from only one country?", a: "No — from many countries" },
+        { q: "Do astronauts come from only one country?", a: "No, from many countries" },
         { q: "What do we call the floating feeling in orbit?", a: "Weightlessness" }
       ]
     },
     explore: {
       title: "Exploring Further", emoji: "🔭",
-      intro: "People have only walked as far as the Moon — but our robots and telescopes have gone much, much further.",
+      intro: "People have only walked as far as the Moon, but our robots and telescopes have gone much, much further.",
       learn: [
         "A telescope collects light so we can see things that are very far away.",
         "Space telescopes orbit above the air, which gives them a far clearer view than telescopes on the ground.",
@@ -241,7 +241,7 @@
         { q: "About how long does sunlight take to reach Earth?", a: "About 8 minutes" },
         { q: "Why does starlight take years to reach us?", a: "The stars are extremely far away" },
         { q: "Which planet do rovers explore?", a: "Mars" },
-        { q: "Do people ride inside the Mars rovers?", a: "No — they are robots controlled from Earth" },
+        { q: "Do people ride inside the Mars rovers?", a: "No, they are robots controlled from Earth" },
         { q: "What are scientists hoping to find on Mars?", a: "Signs of water and life" },
         { q: "Which sees more clearly: a telescope in space or one on the ground?", a: "One in space" },
         { q: "What do we call the study of space and stars?", a: "Astronomy" }
