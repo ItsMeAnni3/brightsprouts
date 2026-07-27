@@ -1,4 +1,4 @@
-// BrightSprouts Academy — Feelings & Kindness (LESSONS[25]): social-emotional learning for grade-schoolers.
+// BrightSprouts Academy: Feelings & Kindness (LESSONS[25]): social-emotional learning for grade-schoolers.
 // Naming feelings → calming them → empathy → friendship → speaking up.
 // Strategies are the mainstream, well-established ones (name it to tame it, slow breathing,
 // perspective-taking, a real apology, "yet"), kept practical and never clinical.
@@ -94,7 +94,7 @@
       + '<text x="' + gx + '" y="98" text-anchor="middle" ' + FA + ' font-size="11" fill="#2d2a4a">' + fsteps[gi][1] + '</text>';
     if (gi < 3) friendDia += '<path d="M' + (gx + 30) + ' 52 h22" stroke="#9ab6e8" stroke-width="2.5" fill="none"/>';
   }
-  friendDia += '<text x="170" y="132" text-anchor="middle" ' + FA + ' font-size="12" fill="#5d3fa0">If they say no, that\'s okay — try another game or friend</text></svg>';
+  friendDia += '<text x="170" y="132" text-anchor="middle" ' + FA + ' font-size="12" fill="#5d3fa0">If they say no, that\'s okay, try another game or friend</text></svg>';
 
   // ---- speaking up: three steps ----
   var bsteps = ['"Stop. I don\'t', 'Walk away', 'Tell a trusted'];
@@ -115,7 +115,7 @@
   LESSONS[25] = {
     feelings: {
       title: "Naming Feelings", emoji: "😊",
-      intro: "Feelings are like weather inside you — they roll in and they roll out. The first big skill is being able to name them.",
+      intro: "Feelings are like weather inside you: they roll in and they roll out. The first big skill is being able to name them.",
       learn: [
         "Everyone has feelings, and all of them are okay: happy, sad, angry, scared, excited, worried, proud, calm.",
         "Feelings are not 'good' or 'bad'. What we DO with a feeling is what matters.",
@@ -126,16 +126,16 @@
       activity: "😊 Feelings Check-In: At dinner, everyone shares one feeling from their day using the sentence \"I felt ___ when ___.\" Grown-ups go first!",
       diagram: feelDia,
       questions: [
-        { q: "Are all feelings okay to have?", a: "Yes — all feelings are normal" },
+        { q: "Are all feelings okay to have?", a: "Yes, all feelings are normal" },
         { q: "Name three feelings.", a: "e.g. happy, sad, angry, scared, excited, proud" },
         { q: "What clues does your body give about feelings?", a: "A tight tummy, hot cheeks, a fast heartbeat, tears" },
         { q: "What happens when you name a feeling?", a: "It gets smaller and easier to handle" },
         { q: "Finish the sentence: \"I feel ___ because ___.\"", a: "Any honest answer" },
-        { q: "Do big feelings last forever?", a: "No — feelings change, like weather" },
+        { q: "Do big feelings last forever?", a: "No, feelings change, like weather" },
         { q: "Is it the feeling, or what we do with it, that matters most?", a: "What we do with it" },
         { q: "What might a fast heartbeat and shaky hands mean?", a: "You might feel scared, nervous or excited" },
         { q: "What feeling might you have after finishing something hard?", a: "Proud" },
-        { q: "Is it okay to feel angry?", a: "Yes — but we still choose kind actions" },
+        { q: "Is it okay to feel angry?", a: "Yes, but we still choose kind actions" },
         { q: "Can two people feel differently about the same thing?", a: "Yes" },
         { q: "Who could you tell if a feeling gets too big?", a: "A grown-up you trust" }
       ]
@@ -158,23 +158,23 @@
         { q: "Describe flower-and-candle breathing.", a: "Breathe in through your nose, blow out slowly through your mouth" },
         { q: "Why does slow breathing help?", a: "It tells your body it is safe so you can think clearly again" },
         { q: "Name two other things that help you calm down.", a: "e.g. count to ten, sip water, move, find a quiet spot" },
-        { q: "Should you make a big decision while you are very upset?", a: "No — wait until you are calm" },
+        { q: "Should you make a big decision while you are very upset?", a: "No, wait until you are calm" },
         { q: "About how many slow breaths is a good number to try?", a: "Five" },
         { q: "What can you do if a feeling is too big to handle alone?", a: "Tell a grown-up you trust" },
         { q: "Is it okay to take a break when you are upset?", a: "Yes" },
         { q: "When is the best time to practise calming tricks?", a: "When you are already calm" },
-        { q: "Does calming down mean your feeling was wrong?", a: "No — it just helps you choose what to do next" },
+        { q: "Does calming down mean your feeling was wrong?", a: "No, it just helps you choose what to do next" },
         { q: "What are the four steps?", a: "Stop, name it, breathe, choose" }
       ]
     },
     kindness: {
       title: "Kindness & Empathy", emoji: "💛",
-      intro: "Empathy is imagining how someone else feels. It is a genuine superpower — and kindness is what you do with it.",
+      intro: "Empathy is imagining how someone else feels. It is a genuine superpower, and kindness is what you do with it.",
       learn: [
         "Empathy means imagining how someone else might be feeling, even when it is different from how you feel.",
         "Look at faces and bodies for clues, and really listen to what people say.",
         "Kindness is empathy in action: including someone, sharing, helping, or simply asking \"Are you okay?\"",
-        "Small kind acts count for a lot — a smile, a thank you, holding a door, or using someone's name.",
+        "Small kind acts count for a lot: a smile, a thank you, holding a door, or using someone's name.",
         "Kindness spreads. When someone is kind to you, you are more likely to be kind to somebody else."
       ],
       activity: "💛 Secret Kindness: Do one kind thing for someone today without telling them it was you. Afterwards, talk about how it felt to do it.",
@@ -182,27 +182,27 @@
       questions: [
         { q: "What does empathy mean?", a: "Imagining how someone else feels" },
         { q: "Where can you look for clues about how someone feels?", a: "Their face, their body, and what they say" },
-        { q: "What is kindness?", a: "Empathy in action — doing something that helps someone" },
+        { q: "What is kindness?", a: "Empathy in action: doing something that helps someone" },
         { q: "Name a small act of kindness.", a: "e.g. a smile, sharing, helping, including someone" },
         { q: "What could you say to someone who looks sad?", a: "\"Are you okay?\"" },
         { q: "If someone is sitting alone at playtime, what could you do?", a: "Invite them to join in" },
-        { q: "Does everyone feel the same way about the same thing?", a: "No — people feel differently" },
-        { q: "What often happens when you are kind to someone?", a: "It spreads — they are more likely to be kind too" },
-        { q: "Is kindness only for your friends?", a: "No — you can be kind to anyone" },
+        { q: "Does everyone feel the same way about the same thing?", a: "No, people feel differently" },
+        { q: "What often happens when you are kind to someone?", a: "It spreads; they are more likely to be kind too" },
+        { q: "Is kindness only for your friends?", a: "No, you can be kind to anyone" },
         { q: "Name one way to show you are really listening.", a: "Look at them, nod, and don't interrupt" },
         { q: "How could you be kind to someone who is new?", a: "Say hello, learn their name, show them around" },
-        { q: "Does being kind to yourself matter too?", a: "Yes — speak kindly to yourself as well" }
+        { q: "Does being kind to yourself matter too?", a: "Yes, speak kindly to yourself as well" }
       ]
     },
     friends: {
       title: "Making Friends", emoji: "🤝",
-      intro: "Friends make everything better — and being a good friend is a skill you can practise, just like reading.",
+      intro: "Friends make everything better, and being a good friend is a skill you can practise, just like reading.",
       learn: [
-        "To join a game, watch for a moment first, then ask: \"Can I play?\" If they say no, that is okay — try another game or another friend.",
+        "To join a game, watch for a moment first, then ask: \"Can I play?\" If they say no, that is okay, try another game or another friend.",
         "Good friends take turns, share, and let other people choose sometimes too.",
         "Listening is half of friendship: look at your friend, let them finish, and ask a question back.",
         "Friends disagree sometimes, and that is completely normal. Talk it over calmly, or take a break and come back to it.",
-        "A real apology has three parts: what you did, why it was wrong, and what you will do next time — not just the word \"sorry\"."
+        "A real apology has three parts: what you did, why it was wrong, and what you will do next time, not just the word \"sorry\"."
       ],
       activity: "🤝 Turn-Taking Game: Play a board game as a family and talk about how it feels to wait your turn, to win kindly, and to lose kindly.",
       diagram: friendDia,
@@ -214,21 +214,21 @@
         { q: "Is it normal for friends to disagree?", a: "Yes" },
         { q: "What can you do if an argument gets heated?", a: "Take a break and come back when you are calm" },
         { q: "How do you show a friend you are listening?", a: "Look at them, let them finish, ask a question" },
-        { q: "Is it kind to always insist on your own game?", a: "No — let others choose sometimes" },
+        { q: "Is it kind to always insist on your own game?", a: "No, let others choose sometimes" },
         { q: "What does it mean to lose kindly?", a: "Congratulate the winner and try again" },
         { q: "How can you make a new person feel welcome?", a: "Say hello, learn their name, invite them to join in" },
-        { q: "Do you have to be friends with everybody?", a: "No — but you should be kind to everybody" },
+        { q: "Do you have to be friends with everybody?", a: "No, but you should be kind to everybody" },
         { q: "Name one way you could be a good friend today.", a: "Any kind, including or helpful action" }
       ]
     },
     brave: {
       title: "Speaking Up & Trying Again", emoji: "🦁",
-      intro: "Being brave does not mean never feeling scared. It means doing the right thing — and trying again — even when it is hard.",
+      intro: "Being brave does not mean never feeling scared. It means doing the right thing, and trying again, even when it is hard.",
       learn: [
         "If someone is unkind to you, you can say it firmly: \"Stop. I don't like that.\" Then walk away.",
-        "Always tell a grown-up you trust if someone keeps being unkind, hurts you, or makes you feel unsafe. That is not tattling — it is brave and sensible.",
+        "Always tell a grown-up you trust if someone keeps being unkind, hurts you, or makes you feel unsafe. That is not tattling; it is brave and sensible.",
         "Know your trusted grown-ups before you need them: a parent, a teacher, a grandparent, a coach. If the first one cannot help, tell another.",
-        "You are allowed to say no to something that feels wrong — even to another child.",
+        "You are allowed to say no to something that feels wrong, even to another child.",
         "When something is hard, add the word YET: \"I can't do it YET.\" Mistakes are how brains grow, so trying again IS the skill."
       ],
       activity: "🦁 My Trusted Grown-Ups: Draw around your hand and write the name of one trusted grown-up on each finger. Put it somewhere you will see it.",
@@ -236,12 +236,12 @@
       questions: [
         { q: "What can you say if someone is being unkind to you?", a: "\"Stop. I don't like that.\"" },
         { q: "What should you do after saying stop?", a: "Walk away and tell a trusted grown-up" },
-        { q: "Is telling a grown-up about someone being unkind the same as tattling?", a: "No — it is brave and sensible" },
+        { q: "Is telling a grown-up about someone being unkind the same as tattling?", a: "No, it is brave and sensible" },
         { q: "Name a grown-up you could trust.", a: "e.g. a parent, teacher, grandparent or coach" },
         { q: "Are you allowed to say no if something feels wrong?", a: "Yes" },
-        { q: "What word can you add when something feels too hard?", a: "Yet — \"I can't do it YET\"" },
+        { q: "What word can you add when something feels too hard?", a: "Yet: \"I can't do it YET\"" },
         { q: "What do mistakes help your brain do?", a: "Learn and grow" },
-        { q: "Does being brave mean you never feel scared?", a: "No — it means doing the right thing anyway" },
+        { q: "Does being brave mean you never feel scared?", a: "No, it means doing the right thing anyway" },
         { q: "What should you do if you see someone else being treated unkindly?", a: "Be kind to them and tell a trusted grown-up" },
         { q: "If one grown-up cannot help, what should you do?", a: "Tell another grown-up you trust" },
         { q: "What is a good thing to say to yourself after a mistake?", a: "\"I'll try again\" or \"not yet\"" },
