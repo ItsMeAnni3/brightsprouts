@@ -1555,6 +1555,9 @@ footer{background:var(--purple-dark);color:#cfc6ee;text-align:center;padding:20p
 .cu-teaches{font-size:.86rem;color:#57547a;background:#f2eefc;border-radius:9px;
   padding:6px 11px;margin-bottom:10px;line-height:1.45}
 .cu-cols{display:grid;grid-template-columns:1fr 2fr;gap:16px}
+.cu-side{display:flex;flex-direction:column;gap:10px;min-width:0}
+.cu-art{background:#fff;border-radius:12px;padding:6px}
+.cu-art svg{width:100%;height:auto;display:block;border-radius:9px}
 .cu-needs,.cu-steps{background:#fff;border-radius:12px;padding:10px 14px}
 .cu-needs h5,.cu-steps h5{font-family:var(--display);font-size:.9rem;color:var(--purple-dark);margin-bottom:6px}
 .cu-needs ul{margin:0;padding-left:17px} .cu-needs li{font-size:.86rem;line-height:1.45;margin:4px 0}

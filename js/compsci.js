@@ -773,6 +773,305 @@
     }
   ];
 
+  // ==================== Illustrations ====================
+  // Kept apart from the activity text so the list above stays readable. Each one is drawn with
+  // window.PaperArt, the site's shared SVG kit, so these look like the paper activities rather
+  // than a second art style. The kit is looked up when the picture is drawn, not when this file
+  // loads, so script order cannot break it.
+  function art(draw) { return function () { return window.PaperArt.box(draw(window.PaperArt)); }; }
+
+  // a small friendly stick child, used wherever an activity needs people in it
+  function kid(A, x, y, s, shirt) {
+    s = s || 1;
+    return A.circ(x, y - 16 * s, 8 * s, "#ffd9c0") +
+      A.circ(x - 3 * s, y - 17 * s, 1.5 * s, "#2d2a4a") + A.circ(x + 3 * s, y - 17 * s, 1.5 * s, "#2d2a4a") +
+      A.path("M" + (x - 3 * s) + " " + (y - 12 * s) + " q" + (3 * s) + " " + (2.5 * s) + " " + (6 * s) + " 0",
+        "none", ' stroke="#2d2a4a" stroke-width="' + (1.3 * s) + '" fill="none" stroke-linecap="round"') +
+      A.poly((x - 9 * s) + "," + (y + 14 * s) + " " + (x + 9 * s) + "," + (y + 14 * s) + " " +
+        (x + 7 * s) + "," + (y - 8 * s) + " " + (x - 7 * s) + "," + (y - 8 * s), shirt || "#4d96ff");
+  }
+
+  var CS_ART = {
+
+    "The Sandwich Robot": art(function (A) {
+      return A.ground(134) +
+        A.sheet(66, 44, 56, 50, "#c9cbd6", 0, 10) +
+        A.line(94, 44, 94, 30, "#8f93a3", 3) + A.circ(94, 27, 5, "#e2453b") +
+        A.circ(82, 62, 7, "#7fc4ff") + A.circ(106, 62, 7, "#7fc4ff") +
+        A.circ(82, 62, 3, "#1f3a5f") + A.circ(106, 62, 3, "#1f3a5f") +
+        A.sheet(82, 78, 24, 7, "#5c5f70", 0, 3) +
+        A.sheet(58, 94, 72, 30, "#a8adba", 0, 8) +
+        A.poly("130,64 154,58 152,80 130,78", "#e8b76a") +
+        A.poly("132,68 152,63 151,74 132,74", "#8ce99a") +
+        A.sheet(24, 56, 36, 46, "#ffffff", -8, 3) +
+        A.line(30, 68, 52, 66, "#c9c3d8", 2) + A.line(30, 76, 48, 74, "#c9c3d8", 2) +
+        A.line(30, 84, 52, 82, "#c9c3d8", 2);
+    }),
+
+    "Robot on the Grid": art(function (A) {
+      var s = A.sheet(46, 24, 108, 108, "#ffffff", 0, 6);
+      for (var i = 1; i < 4; i++) {
+        s += A.line(46 + i * 27, 24, 46 + i * 27, 132, "#e6e0f5", 1.6);
+        s += A.line(46, 24 + i * 27, 154, 24 + i * 27, "#e6e0f5", 1.6);
+      }
+      s += A.path("M59 118 L59 64 L113 64 L113 51", "none",
+        ' stroke="#ff6b9d" stroke-width="2.6" fill="none" stroke-dasharray="5 4" stroke-linecap="round"');
+      s += A.sheet(50, 106, 18, 18, "#4d96ff", 0, 5) +
+        A.circ(55, 113, 2, "#fff") + A.circ(63, 113, 2, "#fff") +
+        A.line(59, 106, 59, 100, "#1f6feb", 2) + A.circ(59, 98, 2.4, "#e2453b");
+      return s + A.star(113, 42, 13, "#ffd166");
+    }),
+
+    "Pattern Bracelets": art(function (A) {
+      var cols = ["#e2453b", "#e2453b", "#4d96ff"];
+      var s = A.path("M34 70 Q100 128 166 70", "none", ' stroke="#c9b892" stroke-width="2.4" fill="none"');
+      for (var i = 0; i < 12; i++) {
+        var t = i / 11, x = 34 + t * 132, y = 70 + Math.sin(t * Math.PI) * 42;
+        s += A.circ(x, y, 7.5, cols[i % 3]);
+        s += A.circ(x - 2, y - 2, 2.2, "#fff", ' opacity=".45"');
+      }
+      return s + A.sheet(58, 20, 84, 24, "#f2eefc", 0, 8) +
+        A.label(100, 37, "REPEAT x 8", "#5d3fa0");
+    }),
+
+    "Pixel Pictures": art(function (A) {
+      var grid = [
+        "00110011", "01111111", "01111111", "01111111",
+        "00111110", "00011100", "00001000", "00000000"
+      ];
+      var s = A.sheet(58, 22, 88, 88, "#ffffff", 0, 5);
+      for (var r = 0; r < 8; r++) {
+        for (var c = 0; c < 8; c++) {
+          var on = grid[r][c] === "1";
+          s += '<rect x="' + (59 + c * 11) + '" y="' + (23 + r * 11) + '" width="10" height="10" fill="' +
+            (on ? "#ff6b9d" : "#fdfbff") + '" stroke="#ece7f7" stroke-width="0.7"/>';
+        }
+      }
+      return s + A.label(100, 128, "every square is one pixel", "#a89ec4");
+    }),
+
+    "If This, Then That Cards": art(function (A) {
+      return A.sheet(20, 44, 62, 62, "#ffffff", -5, 6) +
+        A.circ(44, 68, 12, "#c9cbd6") + A.circ(56, 70, 9, "#c9cbd6") +
+        A.line(42, 84, 39, 94, "#4d96ff", 2.4) + A.line(52, 84, 49, 94, "#4d96ff", 2.4) +
+        A.line(62, 84, 59, 94, "#4d96ff", 2.4) +
+        A.label(51, 42, "IF", "#5d3fa0") +
+        A.path("M90 74 L112 74", "none", ' stroke="#5d3fa0" stroke-width="3" stroke-linecap="round"') +
+        A.poly("110,68 122,74 110,80", "#5d3fa0") +
+        A.sheet(126, 44, 60, 62, "#ffffff", 5, 6) +
+        A.path("M142 96 L144 62 q14 -10 26 0 L172 96 Z", "#ffd166") +
+        A.poly("144,62 138,78 148,74", "#f2b705") + A.poly("170,62 176,78 166,74", "#f2b705") +
+        A.label(156, 42, "THEN", "#5d3fa0");
+    }),
+
+    "The Instruction Trail": art(function (A) {
+      var s = A.path("M26 116 Q54 116 58 92 Q62 66 96 62 Q130 58 134 40", "none",
+        ' stroke="#b8b2cc" stroke-width="2.4" fill="none" stroke-dasharray="6 5"');
+      [[30, 114, "1"], [58, 96, "2"], [92, 64, "3"], [126, 46, "4"]].forEach(function (p) {
+        s += A.circ(p[0], p[1], 10, "#7c5cbf") + A.label(p[0], p[1] + 4, p[2], "#fff");
+      });
+      return s + A.sheet(146, 74, 40, 34, "#ff6b9d", 0, 5) +
+        A.line(166, 74, 166, 108, "#ffd166", 4) + A.line(146, 90, 186, 90, "#ffd166", 4) +
+        A.path("M158 74 q8 -14 16 0", "none", ' stroke="#ffd166" stroke-width="4" fill="none"');
+    }),
+
+    "Odd One Out Sorting": art(function (A) {
+      var s = A.sheet(16, 34, 78, 86, "#eaf9ec", 0, 10) + A.sheet(106, 34, 78, 86, "#eaf3ff", 0, 10);
+      [[36, 58], [64, 56], [50, 84], [30, 104], [70, 100]].forEach(function (p) {
+        s += A.circ(p[0], p[1], 11, "#6bcb77");
+      });
+      [[126, 56], [156, 58], [140, 84], [122, 104], [162, 100]].forEach(function (p) {
+        s += A.sheet(p[0] - 10, p[1] - 10, 20, 20, "#4d96ff", 0, 4);
+      });
+      return s + A.line(100, 30, 100, 124, "#c9c3d8", 2, "5 4") +
+        A.label(55, 26, "round", "#2f6b32") + A.label(145, 26, "square", "#12447f");
+    }),
+
+    "Binary Number Cards": art(function (A) {
+      var vals = [16, 8, 4, 2, 1], up = [false, false, true, false, true];
+      var s = "";
+      for (var i = 0; i < 5; i++) {
+        var x = 20 + i * 34;
+        s += A.sheet(x, 40, 28, 62, up[i] ? "#ffffff" : "#7c5cbf", 0, 4);
+        if (up[i]) {
+          s += '<rect x="' + x + '" y="40" width="28" height="62" rx="4" fill="none" stroke="#c9c3d8" stroke-width="1.3"/>';
+          var n = vals[i], k = 0;
+          for (var r = 0; r < 4 && k < n; r++) {
+            for (var c = 0; c < 4 && k < n; c++, k++) {
+              s += A.circ(x + 7 + c * 5, 50 + r * 5, 1.8, "#2d2a4a");
+            }
+          }
+        }
+        s += A.label(x + 14, 118, up[i] ? "1" : "0", up[i] ? "#2f9e44" : "#a89ec4");
+      }
+      return s + A.label(100, 30, "4 + 1 = 5", "#5d3fa0") + A.label(100, 136, "0 0 1 0 1", "#a89ec4");
+    }),
+
+    "Your Name in Binary": art(function (A) {
+      var pat = [1, 0, 0, 0, 1, 2, 0, 0, 0, 1, 0, 2, 0, 1, 1, 0, 0];
+      var s = A.path("M24 62 Q100 108 176 62", "none", ' stroke="#c9b892" stroke-width="2.2" fill="none"');
+      for (var i = 0; i < pat.length; i++) {
+        var t = i / (pat.length - 1), x = 24 + t * 152, y = 62 + Math.sin(t * Math.PI) * 33;
+        var col = pat[i] === 2 ? "#c9c3d8" : (pat[i] ? "#ffd166" : "#5b21b6");
+        s += A.circ(x, y, pat[i] === 2 ? 4 : 6.6, col);
+      }
+      return s + A.label(100, 30, "A = 1 = 0 0 0 0 1", "#5d3fa0") +
+        A.label(100, 132, "one colour for 1, one for 0", "#a89ec4");
+    }),
+
+    "Bubble Sort Line-Up": art(function (A) {
+      var hs = [30, 54, 40, 66, 46], cols = ["#6bcb77", "#4d96ff", "#ffd166", "#ff6b9d", "#7c5cbf"];
+      var s = A.ground(126);
+      for (var i = 0; i < 5; i++) {
+        var x = 34 + i * 33, h = hs[i];
+        s += A.sheet(x - 12, 120 - h, 24, h, cols[i], 0, 5);
+        s += A.label(x, 116, String(i + 1), "#fff");
+      }
+      s += A.path("M67 42 q16 -16 32 0", "none", ' stroke="#e2453b" stroke-width="2.4" fill="none"') +
+        A.poly("95,38 103,44 95,50", "#e2453b") + A.poly("71,38 63,44 71,50", "#e2453b");
+      return s + A.label(100, 26, "compare, then swap", "#8f1d47");
+    }),
+
+    "Guess My Number: Two Ways": art(function (A) {
+      var s = A.line(22, 92, 178, 92, "#c9c3d8", 3);
+      s += A.label(24, 112, "1", "#a89ec4") + A.label(176, 112, "100", "#a89ec4");
+      [[100, "50"], [139, "75"], [120, "62"]].forEach(function (p, i) {
+        s += A.line(p[0], 92, p[0], 80 - i * 12, "#4d96ff", 2);
+        s += A.circ(p[0], 76 - i * 12, 11, "#4d96ff") + A.label(p[0], 80 - i * 12, p[1], "#fff");
+      });
+      s += A.circ(60, 92, 5, "#ff6b9d") + A.label(60, 76, "1,2,3...", "#e05586");
+      return s + A.label(100, 132, "halve it, or count them all", "#a89ec4");
+    }),
+
+    "Loop Dance": art(function (A) {
+      return kid(A, 62, 84, 1.1, "#ff6b9d") + kid(A, 138, 84, 1.1, "#4d96ff") +
+        A.path("M78 70 q22 -26 44 0", "none", ' stroke="#7c5cbf" stroke-width="3" fill="none"') +
+        A.poly("118,64 130,70 118,76", "#7c5cbf") +
+        A.line(48, 74, 34, 62, "#ff6b9d", 3.4) + A.line(152, 74, 166, 62, "#4d96ff", 3.4) +
+        A.sheet(66, 18, 68, 24, "#f2eefc", 0, 8) + A.label(100, 35, "REPEAT x 4", "#5d3fa0") +
+        A.ground(128);
+    }),
+
+    "Debug the Dance": art(function (A) {
+      var s = A.sheet(30, 26, 104, 106, "#ffffff", -3, 5);
+      var moves = ["CLAP", "STOMP", "SPIN", "JUMP", "CLAP"];
+      for (var i = 0; i < 5; i++) {
+        var y = 46 + i * 18;
+        s += A.label(46, y, String(i + 1), "#a89ec4");
+        s += A.line(56, y - 4, 122, y - 4, i === 2 ? "#ffd9d6" : "#e6e0f5", 9);
+        s += '<text x="60" y="' + y + '" font-family="Fredoka, system-ui, sans-serif" font-size="9" ' +
+          'font-weight="700" fill="' + (i === 2 ? "#b52f2a" : "#57547a") + '">' + moves[i] + '</text>';
+      }
+      s += A.line(112, 74, 124, 86, "#e2453b", 3) + A.line(124, 74, 112, 86, "#e2453b", 3);
+      return s + A.ell(156, 84, 14, 17, "#e2453b") + A.ell(156, 84, 14, 17, "#e2453b") +
+        A.line(156, 68, 156, 100, "#2d2a4a", 1.6) +
+        A.circ(150, 78, 2.6, "#2d2a4a") + A.circ(162, 90, 2.6, "#2d2a4a") + A.circ(150, 92, 2.6, "#2d2a4a") +
+        A.circ(156, 66, 7, "#2d2a4a");
+    }),
+
+    "Secret Message Wheel": art(function (A) {
+      var s = A.circ(100, 74, 50, "#ffd166") + A.circ(100, 74, 34, "#7c5cbf");
+      for (var i = 0; i < 26; i++) {
+        var a = (i * (360 / 26) - 90) * Math.PI / 180;
+        s += A.circ(100 + Math.cos(a) * 43, 74 + Math.sin(a) * 43, 1.9, "#8a5f2e");
+        s += A.circ(100 + Math.cos(a) * 27, 74 + Math.sin(a) * 27, 1.7, "#e0d6f5");
+      }
+      return s + A.circ(100, 74, 6, "#4a4560") +
+        A.line(100, 74, 100, 26, "#e2453b", 2.4) + A.poly("96,30 104,30 100,20", "#e2453b") +
+        A.label(100, 140, "shift every letter by 3", "#a89ec4");
+    }),
+
+    "Paper Packets": art(function (A) {
+      var s = kid(A, 26, 92, 0.9, "#6bcb77") + kid(A, 174, 92, 0.9, "#ff6b9d");
+      [[62, 54, "1"], [100, 74, "2"], [138, 50, "3"]].forEach(function (p) {
+        s += A.sheet(p[0] - 15, p[1] - 11, 30, 22, "#ffffff", p[0] === 100 ? 6 : -6, 3);
+        s += A.line(p[0] - 9, p[1] - 3, p[0] + 9, p[1] - 3, "#e6e0f5", 2);
+        s += A.line(p[0] - 9, p[1] + 3, p[0] + 4, p[1] + 3, "#e6e0f5", 2);
+        s += A.circ(p[0] + 12, p[1] - 12, 7, "#4d96ff") + A.label(p[0] + 12, p[1] - 9, p[2], "#fff");
+      });
+      return s + A.path("M42 84 Q100 30 158 84", "none",
+        ' stroke="#c9c3d8" stroke-width="1.6" fill="none" stroke-dasharray="4 4"') +
+        A.label(100, 132, "the numbers keep the order", "#a89ec4");
+    }),
+
+    "The Card Flip Trick": art(function (A) {
+      var s = "";
+      var on = [[1,0,1,0,1,1],[0,1,1,0,1,1],[1,1,0,0,1,1],[0,0,0,0,0,0],[1,1,1,0,1,0],[1,1,1,0,0,1]];
+      for (var r = 0; r < 6; r++) {
+        for (var c = 0; c < 6; c++) {
+          var last = (r === 5 || c === 5);
+          s += '<rect x="' + (40 + c * 21) + '" y="' + (18 + r * 20) + '" width="18" height="17" rx="3" fill="' +
+            (on[r][c] ? (last ? "#8ce99a" : "#4d96ff") : "#f2eefc") + '" stroke="#dcd6ee" stroke-width="0.8"/>';
+        }
+      }
+      s += '<rect x="38" y="56" width="128" height="21" rx="5" fill="none" stroke="#e2453b" stroke-width="2.4"/>';
+      s += '<rect x="80" y="16" width="22" height="122" rx="5" fill="none" stroke="#e2453b" stroke-width="2.4"/>';
+      return s + A.circ(91, 66, 7, "none", ' stroke="#e2453b" stroke-width="2.6"');
+    }),
+
+    "Sorting Network on the Floor": art(function (A) {
+      var s = "";
+      for (var i = 0; i < 6; i++) {
+        var x = 26 + i * 30;
+        s += A.line(x, 22, x, 128, "#e6e0f5", 7);
+        s += A.circ(x, 22, 6, ["#e2453b", "#ff9f68", "#ffd166", "#6bcb77", "#4d96ff", "#7c5cbf"][i]);
+      }
+      var rungs = [[0, 1, 40], [2, 3, 40], [4, 5, 40], [0, 2, 62], [3, 5, 62],
+                   [0, 1, 84], [2, 4, 84], [1, 2, 106], [3, 4, 106]];
+      rungs.forEach(function (g) {
+        var x1 = 26 + g[0] * 30, x2 = 26 + g[1] * 30;
+        s += A.line(x1, g[2], x2, g[2], "#5d3fa0", 2.4);
+        s += A.circ(x1, g[2], 3, "#5d3fa0") + A.circ(x2, g[2], 3, "#5d3fa0");
+      });
+      return s + A.label(100, 142, "smaller goes left", "#a89ec4");
+    }),
+
+    "Map Colouring Challenge": art(function (A) {
+      return A.sheet(20, 20, 160, 110, "#ffffff", 0, 8) +
+        A.path("M20 20 L92 20 L78 68 L20 60 Z", "#ff9db0") +
+        A.path("M92 20 L180 20 L180 62 L78 68 Z", "#7fc4ff") +
+        A.path("M20 60 L78 68 L70 130 L20 130 Z", "#8ce99a") +
+        A.path("M78 68 L180 62 L180 130 L70 130 Z", "#ffd166") +
+        A.path("M96 62 q24 -8 34 14 q-14 20 -34 12 q-12 -14 0 -26 Z", "#ff9db0") +
+        A.path("M20 20 L92 20 L78 68 L20 60 Z", "none", ' stroke="#fff" stroke-width="2.4"') +
+        A.path("M78 68 L180 62", "none", ' stroke="#fff" stroke-width="2.4"') +
+        A.path("M20 60 L78 68 L70 130", "none", ' stroke="#fff" stroke-width="2.4"') +
+        A.label(100, 144, "no two neighbours the same", "#a89ec4");
+    }),
+
+    "The Human Search Engine": art(function (A) {
+      var s = "";
+      for (var i = 0; i < 4; i++) {
+        s += A.sheet(18 + i * 5, 34 + i * 5, 62, 76, "#ffffff", -4 + i, 4);
+      }
+      s += A.line(38, 60, 82, 58, "#e6e0f5", 3) + A.line(38, 70, 76, 68, "#e6e0f5", 3) +
+        A.line(38, 80, 82, 78, "#e6e0f5", 3) + A.line(38, 90, 68, 88, "#e6e0f5", 3);
+      s += A.poly("108,44 172,40 176,120 112,124", "#c9974d") +
+        A.sheet(112, 36, 18, 74, "#ffd166", 3, 3) + A.sheet(132, 34, 18, 74, "#8ce99a", 3, 3) +
+        A.sheet(152, 32, 18, 74, "#7fc4ff", 3, 3) +
+        A.label(122, 60, "A", "#8a6300") + A.label(142, 58, "M", "#2f6b32") + A.label(162, 56, "Z", "#12447f");
+      return s + A.circ(96, 96, 13, "none", ' stroke="#e2453b" stroke-width="3"') +
+        A.line(105, 105, 116, 116, "#e2453b", 3.4);
+    }),
+
+    "Paper State Machine": art(function (A) {
+      var s = A.circ(46, 44, 22, "#e2453b") + A.circ(154, 44, 22, "#ffd166") + A.circ(100, 110, 22, "#6bcb77");
+      s += A.label(46, 48, "STOP", "#fff") + A.label(154, 48, "WAIT", "#7d6210") + A.label(100, 114, "GO", "#fff");
+      s += A.path("M68 38 q32 -14 64 0", "none", ' stroke="#5d3fa0" stroke-width="2.4" fill="none"') +
+        A.poly("128,32 140,38 128,44", "#5d3fa0");
+      s += A.path("M150 66 q-18 30 -34 34", "none", ' stroke="#5d3fa0" stroke-width="2.4" fill="none"') +
+        A.poly("122,94 114,104 126,106", "#5d3fa0");
+      s += A.path("M80 104 q-24 -12 -30 -38", "none", ' stroke="#5d3fa0" stroke-width="2.4" fill="none"') +
+        A.poly("44,72 48,60 56,70", "#5d3fa0");
+      return s + A.line(10, 44, 22, 44, "#2d2a4a", 3) + A.poly("20,38 30,44 20,50", "#2d2a4a") +
+        A.label(100, 14, "an arrow for every change", "#a89ec4");
+    })
+  };
+
+  // Attach each picture to its activity. A missing one is a bug worth failing loudly on in the
+  // audit rather than quietly rendering an activity with no illustration.
+  CS_UNPLUGGED.forEach(function (a) { a.art = CS_ART[a.name]; });
+
   window.CS_UNPLUGGED = CS_UNPLUGGED;
 
   // Rendered by app.js when a lesson carries unpluggedList. Prints as well as it displays, so a
@@ -796,9 +1095,12 @@
               '<i class="cu-mins">⏱ ' + a.mins + ' min</i></h4>' +
             '<p class="cu-teaches"><b>Teaches:</b> ' + esc(a.teaches) + '</p>' +
             '<div class="cu-cols">' +
-              '<div class="cu-needs"><h5>🧺 What you need</h5><ul>' +
-                a.needs.map(function (n) { return '<li>' + esc(n) + '</li>'; }).join("") +
-              '</ul></div>' +
+              '<div class="cu-side">' +
+                (a.art ? '<div class="cu-art">' + a.art() + '</div>' : '') +
+                '<div class="cu-needs"><h5>🧺 What you need</h5><ul>' +
+                  a.needs.map(function (n) { return '<li>' + esc(n) + '</li>'; }).join("") +
+                '</ul></div>' +
+              '</div>' +
               '<div class="cu-steps"><h5>📋 What to do</h5><ol>' +
                 a.steps.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join("") +
               '</ol></div>' +

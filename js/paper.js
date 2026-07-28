@@ -120,6 +120,9 @@
     ground: function (y, col) { return A.ell(100, y || 132, 62, 6, col || "#ece7f7"); }
   };
 
+  // Shared across the site, not private to this category: the unplugged computer science
+  // activities draw with the same kit so every illustration on the site looks like one set.
+  // Keep it general. Anything only one category needs belongs in that category's file.
   window.PaperArt = A;
   window.PAPER_THEMES = PAPER_THEMES;
 
