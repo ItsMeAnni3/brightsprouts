@@ -87,12 +87,12 @@
 
   // ---- 2. living or not living ----
   var dLiving = frame("#f4f7ff",
-    defs([["bcPup", "#ffd9a8", "#c98a3f"], ["bcRock", "#d8dce4", "#8f93a3"], ["bcSeed", "#b7e88f", "#4f9b41"]]) +
+    defs([["bcDog", "#ffd9a8", "#c98a3f"], ["bcRock", "#d8dce4", "#8f93a3"], ["bcSeed", "#b7e88f", "#4f9b41"]]) +
     '<rect x="14" y="26" width="150" height="162" rx="16" fill="#eaf9ec" stroke="#4ab55d" stroke-width="2.5"/>' +
     '<rect x="176" y="26" width="150" height="162" rx="16" fill="#f2eefc" stroke="#a89ec4" stroke-width="2.5"/>' +
     '<text x="89" y="48" text-anchor="middle" ' + LB + ' font-size="14">LIVING</text>' +
     '<text x="251" y="48" text-anchor="middle" ' + LB + ' font-size="14">NOT LIVING</text>' +
-    orb("bcPup", 60, 94, 24) + orb("bcSeed", 122, 100, 18) +
+    orb("bcDog", 60, 94, 24) + orb("bcSeed", 122, 100, 18) +
     '<circle cx="53" cy="88" r="3" fill="#2d2a4a"/><circle cx="67" cy="88" r="3" fill="#2d2a4a"/>' +
     '<ellipse cx="60" cy="100" rx="5" ry="3.4" fill="#2d2a4a"/>' +
     '<path d="M122 82 q7 -14 0 -20" stroke="#2f7a3c" stroke-width="3" fill="none"/>' +
