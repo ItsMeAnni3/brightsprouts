@@ -959,7 +959,8 @@ function makeStory(name, friend, settingKey, themeKey, valueKey) {
 function go(view) { if (typeof Speech !== "undefined") Speech.stop(); state.view = view; state.authMsg = ""; state.authOk = ""; render(); window.scrollTo(0, 0); }
 
 function navHtml() {
-  const items = [["home", "🏡 Home"], ["lessons", "📚 Lessons"], ["shop", "🛒 Shop"], ["pricing", "⭐ Plans"], ["contact", "✉️ Contact"]];
+  const items = [["home", "🏡 Home"], ["lessons", "📚 Lessons"], ["shop", "🛒 Shop"], ["pricing", "⭐ Plans"],
+                 ["privacy", "🔒 Privacy"], ["contact", "✉️ Contact"]];
   return items.map(([v, l]) => `<button class="${state.view === v ? "active" : ""}" onclick="App.go('${v}')">${l}</button>`).join("");
 }
 function starChip() {
@@ -2016,6 +2017,83 @@ function validPhone(p) {
   const digits = p.replace(/[^\d]/g, "");
   return digits.length >= 7 && digits.length <= 15;
 }
+// ---------- Privacy: the short, plain version, written twice ----------
+// The full legal policy lives at privacy.html and is what the app stores link to. This page is the
+// one a family will actually read, so it is written in two voices: once for the child, in words a
+// seven-year-old can follow, and once for the grown-up. Both say the same true things.
+// If either version ever stops matching privacy.html, privacy.html is the one that is binding, so
+// change both together.
+function privacyView() {
+  const kid = [
+    ["🙋", "We never ask you who you are",
+      "We do not ask for your name, your age, your birthday, your school or where you live. We do not want them. You can use everything here without telling us anything about yourself."],
+    ["💾", "Your stars stay on your own device",
+      "Your stars, your badges, your streak and anything you type all stay on the tablet or computer you are using. They do not get sent anywhere. Not even we can see them."],
+    ["🎤", "The microphone only listens when you press it",
+      "Sprout has a microphone button so you can ask a question out loud. It only listens after you press it, and it stops as soon as you finish your question. You never have to use it. Typing works just as well."],
+    ["⌨️", "Your code is yours",
+      "When you write code in the Code Terminal, it runs on your own device and then it is gone. We never see it, and nothing you write there can break anything."],
+    ["🚫", "No adverts, ever",
+      "There are no adverts here. Nobody is trying to sell you toys while you learn, and nothing follows you around the internet."],
+    ["🧑‍🤝‍🧑", "Nobody else can message you",
+      "There is no way for a stranger to talk to you here. Sprout is not a real person and is not connected to the internet; it only knows what is in these lessons."],
+    ["💬", "If something ever worries you",
+      "Tell a grown-up you trust straight away. That is true here and everywhere else online."]
+  ];
+  const parent = [
+    ["What we store about you", "Almost nothing. Accounts, progress and anything typed live in your own browser's storage on your device. They are never uploaded to us. Clearing your browser data or deleting the app erases them, and they do not sync to another device. That is a deliberate trade: we would rather hold nothing than hold your family's data."],
+    ["What you can choose to send", "Three things, each started by an adult pressing a button: the contact form, the request for free printable packs by email, and a Premium subscription. The first two reach our inbox through Web3Forms. Payments are handled entirely by Stripe; we never see card numbers."],
+    ["The microphone, honestly", "Read-aloud runs on your device using the operating system's own voice, so nothing leaves it. Speech recognition does not: when a child taps the microphone, Chrome and Edge send that recording to their own cloud service to transcribe it. Safari does more on-device. BrightSprouts never records, receives or stores any audio. The microphone is never on at page load, starts only on a tap, and stops after one question. Decline the permission and everything else still works."],
+    ["Who else is involved", "A cookieless page counter that cannot identify anyone, Web3Forms for the two forms, Stripe for payments, and ordinary image and font requests to flagcdn, Wikimedia and Google Fonts. There is no advertising network, no Google Analytics, no Facebook pixel and no third-party tracker anywhere in this app."],
+    ["Children's privacy", "We treat this as a children's service. We do not knowingly collect personal information from anyone under 13. Where an email is needed it is a parent's, asked for in plain words. The mailing list asks for a grade level, which is not information about a particular child. There is no chat with other people, no user profiles and no way for a child to publish anything."],
+    ["One limitation worth knowing", "Accounts are stored in your browser, not on a server, and the password there is not a security barrier in the way a bank's is. Nothing sensitive is kept, but please do not reuse an important password here."]
+  ];
+  return `<div class="view">
+    <h1>🔒 Your Privacy Here</h1>
+    <p class="subtitle">The short version, in plain words. There is a longer, formal policy too, and
+      nothing here contradicts it.</p>
+
+    <div class="pv-promise">
+      <div class="pv-seal">🌱</div>
+      <div>
+        <h2>Our promise to your family</h2>
+        <p>We do not ask children for anything about themselves. We do not sell or share anyone's
+        information. There are no adverts. There is no tracking of individual people. Almost
+        everything you do here never leaves your own device.</p>
+      </div>
+    </div>
+
+    <h2 class="pv-head">👦👧 For kids: what this means for you</h2>
+    <p class="pv-sub">Ask a grown-up to read this with you if any of it is tricky.</p>
+    <div class="grid grid-3 pv-kidgrid">
+      ${kid.map(k => `<div class="pv-kid">
+        <div class="pv-kidemoji">${k[0]}</div>
+        <h3>${esc(k[1])}</h3>
+        <p>${esc(k[2])}</p>
+      </div>`).join("")}
+    </div>
+
+    <h2 class="pv-head">👩‍👦 For parents: the detail</h2>
+    <div class="pv-parent">
+      ${parent.map(p => `<div class="pv-row"><h3>${esc(p[0])}</h3><p>${esc(p[1])}</p></div>`).join("")}
+    </div>
+
+    <div class="pv-more">
+      <p><b>Want the full, formal policy?</b> It covers the same ground in the detail the app stores
+      and data protection laws ask for, including your rights and how to have anything deleted.</p>
+      <div class="lesson-tools" style="justify-content:center">
+        <a class="btn btn-primary" href="privacy.html">📄 Read the full Privacy Policy</a>
+        <button class="btn btn-secondary" onclick="App.go('contact')">✉️ Ask us a question</button>
+      </div>
+    </div>
+
+    <div class="bookfoot">${doodle("rocket")}
+      <p><b>A word for grown-ups.</b> No website can replace talking to your child about being online.
+      If anything here ever worries them, we would much rather they told you than kept it to
+      themselves, and we say so to them on this page.</p></div>
+  </div>`;
+}
+
 function contactView() {
   const u = currentUser();
   // prefill from the signed-in account so parents don't retype what we already know
@@ -3130,7 +3208,7 @@ function render() {
     stories: storiesView, story: storyView, maker: makerView, library: libraryView,
     pricing: pricingView, auth: authView, account: accountView,
     contact: contactView, game: gameView, rewards: rewardsView, globe: globeView,
-    shop: shopView, cart: cartView
+    shop: shopView, cart: cartView, privacy: privacyView
   };
   document.getElementById("nav").innerHTML = navHtml();
   document.getElementById("authzone").innerHTML = authZoneHtml();
@@ -3144,7 +3222,7 @@ function render() {
   // The joke show's controller needs its screen on the page before it can deal the first joke.
   if (typeof JokeTv !== "undefined") JokeTv.mount();
 }
-// Optional deep links: #lessons, #stories, #maker, #pricing, #lesson-3-science, #story-12
+// Optional deep links: #lessons, #stories, #maker, #pricing, #privacy, #lesson-3-science, #story-12
 function applyHash() {
   const h = (location.hash || "").slice(1);
   if (!h) return;
@@ -3166,7 +3244,7 @@ function applyHash() {
       state.view = "auth";
     }
     history.replaceState(null, "", location.pathname);
-  } else if (["home", "lessons", "stories", "maker", "library", "pricing", "contact", "game", "rewards", "globe", "shop", "cart"].includes(h)) {
+  } else if (["home", "lessons", "stories", "maker", "library", "pricing", "privacy", "contact", "game", "rewards", "globe", "shop", "cart"].includes(h)) {
     state.view = h;
   }
 }
