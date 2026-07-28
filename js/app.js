@@ -1327,7 +1327,7 @@ function lessonsView() {
   tiles.push(`<button class="grade-tile ggames" onclick="App.gameHub()">🎮 Games</button>`);
   return `<div class="view">
     <h1>📚 Pick a Grade</h1>
-    <p class="subtitle">Every grade now packs it all in: Math • Reading • Vocabulary • Spelling • Writing • Science • History • Visual Art • Music • Computer Science • English • Books • Create, each matched to that grade's level ${tier() !== "premium" ? "&nbsp;·&nbsp; 🔒 = Premium" : ""}</p>
+    <p class="subtitle">Every grade now packs it all in: Math • Reading • Vocabulary • Spelling • Writing • Science • History • Visual Art • Music • English • Books • Creature Maker • Build It!, each matched to that grade's level ${tier() !== "premium" ? "&nbsp;·&nbsp; 🔒 = Premium" : ""}</p>
     <div class="grid grid-4">${tiles.join("")}</div>
   </div>`;
 }
