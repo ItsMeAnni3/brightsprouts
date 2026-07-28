@@ -111,6 +111,25 @@ main{max-width:1100px;margin:0 auto;padding:26px 18px 80px}
 .g29{background:linear-gradient(135deg,#ff6b9d,#f2b705)}
 .g30{background:linear-gradient(135deg,#0e7490,#8ce99a)}
 .g31{background:linear-gradient(135deg,#2f7a3c,#8fd0ff)}
+.g32{background:linear-gradient(135deg,#5d3fa0,#ffd166)}
+
+/* ---------- Formula card, used by Let's Learn Mathematics ----------
+   Reuses .ftable from the Additional Materials formula sheet so both look the same. */
+.fcard{background:#f7f4ff;border-left:5px solid var(--purple);border-radius:12px;
+  padding:13px 17px;margin:14px 0}
+.fcard h3{font-family:var(--display);font-size:1rem;color:var(--purple-dark);margin-bottom:8px}
+.fcard .ftable{width:100%;border-collapse:collapse;font-size:.9rem}
+.fcard .ftable th{text-align:left;padding:6px 8px;color:var(--purple-dark);
+  font-family:var(--display);border-bottom:2px solid #e0d6f5}
+.fcard .ftable td{padding:7px 8px;border-bottom:1px solid #ece7f7;vertical-align:top;line-height:1.5}
+.fcard .fmath{font-family:Consolas,"Courier New",monospace;color:#12447f;white-space:nowrap}
+.fcard .fmean{color:#57547a;font-size:.86rem}
+@media (max-width:600px){
+  .fcard .ftable,.fcard .ftable tbody,.fcard .ftable tr,.fcard .ftable td{display:block;width:100%}
+  .fcard .ftable thead{display:none}
+  .fcard .ftable tr{border-bottom:1px solid #e0d6f5;padding:6px 0}
+  .fcard .fmath{white-space:normal;font-size:.95rem}
+}
 
 /* ---------- "For the grown-up" note, used by Let's Learn Biology ----------
    Deliberately different from the child-facing boxes: this one is addressed to the adult in the

@@ -301,6 +301,13 @@
     '<text x="86" y="196" text-anchor="middle" ' + LB + ' font-size="11">living: plants, animals</text>' +
     '<text x="248" y="196" text-anchor="middle" ' + LB + ' font-size="11">non-living: sun, water, rock</text>');
 
+  // The shading kit is shared with Let's Learn Mathematics, so both courses draw in one style
+  // rather than two. Keep anything here general; anything only biology needs stays private above.
+  window.DiagramKit = {
+    defs: defs, orb: orb, slab: slab, lab: lab, labR: labR, frame: frame,
+    LB: LB, LBW: LBW, LN: LN, LNW: LNW
+  };
+
   window.BIO_COURSE_ART = {
     what: dWhat, living: dLiving, plants: dPlant, groups: dGroups, cycles: dCycle, body: dBody,
     chain: dChain, cell: dCell, classify: dClass, dna: dDna, evolution: dEvo, ecosystem: dEco
