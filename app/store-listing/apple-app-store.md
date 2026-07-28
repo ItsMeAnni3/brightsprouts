@@ -19,7 +19,7 @@ K-12 lessons, games & coding
 ## Promotional text (170 max, changeable any time without review)
 
 ```
-New: write real code in the Code Terminal, 100 paper activities to make, and 20 computer science activities that need no screen at all.
+New: handmade cards for every occasion, write real code in the Code Terminal, and 20 computer science activities that need no screen at all.
 ```
 
 ## Description (4000 max)
@@ -42,8 +42,8 @@ The Code Terminal is a real JavaScript console. Children write actual code, pres
 COMPUTER SCIENCE WITHOUT A SCREEN
 Twenty unplugged activities teach algorithms, binary, sorting, searching and networks using paper, cards and string. Each one says which idea it teaches.
 
-100 PAPER ACTIVITIES
-Origami animals, party decorations, flying machines, games to make and play. Every one shows a picture of the finished thing, lists what you need, and gives the steps in order.
+112 PAPER ACTIVITIES
+Origami animals, party decorations, flying machines, games to make and play, and handmade cards for birthdays, Diwali, Eid, Christmas, Hanukkah and Halloween. Every one shows a picture of the finished thing, lists what you need, and gives the steps in order.
 
 51 LEARNING GAMES
 An arcade at three difficulty levels, with stars and badges to collect.

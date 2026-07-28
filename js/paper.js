@@ -1,6 +1,6 @@
 // BrightSprouts Academy — Paper Activity for Kids & Family (category 30).
 //
-// 100 things to make out of paper, each with a picture of the finished thing, the materials, and
+// 112 things to make out of paper, each with a picture of the finished thing, the materials, and
 // numbered steps. The activities themselves live in js/paper-data.js; this file is the engine:
 // the themes, the shared drawing helpers every picture is built from, and the studio UI.
 //
@@ -23,12 +23,16 @@
     { n: "Dress Up",          e: "👑", colour: "#f2b705", tag: "Hats, masks, crowns and cuffs" },
     { n: "Useful Things",     e: "📦", colour: "#8a5f2e", tag: "Boxes, holders and helpers" },
     { n: "Games to Play",     e: "🎲", colour: "#0e7490", tag: "Make it, then play it" },
-    { n: "Seasons & Holidays",e: "🎄", colour: "#e2453b", tag: "Something for every time of year" }
+    { n: "Seasons & Holidays",e: "🎄", colour: "#e2453b", tag: "Something for every time of year" },
+    // Cards for the days that matter to a family, across different faiths and none. If you add
+    // one, add it for a real occasion somebody in a class would actually celebrate, and keep the
+    // wording warm rather than assuming who is at home.
+    { n: "Cards for Occasions", e: "💌", colour: "#c9822a", tag: "Handmade cards for holidays and big days" }
   ];
 
   // ==================== drawing helpers ====================
   // Every picture is drawn in the same 200×150 box so the cards line up, and is built from these
-  // few primitives so 100 drawings stay consistent instead of looking like 100 different hands.
+  // few primitives so every drawing stays consistent instead of looking like a hundred different hands.
   var A = {
     box: function (inner) {
       return '<svg class="pa-art" viewBox="0 0 200 150" role="img" aria-hidden="true">' +
@@ -253,7 +257,7 @@
     LESSONS[30] = {
       paperstudio: {
         title: "The Paper Activity Studio", emoji: "✂️",
-        intro: "One hundred things to make out of paper, sorted by theme and by how tricky they are. Every one shows you what it will look like when it's finished, exactly what you need, and the steps in order. Nearly all of them use paper, scissors and glue — nothing you have to go out and buy.",
+        intro: "One hundred and twelve things to make out of paper, sorted by theme and by how tricky they are. Every one shows you what it will look like when it's finished, exactly what you need, and the steps in order. Nearly all of them use paper, scissors and glue — nothing you have to go out and buy.",
         learn: [
           "Pick by TIME first: some of these take five minutes, some take half an hour. Check the clock on each card.",
           "Green means Easy, amber means Medium, red means Hard. Start one level below where you think you are; finishing something feels better than giving up on it.",
@@ -262,12 +266,12 @@
           "If a step goes wrong, don't throw the whole thing away. Most paper mistakes can be covered with another piece of paper."
         ],
         paperStudio: true,
-        activity: "🗓️ One-a-Week Challenge: put all one hundred on the fridge and tick one off every week. Two years of Saturday afternoons, and by the end you can fold a crane from memory."
+        activity: "🗓️ One-a-Week Challenge: put the whole list on the fridge and tick one off every week. Two years of Saturday afternoons, and by the end you can fold a crane from memory."
       },
 
       paperbasics: {
         title: "Paper Skills & Scissor Safety", emoji: "📐",
-        intro: "Six skills sit underneath all one hundred activities. Learn these first and every project in the studio gets easier — and safer.",
+        intro: "Six skills sit underneath every activity in the studio. Learn these first and every project in the studio gets easier — and safer.",
         learn: [
           "A VALLEY fold makes a V: the crease goes down and the paper comes up on both sides. A MOUNTAIN fold is the opposite — flip the paper over and a valley becomes a mountain.",
           "SCORING means pressing a line into thick card with a ruler and a blunt edge (a dead pen works) before folding. It stops card from cracking.",

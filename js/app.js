@@ -1990,7 +1990,7 @@ function pricingView() {
           <li><b>15 "Let's Learn" categories</b>: Geography, Space, Computer Science, Spanish, Geology, Paleontology, Physical Science, Earth &amp; Space Science, Time &amp; Money, The History of Us, Feelings &amp; Kindness, Kids &amp; Family Jokes, Paper Activities, Additional Learning Materials &amp; Books</li>
           <li><b>US-aligned Social Studies</b>: 36 units including US History I, II &amp; III and Civics</li>
           <li><b>Computer Science, three ways</b>: the Grade 1–12 course, 20 unplugged activities with no screen, and a live Code Terminal where children write real code and see it run</li>
-          <li><b>100 paper activities</b> with pictures, materials and step-by-step instructions, plus a printable booklet of all of them</li>
+          <li><b>112 paper activities</b> with pictures, materials and step-by-step instructions, including handmade cards for birthdays, Diwali, Eid, Christmas, Hanukkah and more, plus a printable booklet of all of them</li>
           <li><b>100 clean jokes</b> on Sprout &amp; Bud's joke show, and the printable joke book</li>
           <li><b>Endless worksheets</b>: press one button for a brand-new sheet, with printable answer keys</li>
           <li><b>Activity sheets</b> in every lesson, plus hands-on family activities</li>

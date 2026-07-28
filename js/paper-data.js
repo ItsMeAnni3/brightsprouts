@@ -1,4 +1,4 @@
-// BrightSprouts Academy — the 100 paper activities for category 30.
+// BrightSprouts Academy — the 112 paper activities for category 30.
 // The engine, the themes and the drawing helpers live in js/paper.js; see the house rules at the
 // top of that file before adding anything here.
 //
@@ -2498,6 +2498,341 @@
           '" fill="none" stroke="' + cols[i] + '" stroke-width="5"/>';
       }
       return s + A.label(100, 142, "tear one a day", "#a89ec4");
+    }
+  });
+
+  // ==================== 10 · Cards for Occasions ====================
+  // Handmade cards for the days a family marks. Every one is a card a grade-schooler can finish
+  // in one sitting and hand to somebody the same day.
+  P.push({
+    id: "birthdayballoon", t: 10, name: "Birthday Balloon Card", emoji: "🎈", level: "Easy", mins: 12,
+    blurb: "Open it and a bunch of balloons springs up off the page.",
+    needs: ["1 sheet of card", "Coloured paper", "Scissors", "Glue stick", "Pens", "Thin string or thread"],
+    steps: [
+      "Fold the card in half and put it down with the fold at the top.",
+      "Cut four balloon shapes from different coloured papers, each about as big as your thumb.",
+      "Cut four short pieces of paper about 1 cm wide and 5 cm long for the springs.",
+      "Fold each spring strip back and forth like a tiny concertina.",
+      "Glue one end of each spring to the inside of the card, spread out near the top.",
+      "Glue a balloon to the free end of each spring, so the balloons stand up off the page.",
+      "Draw a curly string from each balloon down to one point near the bottom.",
+      "Write your message underneath, then close the card gently to check the balloons squash flat."
+    ],
+    tip: "Squash the springs flat with your hand before you close it the first time. If a balloon pokes out of the side, trim it smaller.",
+    art: function () {
+      var s = A.sheet(34, 28, 132, 100, "#ffffff", 0, 5) + A.poly("100,28 100,128 34,120 34,36", "#fdf7ff");
+      var cols = ["#ff6b9d", "#ffd166", "#4d96ff", "#8ce99a"];
+      [[68, 52], [90, 42], [112, 44], [132, 56]].forEach(function (p, i) {
+        s += A.path("M" + p[0] + " " + (p[1] + 26) + " Q" + (p[0] - 4) + " " + (p[1] + 40) + " 100 108", "none",
+          ' stroke="#c9c3d8" stroke-width="1.2" fill="none"');
+        s += A.ell(p[0], p[1], 10, 13, cols[i]);
+        s += A.poly((p[0] - 3) + "," + (p[1] + 13) + " " + (p[0] + 3) + "," + (p[1] + 13) + " " + p[0] + "," + (p[1] + 18), cols[i]);
+        s += A.circ(p[0] - 3, p[1] - 4, 2.4, "#fff", ' opacity=".55"');
+      });
+      return s + A.fold(100, 28, 100, 128) + A.label(100, 120, "Happy Birthday!", "#b52f63");
+    }
+  });
+  P.push({
+    id: "teacherapple", t: 10, name: "Thank You, Teacher", emoji: "🍎", level: "Easy", mins: 10,
+    blurb: "An apple-shaped card for the last day of term.",
+    needs: ["Red card", "Green paper", "Brown paper", "Scissors", "Glue stick", "A pen"],
+    steps: [
+      "Fold the red card in half.",
+      "Draw half an apple shape against the folded edge, so the fold runs down the middle of the apple.",
+      "Cut it out, but do NOT cut along the fold, or the card will fall into two pieces.",
+      "Open it up. You have an apple that opens like a book.",
+      "Cut a small leaf from green paper and a short stalk from brown paper.",
+      "Glue the stalk and the leaf to the top of the front.",
+      "Write your thank you inside, and say one thing you actually enjoyed this year."
+    ],
+    tip: "Naming one real thing beats 'thanks for everything'. Teachers keep the ones that mention something they did.",
+    art: function () {
+      return A.ground(134, "#f7ece2") +
+        A.path("M100 44 C74 40 60 62 62 84 C64 108 84 122 100 116 C116 122 136 108 138 84 C140 62 126 40 100 44 Z", "#e2453b") +
+        A.path("M100 44 C74 40 60 62 62 84 C64 108 84 122 100 116 Z", "#c9342b") +
+        A.sheet(96, 26, 7, 20, "#8a5f2e", 8, 3) +
+        A.path("M104 32 Q126 22 132 38 Q112 46 104 32 Z", "#4ab55d") +
+        A.fold(100, 44, 100, 118) +
+        A.label(100, 132, "Thank you!", "#8f1d47");
+    }
+  });
+  P.push({
+    id: "getwell", t: 10, name: "Get Well Soon Card", emoji: "🩹", level: "Easy", mins: 10,
+    blurb: "A cheerful card with a giant paper plaster across the front.",
+    needs: ["Card", "Pale pink or cream paper", "Coloured paper", "Scissors", "Glue stick", "Pens"],
+    steps: [
+      "Fold the card in half.",
+      "Cut a long rectangle from the pale paper and round off its four corners. That is the plaster.",
+      "Cut a small rectangle of a different colour and glue it across the middle of the plaster.",
+      "Draw a row of little dots on that middle patch, like a real plaster.",
+      "Glue the plaster diagonally across the front of the card.",
+      "Draw a smiley face in one corner.",
+      "Inside, write something that will make them laugh rather than something serious."
+    ],
+    tip: "A joke from the Kids and Family Jokes category makes a better get-well card than a long message.",
+    art: function () {
+      return A.sheet(34, 26, 132, 104, "#ffffff", 0, 5) +
+        A.sheet(50, 62, 100, 30, "#ffd9c0", -18, 14) +
+        A.sheet(84, 68, 32, 24, "#f3c4a6", -18, 5) +
+        A.circ(92, 76, 1.8, "#c9974d", ' transform="rotate(-18 100 78)"') +
+        A.circ(100, 76, 1.8, "#c9974d", ' transform="rotate(-18 100 78)"') +
+        A.circ(108, 76, 1.8, "#c9974d", ' transform="rotate(-18 100 78)"') +
+        A.circ(92, 84, 1.8, "#c9974d", ' transform="rotate(-18 100 78)"') +
+        A.circ(100, 84, 1.8, "#c9974d", ' transform="rotate(-18 100 78)"') +
+        A.circ(108, 84, 1.8, "#c9974d", ' transform="rotate(-18 100 78)"') +
+        A.circ(52, 42, 11, "#ffd166") + A.face(52, 40, 0.8) +
+        A.label(100, 120, "Get well soon!", "#c9822a");
+    }
+  });
+  P.push({
+    id: "congrats", t: 10, name: "Congratulations Star Card", emoji: "⭐", level: "Easy", mins: 10,
+    blurb: "A gold star that stands proud of the card. Good for a race won or a badge earned.",
+    needs: ["Card", "Gold or yellow paper", "Scissors", "Glue stick", "Pens"],
+    steps: [
+      "Fold the card in half.",
+      "Cut two identical stars from the gold paper.",
+      "Fold one star gently down its middle so it is not flat.",
+      "Glue only the LEFT half of the folded star onto the front of the card.",
+      "Glue the second star flat, just behind and a little to one side, so it peeps out.",
+      "The folded star now lifts off the card when you look from the side.",
+      "Write what they did on the front, and why you are proud of them inside."
+    ],
+    tip: "Glue only one half of the folded star. Glue both and it lies flat and loses the whole effect.",
+    art: function () {
+      return A.sheet(34, 26, 132, 104, "#4d96ff", 0, 5) +
+        A.star(114, 66, 30, "#f2b705") + A.star(100, 72, 34, "#ffd166") +
+        A.line(100, 42, 100, 100, "#f2b705", 1.6) +
+        A.label(100, 118, "Well done!", "#ffffff");
+    }
+  });
+  P.push({
+    id: "flowerpotcard", t: 10, name: "Mother's Day Flower Pot", emoji: "💐", level: "Medium", mins: 18,
+    blurb: "A pot on the front with real paper flowers you can lift out. For a mum, a nan, or whoever does the mum jobs.",
+    needs: ["Card", "Coloured paper", "Green paper", "Scissors", "Glue stick", "Pens"],
+    steps: [
+      "Fold the card in half.",
+      "Cut a pot shape from coloured paper, about as wide as your hand.",
+      "Glue the pot to the front, but put glue ONLY around the sides and the bottom. Leave the top open so it is a pocket.",
+      "Cut three strips of green paper for stems, each a little longer than the pot is tall.",
+      "Cut three flowers, each from a folded square so the petals match all the way round.",
+      "Glue one flower to the top of each stem, and a small circle in the middle of each flower.",
+      "Write one thing you love about them on each stem.",
+      "Slide the stems into the pot pocket so the flowers can be pulled out and read."
+    ],
+    tip: "Making the pot a pocket is the whole idea. Glue the top edge by mistake and the flowers are stuck.",
+    art: function () {
+      var s = A.sheet(34, 26, 132, 104, "#fdf7ff", 0, 5);
+      var cols = ["#ff6b9d", "#ffd166", "#b39ddb"];
+      [[76, 46], [100, 38], [124, 46]].forEach(function (p, i) {
+        s += A.line(p[0], p[1], p[0] + (1 - i) * -4, 92, "#4a9c58", 3);
+        s += A.petals(p[0], p[1], 8, 6, 6, 4.4, cols[i]) + A.circ(p[0], p[1], 4, "#fff8e1");
+      });
+      return s + A.poly("66,88 134,88 126,120 74,120", "#c9704a") +
+        A.sheet(64, 84, 72, 9, "#e08a5f", 0, 3) +
+        A.label(100, 108, "for you", "#fff");
+    }
+  });
+  P.push({
+    id: "shirtcard", t: 10, name: "Father's Day Shirt Card", emoji: "👔", level: "Medium", mins: 16,
+    blurb: "A card folded into a shirt with a collar and a tie. For a dad, a grandad, or whoever does the dad jobs.",
+    needs: ["1 sheet of card", "Coloured paper for the tie", "Scissors", "Glue stick", "Pens", "A ruler"],
+    steps: [
+      "Lay the card portrait and fold the bottom edge up to the middle.",
+      "Turn it over. Fold the two top corners down towards the middle so they nearly meet, leaving a small gap.",
+      "Those two folded triangles are the collar.",
+      "Fold the top edge of the bottom half up and tuck it UNDER the collar.",
+      "Cut a tie shape from the coloured paper: a small knot and a longer pointed piece.",
+      "Glue the knot into the gap between the collar points, then glue the tie hanging below it.",
+      "Draw a line of buttons down the middle and a pocket on one side.",
+      "Write your message on the back, or inside if you left it openable."
+    ],
+    tip: "Press every fold hard with your thumbnail. This one only looks like a shirt if the folds are sharp.",
+    art: function () {
+      return A.sheet(40, 24, 120, 108, "#7fc4ff", 0, 5) +
+        A.poly("40,24 100,68 76,24", "#ffffff") + A.poly("160,24 100,68 124,24", "#ffffff") +
+        A.poly("94,52 106,52 110,66 90,66", "#e2453b") +
+        A.poly("90,66 110,66 104,112 96,112", "#e2453b") +
+        A.circ(100, 84, 2.4, "#b52f2a") +
+        A.sheet(50, 74, 22, 18, "#4d96ff", 0, 2) +
+        A.line(100, 24, 100, 68, "#cfe3f7", 1.4);
+    }
+  });
+  P.push({
+    id: "christmastreecard", t: 10, name: "Christmas Tree Pop-Up", emoji: "🎄", level: "Medium", mins: 16,
+    blurb: "A tree that stands straight up when the card opens, with baubles you stick on yourself.",
+    needs: ["1 sheet of card", "Green paper", "Coloured paper scraps", "Scissors", "Glue stick", "Ruler"],
+    steps: [
+      "Fold the card in half and open it flat again so you can see the middle crease.",
+      "Cut two parallel slits into the crease, 5 cm apart and 4 cm deep.",
+      "Fold the flap between the slits forwards, then close the card and press it so the flap pops inwards.",
+      "Open the card. A step now stands up off the middle.",
+      "Cut a triangle of green paper a little taller than the step and glue its bottom edge to the front of the step.",
+      "Cut a second, smaller green triangle and glue it over the first, slightly higher up.",
+      "Stick small circles of coloured paper on as baubles, and a star on the top.",
+      "Close the card and check the tree folds flat inside. Trim the tree if it pokes out."
+    ],
+    tip: "Measure the two slits with a ruler. This is one of the few paper jobs where guessing really does show.",
+    art: function () {
+      return A.sheet(34, 26, 132, 104, "#ffffff", 0, 5) + A.poly("100,26 100,126 34,118 34,34", "#f4faff") +
+        A.poly("100,42 78,74 122,74", "#2f9e44") +
+        A.poly("100,58 70,102 130,102", "#3aa64f") +
+        A.sheet(94, 100, 12, 14, "#8a5f2e", 0, 2) +
+        A.star(100, 36, 10, "#ffd166") +
+        A.circ(88, 68, 3.4, "#e2453b") + A.circ(112, 66, 3.4, "#4d96ff") +
+        A.circ(82, 92, 3.4, "#ffd166") + A.circ(118, 94, 3.4, "#ff6b9d") + A.circ(100, 86, 3.4, "#b39ddb") +
+        A.fold(100, 26, 100, 126);
+    }
+  });
+  P.push({
+    id: "diwalicard", t: 10, name: "Diwali Diya Card", emoji: "🪔", level: "Medium", mins: 16,
+    blurb: "A row of little clay lamps with glowing flames, for the festival of lights.",
+    needs: ["Dark blue or purple card", "Orange and yellow paper", "Brown paper", "Scissors", "Glue stick", "A gold or white pen"],
+    steps: [
+      "Fold the dark card in half.",
+      "Cut three small bowl shapes from the brown paper. These are the diyas, the little lamps.",
+      "Glue them in a row across the front, near the bottom.",
+      "Cut three flame shapes from orange paper and three smaller ones from yellow.",
+      "Glue an orange flame above each lamp, then a yellow flame on top of each orange one.",
+      "Use the gold or white pen to draw a ring of dots glowing around each flame.",
+      "Draw a rangoli pattern along the bottom edge: a row of repeating shapes, mirrored on both sides.",
+      "Write Happy Diwali inside."
+    ],
+    tip: "A rangoli pattern is symmetrical. Fold your paper in half, draw half the pattern, and copy it to the other side.",
+    art: function () {
+      var s = A.sheet(34, 26, 132, 104, "#3b1478", 0, 5);
+      [[68, 96], [100, 96], [132, 96]].forEach(function (p) {
+        s += A.path("M" + (p[0] - 14) + " " + p[1] + " q14 14 28 0 z", "#a3763f");
+        s += A.ell(p[0], p[1], 14, 3.4, "#c9974d");
+        s += A.path("M" + p[0] + " " + (p[1] - 22) + " q7 10 0 16 q-7 -6 0 -16 z", "#ff9f68");
+        s += A.path("M" + p[0] + " " + (p[1] - 16) + " q4 6 0 10 q-4 -4 0 -10 z", "#ffd166");
+        s += A.circ(p[0], p[1] - 18, 12, "#ffd166", ' opacity=".16"');
+      });
+      for (var i = 0; i < 9; i++) s += A.circ(44 + i * 14, 118, 2.4, "#ffd166", ' opacity=".8"');
+      return s + A.label(100, 46, "Happy Diwali", "#ffd166");
+    }
+  });
+  P.push({
+    id: "eidcard", t: 10, name: "Eid Crescent Moon Card", emoji: "🌙", level: "Medium", mins: 15,
+    blurb: "A silver moon and a sky of stars, for Eid.",
+    needs: ["Dark blue card", "White or silver paper", "Yellow paper", "Scissors", "Glue stick", "A white pen"],
+    steps: [
+      "Fold the dark blue card in half.",
+      "To make the crescent, draw a circle on the white paper, then draw a second circle overlapping it and slightly to one side.",
+      "Cut around the outside of the first circle, then cut away the part where the second circle overlaps.",
+      "What is left is a crescent moon. Glue it near the top of the front.",
+      "Cut five or six small stars from the yellow paper and glue them around the moon.",
+      "Use the white pen to add tiny dots between the stars so the sky looks full.",
+      "Write Eid Mubarak on the front, and your message inside."
+    ],
+    tip: "The two circles must overlap, not just touch. The further you slide the second circle across, the thinner the crescent.",
+    art: function () {
+      var s = A.sheet(34, 26, 132, 104, "#12447f", 0, 5);
+      s += A.path("M118 74 A26 26 0 1 1 96 48 A21 21 0 1 0 118 74 Z", "#f7f9fc");
+      [[62, 46], [78, 100], [140, 52], [128, 106], [54, 78]].forEach(function (p, i) {
+        s += A.star(p[0], p[1], i % 2 ? 6 : 8, "#ffd166");
+      });
+      for (var i = 0; i < 10; i++) {
+        s += A.circ(44 + (i * 13) % 116, 34 + (i * 29) % 88, 1.4, "#cfe3f7", ' opacity=".8"');
+      }
+      return s + A.label(100, 122, "Eid Mubarak", "#ffd166");
+    }
+  });
+  P.push({
+    id: "spiderwebcard", t: 10, name: "Halloween Web Card", emoji: "🕸️", level: "Medium", mins: 15,
+    blurb: "A card with a real woven web across the front and a friendly spider sitting on it.",
+    needs: ["Black card", "White wool or string", "Scissors", "Sticky tape", "White and coloured paper", "A hole punch"],
+    steps: [
+      "Fold the black card in half.",
+      "On the front, punch a ring of holes around the edge, about 2 cm apart.",
+      "Cut a long piece of white wool and tape one end inside the front cover.",
+      "Thread the wool out through one hole, across the front, and back in through a hole on the other side.",
+      "Keep crossing from side to side so the threads make a web pattern.",
+      "Tape the loose end inside when the web looks full.",
+      "Cut a small black circle and glue two white paper eyes on it. That is the spider.",
+      "Glue the spider onto the web, and add eight short legs cut from paper."
+    ],
+    tip: "Cross the middle a few times early on. Threads that only go round the outside look like a fence, not a web.",
+    art: function () {
+      var s = A.sheet(34, 26, 132, 104, "#2d2a4a", 0, 5);
+      for (var i = 0; i < 8; i++) {
+        var a = i * 45 * Math.PI / 180;
+        s += A.line(100, 76, 100 + Math.cos(a) * 52, 76 + Math.sin(a) * 42, "#c9c3d8", 1.2);
+      }
+      [18, 30, 42].forEach(function (r) {
+        var pts = [];
+        for (var j = 0; j < 8; j++) {
+          var a2 = j * 45 * Math.PI / 180;
+          pts.push((100 + Math.cos(a2) * r * 1.25).toFixed(1) + "," + (76 + Math.sin(a2) * r).toFixed(1));
+        }
+        s += '<polygon points="' + pts.join(" ") + '" fill="none" stroke="#c9c3d8" stroke-width="1.2"/>';
+      });
+      s += A.ell(118, 60, 9, 7, "#1a1830");
+      for (var k = 0; k < 4; k++) {
+        s += A.line(110, 58 + k * 2, 102, 52 + k * 4, "#1a1830", 1.4);
+        s += A.line(126, 58 + k * 2, 134, 52 + k * 4, "#1a1830", 1.4);
+      }
+      return s + A.circ(115, 58, 2.2, "#ffffff") + A.circ(121, 58, 2.2, "#ffffff") +
+        A.circ(115, 58, 1, "#2d2a4a") + A.circ(121, 58, 1, "#2d2a4a");
+    }
+  });
+  P.push({
+    id: "wovenheart", t: 10, name: "Woven Heart Card", emoji: "💗", level: "Hard", mins: 22,
+    blurb: "Two paper hearts woven together so they lock without any glue at all. A proper Valentine.",
+    needs: ["Red paper", "White paper", "Scissors", "A ruler", "A pencil", "Card for the base"],
+    steps: [
+      "Cut one rectangle of red paper and one of white, both the same size, about 8 cm by 16 cm.",
+      "Fold each one in half so you have two squares standing on their folds.",
+      "Round off the two corners at the OPEN end of each, so each piece looks like an arch.",
+      "On each piece, cut two straight slits from the folded edge up towards the curve, dividing it into three equal strips. Stop before you reach the curve.",
+      "Hold the red arch in one hand and the white in the other, at right angles to each other.",
+      "Weave the first red strip THROUGH the first white strip, then AROUND the second, then through the third.",
+      "Weave the second red strip the opposite way: around, through, around.",
+      "Weave the third strip like the first. Open it out and you have a heart-shaped pocket that holds itself together.",
+      "Glue it to the front of a folded card, and slide a small note inside the pocket."
+    ],
+    tip: "Alternating is the whole trick: through, around, through, then around, through, around. Two rows the same and it falls apart.",
+    art: function () {
+      var s = A.sheet(34, 26, 132, 104, "#fff0f5", 0, 5);
+      s += A.path("M100 118 L60 78 A22 22 0 0 1 100 56 A22 22 0 0 1 140 78 Z", "#ff6b9d");
+      for (var i = 0; i < 3; i++) {
+        s += A.path("M" + (76 + i * 16) + " " + (100 - i * 2) + " L" + (100 + i * 14) + " " + (60 + i * 10), "none",
+          ' stroke="#ffffff" stroke-width="9" stroke-linecap="round"');
+      }
+      for (var j = 0; j < 3; j++) {
+        s += A.path("M" + (124 - j * 16) + " " + (100 - j * 2) + " L" + (100 - j * 14) + " " + (60 + j * 10), "none",
+          ' stroke="#e05586" stroke-width="9" stroke-linecap="round" opacity=".85"');
+      }
+      return s + A.label(100, 128, "no glue needed", "#b52f63");
+    }
+  });
+  P.push({
+    id: "menorahcard", t: 10, name: "Hanukkah Menorah Card", emoji: "🕎", level: "Hard", mins: 20,
+    blurb: "A menorah with nine candles, and a flame you add each night of the festival.",
+    needs: ["Blue card", "White and yellow paper", "Scissors", "Glue stick", "A silver or white pen", "A small envelope or paper pocket"],
+    steps: [
+      "Fold the blue card in half.",
+      "Cut a menorah shape from white paper: a base, an upright stem, and a straight arm across the top.",
+      "Glue it to the front of the card, low down, so there is room above it.",
+      "Cut nine thin candles from white paper, all the same height except the middle one, which should be taller.",
+      "Glue the candles along the arm, four on each side and the tall one in the middle.",
+      "Cut nine small flames from yellow paper, but do NOT glue them on.",
+      "Glue a small paper pocket inside the card and keep the flames in it.",
+      "Each night of Hanukkah, take out one flame and stick it on. The tall middle candle, the shamash, is lit first every night."
+    ],
+    tip: "Leaving the flames loose is what makes this one worth keeping. It becomes something the family does together for eight nights.",
+    art: function () {
+      var s = A.sheet(34, 26, 132, 104, "#12447f", 0, 5);
+      s += A.sheet(84, 112, 32, 8, "#f7f9fc", 0, 3) + A.sheet(96, 84, 8, 30, "#f7f9fc", 0, 2) +
+        A.sheet(56, 78, 88, 7, "#f7f9fc", 0, 3);
+      for (var i = 0; i < 9; i++) {
+        var x = 60 + i * 10, mid = (i === 4);
+        s += A.sheet(x - 2, mid ? 52 : 60, 5, mid ? 26 : 18, "#ffffff", 0, 2);
+        if (i <= 4) {
+          s += A.path("M" + (x + 0.5) + " " + ((mid ? 52 : 60) - 9) + " q4 6 0 9 q-4 -3 0 -9 z", "#ffd166");
+        }
+      }
+      // One caption only: a second line at the foot of the card was clipping off the picture.
+      return s + A.label(100, 42, "Happy Hanukkah", "#ffd166");
     }
   });
 

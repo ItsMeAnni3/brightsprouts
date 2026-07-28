@@ -36,8 +36,8 @@ The Code Terminal is a real JavaScript console. Children write actual code, pres
 COMPUTER SCIENCE WITHOUT A SCREEN
 Twenty unplugged activities teach algorithms, binary, sorting, searching and networks using paper, cards and string. Each one says which idea it teaches.
 
-100 PAPER ACTIVITIES
-Origami animals, party decorations, flying machines, games to make and play. Every one shows a picture of the finished thing, lists what you need, and gives the steps in order. Print one, or print the whole booklet.
+112 PAPER ACTIVITIES
+Origami animals, party decorations, flying machines, games to make and play, and handmade cards for birthdays, Diwali, Eid, Christmas, Hanukkah and Halloween. Every one shows a picture of the finished thing, lists what you need, and gives the steps in order. Print one, or print the whole booklet.
 
 51 LEARNING GAMES
 An arcade at three difficulty levels: maths races, flag quizzes, spelling bees, memory match, fraction frenzy and more, with stars and badges to collect.
