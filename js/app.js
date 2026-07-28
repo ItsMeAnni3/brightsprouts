@@ -297,10 +297,14 @@ const RULES = {
   free:    { grades: [0, 1, 2, 15, 16, 25], stories: 10, custom: 2 },
   premium: { grades: "all",  stories: "all", custom: "all" }
 };
-const PRICE = "$7.99";
+// IMPORTANT: this is only what the page SAYS the price is. What a customer is actually charged
+// is set in Stripe, on the product behind STRIPE_PAYMENT_LINK below. Changing this line alone
+// means the site advertises one price and the card is charged another, so change both together.
+const PRICE = "$6.99";
 const TAX_NOTE = "Plus sales tax based on your state, calculated at checkout.";
 // Paste your Stripe Payment Link between the quotes to switch from demo checkout to real payments.
 // In Stripe, set the link's after-payment redirect to: https://brightsprouts.academy/#payment-success
+// This link must point at a $6.99/month price to match PRICE above.
 const STRIPE_PAYMENT_LINK = "https://buy.stripe.com/4gMcN5e1Idl23bS2mE3gk05";
 
 // ---- Shop checkout ----
@@ -1197,7 +1201,7 @@ function homeView() {
   <div class="hero">
     <span class="big-emoji">🌱</span>
     <h1>BrightSprouts Academy</h1>
-    <p>Everything one family needs for <b>Kindergarten through Grade 12</b>: Math, Reading, Phonics, Vocabulary, Spelling, Writing, Science, Social Studies, Art and Music, plus Biology, Chemistry and Physics for older students. Then thirteen <b>"Let's Learn" courses</b>: Geography, Space, Computer Science, Spanish, Geology, Paleontology, Physical Science, Earth &amp; Space Science, Time &amp; Money, The History of Us and Feelings &amp; Kindness. Every lesson prints. Made for parents. Loved by kids.</p>
+    <p>Everything one family needs for <b>Kindergarten through Grade 12</b>: Math, Reading, Phonics, Vocabulary, Spelling, Writing, Science, Social Studies, Art and Music, plus Biology, Chemistry and Physics for older students. Then fifteen <b>"Let's Learn" courses</b>: Geography, Space, Computer Science, Spanish, Geology, Paleontology, Physical Science, Earth &amp; Space Science, Time &amp; Money, The History of Us, Feelings &amp; Kindness, Kids &amp; Family Jokes and Paper Activities. Write real code in the Code Terminal, make things from 100 paper activities, and every lesson prints. Made for parents. Loved by kids.</p>
     <button class="btn btn-primary" onclick="App.go('lessons')">🚀 Explore Lessons</button>
     <button class="btn btn-secondary" onclick="App.go('library')">📖 Books &amp; Stories</button>
   </div>
@@ -1964,10 +1968,12 @@ function pricingView() {
           <li>The free classic books library</li>
           <li>Creature Maker &amp; Build It!</li>
           <li>All ${gameCount()} arcade games</li>
+          <li>Sprout the chat helper, with the microphone</li>
           <li>10 moral-value stories · 2 custom stories</li>
           <li>Printable worksheets &amp; answer keys</li>
           <li class="no">Grades 3–12</li>
           <li class="no">The 15 "Let's Learn" subject categories</li>
+          <li class="no">The Code Terminal, paper activities &amp; the joke show</li>
         </ul>
         ${u ? `<button class="btn btn-ghost" disabled>Your current plan${u.plan === "premium" ? " was this once!" : ""}</button>`
           : `<button class="btn btn-secondary" onclick="App.goAuth('signup')">Sign Up Free</button>`}
@@ -1976,17 +1982,24 @@ function pricingView() {
         <span class="ribbon">MOST POPULAR</span>
         <h2>⭐ Premium Family</h2>
         <div class="price">${PRICE}<span>/month + tax</span></div>
+        <p class="planlede">Everything on BrightSprouts, for every child in the family. No add-ons, no extras to buy.</p>
         <ul>
-          <li><b>Every grade, K–12</b>: Math, Reading, Phonics, Vocabulary, Spelling, Writing, Science, History, Art &amp; Music</li>
+          <li><b>Every grade, K–12</b>: Math, Reading, Phonics, Vocabulary, Spelling, Writing, Science, Social Studies, Art &amp; Music</li>
           <li><b>High-school sciences</b>: Biology, Chemistry &amp; Physics</li>
-          <li><b>15 "Let's Learn" categories</b>: Geography, Geology, Paleontology, Physical Science, Earth &amp; Space Science, Spanish, The History of Us, Time &amp; Money, Space, Feelings, Computer Science, Kids &amp; Family Jokes, Paper Activities, Additional Learning Materials &amp; Books</li>
+          <li><b>15 "Let's Learn" categories</b>: Geography, Space, Computer Science, Spanish, Geology, Paleontology, Physical Science, Earth &amp; Space Science, Time &amp; Money, The History of Us, Feelings &amp; Kindness, Kids &amp; Family Jokes, Paper Activities, Additional Learning Materials &amp; Books</li>
           <li><b>US-aligned Social Studies</b>: 36 units including US History I, II &amp; III and Civics</li>
+          <li><b>Computer Science, three ways</b>: the Grade 1–12 course, 20 unplugged activities with no screen, and a live Code Terminal where children write real code and see it run</li>
+          <li><b>100 paper activities</b> with pictures, materials and step-by-step instructions, plus a printable booklet of all of them</li>
+          <li><b>100 clean jokes</b> on Sprout &amp; Bud's joke show, and the printable joke book</li>
           <li><b>Endless worksheets</b>: press one button for a brand-new sheet, with printable answer keys</li>
           <li><b>Activity sheets</b> in every lesson, plus hands-on family activities</li>
-          <li>Tap-to-hear Spanish &amp; phonics audio</li>
+          <li>Tap-to-hear Spanish &amp; phonics audio, and read-aloud on every lesson</li>
           <li>Tracing, Trace &amp; Draw and the colouring book</li>
           <li>The full moral-story library + unlimited custom stories</li>
-          <li>The interactive Globe, all ${gameCount()} arcade games &amp; the rewards system</li>
+          <li>The interactive 3D Globe, all ${gameCount()} arcade games &amp; the rewards system</li>
+          <li>Ask <b>Sprout</b>, the friendly helper who answers questions from the site's own lessons. Type it or say it out loud</li>
+          <li>Works offline, and installs like an app on a phone or tablet</li>
+          <li><b>One price for the whole family</b>, however many children you have</li>
           <li>Every new subject and lesson we add: included, always</li>
         </ul>
         ${u && u.plan === "premium" ? `<button class="btn btn-gold" disabled>⭐ You're Premium!</button>`

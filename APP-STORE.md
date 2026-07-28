@@ -69,7 +69,7 @@ Apple Pencil support for the tracing sheets, or similar.
 
 **2. In-app purchase.** If the iOS app unlocks Premium, Apple's rules generally require **their**
 in-app purchase system, which takes **15–30%** (15% under the Small Business Program, under $1M/yr)
-— instead of Stripe's ~3%. On $7.99/month that is roughly $1.20/subscriber/month to Apple at 15%.
+— instead of Stripe's ~3%. On $6.99/month that is roughly $1.05/subscriber/month to Apple at 15%.
 US apps may now link out to external payment, but the rules are narrow and still changing.
 
 A common approach: keep Premium sign-up on the **website**, and let the iOS app sign in to an
