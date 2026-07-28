@@ -1,0 +1,62 @@
+{
+  "packageId": "academy.brightsprouts.app",
+  "host": "brightsprouts.academy",
+  "name": "BrightSprouts Academy",
+  "launcherName": "BrightSprouts",
+  "display": "standalone",
+  "themeColor": "#7c5cbf",
+  "themeColorDark": "#5d3fa0",
+  "navigationColor": "#7c5cbf",
+  "navigationColorDark": "#5d3fa0",
+  "navigationDividerColor": "#7c5cbf",
+  "navigationDividerColorDark": "#5d3fa0",
+  "backgroundColor": "#fdf6ff",
+  "enableNotifications": false,
+  "startUrl": "/index.html",
+  "iconUrl": "https://brightsprouts.academy/icons/icon-512.png",
+  "maskableIconUrl": "https://brightsprouts.academy/icons/icon-maskable-512.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "./android.keystore",
+    "alias": "brightsprouts"
+  },
+  "appVersionName": "1.0.0",
+  "appVersionCode": 1,
+  "shortcuts": [
+    {
+      "name": "Lessons",
+      "shortName": "Lessons",
+      "url": "/index.html#lessons",
+      "chosenIconUrl": "https://brightsprouts.academy/icons/icon-192.png"
+    },
+    {
+      "name": "Books & Stories",
+      "shortName": "Books",
+      "url": "/index.html#library",
+      "chosenIconUrl": "https://brightsprouts.academy/icons/icon-192.png"
+    },
+    {
+      "name": "Games",
+      "shortName": "Games",
+      "url": "/index.html#game",
+      "chosenIconUrl": "https://brightsprouts.academy/icons/icon-192.png"
+    }
+  ],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://brightsprouts.academy/manifest.webmanifest",
+  "fallbackType": "customtabs",
+  "features": {},
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://brightsprouts.academy/",
+  "minSdkVersion": 21,
+  "orientation": "any",
+  "fingerprints": [],
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "appVersion": "1.0.0"
+}

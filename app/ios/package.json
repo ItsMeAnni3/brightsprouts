@@ -1,0 +1,18 @@
+{
+  "name": "brightsprouts-ios",
+  "version": "1.0.0",
+  "private": true,
+  "description": "iOS shell for BrightSprouts Academy. The content is the live website; this project only builds the App Store wrapper.",
+  "scripts": {
+    "setup": "npm install && npx cap add ios && npx cap sync ios",
+    "open": "npx cap open ios"
+  },
+  "dependencies": {
+    "@capacitor/core": "^6.1.2",
+    "@capacitor/ios": "^6.1.2",
+    "@capacitor/splash-screen": "^6.0.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.1.2"
+  }
+}

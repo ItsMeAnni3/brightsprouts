@@ -1,0 +1,21 @@
+{
+  "appId": "academy.brightsprouts.app",
+  "appName": "BrightSprouts Academy",
+  "webDir": "www",
+  "server": {
+    "url": "https://brightsprouts.academy",
+    "cleartext": false
+  },
+  "ios": {
+    "contentInset": "always",
+    "backgroundColor": "#fdf6ff",
+    "limitsNavigationsToAppBoundDomains": true
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 800,
+      "backgroundColor": "#fdf6ff",
+      "showSpinner": false
+    }
+  }
+}
