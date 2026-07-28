@@ -1537,3 +1537,28 @@ footer{background:var(--purple-dark);color:#cfc6ee;text-align:center;padding:20p
   .pa-book{display:block}
   .pa-bookitem{display:flex}
 }
+
+/* ============ Unplugged computer science (category 17, Unplugged tab) ============
+   A plain readable list rather than a browsing UI: twenty activities is few enough to scroll,
+   and a grown-up running one of these wants it on paper, not behind a tap. */
+.cu-intro{text-align:center;color:#6c6790;font-size:.88rem;margin:4px 0 16px}
+.cu-item{background:#fbf9ff;border-left:5px solid var(--purple);border-radius:14px;
+  padding:14px 18px;margin-bottom:16px;break-inside:avoid;page-break-inside:avoid}
+.cu-item h4{font-family:var(--display);font-size:1.08rem;color:var(--ink);
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.cu-num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;
+  border-radius:50%;background:var(--purple);color:#fff;font-size:.82rem;flex:0 0 auto}
+.cu-lvl{font-style:normal;font-size:.66rem;font-weight:800;text-transform:uppercase;
+  letter-spacing:.04em;padding:2px 8px;border-radius:999px;color:#fff}
+.cu-lvl.easy{background:#2f9e44} .cu-lvl.medium{background:#c9822a} .cu-lvl.hard{background:#e2453b}
+.cu-mins{font-style:normal;font-size:.74rem;color:#8a86a8;font-weight:700}
+.cu-teaches{font-size:.86rem;color:#57547a;background:#f2eefc;border-radius:9px;
+  padding:6px 11px;margin-bottom:10px;line-height:1.45}
+.cu-cols{display:grid;grid-template-columns:1fr 2fr;gap:16px}
+.cu-needs,.cu-steps{background:#fff;border-radius:12px;padding:10px 14px}
+.cu-needs h5,.cu-steps h5{font-family:var(--display);font-size:.9rem;color:var(--purple-dark);margin-bottom:6px}
+.cu-needs ul{margin:0;padding-left:17px} .cu-needs li{font-size:.86rem;line-height:1.45;margin:4px 0}
+.cu-steps ol{margin:0;padding-left:19px} .cu-steps li{font-size:.9rem;line-height:1.55;margin:6px 0}
+.cu-tip{margin-top:10px;background:#fff8e1;border-radius:10px;padding:8px 13px;
+  font-size:.86rem;line-height:1.5}
+@media (max-width:640px){ .cu-cols{grid-template-columns:1fr} }

@@ -59,7 +59,9 @@ const CS_SUBJECTS = [
   { key: "scratch",      label: "7 · Build in Scratch",    emoji: "🐱" },
   { key: "python",       label: "8 · Python",              emoji: "🐍" },
   { key: "internet",     label: "9 · The Internet",        emoji: "🌐" },
-  { key: "safety",       label: "10 · Safety, Data & AI",  emoji: "🛡️" }
+  { key: "safety",       label: "10 · Safety, Data & AI",  emoji: "🛡️" },
+  // Not a rung on the ladder: twenty activities that teach the same ideas with no screen.
+  { key: "unplugged",    label: "Unplugged (no computer)",  emoji: "🔌" }
 ];
 // Extra subjects added to every Grade 1–12 tab bar (content matched to the grade's level).
 const GRADE_EXTRA = [
@@ -1716,6 +1718,7 @@ function lessonView() {
   }
   // The joke show and the joke book both live in js/jokes.js. The show is mounted after paint
   // (see App.afterRender) because its controller needs the screen elements to exist first.
+  if (lesson.unpluggedList && typeof CSUnplugged !== "undefined") body += CSUnplugged.html();
   if (lesson.paperStudio && typeof Paper !== "undefined") body += Paper._html() + Paper._bookHtml();
   if (lesson.jokeTv && typeof JokeTv !== "undefined") body += JokeTv._html();
   if (lesson.jokeBook && typeof JokeTv !== "undefined") body += JokeTv._bookHtml();

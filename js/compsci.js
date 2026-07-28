@@ -421,6 +421,391 @@
         { q: "Can deleted posts still exist somewhere?", a: "Yes, they may have been copied or saved" },
         { q: "Are pictures and songs also stored as numbers?", a: "Yes" }
       ]
+    },
+
+    // ---- Unplugged: computer science with no computer in the room ----
+    // These teach the ideas underneath the ladder above, using paper, cards, string and people.
+    // Rules for anything added here: no screen, no internet, no app, and no material a family
+    // would have to go out and buy. Every activity names the computer science idea it teaches,
+    // so a grown-up can see the point of it before they start.
+    unplugged: {
+      title: "Unplugged: No Computer Needed", emoji: "🔌", band: "Grades 1 to 8",
+      intro: "You can learn most of computer science without a computer at all. These twenty activities use paper, cards, string and people. They teach the same ideas a programmer uses every day: algorithms, loops, binary, sorting, searching, networks and debugging.",
+      learn: [
+        "Computer science is about ideas, not machines. Sorting, searching and following steps are all things you can do on a kitchen table.",
+        "Doing an algorithm with your body makes it stick. Children who have BEEN a sorting algorithm remember what it does.",
+        "Every activity below says which idea it teaches. Read that first, then do the activity, then talk about what happened.",
+        "Green is Easy, amber is Medium, red is Hard. The hard ones are not harder to do, they just carry a bigger idea.",
+        "Nothing here needs a screen, an app or the internet, and nothing needs anything you would have to go and buy."
+      ],
+      unpluggedList: true,
+      activity: "🧑‍🏫 Teach it back: pick any activity below, do it once, then teach it to somebody who has not done it. Explaining an algorithm out loud is the fastest way to find out whether you really understood it.",
+      questions: [
+        { q: "What is an algorithm?", a: "A list of steps in order" },
+        { q: "Why must instructions for a computer be exact?", a: "A computer cannot guess" },
+        { q: "What is a loop?", a: "Something repeated a number of times" },
+        { q: "What number system do computers use?", a: "Binary" },
+        { q: "Which two digits does binary use?", a: "0 and 1" },
+        { q: "What is the value of the binary card after 8?", a: "16" },
+        { q: "In binary, what does 1 0 1 equal?", a: "5" },
+        { q: "What is finding a mistake in your steps called?", a: "Debugging" },
+        { q: "What does a bubble sort compare each time?", a: "Two neighbours" },
+        { q: "Which is faster on sorted data: guessing halfway or one by one?", a: "Guessing halfway" },
+        { q: "What is a small piece of a message sent over a network called?", a: "A packet" },
+        { q: "What is a tiny square of colour on a screen called?", a: "A pixel" },
+        { q: "What does a Caesar cipher do to each letter?", a: "Shifts it along the alphabet" },
+        { q: "What is a check that spots a flipped bit called?", a: "A parity check" },
+        { q: "What do we call the smallest piece of computer data?", a: "A bit" }
+      ]
+    }
+  };
+
+  // ==================== The 20 unplugged activities ====================
+  // { name, emoji, level, mins, teaches, needs[], steps[], tip }
+  // Kept as data so the tab, the print sheet and any future page all read the same list.
+  var CS_UNPLUGGED = [
+
+    // ---------- Easy ----------
+    {
+      name: "The Sandwich Robot", emoji: "🥪", level: "Easy", mins: 15,
+      teaches: "Algorithms, and why a computer needs instructions that leave nothing out",
+      needs: ["Bread", "Something to spread", "A blunt knife", "Paper and a pencil"],
+      steps: [
+        "The child writes down the steps for making a sandwich. Every step goes on its own line.",
+        "The grown-up is now a robot. Robots do exactly what the paper says and nothing else.",
+        "Read step one out loud and do it EXACTLY. If the paper says 'put the jam on the bread', put the closed jar on top of the loaf.",
+        "Carry on down the list, being as literal as you can.",
+        "When it goes wrong, hand the paper back. The child rewrites the step to be clearer.",
+        "Keep going until a real sandwich appears."
+      ],
+      tip: "Do not help. The whole lesson is in the moment the child realises the robot cannot guess what they meant."
+    },
+    {
+      name: "Robot on the Grid", emoji: "🤖", level: "Easy", mins: 20,
+      teaches: "Sequences and commands: writing a program before you run it",
+      needs: ["Chalk outside, or masking tape indoors, or 16 sheets of paper", "Paper and a pencil", "A small toy as the treasure"],
+      steps: [
+        "Lay out a grid four squares by four squares on the floor.",
+        "Put the toy on one square. That is the treasure.",
+        "One player stands on a corner square and is the robot.",
+        "Everyone agrees on four commands: FORWARD, TURN LEFT, TURN RIGHT, PICK UP.",
+        "The programmer writes the whole list of commands BEFORE the robot moves at all.",
+        "Read the program out one line at a time. The robot does only what is written.",
+        "If the robot ends up in the wrong place, fix the program and run it again from the start."
+      ],
+      tip: "Writing the whole program first is the important bit. Steering the robot square by square is not programming, it is remote control."
+    },
+    {
+      name: "Pattern Bracelets", emoji: "📿", level: "Easy", mins: 20,
+      teaches: "Loops: repeating a small pattern many times instead of writing it out",
+      needs: ["String or wool", "Beads, buttons or paper circles in two or three colours", "Paper and a pencil"],
+      steps: [
+        "Choose a short pattern of three or four beads, for example red, red, blue.",
+        "Write it down once, then write REPEAT 8 TIMES next to it.",
+        "Thread the beads following your written pattern.",
+        "Count how many beads you threaded in total.",
+        "Now write out every single bead one by one on paper, with no repeat.",
+        "Compare the two pieces of paper and see which was quicker to write."
+      ],
+      tip: "That short version with REPEAT is a loop. It is why a program that draws a hundred stars is not a hundred lines long."
+    },
+    {
+      name: "Pixel Pictures", emoji: "🎨", level: "Easy", mins: 20,
+      teaches: "How a screen builds a picture out of tiny coloured squares",
+      needs: ["Squared paper", "Coloured pencils or crayons", "A ruler"],
+      steps: [
+        "Mark out a grid ten squares across and ten squares down.",
+        "Draw a simple picture on the grid, colouring in whole squares only. No part squares and no curves.",
+        "Hold it at arm's length and then across the room. Notice how the jagged edges smooth out from far away.",
+        "Now draw the same picture on a grid of twenty by twenty squares.",
+        "Compare the two. The one with more squares looks better and took longer to fill in.",
+        "Write down how many squares each picture used."
+      ],
+      tip: "Each square is a pixel. More pixels means a sharper picture and a bigger file, which is exactly the trade a phone camera makes."
+    },
+    {
+      name: "If This, Then That Cards", emoji: "❓", level: "Easy", mins: 15,
+      teaches: "Conditionals: a computer choosing between two paths",
+      needs: ["Index cards or paper cut into cards", "A pencil"],
+      steps: [
+        "Write six rules, one per card, in this shape: IF it is raining THEN take a coat.",
+        "On the back of each card, write ELSE and what happens instead.",
+        "Shuffle the cards and put them face down in a pile.",
+        "Turn one over and read only the IF part out loud.",
+        "Everyone else says what should happen next.",
+        "Turn the card over to check.",
+        "Now make three cards where the IF part is something silly, and see whether the rule still works."
+      ],
+      tip: "Ask what happens if the IF part is neither clearly true nor clearly false. Computers hate that, and so will your rules."
+    },
+    {
+      name: "The Instruction Trail", emoji: "🗺️", level: "Easy", mins: 25,
+      teaches: "Writing a clear sequence for somebody else to follow",
+      needs: ["Paper and a pencil", "A room or a garden", "A small prize to hide"],
+      steps: [
+        "One player hides the prize while everybody else is out of the room.",
+        "That player writes a numbered list of instructions to find it, using steps and turns only.",
+        "No pointing and no extra hints once the list is written.",
+        "Hand the list to somebody else and watch them follow it.",
+        "Mark the first instruction that goes wrong.",
+        "Rewrite that one instruction so it cannot be misread, then test it on a third person."
+      ],
+      tip: "Counting steps works far better than 'go a bit further'. Precise words are the whole job."
+    },
+    {
+      name: "Odd One Out Sorting", emoji: "🗂️", level: "Easy", mins: 15,
+      teaches: "Data and attributes: describing things so a machine could group them",
+      needs: ["A pile of mixed objects from around the house, about twenty", "Paper and a pencil"],
+      steps: [
+        "Tip all the objects onto the table.",
+        "One player secretly picks a rule, for example 'made of metal'.",
+        "They sort the objects into two groups following that rule, without saying what it is.",
+        "Everybody else guesses the rule.",
+        "Write down three different rules that would sort the same pile in three different ways.",
+        "Try sorting by a rule that needs a yes or no answer, then by one that needs a number."
+      ],
+      tip: "A rule a computer can follow must have a clear yes or no answer. 'Is it pretty' will not sort anything."
+    },
+
+    // ---------- Medium ----------
+    {
+      name: "Binary Number Cards", emoji: "🔢", level: "Medium", mins: 25,
+      teaches: "Binary: counting with only two digits, the way every computer does",
+      needs: ["5 index cards or pieces of card", "A pencil", "Dot stickers, or just draw dots"],
+      steps: [
+        "Make five cards with dots on one side: 1 dot, 2 dots, 4 dots, 8 dots and 16 dots.",
+        "Lay them in a row with 16 on the left and 1 on the right. The blank side means off.",
+        "To show a number, turn cards face up until the dots add up to it. Always take the biggest card that still fits.",
+        "Make the number 5. You should have 4 and 1 face up, so 0 0 1 0 1.",
+        "Take turns calling out a number under 32 for the other person to build.",
+        "Now write each answer as five 1s and 0s, where 1 means face up.",
+        "Count from 0 up to 10 in binary, writing each one down, and look for the pattern in the last column."
+      ],
+      tip: "Every card is double the one to its right. That doubling is the whole idea, and it is why the eighth card would be 128."
+    },
+    {
+      name: "Your Name in Binary", emoji: "🅰️", level: "Medium", mins: 25,
+      teaches: "How letters are stored as numbers",
+      needs: ["String or wool", "Beads or paper squares in two colours", "Paper and a pencil"],
+      steps: [
+        "Number the alphabet: A is 1, B is 2, all the way to Z is 26.",
+        "Write down the number for each letter of your name.",
+        "Turn each number into binary using the card trick from Binary Number Cards, with five digits each time.",
+        "Choose one bead colour for 1 and another for 0.",
+        "Thread the beads for your first letter, then add a spacer bead, then the next letter.",
+        "Carry on until your whole name is on the string.",
+        "Swap bracelets with somebody and work out whose name you are holding."
+      ],
+      tip: "Five digits is enough for 26 letters because 5 doublings reach 32. Four digits would only reach 16, so half the alphabet would not fit."
+    },
+    {
+      name: "Bubble Sort Line-Up", emoji: "📏", level: "Medium", mins: 20,
+      teaches: "A sorting algorithm, done with people instead of numbers",
+      needs: ["6 to 10 players, or 10 cards with numbers on", "Space to stand in a line"],
+      steps: [
+        "Everybody holds a card with a number on it, or just stands in a random order by height.",
+        "Start at the left end of the line.",
+        "Compare the first two people only. If the left one is bigger, they swap places.",
+        "Move one place right and compare the next two. Swap if the left one is bigger.",
+        "Carry on to the end of the line. That is one pass.",
+        "Go back to the left and do another pass.",
+        "Stop when you get all the way along with no swaps at all. The line is sorted.",
+        "Count how many passes and how many swaps it took."
+      ],
+      tip: "Try it again with ten people instead of six and count again. The work grows much faster than the line does, which is why nobody sorts a million things this way."
+    },
+    {
+      name: "Guess My Number: Two Ways", emoji: "🔍", level: "Medium", mins: 15,
+      teaches: "Linear search against binary search, and why the strategy matters",
+      needs: ["Paper and a pencil", "Two players"],
+      steps: [
+        "One player thinks of a number between 1 and 100 and writes it down.",
+        "Round one: the guesser starts at 1 and counts up, one number at a time. Count the guesses.",
+        "Round two: a new number. This time the guesser always says the middle of what is left, starting with 50.",
+        "After each guess the other player says HIGHER or LOWER.",
+        "Count the guesses again.",
+        "Play three rounds of each way and write down the worst case for both.",
+        "Work out how many guesses the halving method would need for 1 to 1000."
+      ],
+      tip: "Halving needs at most 7 guesses for 100 and only 10 for 1000. Counting up needs 100 and 1000. That gap is why search algorithms matter."
+    },
+    {
+      name: "Loop Dance", emoji: "💃", level: "Medium", mins: 20,
+      teaches: "Loops and nested loops, written as a program and then performed",
+      needs: ["Paper and a pencil", "Space to move", "Music if you like"],
+      steps: [
+        "Invent four simple moves and give each one a short name, such as CLAP, STOMP, SPIN, JUMP.",
+        "Write a routine using only those names, for example CLAP CLAP STOMP.",
+        "Put REPEAT 4 TIMES around it and perform it.",
+        "Now write a second short routine and put REPEAT 3 TIMES around that.",
+        "Put both loops inside one more loop that says REPEAT 2 TIMES.",
+        "Perform the whole thing and count how many moves you actually did.",
+        "Check your count by multiplying instead of counting."
+      ],
+      tip: "A loop inside a loop is a nested loop. Multiplying to predict the total is exactly how a programmer knows what their code will do before running it."
+    },
+    {
+      name: "Debug the Dance", emoji: "🐞", level: "Medium", mins: 20,
+      teaches: "Debugging: finding the one wrong step in a program",
+      needs: ["Paper and a pencil", "Two or more players"],
+      steps: [
+        "Player one writes a routine of about ten moves using the names from Loop Dance.",
+        "They perform it once, correctly, while everybody watches.",
+        "Player one then copies the routine onto a fresh sheet, changing exactly one step, and hands it over.",
+        "Player two performs the new sheet exactly as written.",
+        "Everybody else watches for the moment it stops matching what they saw.",
+        "Whoever spots the wrong line first says STOP and points at that line.",
+        "Fix that line, run it again from the top, and check it matches."
+      ],
+      tip: "Running it from the top after a fix is the habit worth building. Programmers do it because a fix in one place can break another."
+    },
+    {
+      name: "Secret Message Wheel", emoji: "🔐", level: "Medium", mins: 25,
+      teaches: "Ciphers: hiding a message by shifting every letter",
+      needs: ["Card", "Scissors", "A paper fastener or a pin and a rubber", "A pencil", "A ruler"],
+      steps: [
+        "Cut two circles of card, one about 10 cm across and one about 7 cm.",
+        "Write the alphabet evenly around the edge of each circle.",
+        "Push the fastener through the centre of both so the small circle turns on top of the big one.",
+        "Choose a shift, for example 3, and line A on the small wheel up with D on the big one.",
+        "Write your message, then find each letter on the small wheel and write down the letter it points to.",
+        "Give the coded message to somebody with the shift number.",
+        "They set their wheel the same way and read it backwards.",
+        "Now try to crack a friend's message without being told the shift."
+      ],
+      tip: "There are only 25 shifts to try, which is why this code is easy to break. Real encryption uses keys with more possibilities than there are atoms in the room."
+    },
+    {
+      name: "Paper Packets", emoji: "📨", level: "Medium", mins: 25,
+      teaches: "Networks: how a message is split into packets and put back together",
+      needs: ["Paper cut into small slips", "Pencils", "4 or more players", "A room to move around in"],
+      steps: [
+        "Write a message of about twenty words. Do not show anybody.",
+        "Split it up so each slip carries only two or three words.",
+        "Number every slip so the order is recorded on the paper itself.",
+        "Shuffle the slips and hand them to different players standing around the room.",
+        "Each player passes their slip to the next player, and so on, until all the slips reach the person at the far end.",
+        "That person puts the message back together using the numbers, not the meaning.",
+        "Now play again but secretly lose one slip, and see what the receiver does.",
+        "Agree a rule for what the receiver should say when a number is missing."
+      ],
+      tip: "Numbering the slips is the whole trick. It is why a video still plays properly even though its packets arrive out of order."
+    },
+
+    // ---------- Hard ----------
+    {
+      name: "The Card Flip Trick", emoji: "🃏", level: "Hard", mins: 30,
+      teaches: "Error detection: how a computer notices that data got corrupted",
+      needs: ["36 cards that are a different colour on each side, or 36 squares of paper coloured on one side only"],
+      steps: [
+        "Lay the cards out in a square, five across and five down, with random sides showing.",
+        "Now add one extra card to the end of every row, choosing its side so each row has an EVEN number of coloured cards.",
+        "Do the same for every column, adding an extra card at the bottom.",
+        "Add one more card in the bottom right corner so the last row and the last column are both even too.",
+        "You now have a six by six square where every row and every column has an even count.",
+        "Turn away while somebody flips exactly one card over.",
+        "Turn back and find it: one row and one column will now have an odd count, and the flipped card sits where they cross.",
+        "Try it again with two cards flipped and see whether you can still find them."
+      ],
+      tip: "Those extra cards are parity bits. Notice that one flip is always findable but two flips can hide each other, which is a real limit of this method."
+    },
+    {
+      name: "Sorting Network on the Floor", emoji: "🕸️", level: "Hard", mins: 30,
+      teaches: "Doing comparisons in parallel instead of one after another",
+      needs: ["Chalk outside or masking tape indoors", "6 players", "6 cards with numbers on"],
+      steps: [
+        "Draw six lanes side by side on the ground, each long enough to walk down.",
+        "Draw short rungs joining pairs of lanes at different points along their length. Copy a six input sorting network diagram, or use this order: join lanes 1 and 2, 3 and 4, 5 and 6, then 1 and 3, 4 and 6, then 1 and 2, 3 and 5, 4 and 6, then 2 and 3, 4 and 5, then 3 and 4.",
+        "Each player takes a card and stands at the start of one lane.",
+        "Walk forward together.",
+        "When two players meet at a rung, they compare cards. The smaller number carries on down the left lane, the bigger down the right.",
+        "Keep walking until everybody reaches the far end.",
+        "Read the cards from left to right. They are sorted.",
+        "Do it again with different numbers and time it against the Bubble Sort Line-Up."
+      ],
+      tip: "Several comparisons happen at the same moment here, which is why it finishes so much faster. That is parallel computing, done with feet."
+    },
+    {
+      name: "Map Colouring Challenge", emoji: "🗺️", level: "Hard", mins: 30,
+      teaches: "Graph colouring: solving a problem where choices affect each other",
+      needs: ["Paper", "Coloured pencils in at least four colours", "A pencil"],
+      steps: [
+        "Draw a squiggly closed shape on the paper, then draw more squiggles across it until you have about twelve regions.",
+        "The rule: two regions that share an edge must not be the same colour. Touching at a single corner is allowed.",
+        "Colour the whole map using as few colours as you can.",
+        "Write down how many colours you needed.",
+        "Try again on a new map and see whether you can ever be forced to use five.",
+        "Now try to DRAW a map that needs five colours."
+      ],
+      tip: "You will not manage it. Any flat map can be coloured with four, which mathematicians spent over a hundred years proving, and the proof needed a computer."
+    },
+    {
+      name: "The Human Search Engine", emoji: "📚", level: "Hard", mins: 35,
+      teaches: "Indexing: why searching an index beats searching everything",
+      needs: ["10 short pages of text, from a magazine or written by hand", "Index cards", "Pencils", "A timer"],
+      steps: [
+        "Number the ten pages 1 to 10 and spread them on the table.",
+        "Round one: somebody calls out a word. Everybody searches every page to find which ones contain it. Time it.",
+        "Now build an index. Choose about twenty interesting words.",
+        "Write each word on its own card, and under it list the page numbers where that word appears.",
+        "Sort the cards into alphabetical order.",
+        "Round two: call out another word. Find it in the index instead. Time it again.",
+        "Compare the two times.",
+        "Talk about the cost: how long did building the index take, and how many searches before it pays for itself?"
+      ],
+      tip: "A search engine does exactly this. It reads the whole web slowly and in advance, so that your search can be fast."
+    },
+    {
+      name: "Paper State Machine", emoji: "🎰", level: "Hard", mins: 35,
+      teaches: "State machines: a system that remembers where it is and what happens next",
+      needs: ["A large sheet of paper", "Coloured pens", "A counter or coin", "A dice or a coin to flip"],
+      steps: [
+        "Choose something with a few clear states, for example a traffic light, or a vending machine, or a door that can be locked, shut or open.",
+        "Draw a circle for each state and write the state's name inside it.",
+        "Draw an arrow from one circle to another for every change that can happen, and write ON the arrow what causes it.",
+        "Mark the starting state with a thick arrow coming in from nowhere.",
+        "Put the counter on the start state.",
+        "Call out events one at a time. Move the counter only if there is an arrow for that event.",
+        "If there is no arrow, the machine ignores the event. Say so out loud and leave the counter where it is.",
+        "Now find a state you can get into but never get out of, or prove there is not one."
+      ],
+      tip: "A state you can never leave is called a trap state. Finding one on paper is far cheaper than finding one in a program that is already running."
+    }
+  ];
+
+  window.CS_UNPLUGGED = CS_UNPLUGGED;
+
+  // Rendered by app.js when a lesson carries unpluggedList. Prints as well as it displays, so a
+  // grown-up can run one of these from a sheet of paper with no screen in the room, which is
+  // rather the point.
+  window.CSUnplugged = {
+    html: function () {
+      function esc(s) {
+        return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+      }
+      var counts = { Easy: 0, Medium: 0, Hard: 0 };
+      CS_UNPLUGGED.forEach(function (a) { counts[a.level]++; });
+      return '<div class="cu-list">' +
+        '<p class="cu-intro">' + CS_UNPLUGGED.length + ' activities, no screen required: ' +
+          counts.Easy + ' easy, ' + counts.Medium + ' medium, ' + counts.Hard + ' hard.</p>' +
+        CS_UNPLUGGED.map(function (a, i) {
+          return '<div class="cu-item">' +
+            '<h4><span class="cu-num">' + (i + 1) + '</span>' + esc(a.emoji) + ' ' + esc(a.name) +
+              '<i class="cu-lvl ' + a.level.toLowerCase() + '">' + a.level + '</i>' +
+              '<i class="cu-mins">⏱ ' + a.mins + ' min</i></h4>' +
+            '<p class="cu-teaches"><b>Teaches:</b> ' + esc(a.teaches) + '</p>' +
+            '<div class="cu-cols">' +
+              '<div class="cu-needs"><h5>🧺 What you need</h5><ul>' +
+                a.needs.map(function (n) { return '<li>' + esc(n) + '</li>'; }).join("") +
+              '</ul></div>' +
+              '<div class="cu-steps"><h5>📋 What to do</h5><ol>' +
+                a.steps.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join("") +
+              '</ol></div>' +
+            '</div>' +
+            (a.tip ? '<p class="cu-tip">💡 <b>Talk about it:</b> ' + esc(a.tip) + '</p>' : '') +
+          '</div>';
+        }).join("") + '</div>';
     }
   };
 })();
