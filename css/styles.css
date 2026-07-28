@@ -110,6 +110,15 @@ main{max-width:1100px;margin:0 auto;padding:26px 18px 80px}
 .g28{background:linear-gradient(135deg,#0f1730,#2ec4b6)}
 .g29{background:linear-gradient(135deg,#ff6b9d,#f2b705)}
 .g30{background:linear-gradient(135deg,#0e7490,#8ce99a)}
+.g31{background:linear-gradient(135deg,#2f7a3c,#8fd0ff)}
+
+/* ---------- "For the grown-up" note, used by Let's Learn Biology ----------
+   Deliberately different from the child-facing boxes: this one is addressed to the adult in the
+   room, and usually names the misconception to listen out for. */
+.parentnote{background:#f4f7ff;border-left:5px solid #4d96ff;border-radius:12px;
+  padding:13px 17px;margin:14px 0}
+.parentnote h3{font-family:var(--display);font-size:1rem;color:#12447f;margin-bottom:5px}
+.parentnote p{color:#3f4a63;line-height:1.65;font-size:.93rem}
 .ggames{background:linear-gradient(135deg,#8338ec,#2ec4b6)}
 .glibrary{background:linear-gradient(135deg,#e26d5c,#ffd166);color:var(--ink)}
 .libnote{font-size:.78rem;color:#8a86a8;margin-top:-2px}
