@@ -628,16 +628,71 @@ main{max-width:1100px;margin:0 auto;padding:26px 18px 80px}
 .spchip{
   display:inline-flex;align-items:center;gap:7px;background:#f7f4ff;border:1px solid #e4dcf6;
   border-radius:999px;padding:3px 12px 3px 3px;font-size:.82rem;font-weight:600;white-space:nowrap;
+  cursor:pointer;transition:background .12s,border-color .12s,transform .12s;
 }
+.spchip:hover,.spchip:focus-visible{background:#efe6ff;border-color:var(--purple);transform:translateY(-1px)}
+.spchip:focus-visible{outline:2px solid var(--purple);outline-offset:2px}
 .spchip img{width:32px;height:32px;object-fit:cover;border-radius:50%;background:#fff;flex-shrink:0}
 .spchip .spname{display:flex;flex-direction:column;line-height:1.25}
 .spchip .spname i{font-size:.68rem;font-weight:400;color:#8a86a8;font-style:italic}
 .spphoto{width:56px;height:56px;object-fit:cover;border-radius:8px;vertical-align:middle;margin:0 6px;border:1px solid #e4dcf6}
 .spphoto.big{width:130px;height:110px;display:block;margin:8px 0}
 @media print{
-  .spchip{border:1px solid #ccc;background:#fff;break-inside:avoid}
+  .spchip{border:1px solid #ccc;background:#fff;break-inside:avoid;cursor:auto}
   .spchip img,.spphoto{ -webkit-print-color-adjust:exact;print-color-adjust:exact }
 }
+
+/* ---------- Species hover card (js/species-popup.js) ---------- */
+/* An invisible full-page layer that only becomes clickable once a card is pinned open (by a
+   click, a tap, or the keyboard), so it can catch a tap outside the card to close it without
+   dimming the page the way a real modal would. */
+.sp-pop-backdrop{position:fixed;inset:0;z-index:970;background:transparent;pointer-events:none}
+.sp-pop-backdrop.show{pointer-events:auto}
+.sp-pop{
+  position:fixed;left:-9999px;top:-9999px;z-index:971;width:272px;max-width:calc(100vw - 24px);
+  background:#fff;border-radius:20px;box-shadow:0 14px 34px rgba(45,42,74,.32);padding:14px;
+  opacity:0;transform:translateY(6px) scale(.97);pointer-events:none;
+  transition:opacity .16s ease,transform .16s ease;
+}
+.sp-pop.open{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
+.sp-pop-close{
+  position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;border:0;
+  background:#f1ecfb;color:var(--ink);font-size:.85rem;line-height:1;
+  display:flex;align-items:center;justify-content:center;
+}
+.sp-pop-close:hover{background:#e4dcf6}
+/* the "spin the photo" card: two faces of one flat box, rotated in 3D so a drag can turn it */
+.sp-pop-stage{width:100%;height:168px;perspective:900px;margin-top:6px;cursor:grab}
+.sp-pop-stage:active{cursor:grabbing}
+.sp-pop-cardface{position:relative;width:100%;height:100%;transform-style:preserve-3d}
+.sp-pop-side{
+  position:absolute;inset:0;border-radius:14px;backface-visibility:hidden;overflow:hidden;
+  box-shadow:0 4px 14px rgba(45,42,74,.18);
+}
+.sp-pop-front{background:#e9e4f7}
+.sp-pop-img{width:100%;height:100%;object-fit:cover;display:block}
+.sp-pop-front-emoji{display:none;position:absolute;inset:0;align-items:center;justify-content:center;font-size:3.2rem}
+/* the far side, revealed once the photo has been spun past its own edge */
+.sp-pop-back{
+  transform:rotateY(180deg);background:linear-gradient(160deg,var(--purple),var(--purple-dark));
+  color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:10px;
+}
+.sp-pop-back-emoji{font-size:2rem;margin-bottom:4px}
+.sp-pop-back-name{font-family:var(--display);font-weight:700;font-size:1.02rem}
+.sp-pop-back-country{font-size:.8rem;opacity:.85;margin-top:2px}
+.sp-pop-hint{text-align:center;font-size:.68rem;color:#8a86a8;margin-top:8px}
+.sp-pop-info{margin-top:6px;text-align:center}
+.sp-pop-name{font-family:var(--display);font-weight:700;font-size:1.05rem;color:var(--ink)}
+.sp-pop-sci{font-size:.82rem;font-style:italic;color:#6a668c;margin-top:2px}
+.sp-pop-where{font-size:.78rem;color:#8a86a8;margin-top:4px}
+.sp-pop-say{
+  margin-top:9px;background:var(--purple);color:#fff;border:0;border-radius:999px;
+  padding:7px 16px;font-size:.82rem;font-weight:600;
+}
+.sp-pop-say:hover{background:var(--purple-dark)}
+@media (max-width:480px){ .sp-pop-stage{height:150px} }
+@media print{ .sp-pop,.sp-pop-backdrop{display:none !important} }
 
 /* ---------- Spelling word chips ---------- */
 .spellgrid{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}

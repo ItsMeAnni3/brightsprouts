@@ -400,9 +400,14 @@ function doodle(key, cls) {
 function flagImg(iso, size) { return `<img class="flagimg" src="https://flagcdn.com/w${size || 40}/${iso}.png" alt="flag" loading="lazy">`; }
 // species entries are [common name, scientific name]
 function spImgSrc(sci) { return (typeof SPECIES_IMG !== "undefined") ? SPECIES_IMG[sci] : null; }
-function spChip(sp) {
-  const [name, sci] = sp, src = spImgSrc(sci);
-  return `<span class="spchip" title="${esc(sci)}">${src ? `<img src="${src}" alt="${esc(name)}" loading="lazy">` : ""}<span class="spname">${esc(name)}<i>${esc(sci)}</i></span></span>`;
+// opts.country and opts.kind ("flora"/"fauna") let the hover card (js/species-popup.js) speak
+// something true about this particular chip: which country's table it came from.
+function spChip(sp, opts) {
+  const [name, sci] = sp, src = spImgSrc(sci), o = opts || {};
+  const data = ` data-sp-name="${esc(name)}" data-sp-sci="${esc(sci)}"` +
+    (o.country ? ` data-sp-country="${esc(o.country)}"` : "") +
+    (o.kind ? ` data-sp-kind="${o.kind}"` : "");
+  return `<span class="spchip" tabindex="0" role="button" title="${esc(sci)}"${data}>${src ? `<img src="${src}" alt="${esc(name)}" loading="lazy">` : ""}<span class="spname">${esc(name)}<i>${esc(sci)}</i></span></span>`;
 }
 function spPhoto(sci, big) {
   const src = spImgSrc(sci);
@@ -1926,6 +1931,7 @@ function lessonView() {
   }
   if (lesson.floraFauna) {
     const conts = LESSONS[13].geography.continents;
+    body += `<p class="lesson-intro no-print">🔊 Hover, tap or tab to any plant or animal below to see its real photo up close and hear its name.</p>`;
     body += `<div class="cont-nav no-print">` + conts.filter(c => c.countries).map((c, i) =>
       `<button class="btn btn-ghost btn-sm" onclick="document.getElementById('ff-${i}').scrollIntoView({behavior:'smooth'})">${c.emoji} ${esc(c.name)}</button>`).join("") + `</div>`;
     conts.forEach((c, i) => {
@@ -1934,7 +1940,7 @@ function lessonView() {
         <div style="overflow-x:auto"><table class="word-table"><tr><th>Flag</th><th>Country</th><th>🌿 Flora (plants)</th><th>🐾 Fauna (animals)</th></tr>` +
         c.countries.map(k => {
           const ff = FF_COUNTRY[k[0]] || { flora: [], fauna: [] };
-          return `<tr><td>${flagImg(k[0])}</td><td><b>${esc(k[1])}</b></td><td><div class="spwrap">${ff.flora.map(spChip).join("")}</div></td><td><div class="spwrap">${ff.fauna.map(spChip).join("")}</div></td></tr>`;
+          return `<tr><td>${flagImg(k[0])}</td><td><b>${esc(k[1])}</b></td><td><div class="spwrap">${ff.flora.map(sp => spChip(sp, { country: k[1], kind: "flora" })).join("")}</div></td><td><div class="spwrap">${ff.fauna.map(sp => spChip(sp, { country: k[1], kind: "fauna" })).join("")}</div></td></tr>`;
         }).join("") + `</table></div></div>`;
     });
     body += `<p style="font-size:.8rem;color:#8a86a8;margin-top:14px">Each species is listed with its scientific name and was checked against occurrence records in the Global Biodiversity Information Facility (GBIF). Photos courtesy of Wikimedia Commons contributors.</p>`;
