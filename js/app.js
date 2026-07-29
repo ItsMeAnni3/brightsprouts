@@ -1969,6 +1969,15 @@ function lessonView() {
     <div class="tabs no-print">${tabs}</div>
     ${baseLesson.units && baseLesson.units.length > 1 ? `<div class="unitbar no-print">` + baseLesson.units.map((u, i) =>
       `<button class="btn btn-sm ${i === unitIdx ? "btn-primary" : "btn-ghost"}" onclick="App.pickUnit('${unitKey}',${i})">${u.emoji || ""} Unit ${i + 1}: ${esc(u.title)}</button>`).join("") + `</div>` : ""}
+    ${typeof Ink === "undefined" ? "" : `<div class="inkbar no-print" id="inkbar">
+      <button class="btn btn-sm btn-primary" id="ink-toggle" onclick="App.inkToggle()">✏️ Write on this sheet</button>
+      <span class="inktools" id="inktools" hidden>
+        ${Ink.pens.map(p => `<button class="inkpen ${p.key === "hi" ? "hi" : ""}" data-pen="${p.key}" title="${esc(p.name)}" aria-label="${esc(p.name)}" onclick="App.inkPen('${p.key}')"><i style="background:${p.colour}"></i></button>`).join("")}
+        <button class="btn btn-sm btn-ghost" id="ink-erase" onclick="App.inkErase()">🧽 Rubber</button>
+        <button class="btn btn-sm btn-ghost" onclick="App.inkUndo()">↶ Undo</button>
+        <button class="btn btn-sm btn-ghost" onclick="App.inkClear()">🗑️ Clear</button>
+      </span>
+    </div>`}
     <div class="card" id="lesson-card">
       <div class="print-only print-header"><span class="brand">🌱 BrightSprouts Academy: ${gradeName(g)} ${subjectsFor(g).find(s => s.key === subj).label}</span><span>Name: ____________ &nbsp; Date: ________</span></div>
       <div class="lesson-head"><span class="lesson-emoji">${lesson.emoji}</span><h2>${esc(lesson.title)}</h2></div>
@@ -2204,6 +2213,7 @@ function pricingView() {
         <ul>
           <li><b>Every grade, K–12</b>: Math, Reading, Phonics, Vocabulary, Spelling, Writing, Science, Social Studies, Art &amp; Music</li>
           <li><b>High-school sciences</b>: Biology, Chemistry &amp; Physics</li>
+          <li><b>Write straight on the screen</b>: answer the questions, trace a maze or colour a picture with a stylus, a finger or a mouse. Pressure sensitive if your pen supports it, with an eraser, undo, and your writing saved per sheet</li>
           <li><b>20 "Let's Learn" categories</b>: Geography, Space, Biology, Chemistry, Physics, Mathematics, Visual Arts, Music, Computer Science, Spanish, Geology, Paleontology, Weather &amp; Oceans, Time &amp; Money, The History of Us, Feelings &amp; Kindness, Kids &amp; Family Jokes, Paper Activities, Coloring &amp; Maze Worksheets &amp; Books</li>
           <li><b>US-aligned Social Studies</b>: 36 units including US History I, II &amp; III and Civics</li>
           <li><b>Computer Science, three ways</b>: the Grade 1–12 course, 20 unplugged activities with no screen, and a live Code Terminal where children write real code and see it run</li>
@@ -2533,6 +2543,32 @@ const App = {
   newSheet() { delete state.sheetCache[state.grade + "-" + state.subject]; render(); },
   newColorPage() { state.colorPick = null; render(); },
   newMazePage() { state.mazeSeed = null; render(); },
+  // ---- writing on the sheet with a stylus, a finger or a mouse ----
+  inkToggle() {
+    var on = Ink.toggle();
+    var b = document.getElementById("ink-toggle"), t = document.getElementById("inktools");
+    if (b) {
+      b.textContent = on ? "✅ Done writing" : "✏️ Write on this sheet";
+      b.className = "btn btn-sm " + (on ? "btn-secondary" : "btn-primary");
+    }
+    if (t) t.hidden = !on;
+    App.inkPaintPens();
+  },
+  inkPen(k) { Ink.setPen(k); App.inkPaintPens(); },
+  inkErase() { Ink.setErase(!Ink.isErasing()); App.inkPaintPens(); },
+  inkUndo() { Ink.undo(); },
+  inkClear() {
+    if (Ink.count() && !confirm("Rub out everything you have written on this sheet?")) return;
+    Ink.clear();
+  },
+  // Keeps the toolbar showing what is actually selected, including which pen.
+  inkPaintPens() {
+    document.querySelectorAll(".inkpen").forEach(function (el) {
+      el.classList.toggle("on", !Ink.isErasing() && el.dataset.pen === Ink.currentPen());
+    });
+    var e = document.getElementById("ink-erase");
+    if (e) e.className = "btn btn-sm " + (Ink.isErasing() ? "btn-secondary" : "btn-ghost");
+  },
   mazeTheme(t) { state.mazeTheme = t; state.mazeSeed = null; render(); },
   mazeLevel(l) { state.mazeLevel = l; state.mazeSeed = null; render(); },
   mmSet(part, val) { state.maker[part] = val; render(); mmPop(); },
@@ -3441,6 +3477,19 @@ function render() {
   else if (typeof Globe !== "undefined") Globe.unmount();
   // The joke show's controller needs its screen on the page before it can deal the first joke.
   if (typeof JokeTv !== "undefined") JokeTv.mount();
+  mountInk();
+}
+
+// The writing layer clips itself over the lesson card after every render. The key is per sheet,
+// so a child's handwriting comes back when they return to the same lesson and does not follow
+// them onto a different one.
+function mountInk() {
+  if (typeof Ink === "undefined") return;
+  const card = state.view === "lesson" ? document.getElementById("lesson-card") : null;
+  if (!card) { Ink.detach(); document.body.classList.remove("inkon"); return; }
+  const unit = (state.unitPick && state.unitPick[state.grade + "-" + state.subject]) || 0;
+  Ink.attach(card, "bs_ink_" + state.grade + "_" + state.subject + "_" + unit);
+  if (typeof App !== "undefined" && App.inkPaintPens) App.inkPaintPens();
 }
 // Optional deep links: #lessons, #stories, #maker, #pricing, #privacy, #lesson-3-science, #story-12
 function applyHash() {

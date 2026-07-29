@@ -1721,3 +1721,25 @@ footer{background:var(--purple-dark);color:#cfc6ee;text-align:center;padding:20p
   .maze-grid{grid-template-columns:1fr 1fr;gap:10px}
   .mazepage{box-shadow:none;border:1px solid #ddd;break-inside:avoid;page-break-inside:avoid}
 }
+
+/* ---------- Write on the sheet: stylus, finger or mouse ---------- */
+#lesson-card{position:relative}
+.inklayer{position:absolute;left:0;top:0;pointer-events:none;z-index:5;touch-action:none}
+.inklayer.on{pointer-events:auto;cursor:crosshair}
+/* The tools live inside the card, so they have to sit above the writing layer to stay usable. */
+.lesson-tools{position:relative;z-index:6}
+.inkbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:14px 0 0}
+.inktools{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.inkpen{width:30px;height:30px;border-radius:50%;border:2px solid #e6e0f5;background:#fff;
+  cursor:pointer;padding:0;display:inline-flex;align-items:center;justify-content:center}
+.inkpen i{width:16px;height:16px;border-radius:50%;display:block}
+.inkpen.hi i{border-radius:3px;height:11px}
+.inkpen:hover{border-color:var(--purple)}
+.inkpen.on{border-color:var(--purple);box-shadow:0 0 0 3px rgba(124,92,191,.22)}
+/* While writing is on, the answer lines show on screen too, so there is somewhere to aim. */
+body.inkon .q-item .write-line{display:block;border-bottom:1.5px solid #b9b3d4;height:30px;margin-top:8px}
+body.inkon #lesson-card{touch-action:pan-y}
+@media print{
+  .inklayer{display:block!important;pointer-events:none}
+  .inkbar{display:none!important}
+}
