@@ -1730,12 +1730,18 @@ footer{background:var(--purple-dark);color:#cfc6ee;text-align:center;padding:20p
 .lesson-tools{position:relative;z-index:6}
 .inkbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:14px 0 0}
 .inktools{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.inkpen{width:30px;height:30px;border-radius:50%;border:2px solid #e6e0f5;background:#fff;
+.inkcolours,.inksizes{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.inksizes{padding-left:8px;margin-left:4px;border-left:1px solid #e6e0f5}
+.inkpen{width:28px;height:28px;border-radius:50%;border:2px solid #e6e0f5;background:#fff;
   cursor:pointer;padding:0;display:inline-flex;align-items:center;justify-content:center}
-.inkpen i{width:16px;height:16px;border-radius:50%;display:block}
-.inkpen.hi i{border-radius:3px;height:11px}
-.inkpen:hover{border-color:var(--purple)}
-.inkpen.on{border-color:var(--purple);box-shadow:0 0 0 3px rgba(124,92,191,.22)}
+.inkpen i{width:15px;height:15px;border-radius:50%;display:block;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
+.inkpen:hover,.inksize:hover{border-color:var(--purple)}
+.inkpen.on,.inksize.on{border-color:var(--purple);box-shadow:0 0 0 3px rgba(124,92,191,.22)}
+/* The thickness buttons show the actual line weight rather than naming it, so a child who
+   cannot read the word "medium" can still pick the one they want. */
+.inksize{width:30px;height:28px;border-radius:9px;border:2px solid #e6e0f5;background:#fff;
+  cursor:pointer;padding:0;display:inline-flex;align-items:center;justify-content:center}
+.inksize i{background:#2d2a4a;border-radius:50%;display:block}
 /* While writing is on, the answer lines show on screen too, so there is somewhere to aim. */
 body.inkon .q-item .write-line{display:block;border-bottom:1.5px solid #b9b3d4;height:30px;margin-top:8px}
 body.inkon #lesson-card{touch-action:pan-y}

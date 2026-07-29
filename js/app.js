@@ -1972,7 +1972,9 @@ function lessonView() {
     ${typeof Ink === "undefined" ? "" : `<div class="inkbar no-print" id="inkbar">
       <button class="btn btn-sm btn-primary" id="ink-toggle" onclick="App.inkToggle()">✏️ Write on this sheet</button>
       <span class="inktools" id="inktools" hidden>
-        ${Ink.pens.map(p => `<button class="inkpen ${p.key === "hi" ? "hi" : ""}" data-pen="${p.key}" title="${esc(p.name)}" aria-label="${esc(p.name)}" onclick="App.inkPen('${p.key}')"><i style="background:${p.colour}"></i></button>`).join("")}
+        <span class="inkcolours">${Ink.colours.map(c => `<button class="inkpen" data-colour="${c.key}" title="${esc(c.name)}" aria-label="${esc(c.name)}" onclick="App.inkColour('${c.key}')"><i style="background:${c.hex}"></i></button>`).join("")}</span>
+        <span class="inksizes">${Ink.sizes.map(z => `<button class="inksize" data-size="${z.key}" title="${esc(z.name)}" aria-label="${esc(z.name)} line" onclick="App.inkSize('${z.key}')"><i style="width:${(z.width * 2.2).toFixed(1)}px;height:${(z.width * 2.2).toFixed(1)}px"></i></button>`).join("")}</span>
+        <button class="btn btn-sm btn-ghost" id="ink-hi" onclick="App.inkHighlighter()">🖍️ Highlighter</button>
         <button class="btn btn-sm btn-ghost" id="ink-erase" onclick="App.inkErase()">🧽 Rubber</button>
         <button class="btn btn-sm btn-ghost" onclick="App.inkUndo()">↶ Undo</button>
         <button class="btn btn-sm btn-ghost" onclick="App.inkClear()">🗑️ Clear</button>
@@ -2554,7 +2556,9 @@ const App = {
     if (t) t.hidden = !on;
     App.inkPaintPens();
   },
-  inkPen(k) { Ink.setPen(k); App.inkPaintPens(); },
+  inkColour(k) { Ink.setColour(k); App.inkPaintPens(); },
+  inkSize(k) { Ink.setSize(k); App.inkPaintPens(); },
+  inkHighlighter() { Ink.setTool(Ink.currentTool() === "highlighter" ? "pen" : "highlighter"); App.inkPaintPens(); },
   inkErase() { Ink.setErase(!Ink.isErasing()); App.inkPaintPens(); },
   inkUndo() { Ink.undo(); },
   inkClear() {
@@ -2563,9 +2567,16 @@ const App = {
   },
   // Keeps the toolbar showing what is actually selected, including which pen.
   inkPaintPens() {
+    if (typeof Ink === "undefined") return;
+    var writing = !Ink.isErasing();
     document.querySelectorAll(".inkpen").forEach(function (el) {
-      el.classList.toggle("on", !Ink.isErasing() && el.dataset.pen === Ink.currentPen());
+      el.classList.toggle("on", writing && el.dataset.colour === Ink.currentColour());
     });
+    document.querySelectorAll(".inksize").forEach(function (el) {
+      el.classList.toggle("on", writing && el.dataset.size === Ink.currentSize());
+    });
+    var h = document.getElementById("ink-hi");
+    if (h) h.className = "btn btn-sm " + (writing && Ink.currentTool() === "highlighter" ? "btn-secondary" : "btn-ghost");
     var e = document.getElementById("ink-erase");
     if (e) e.className = "btn btn-sm " + (Ink.isErasing() ? "btn-secondary" : "btn-ghost");
   },

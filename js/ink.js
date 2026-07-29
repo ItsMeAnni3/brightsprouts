@@ -22,18 +22,51 @@
 (function () {
   "use strict";
 
-  var PENS = [
-    { key: "ink",    name: "Pencil",      colour: "#2d2a4a", width: 2.6, alpha: 1 },
-    { key: "blue",   name: "Blue",        colour: "#1f6feb", width: 2.6, alpha: 1 },
-    { key: "red",    name: "Red",         colour: "#e2453b", width: 2.6, alpha: 1 },
-    { key: "green",  name: "Green",       colour: "#2f9e44", width: 2.6, alpha: 1 },
-    { key: "fat",    name: "Fat crayon",  colour: "#7c5cbf", width: 9,   alpha: 1 },
-    { key: "hi",     name: "Highlighter", colour: "#ffd166", width: 16,  alpha: 0.4 }
+  // Colour and thickness are chosen separately. They used to be welded together into six fixed
+  // pens, which meant there was no way to ask for a thin purple: purple only existed as the fat
+  // crayon. Now any colour can be any thickness.
+  var COLOURS = [
+    { key: "pencil", name: "Pencil",  hex: "#2d2a4a" },
+    { key: "grey",   name: "Grey",    hex: "#6b7280" },
+    { key: "blue",   name: "Blue",    hex: "#1f6feb" },
+    { key: "sky",    name: "Sky",     hex: "#22b8cf" },
+    { key: "teal",   name: "Teal",    hex: "#0ca678" },
+    { key: "green",  name: "Green",   hex: "#2f9e44" },
+    { key: "lime",   name: "Lime",    hex: "#74b816" },
+    { key: "yellow", name: "Yellow",  hex: "#f2b705" },
+    { key: "orange", name: "Orange",  hex: "#f76707" },
+    { key: "red",    name: "Red",     hex: "#e2453b" },
+    { key: "pink",   name: "Pink",    hex: "#e64980" },
+    { key: "purple", name: "Purple",  hex: "#7c5cbf" },
+    { key: "brown",  name: "Brown",   hex: "#8a5f2e" },
+    { key: "white",  name: "White",   hex: "#ffffff" }
   ];
+
+  // The old single width was 2.6, which is chunky for writing an answer on a worksheet line.
+  // Thin is the new default and it is finer than anything that was available before.
+  var SIZES = [
+    { key: "fine",   name: "Fine",   width: 1.1 },
+    { key: "thin",   name: "Thin",   width: 1.9 },
+    { key: "medium", name: "Medium", width: 3.4 },
+    { key: "thick",  name: "Thick",  width: 6 }
+  ];
+
+  // Strokes written before colour and thickness were split apart. Kept so a child's saved work
+  // still opens, and mapped onto the new model rather than thrown away.
+  var LEGACY = {
+    ink:  { hex: "#2d2a4a", width: 2.6, alpha: 1 },
+    blue: { hex: "#1f6feb", width: 2.6, alpha: 1 },
+    red:  { hex: "#e2453b", width: 2.6, alpha: 1 },
+    green:{ hex: "#2f9e44", width: 2.6, alpha: 1 },
+    fat:  { hex: "#7c5cbf", width: 9,   alpha: 1 },
+    hi:   { hex: "#ffd166", width: 16,  alpha: 0.4 }
+  };
 
   var state = {
     on: false,
-    pen: "ink",
+    colour: "pencil",
+    size: "thin",
+    tool: "pen",     // "pen" or "highlighter"
     erasing: false,
     strokes: [],      // { pen, pts: [[x, y, pressure], ...] } with x and y as fractions of width
     undone: [],
@@ -46,9 +79,20 @@
   var live = null;    // the stroke being drawn right now
   var saveTimer = null;
 
-  function penByKey(k) {
-    for (var i = 0; i < PENS.length; i++) if (PENS[i].key === k) return PENS[i];
-    return PENS[0];
+  function colourByKey(k) {
+    for (var i = 0; i < COLOURS.length; i++) if (COLOURS[i].key === k) return COLOURS[i];
+    return COLOURS[0];
+  }
+  function sizeByKey(k) {
+    for (var i = 0; i < SIZES.length; i++) if (SIZES[i].key === k) return SIZES[i];
+    return SIZES[1];
+  }
+  // What the next stroke will be drawn with, given the colour, thickness and tool chosen.
+  // A highlighter is the same colour laid down wide and see-through.
+  function nib() {
+    var c = colourByKey(state.colour), z = sizeByKey(state.size);
+    if (state.tool === "highlighter") return { c: c.hex, w: z.width * 4.5, a: 0.35 };
+    return { c: c.hex, w: z.width, a: 1 };
   }
 
   // ==================== the canvas ====================
@@ -71,13 +115,13 @@
 
   function strokePath(s) {
     if (!ctx || !s.pts.length) return;
-    var p = penByKey(s.pen);
+    var p = { colour: s.c, width: s.w, alpha: s.a };
     ctx.globalAlpha = p.alpha;
     ctx.strokeStyle = p.colour;
     if (s.pts.length === 1) {
       var only = s.pts[0];
       ctx.beginPath();
-      ctx.arc(only[0] * boxW, only[1] * boxW, Math.max(0.6, p.width * only[2] * 0.6), 0, Math.PI * 2);
+      ctx.arc(only[0] * boxW, only[1] * boxW, Math.max(0.4, p.width * only[2] * 0.6), 0, Math.PI * 2);
       ctx.fillStyle = p.colour;
       ctx.fill();
       ctx.globalAlpha = 1;
@@ -88,7 +132,7 @@
     for (var i = 1; i < s.pts.length; i++) {
       var a = s.pts[i - 1], b = s.pts[i];
       var press = (a[2] + b[2]) / 2;
-      ctx.lineWidth = Math.max(0.5, p.width * (0.35 + press * 1.3));
+      ctx.lineWidth = Math.max(0.35, p.width * (0.35 + press * 1.3));
       ctx.beginPath();
       ctx.moveTo(a[0] * boxW, a[1] * boxW);
       ctx.lineTo(b[0] * boxW, b[1] * boxW);
@@ -170,7 +214,8 @@
       eraseAt(pt);
       return;
     }
-    live = { pen: state.pen, pts: [pt] };
+    var n = nib();
+    live = { c: n.c, w: n.w, a: n.a, pts: [pt] };
     redraw();
   }
 
@@ -221,7 +266,7 @@
       // Round hard: three decimals is well under a pixel on any screen and keeps a long sheet of
       // writing inside the localStorage budget.
       var packed = state.strokes.map(function (s) {
-        return { p: s.pen, t: s.pts.map(function (q) {
+        return { c: s.c, w: s.w, a: s.a, t: s.pts.map(function (q) {
           return [+q[0].toFixed(3), +q[1].toFixed(3), +q[2].toFixed(2)];
         }) };
       });
@@ -239,7 +284,14 @@
       var packed = JSON.parse(raw);
       if (!Array.isArray(packed)) return;
       state.strokes = packed.map(function (s) {
-        return { pen: s.p, pts: (s.t || []).map(function (q) { return [q[0], q[1], q[2]]; }) };
+        // s.p is the old format, from before colour and thickness were separate.
+        var old = s.p ? (LEGACY[s.p] || LEGACY.ink) : null;
+        return {
+          c: old ? old.hex : (s.c || "#2d2a4a"),
+          w: old ? old.width : (s.w || 1.9),
+          a: old ? old.alpha : (s.a === undefined ? 1 : s.a),
+          pts: (s.t || []).map(function (q) { return [q[0], q[1], q[2]]; })
+        };
       }).filter(function (s) { return s.pts.length; });
     } catch (err) { state.strokes = []; }
   }
@@ -280,14 +332,20 @@
   }
 
   var Ink = {
-    pens: PENS,
+    colours: COLOURS,
+    sizes: SIZES,
     attach: attach,
     detach: detach,
     isOn: function () { return state.on; },
     setOn: function (v) { state.on = !!v; applyMode(); return state.on; },
     toggle: function () { return Ink.setOn(!state.on); },
-    setPen: function (k) { state.pen = penByKey(k).key; state.erasing = false; },
-    currentPen: function () { return state.pen; },
+    setColour: function (k) { state.colour = colourByKey(k).key; state.erasing = false; },
+    currentColour: function () { return state.colour; },
+    setSize: function (k) { state.size = sizeByKey(k).key; state.erasing = false; },
+    currentSize: function () { return state.size; },
+    setTool: function (t) { state.tool = (t === "highlighter") ? "highlighter" : "pen"; state.erasing = false; },
+    currentTool: function () { return state.tool; },
+    nib: nib,
     setErase: function (v) { state.erasing = !!v; },
     isErasing: function () { return state.erasing; },
     undo: function () {
@@ -323,7 +381,9 @@
       save: save,
       sizeCanvas: sizeCanvas,
       canvas: function () { return canvas; },
-      penByKey: penByKey
+      colourByKey: colourByKey,
+      sizeByKey: sizeByKey,
+      nib: nib
     }
   };
   window.Ink = Ink;
