@@ -25,7 +25,7 @@ WHAT IS INSIDE
 
 Every grade, K to 12: Math, Reading, Phonics, Vocabulary, Spelling, Writing, Science, Social Studies, Art and Music. Biology, Chemistry and Physics for older students.
 
-Twenty "Let's Learn" courses: Geography, Space, Biology, Mathematics, Chemistry, Physics, Visual Arts, Music, Computer Science, Spanish, Geology, Paleontology, Weather and Oceans, Time and Money, The History of Us, Feelings and Kindness, Kids and Family Jokes, Paper Activities, Coloring and Maze Worksheets, and Books.
+Twenty one "Let's Learn" courses: Geography, Space, Biology, Mathematics, Chemistry, Physics, Essay Writing, Visual Arts, Music, Computer Science, Spanish, Geology, Paleontology, Weather and Oceans, Time and Money, The History of Us, Feelings and Kindness, Kids and Family Jokes, Paper Activities, Coloring and Maze Worksheets, and Books.
 
 ENDLESS WORKSHEETS
 Press one button for a brand-new worksheet. Maths problems are generated fresh every time, and every sheet prints with a name and date header and an optional answer key for parents.

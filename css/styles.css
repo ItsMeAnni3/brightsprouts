@@ -1749,3 +1749,57 @@ body.inkon #lesson-card{touch-action:pan-y}
   .inklayer{display:block!important;pointer-events:none}
   .inkbar{display:none!important}
 }
+.g37{background:linear-gradient(135deg,#2f9e44,#7c5cbf)}
+
+/* ---------- The essay Writing Pad: stationery you can write on ---------- */
+.padwrap{margin-top:6px}
+.padbar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.padcount{font-size:.8rem;color:#8a86a8;margin-left:4px}
+/* The sheet itself. The layered shadow plus the lit top edge is what gives it thickness. */
+.padpaper{position:relative;min-height:440px;border-radius:14px;overflow:hidden;
+  box-shadow:0 20px 38px rgba(45,42,74,.24), 0 4px 10px rgba(45,42,74,.14),
+             inset 0 1px 0 rgba(255,255,255,.75);
+  background-repeat:no-repeat}
+/* The ruled lines are painted on the paper, under the writing. */
+.padpaper::after{content:"";position:absolute;inset:44px 18px 18px 54px;pointer-events:none;
+  background:repeating-linear-gradient(to bottom,transparent 0,transparent calc(var(--ruleh) - 1px),
+    var(--rule) calc(var(--ruleh) - 1px),var(--rule) var(--ruleh))}
+/* and the margin rule down the left */
+.padpaper::before{content:"";position:absolute;left:46px;top:14px;bottom:14px;width:2px;
+  background:var(--margin);opacity:.55;pointer-events:none;z-index:1}
+.padink{position:absolute;left:0;top:0;z-index:3;touch-action:none;cursor:crosshair}
+.padpaper.dark{box-shadow:0 20px 38px rgba(10,12,30,.5), inset 0 1px 0 rgba(255,255,255,.14)}
+
+/* Edge treatments, so each theme feels like a different physical thing. */
+.padpaper.edge-spiral{padding-left:16px}
+.padpaper.edge-spiral > .spiral{position:absolute;left:14px;top:0;bottom:0;width:16px;z-index:2;
+  pointer-events:none;
+  background:repeating-linear-gradient(to bottom,transparent 0,transparent 16px,
+    rgba(45,42,74,.42) 16px,rgba(45,42,74,.42) 20px,transparent 20px,transparent 44px)}
+.padpaper.edge-tape::after{}
+.padpaper.edge-tape > .tape{position:absolute;z-index:2;pointer-events:none;width:96px;height:26px;
+  background:rgba(255,236,150,.72);box-shadow:0 2px 5px rgba(45,42,74,.2)}
+.padpaper.edge-tape > .tape.tl{left:-22px;top:16px;transform:rotate(-32deg)}
+.padpaper.edge-tape > .tape.br{right:-22px;bottom:16px;transform:rotate(-32deg)}
+.padpaper.edge-torn > .torn{position:absolute;left:0;right:0;bottom:0;height:14px;z-index:2;
+  pointer-events:none;
+  background:repeating-linear-gradient(135deg,rgba(255,255,255,.9) 0 8px,transparent 8px 16px)}
+.padpaper.edge-stitched{border:3px dashed rgba(255,255,255,.85)}
+.padpaper.edge-glow{box-shadow:0 0 0 2px rgba(122,134,201,.5),0 20px 44px rgba(10,12,40,.6)}
+.padpaper.edge-frame{border:10px solid #8a5f2e;border-radius:10px;
+  box-shadow:0 18px 34px rgba(45,42,74,.32), inset 0 0 0 3px rgba(0,0,0,.18)}
+
+.padtools{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}
+.padnotes{margin-top:14px;background:#fbf9ff;border-left:5px solid var(--purple);
+  border-radius:14px;padding:14px 16px}
+.padnotes h3{font-family:var(--display);font-size:1.02rem;color:var(--ink);margin:0 0 8px}
+.padnote{background:#fff7ea;border-left:4px solid var(--yellow);border-radius:9px;
+  padding:9px 12px;font-size:.88rem;color:#57547a;line-height:1.5;margin:0 0 10px}
+.padwait{color:#57547a;font-size:.92rem;margin:0}
+.padtext{width:100%;border:1px solid #e6e0f5;border-radius:10px;padding:10px 12px;
+  font-family:Verdana,Arial,sans-serif;font-size:.95rem;line-height:1.6;color:#2d2a4a;resize:vertical}
+.padtext:focus{outline:none;border-color:var(--purple);box-shadow:0 0 0 3px rgba(124,92,191,.18)}
+@media print{
+  .padbar,.padtools{display:none!important}
+  .padpaper{box-shadow:none;border:1px solid #ddd;break-inside:avoid}
+}

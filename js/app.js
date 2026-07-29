@@ -172,6 +172,9 @@ const PAPER_SUBJECTS = [
 // inside each grade, which is one grade's worth of practice.
 // Let's Learn Physics (category 36): one K-12 ladder. Distinct from the Physics subject inside
 // Grades 9 to 12, which assumes algebra. This one starts at pushing a box across a floor.
+// Let's Learn Essay Writing (category 37): twelve units plus a Writing Pad you write on by hand.
+// Named Essay Writing rather than Writing Essay because a course about writing cannot afford an
+// ungrammatical title.
 const CHEMCOURSE_SUBJECTS = [
   { key: "whatis",    label: "1 · What Is Chemistry?", emoji: "⚗️" },
   { key: "states",    label: "2 · Solid, Liquid, Gas", emoji: "🧊" },
@@ -228,6 +231,21 @@ const PHYSCOURSE_SUBJECTS = [
   { key: "sound",       label: "10 · Sound & Waves",     emoji: "🔊" },
   { key: "electricity", label: "11 · Electricity",       emoji: "🔌" },
   { key: "laws",        label: "12 · Newton's Laws",     emoji: "🍎" }
+];
+const ESSAYCOURSE_SUBJECTS = [
+  { key: "whatis",    label: "1 · What Is an Essay?", emoji: "📝" },
+  { key: "paragraph", label: "2 · Paragraphs",        emoji: "🧱" },
+  { key: "plan",      label: "3 · Planning",          emoji: "🗺️" },
+  { key: "opening",   label: "4 · Hook & Thesis",     emoji: "🪝" },
+  { key: "body",      label: "5 · The Middle",        emoji: "🏗️" },
+  { key: "evidence",  label: "6 · Evidence",          emoji: "🔍" },
+  { key: "ending",    label: "7 · The Ending",        emoji: "🎯" },
+  { key: "linking",   label: "8 · Joining It Up",     emoji: "🔗" },
+  { key: "kinds",     label: "9 · Kinds of Essay",    emoji: "📚" },
+  { key: "voice",     label: "10 · Words & Voice",    emoji: "🎙️" },
+  { key: "editing",   label: "11 · Editing",          emoji: "✂️" },
+  { key: "longessay", label: "12 · The Long Essay",   emoji: "📜" },
+  { key: "pad",       label: "✍️ Writing Pad",   emoji: "✍️" }
 ];
 const MATHCOURSE_SUBJECTS = [
   { key: "whatis",     label: "1 · What Is Maths?",   emoji: "🔎" },
@@ -296,6 +314,7 @@ function subjectsFor(g) {
   if (g === 34) return VACOURSE_SUBJECTS;
   if (g === 35) return MUSICCOURSE_SUBJECTS;
   if (g === 36) return PHYSCOURSE_SUBJECTS;
+  if (g === 37) return ESSAYCOURSE_SUBJECTS;
   // Grades 1–12: core subjects (+ Biology after Science from Grade 6) + folded-in extras
   // (+ the creative tools in Grades 1–6 only).
   let core = SUBJECTS.slice();
@@ -346,6 +365,7 @@ function gradeName(g) {
   if (g === 34) return "Let's Learn Visual Arts";
   if (g === 35) return "Let's Learn Music";
   if (g === 36) return "Let's Learn Physics";
+  if (g === 37) return "Let's Learn Essay Writing";
   return "Grade " + g;
 }
 // Build the creature SVG from the chosen parts. Order matters: back to front.
@@ -534,6 +554,17 @@ function pick(arr) { return arr[rand(arr.length)]; }
 // sheet is never all arithmetic. Answers are computed, so the answer key cannot be wrong.
 function genChemCourse(lesson) {
   const gen = (typeof CHEM_GEN !== "undefined") && CHEM_GEN[lesson.chemGen];
+  const bank = shuffleArr((lesson.questions || []).slice());
+  if (!gen) return bank.slice(0, 6);
+  const made = [], seen = {};
+  for (let i = 0; i < 80 && made.length < 4; i++) {
+    const q = gen();
+    if (q && !seen[q.q]) { seen[q.q] = 1; made.push(q); }
+  }
+  return shuffleArr(made.concat(bank.slice(0, 6 - made.length)));
+}
+function genEssayCourse(lesson) {
+  const gen = (typeof ESSAY_GEN !== "undefined") && ESSAY_GEN[lesson.essayGen];
   const bank = shuffleArr((lesson.questions || []).slice());
   if (!gen) return bank.slice(0, 6);
   const made = [], seen = {};
@@ -990,6 +1021,7 @@ function makeSheet(g, subj, lesson) {
   if (g === 34) return genVACourse(lesson);
   if (g === 35) return genMusicCourse(lesson);
   if (g === 36) return genPhysCourse(lesson);
+  if (g === 37) return genEssayCourse(lesson);
   if (g === 13) {
     if (subj === "florafauna") return genFF();
     if (subj === "geography") return genGeo(lesson);
@@ -1373,7 +1405,7 @@ function homeView() {
   <div class="hero">
     <span class="big-emoji">🌱</span>
     <h1>BrightSprouts Academy</h1>
-    <p>Everything one family needs for <b>Kindergarten through Grade 12</b>: Math, Reading, Phonics, Vocabulary, Spelling, Writing, Science, Social Studies, Art and Music, plus Biology, Chemistry and Physics for older students. Then twenty <b>"Let's Learn" courses</b>: Geography, Space, Biology, Chemistry, Physics, Mathematics, Visual Arts, Music, Computer Science, Spanish, Geology, Paleontology, Weather &amp; Oceans, Time &amp; Money, The History of Us, Feelings &amp; Kindness, Kids &amp; Family Jokes and Paper Activities. Follow biology from "what is a living thing" all the way to genes and ecosystems, write real code in the Code Terminal, make things from 112 paper activities, and every lesson prints. Made for parents. Loved by kids.</p>
+    <p>Everything one family needs for <b>Kindergarten through Grade 12</b>: Math, Reading, Phonics, Vocabulary, Spelling, Writing, Science, Social Studies, Art and Music, plus Biology, Chemistry and Physics for older students. Then twenty one <b>"Let's Learn" courses</b>: Geography, Space, Biology, Chemistry, Physics, Mathematics, Essay Writing, Visual Arts, Music, Computer Science, Spanish, Geology, Paleontology, Weather &amp; Oceans, Time &amp; Money, The History of Us, Feelings &amp; Kindness, Kids &amp; Family Jokes and Paper Activities. Follow biology from "what is a living thing" all the way to genes and ecosystems, write real code in the Code Terminal, make things from 112 paper activities, and every lesson prints. Made for parents. Loved by kids.</p>
     <button class="btn btn-primary" onclick="App.go('lessons')">🚀 Explore Lessons</button>
     <button class="btn btn-secondary" onclick="App.go('library')">📖 Books &amp; Stories</button>
   </div>
@@ -1400,12 +1432,12 @@ function homeView() {
 // ---------- Lessons ----------
 function lessonsView() {
   const tiles = [];
-  for (let g = 0; g <= 36; g++) {
+  for (let g = 0; g <= 37; g++) {
     if (g === 15 || g === 16 || g === 18 || g === 22) continue;  // now folded into each grade's tabs
     if (g === 27) continue;  // Physical Science retired; Chemistry (33) and Physics (36) cover it
     const locked = !canGrade(g);
     const label = g === 0 ? "🌈 Kindergarten" : g === 13 ? "🌍 Let's Learn Geography" : g === 14 ? "🖍️ Coloring & Maze Worksheet" : g === 17 ? "💻 Let's Learn Computer Science"
-                : g === 19 ? "⏳ Let's Learn The History of Us" : g === 20 ? "🪨 Let's Learn Geology" : g === 21 ? "💬 Let's Learn Spanish" : g === 23 ? "🕐 Let's Learn Time & Money" : g === 24 ? "🚀 Let's Learn Space" : g === 25 ? "💛 Let's Learn Feelings" : g === 26 ? "🦖 Let's Learn Paleontology" : g === 28 ? "🌦️ Let's Learn Weather & Oceans" : g === 29 ? "😂 Kids &amp; Family Jokes" : g === 30 ? "✂️ Paper Activities" : g === 31 ? "🧬 Let's Learn Biology" : g === 32 ? "🧮 Let's Learn Mathematics" : g === 33 ? "⚗️ Let's Learn Chemistry" : g === 34 ? "🎨 Let's Learn Visual Arts" : g === 35 ? "🎵 Let's Learn Music" : g === 36 ? "🔭 Let's Learn Physics" : "Grade " + g;
+                : g === 19 ? "⏳ Let's Learn The History of Us" : g === 20 ? "🪨 Let's Learn Geology" : g === 21 ? "💬 Let's Learn Spanish" : g === 23 ? "🕐 Let's Learn Time & Money" : g === 24 ? "🚀 Let's Learn Space" : g === 25 ? "💛 Let's Learn Feelings" : g === 26 ? "🦖 Let's Learn Paleontology" : g === 28 ? "🌦️ Let's Learn Weather & Oceans" : g === 29 ? "😂 Kids &amp; Family Jokes" : g === 30 ? "✂️ Paper Activities" : g === 31 ? "🧬 Let's Learn Biology" : g === 32 ? "🧮 Let's Learn Mathematics" : g === 33 ? "⚗️ Let's Learn Chemistry" : g === 34 ? "🎨 Let's Learn Visual Arts" : g === 35 ? "🎵 Let's Learn Music" : g === 36 ? "🔭 Let's Learn Physics" : g === 37 ? "📝 Let's Learn Essay Writing" : "Grade " + g;
     tiles.push(`<button class="grade-tile g${g}" onclick="App.openGrade(${g})">${locked ? '<span class="lock">🔒</span>' : ""}${label}</button>`);
   }
   // The arcade lives here now instead of the top bar. gameHub() so it always opens on the
@@ -1472,6 +1504,7 @@ function lessonView() {
     body += `<div class="biodiagram">${typeof lesson.diagram === "function" ? lesson.diagram() : lesson.diagram}</div>`;
   }
   if (lesson.globeBoard) body += globeStageHtml();
+  if (lesson.essayPad && typeof EssayPad !== "undefined") body += EssayPad.html();
   if (lesson.band) body += `<p class="csband">👣 Best for <b>${esc(lesson.band)}</b>, but try it whenever you are ready</p>`;
   // A project written twice: once for an older child working alone, once for a younger child
   // working with a grown-up. Same materials, different steps, so one family can share a table.
@@ -1951,7 +1984,7 @@ function lessonView() {
 
   const sheetKey = g + "-" + subj + (baseLesson.byCurrency ? "-" + curCcy : "") + (baseLesson.units ? "-u" + unitIdx : "");
   // Note: the Earth's Story timeline (earthTimeline) DOES get a worksheet; it has a questions bank.
-  const noQuiz = lesson.globeBoard || lesson.coloringBook || lesson.mazeBook || lesson.tracingSheet || lesson.drawTracing || lesson.csPlan || lesson.engPlan || lesson.erasTimeline || lesson.engineerBuild || (lesson.engBand != null) || lesson.readOnline || lesson.magicMaker || lesson.jokeTv || lesson.jokeBook || lesson.paperStudio;
+  const noQuiz = lesson.globeBoard || lesson.coloringBook || lesson.mazeBook || lesson.essayPad || lesson.tracingSheet || lesson.drawTracing || lesson.csPlan || lesson.engPlan || lesson.erasTimeline || lesson.engineerBuild || (lesson.engBand != null) || lesson.readOnline || lesson.magicMaker || lesson.jokeTv || lesson.jokeBook || lesson.paperStudio;
   if (!noQuiz && !state.sheetCache[sheetKey]) state.sheetCache[sheetKey] = makeSheet(g, subj, lesson);
   const questions = noQuiz ? [] : state.sheetCache[sheetKey];
   const qHtml = questions.length ? `
@@ -2215,8 +2248,9 @@ function pricingView() {
         <ul>
           <li><b>Every grade, K–12</b>: Math, Reading, Phonics, Vocabulary, Spelling, Writing, Science, Social Studies, Art &amp; Music</li>
           <li><b>High-school sciences</b>: Biology, Chemistry &amp; Physics</li>
+          <li><b>A Writing Pad with ten sheets of stationery</b>: write an essay plan by hand with a stylus or a finger, then turn the handwriting into typed notes, read on your own device and never sent anywhere</li>
           <li><b>Write straight on the screen</b>: answer the questions, trace a maze or colour a picture with a stylus, a finger or a mouse. Pressure sensitive if your pen supports it, with an eraser, undo, and your writing saved per sheet</li>
-          <li><b>20 "Let's Learn" categories</b>: Geography, Space, Biology, Chemistry, Physics, Mathematics, Visual Arts, Music, Computer Science, Spanish, Geology, Paleontology, Weather &amp; Oceans, Time &amp; Money, The History of Us, Feelings &amp; Kindness, Kids &amp; Family Jokes, Paper Activities, Coloring &amp; Maze Worksheets &amp; Books</li>
+          <li><b>21 "Let's Learn" categories</b>: Geography, Space, Biology, Chemistry, Physics, Mathematics, Essay Writing, Visual Arts, Music, Computer Science, Spanish, Geology, Paleontology, Weather &amp; Oceans, Time &amp; Money, The History of Us, Feelings &amp; Kindness, Kids &amp; Family Jokes, Paper Activities, Coloring &amp; Maze Worksheets &amp; Books</li>
           <li><b>US-aligned Social Studies</b>: 36 units including US History I, II &amp; III and Civics</li>
           <li><b>Computer Science, three ways</b>: the Grade 1–12 course, 20 unplugged activities with no screen, and a live Code Terminal where children write real code and see it run</li>
           <li><b>112 paper activities</b> with pictures, materials and step-by-step instructions, including handmade cards for birthdays, Diwali, Eid, Christmas, Hanukkah and more, plus a printable booklet of all of them</li>
@@ -2531,7 +2565,7 @@ const App = {
     const dflt = g === 0 ? "alphabet" : g === 13 ? "globe" : g === 14 ? "coloring"
                : g === 15 ? "readnow" : g === 16 ? "create" : g === 17 ? "basics"
                : g === 18 ? "engplan" : g === 19 ? "earth" : g === 20 ? "rocks"
-               : g === 21 ? "greetings" : g === 23 ? "clock" : g === 24 ? "spacecourse" : g === 25 ? "feelings" : g === 26 ? "digsite" : g === 28 ? "weather" : g === 29 ? "jokeshow" : g === 30 ? "paperstudio" : g === 31 ? "whatis" : g === 32 ? "whatis" : g === 33 ? "whatis" : g === 34 ? "whatis" : g === 35 ? "whatis" : g === 36 ? "whatis" : "math";
+               : g === 21 ? "greetings" : g === 23 ? "clock" : g === 24 ? "spacecourse" : g === 25 ? "feelings" : g === 26 ? "digsite" : g === 28 ? "weather" : g === 29 ? "jokeshow" : g === 30 ? "paperstudio" : g === 31 ? "whatis" : g === 32 ? "whatis" : g === 33 ? "whatis" : g === 34 ? "whatis" : g === 35 ? "whatis" : g === 36 ? "whatis" : g === 37 ? "whatis" : "math";
     // Premium grades still open, landing on the free Books tab; other subjects show an upgrade card.
     state.subject = canGrade(g) ? dflt : "books";
     go("lesson");
@@ -2555,6 +2589,63 @@ const App = {
     }
     if (t) t.hidden = !on;
     App.inkPaintPens();
+  },
+  // ---- the essay Writing Pad ----
+  padTheme(k) { EssayPad.setTheme(k); render(); },
+  padColour(k) {
+    EssayPad.setColour(k);
+    document.querySelectorAll("[data-padcolour]").forEach(function (el) {
+      el.classList.toggle("on", el.dataset.padcolour === k);
+    });
+  },
+  padSize(k) {
+    EssayPad.setSize(k);
+    document.querySelectorAll("[data-padsize]").forEach(function (el) {
+      el.classList.toggle("on", el.dataset.padsize === k);
+    });
+  },
+  padUndo() { EssayPad.undo(); },
+  padClear() {
+    if (EssayPad.count() && !confirm("Clear the whole page?")) return;
+    EssayPad.clear();
+  },
+  // Turn the handwriting into typed notes, and be honest when this device cannot.
+  async padTidy() {
+    const box = document.getElementById("padnotes");
+    if (!box) return;
+    box.hidden = false;
+    box.innerHTML = `<p class="padwait">⏳ Reading your handwriting...</p>`;
+    const res = await EssayPad.recognise();
+    const editor = (text, note) => `
+      <h3>✨ Your typed notes</h3>
+      ${note ? `<p class="padnote">${esc(note)}</p>` : ""}
+      <textarea id="padtext" class="padtext" rows="7" spellcheck="true"
+        placeholder="Type or tidy your notes here...">${esc(text || "")}</textarea>
+      <div class="padtools no-print">
+        <button class="btn btn-sm btn-secondary" onclick="App.padCopy()">📋 Copy</button>
+        <button class="btn btn-sm btn-ghost" onclick="App.padHideNotes()">✕ Close</button>
+      </div>`;
+    if (res.ok) {
+      EssayPad.setText(res.text);
+      box.innerHTML = editor(res.text, res.text.trim() ? "" :
+        "The reader could not make out any words this time. Neater and bigger writing usually helps.");
+    } else if (res.reason === "empty") {
+      box.innerHTML = editor("", "There is nothing on the page yet. Write something first!");
+    } else if (res.reason === "unsupported") {
+      box.innerHTML = editor("",
+        "This browser cannot read handwriting yet, so nothing was converted. Chrome on a Chromebook can. " +
+        "Your writing is safe on the page, and you can type it up here instead.");
+    } else {
+      box.innerHTML = editor("", "The reader had trouble this time. You can type your notes here instead.");
+    }
+  },
+  padHideNotes() { const b = document.getElementById("padnotes"); if (b) b.hidden = true; },
+  padCopy() {
+    const t = document.getElementById("padtext");
+    if (!t) return;
+    t.select();
+    try { document.execCommand("copy"); } catch (e) { /* clipboard blocked */ }
+    if (navigator.clipboard) navigator.clipboard.writeText(t.value).catch(function () {});
   },
   inkColour(k) { Ink.setColour(k); App.inkPaintPens(); },
   inkSize(k) { Ink.setSize(k); App.inkPaintPens(); },
@@ -3488,6 +3579,7 @@ function render() {
   else if (typeof Globe !== "undefined") Globe.unmount();
   // The joke show's controller needs its screen on the page before it can deal the first joke.
   if (typeof JokeTv !== "undefined") JokeTv.mount();
+  if (typeof EssayPad !== "undefined" && document.getElementById("padpaper")) EssayPad.mount();
   mountInk();
 }
 
