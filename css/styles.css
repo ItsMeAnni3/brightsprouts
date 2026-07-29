@@ -1708,3 +1708,4 @@ footer{background:var(--purple-dark);color:#cfc6ee;text-align:center;padding:20p
 @media (max-width:720px){ .vp-cols{grid-template-columns:1fr} }
 @media print{ .vp-cols{grid-template-columns:1fr 1fr} }
 .g34{background:linear-gradient(135deg,#e2453b,#3a7fc9)}
+.g35{background:linear-gradient(135deg,#c9184a,#ffd166)}

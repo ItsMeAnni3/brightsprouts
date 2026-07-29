@@ -30,8 +30,8 @@ BrightSprouts Academy is everything one family needs for Kindergarten through Gr
 EVERY GRADE, K TO 12
 Math, Reading, Phonics, Vocabulary, Spelling, Writing, Science, Social Studies, Art and Music, plus Biology, Chemistry and Physics for older students.
 
-NINETEEN FULL COURSES
-Geography, Space, Biology, Mathematics, Chemistry, Visual Arts, Computer Science, Spanish, Geology, Paleontology, Physical Science, Earth and Space Science, Time and Money, The History of Us, Feelings and Kindness, Kids and Family Jokes, Paper Activities, Additional Learning Materials and Books.
+TWENTY FULL COURSES
+Geography, Space, Biology, Mathematics, Chemistry, Visual Arts, Music, Computer Science, Spanish, Geology, Paleontology, Physical Science, Earth and Space Science, Time and Money, The History of Us, Feelings and Kindness, Kids and Family Jokes, Paper Activities, Additional Learning Materials and Books.
 
 ENDLESS WORKSHEETS
 Press one button for a brand-new worksheet. Maths problems are generated fresh every time, and every sheet prints with a name and date header and an optional answer key for parents.
