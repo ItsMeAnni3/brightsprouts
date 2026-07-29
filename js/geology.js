@@ -4,6 +4,79 @@
   if (typeof LESSONS === "undefined") return;
   var LB = 'font-family="Fredoka, system-ui, sans-serif" font-size="12" fill="#2d2a4a"';
 
+  // An animated cross-section of a subduction zone: the same boundary that causes both the
+  // earthquakes and the volcano the lesson's text already mentions. Motion is shown by small
+  // moving glyphs (arrows, particles, rings) over still rock shapes, not by moving the rock
+  // shapes themselves, the same technique js/engineer.js uses for its car and rocket: animating
+  // a big hand-drawn shape's transform would open a gap at its own edge.
+  function plateTectonicsDiagram() {
+    return '<svg viewBox="0 0 360 232" role="img" aria-label="Animated diagram of a volcano forming where an oceanic plate slides under a continental plate">'
+      + '<defs>'
+      + '<linearGradient id="ptSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dff0ff"/><stop offset="1" stop-color="#f7fbff"/></linearGradient>'
+      + '<linearGradient id="ptSea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fd3f4" stop-opacity=".9"/><stop offset="1" stop-color="#4d96ff" stop-opacity=".9"/></linearGradient>'
+      + '<linearGradient id="ptMantle" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e2453b"/><stop offset="1" stop-color="#7a1f1a"/></linearGradient>'
+      + '<linearGradient id="ptOcean" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6b7fa0"/><stop offset="1" stop-color="#485a78"/></linearGradient>'
+      + '<linearGradient id="ptCont" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c98a5a"/><stop offset="1" stop-color="#8a5f3c"/></linearGradient>'
+      + '<radialGradient id="ptLava" cx="50%" cy="35%" r="65%"><stop offset="0" stop-color="#fff3b0"/><stop offset=".5" stop-color="#ffb54d"/><stop offset="1" stop-color="#e2453b"/></radialGradient>'
+      + '<marker id="ptHead" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#eef2ff"/></marker>'
+      + '</defs>'
+      // sky and sea
+      + '<rect width="360" height="232" rx="14" fill="url(#ptSky)"/>'
+      + '<rect x="0" y="38" width="140" height="22" fill="url(#ptSea)"/>'
+      + '<g stroke="#eaf7ff" stroke-width="1.6" opacity=".8" fill="none">'
+      + '<path d="M10 44 q10 -5 20 0 t20 0 t20 0"/><path d="M60 52 q10 -5 20 0 t20 0"/></g>'
+      // deep mantle, everything else sits on top of this
+      + '<path d="M0 60 L360 60 L360 232 L0 232 Z" fill="url(#ptMantle)"/>'
+      // the oceanic plate: thin at the surface, sliding down and under as a wedge (subduction)
+      + '<path d="M0 58 L150 62 L232 190 L205 205 L120 82 L0 74 Z" fill="url(#ptOcean)"/>'
+      // the continental plate: thicker, riding up over the sinking oceanic slab
+      + '<path d="M120 82 Q135 40 230 38 L360 46 L360 118 L150 122 Q125 104 120 82 Z" fill="url(#ptCont)"/>'
+      // the volcano, built on the continental plate above where the slab melts
+      + '<path d="M255 20 L296 100 L214 100 Z" fill="#8a5f3c"/>'
+      + '<path d="M255 20 L270 48 L240 48 Z" fill="#5a3a24"/>'
+      + '<path d="M244 100 Q255 60 266 100 Z" fill="url(#ptLava)"/>'
+      // the magma chamber and the conduit feeding the crater
+      + '<ellipse cx="255" cy="150" rx="30" ry="20" fill="url(#ptLava)" opacity=".92"/>'
+      + '<path d="M244 150 Q250 90 255 46 Q260 90 266 150 Z" fill="url(#ptLava)" opacity=".55"/>'
+      + '<g class="pt-magma"><circle cx="255" cy="140" r="9" fill="#fff3b0"/></g>'
+      // the crater: a soft glow, plus little spurts and ash puffs that come and go on a loop
+      + '<circle class="pt-crater-glow" cx="255" cy="44" r="8" fill="#ffdd8a"/>'
+      + '<g fill="#ffb54d">'
+      + '<circle class="pt-spurt" cx="248" cy="42" r="4"/><circle class="pt-spurt" cx="255" cy="40" r="4.5"/><circle class="pt-spurt" cx="262" cy="42" r="4"/>'
+      + '</g>'
+      + '<g fill="#cfc9da">'
+      + '<circle class="pt-ash" cx="250" cy="34" r="7"/><circle class="pt-ash" cx="260" cy="30" r="6"/><circle class="pt-ash" cx="255" cy="26" r="8"/>'
+      + '</g>'
+      // the fault line where the plates meet, and the earthquakes that happen along it
+      + '<path d="M150 62 L205 200" stroke="#3d2b1f" stroke-width="2" stroke-dasharray="5 4" opacity=".55" fill="none"/>'
+      + '<g fill="none" stroke="#fff6d8" stroke-width="2">'
+      + '<circle class="pt-quake" cx="178" cy="130" r="6"/><circle class="pt-quake" cx="178" cy="130" r="6"/><circle class="pt-quake" cx="178" cy="130" r="6"/>'
+      + '</g>'
+      // small gliding arrows show each plate creeping, without moving the rock itself
+      + '<g class="pt-arrow" stroke="#eef2ff" stroke-width="3" marker-end="url(#ptHead)">'
+      + '<line class="pt-arrow-o" x1="46" y1="66" x2="66" y2="76"/>'
+      + '<line class="pt-arrow-o" x1="74" y1="70" x2="94" y2="80"/>'
+      + '<line class="pt-arrow-o" x1="102" y1="74" x2="122" y2="84"/>'
+      + '<line class="pt-arrow-c" x1="330" y1="60" x2="312" y2="60"/>'
+      + '</g>'
+      // labels: light text where it sits over the dark mantle or oceanic wedge, dark text
+      // where it sits over the pale sky, each with a thin leader line back to what it names,
+      // the same convention the layers diagram right above this one already uses
+      + '<g ' + LB + '>'
+      + '<text x="6" y="50" font-size="10" fill="#2f5f8a">Ocean</text>'
+      + '<text x="216" y="16">Volcano</text>'
+      + '<text x="352" y="52" font-size="11" text-anchor="end">Continental plate</text>'
+      + '</g>'
+      + '<g font-family="Fredoka, system-ui, sans-serif" font-size="10" fill="#fff3d6">'
+      + '<text x="8" y="94">Oceanic plate</text>'
+      + '<text x="8" y="106">sliding under (subducting)</text>'
+      + '<text x="6" y="168">Fault line:</text>'
+      + '<text x="6" y="180">earthquakes happen here</text>'
+      + '<line x1="88" y1="176" x2="168" y2="138" stroke="#fff3d6" stroke-width="1.2" stroke-dasharray="2 3"/>'
+      + '</g>'
+      + '</svg>';
+  }
+
   LESSONS[20] = {
     rocks: {
       title: "Rocks & Minerals", emoji: "🪨",
@@ -83,6 +156,7 @@
         "The crust is cracked into giant pieces called tectonic plates that move very slowly: only a few centimeters a year.",
         "When plates push, pull or slide past each other, they can cause earthquakes: sudden shaking of the ground.",
         "Volcanoes are openings where magma, ash and gases erupt from below; many form where plates meet.",
+        "One common way plates meet is subduction: a heavier ocean plate slides underneath a lighter land plate. Deep down, the sinking plate gets hot enough to melt, and that melted rock rises to feed a volcano above it.",
         "The very center (the inner core) is solid metal and incredibly hot: thousands of degrees!"
       ],
       activity: "🌋 Baking-Soda Volcano (with an adult): Build a mound around a small cup, add baking soda, then pour in vinegar with red colouring. The 'eruption' shows how gas pushes material up and out!",
@@ -92,7 +166,10 @@
         + '<line x1="140" y1="18" x2="250" y2="24"/><line x1="196" y1="58" x2="256" y2="60"/><line x1="176" y1="100" x2="256" y2="112"/><line x1="150" y1="108" x2="250" y2="150"/></g>'
         + '<g ' + LB + '>'
         + '<text x="254" y="28">Crust</text><text x="260" y="64">Mantle</text><text x="260" y="116">Outer core</text><text x="254" y="154">Inner core</text>'
-        + '</g></svg>',
+        + '</g></svg>'
+        + '<p style="text-align:center;color:#6a668c;font-size:.85rem;margin:10px 0 2px">'
+        + 'Now watch it happen: an ocean plate slides under a land plate, the rock that melts there rises, and a volcano is born.</p>'
+        + plateTectonicsDiagram(),
       questions: [
         { q: "Name Earth's three main layers, from outside in.", a: "Crust, mantle, and core" },
         { q: "Which layer do we live on?", a: "The crust" },
@@ -105,7 +182,10 @@
         { q: "Is Earth's inner core hot or cold?", a: "Extremely hot (thousands of degrees)" },
         { q: "Melted rock that erupts from a volcano is called ____.", a: "Lava" },
         { q: "Many volcanoes and earthquakes happen where plates ____.", a: "Meet (push, pull or slide)" },
-        { q: "Which is thinnest: the crust, the mantle, or the core?", a: "The crust" }
+        { q: "Which is thinnest: the crust, the mantle, or the core?", a: "The crust" },
+        { q: "When one plate slides underneath another, that is called ____.", a: "Subduction" },
+        { q: "In the diagram, which plate slides under the other: the ocean plate or the land plate?", a: "The ocean (oceanic) plate" },
+        { q: "Why does a volcano often form above a subduction zone?", a: "The sinking plate melts, and that melted rock (magma) rises to the surface" }
       ]
     },
     fossils: {

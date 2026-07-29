@@ -1120,6 +1120,57 @@ footer{background:var(--purple-dark);color:#cfc6ee;text-align:center;padding:20p
   .eng-pop,.eng-drive,.eng-bob,.eng-launch,.eng-flame,.eng-wave,.eng-rotor,.eng-smoke circle{animation:none!important}
 }
 
+/* ---------- Plate tectonics & volcano diagram (js/geology.js, "Inside the Earth") ----------
+   A subduction zone: the oceanic plate slides under the continental plate, the rock that melts
+   there feeds a magma chamber, and that magma rises to erupt as a volcano. The same boundary is
+   also where the earthquakes shown at the fault line come from. Each layer animates on its own
+   loop rather than the rock shapes themselves moving, the same convention the engineering
+   diagrams above use for a car or a rocket: a moving shape big enough to distort would leave
+   gaps at its own edges, so motion is shown with small glyphs (arrows, particles, rings)
+   travelling over a fixed shape instead. */
+.pt-arrow{transform-box:fill-box;transform-origin:50% 50%}
+.pt-arrow-o{animation:ptGlideO 2.6s ease-in-out infinite}
+.pt-arrow-o:nth-child(2){animation-delay:.5s}
+.pt-arrow-o:nth-child(3){animation-delay:1s}
+@keyframes ptGlideO{0%{transform:translate(0,0);opacity:0}15%{opacity:1}85%{opacity:1}100%{transform:translate(20px,10px);opacity:0}}
+.pt-arrow-c{animation:ptGlideC 3.2s ease-in-out infinite}
+@keyframes ptGlideC{0%,100%{transform:translateX(0)}50%{transform:translateX(-5px)}}
+.pt-magma{transform-box:fill-box;transform-origin:50% 100%;animation:ptRise 3.4s ease-in infinite}
+@keyframes ptRise{
+  0%{transform:translateY(0) scale(1);opacity:.55}
+  70%{transform:translateY(-64px) scale(1.06);opacity:1}
+  100%{transform:translateY(-72px) scale(.9);opacity:0}
+}
+.pt-crater-glow{transform-box:fill-box;transform-origin:50% 50%;animation:ptGlow 1.6s ease-in-out infinite}
+@keyframes ptGlow{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.18)}}
+.pt-spurt{transform-box:fill-box;transform-origin:50% 100%;animation:ptSpurt 2.8s ease-out infinite}
+.pt-spurt:nth-child(2){animation-delay:.35s}
+.pt-spurt:nth-child(3){animation-delay:.7s}
+@keyframes ptSpurt{
+  0%{transform:translateY(0) scale(1);opacity:0}
+  8%{opacity:1}
+  55%{transform:translateY(-46px) scale(.7);opacity:1}
+  100%{transform:translateY(-30px) scale(.3);opacity:0}
+}
+.pt-ash{transform-box:fill-box;transform-origin:50% 50%;animation:ptAsh 4.2s ease-out infinite}
+.pt-ash:nth-child(2){animation-delay:1.2s}
+.pt-ash:nth-child(3){animation-delay:2.4s}
+@keyframes ptAsh{0%{transform:translateY(0) scale(.6);opacity:.85}100%{transform:translateY(-38px) scale(1.9);opacity:0}}
+/* the earthquake rings sit still and silent most of the time, then ripple out in a burst, so
+   the animation reads as "an earthquake happens now and then" rather than constant shaking */
+.pt-quake{transform-box:fill-box;transform-origin:50% 50%;animation:ptQuake 5s ease-out infinite;opacity:0}
+.pt-quake:nth-child(2){animation-delay:.28s}
+.pt-quake:nth-child(3){animation-delay:.56s}
+@keyframes ptQuake{
+  0%,72%{transform:scale(.3);opacity:0}
+  78%{opacity:.85}
+  100%{transform:scale(2.6);opacity:0}
+}
+@media (prefers-reduced-motion:reduce){
+  .pt-arrow-o,.pt-arrow-c,.pt-magma,.pt-crater-glow,.pt-spurt,.pt-ash,.pt-quake{animation:none!important;opacity:0!important}
+  .pt-magma{opacity:.8!important}
+}
+
 /* ============ Biology diagrams ============ */
 .biodiagram{max-width:470px;margin:6px auto 18px;background:#fff;border-radius:16px;
   box-shadow:var(--shadow);padding:12px;border:1px solid #eee9fa}
