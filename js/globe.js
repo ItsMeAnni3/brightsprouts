@@ -10,6 +10,11 @@ const Globe = {
   cache: null, out: null, needsRender: true,
   pointers: {}, dragMoved: 0, lastPinch: 0,
   onPick: null,
+  // Set by js/globe-popup.js while a country's hover card is open, so the country being looked
+  // at does not spin out from under the cursor. Separate from `spinning`, which is the user's
+  // own play/pause choice: this must never touch that flag, or the pause button's icon would
+  // fall out of sync with what the globe is actually doing.
+  hoverFreeze: false,
 
   MINZOOM: 1, MAXZOOM: 6,
 
@@ -43,9 +48,16 @@ const Globe = {
     this.canvas = cv; this.ctx = cv.getContext("2d");
     this.onPick = onPick || null;
     this.active = true;
+    this.hoverFreeze = false;
     this._resize();
     this._bind();
-    this._loadTexture(() => { this.ready = true; this.needsRender = true; });
+    // _resize() above just built the geometry cache using a 1x1 placeholder for the texture
+    // size, because the real size is not known until the image finishes loading (always async,
+    // even from cache). Without rebuilding once that size is known, every pixel's texture
+    // lookup stays wrong for the rest of the session: rowW/colBase were computed as fractions
+    // of 1 instead of fractions of the real width/height, so every tap keeps resolving to
+    // whatever sits in the texture's top-left corner rather than the country under the finger.
+    this._loadTexture(() => { this.ready = true; this._buildCache(); this.needsRender = true; });
     this._loop();
   },
   unmount() {
@@ -122,7 +134,7 @@ const Globe = {
 
   _loop() {
     if (!this.active || !document.getElementById("globe-canvas")) { this.active = false; return; }
-    if (this.spinning && !this._nDrag()) { this.lon0 = (this.lon0 + 0.14) % 360; this.needsRender = true; }
+    if (this.spinning && !this._nDrag() && !this.hoverFreeze) { this.lon0 = (this.lon0 + 0.14) % 360; this.needsRender = true; }
     if (this.needsRender) { this._render(); this.needsRender = false; }
     requestAnimationFrame(() => this._loop());
   },

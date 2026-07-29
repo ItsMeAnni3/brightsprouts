@@ -1249,6 +1249,7 @@ function globeStageHtml() {
           <button class="gbtn" onclick="App.globeReset()" title="Reset the view">🔄</button>
         </div>
         <p class="globehint no-print">🖱️ Drag to spin · scroll or pinch to zoom · tap a country</p>
+        <p class="globehint no-print">🔍 Hover or tap a country to see its real shape, a photo and a fun fact</p>
         <p id="globe-status" class="globehint no-print"></p>
       </div>
       <div class="globeinfo" id="globe-info">${globeInfoHtml(null)}</div>
@@ -3674,8 +3675,13 @@ function render() {
   gameTilt();
   const onGlobe = state.view === "globe" ||
     (state.view === "lesson" && state.grade === 13 && state.subject === "globe" && canSubject(13, "globe"));
-  if (onGlobe) { if (typeof Globe !== "undefined") Globe.mount(App.globePick); }
-  else if (typeof Globe !== "undefined") Globe.unmount();
+  if (onGlobe) {
+    if (typeof Globe !== "undefined") Globe.mount(App.globePick);
+    if (typeof GlobePopup !== "undefined") GlobePopup.mount();
+  } else {
+    if (typeof Globe !== "undefined") Globe.unmount();
+    if (typeof GlobePopup !== "undefined") GlobePopup.unmount();
+  }
   // The joke show's controller needs its screen on the page before it can deal the first joke.
   if (typeof JokeTv !== "undefined") JokeTv.mount();
   if (typeof EssayPad !== "undefined" && document.getElementById("padpaper")) EssayPad.mount();

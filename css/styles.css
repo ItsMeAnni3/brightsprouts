@@ -694,6 +694,44 @@ main{max-width:1100px;margin:0 auto;padding:26px 18px 80px}
 @media (max-width:480px){ .sp-pop-stage{height:150px} }
 @media print{ .sp-pop,.sp-pop-backdrop{display:none !important} }
 
+/* ---------- Globe country card (js/globe-popup.js) ---------- */
+.gp-pop-backdrop{position:fixed;inset:0;z-index:970;background:transparent;pointer-events:none}
+.gp-pop-backdrop.show{pointer-events:auto}
+.gp-pop{
+  position:fixed;left:-9999px;top:-9999px;z-index:971;width:300px;max-width:calc(100vw - 24px);
+  background:#fff;border-radius:20px;box-shadow:0 14px 34px rgba(45,42,74,.32);padding:14px;
+  opacity:0;transform:translateY(6px) scale(.97);pointer-events:none;
+  transition:opacity .16s ease,transform .16s ease;
+}
+.gp-pop.open{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
+.gp-pop-close{
+  position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;border:0;
+  background:#f1ecfb;color:var(--ink);font-size:.85rem;line-height:1;
+  display:flex;align-items:center;justify-content:center;
+}
+.gp-pop-close:hover{background:#e4dcf6}
+.gp-pop-top{display:flex;gap:10px;align-items:stretch;margin-top:4px}
+/* the country's own outline, cropped from the same texture the globe itself is painted from,
+   lifted off the page with a light-from-top-left bevel so it reads as a raised sticker */
+.gp-pop-shape{
+  flex:0 0 auto;width:82px;height:82px;display:flex;align-items:center;justify-content:center;
+  background:#f7f4ff;border-radius:12px;
+}
+.gp-pop-shape-img{
+  max-width:78%;max-height:78%;
+  filter:drop-shadow(-1px -1px 0 rgba(255,255,255,.6)) drop-shadow(2px 4px 5px rgba(45,42,74,.42));
+}
+.gp-pop-photo{flex:1 1 auto;min-width:0;height:82px;object-fit:cover;border-radius:12px;border:1px solid #e4dcf6}
+.gp-pop-info{margin-top:10px}
+.gp-pop-name{font-family:var(--display);font-weight:700;font-size:1.08rem;color:var(--ink)}
+.gp-pop-desc{font-size:.82rem;color:#57547a;margin-top:5px;line-height:1.35}
+.gp-pop-fact{
+  font-size:.8rem;color:#5d3fa0;margin-top:8px;background:#f7f4ff;border-radius:10px;
+  padding:7px 9px;line-height:1.35;
+}
+@media (max-width:480px){ .gp-pop{width:calc(100vw - 24px)} }
+@media print{ .gp-pop,.gp-pop-backdrop{display:none !important} }
+
 /* ---------- Spelling word chips ---------- */
 .spellgrid{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
 .spellgrid span{background:#fff;border:2px solid #e0dcf0;border-radius:999px;padding:7px 15px;font-weight:700;font-size:.98rem}
