@@ -1668,23 +1668,34 @@ function lessonView() {
       if (!list.length) return;
       body += `<div class="bandhead">${doodle(doodles[bd])}<div><h3>${bands[bd]}</h3>
                  <p>${list.length} free book${list.length === 1 ? "" : "s"} to read right now</p></div></div>`;
-      body += `<div class="grid grid-3">` + list.map(b => `
-        <div class="pdcard">
-          <div class="pdspine"></div>
-          <div onclick="App.readBook('${b.slug}')">
-            <h4>${esc(b.t)}</h4>
-            <p class="bookby">${esc(b.a)} · ${b.y}</p>
-            <span class="moral-tag">${esc(b.g)}</span>
-            <p class="bookwhy">${esc(b.w)}</p>
-            <p class="pdmeta">${b.ch} chapter${b.ch === 1 ? "" : "s"} · ${(b.words / 1000).toFixed(0)}k words · about ${Math.max(1, Math.round(b.words / 9000))} hr read</p>
-          </div>
-          <div class="pdactions">
-            <button class="btn btn-primary btn-sm" onclick="App.readBook('${b.slug}')">📖 Read it free</button>
-            <button class="btn btn-ghost btn-sm bookkeep" id="keep-${b.slug}"
+      // A pile of books lying on their sides, spines towards you, so every title reads straight
+      // across. The cover colour and the emblem come from the genre, and how thick a book looks
+      // comes from how long it really is.
+      body += `<ul class="bookstack">` + list.map((b, i) => {
+        const th = (typeof BookArt !== "undefined") ? BookArt.forGenre(b.g) : { c1: "#7c5cbf", c2: "#4d3580" };
+        const thick = (typeof BookArt !== "undefined") ? BookArt.thickness(b.words) : 2;
+        const uid = "bkg" + b.slug.replace(/[^a-z0-9]/g, "");
+        const em = (typeof BookArt !== "undefined") ? BookArt.emblem(b.g, uid) : "";
+        return `
+        <li class="bookspine t${thick}" style="--c1:${th.c1};--c2:${th.c2};--tilt:${(i % 3) * 3}px">
+          <button class="bs-open" onclick="App.readBook('${b.slug}')"
+            aria-label="Read ${esc(b.t)} by ${esc(b.a)}">
+            <span class="bs-badge">${em}</span>
+            <span class="bs-text">
+              <span class="bs-title">${esc(b.t)}</span>
+              <span class="bs-by">${esc(b.a)} · ${b.y} · ${esc(b.g)}</span>
+            </span>
+            <span class="bs-meta">${b.ch} chapter${b.ch === 1 ? "" : "s"} · ${(b.words / 1000).toFixed(0)}k words · about ${Math.max(1, Math.round(b.words / 9000))} hr</span>
+            <span class="bs-pages" aria-hidden="true"></span>
+          </button>
+          <span class="bs-actions">
+            <button class="btn btn-sm btn-primary" onclick="App.readBook('${b.slug}')">📖 Read</button>
+            <button class="btn btn-sm btn-ghost bookkeep" id="keep-${b.slug}"
               onclick="event.stopPropagation();App.keepBook('${b.slug}')"
               title="Save this book so you can read it with no internet">⬇️ Keep offline</button>
-          </div>
-        </div>`).join("") + `</div>`;
+          </span>
+        </li>`;
+      }).join("") + `</ul>`;
     });
     body += `<div class="bookfoot">${doodle("lamp")}
       <p><b>Reading with no internet:</b> the books are big, so they are not downloaded until you
