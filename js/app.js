@@ -33,11 +33,10 @@ const GEN_SUBJECTS = [
 const BOOK_SUBJECTS = [
   { key: "readnow", label: "Read Online", emoji: "📖" }
 ];
+// The abacus, maths tables and formula sheet moved into Let's Learn Mathematics (32) on
+// 2026-07-28, and the periodic table was deleted because Let's Learn Chemistry (33) unit 7
+// renders the full table of all 118 elements.
 const ADD_SUBJECTS = [
-  { key: "periodic", label: "Periodic Table",  emoji: "⚗️" },
-  { key: "abacus",   label: "Abacus",          emoji: "🧮" },
-  { key: "formulas", label: "Formulas",        emoji: "📐" },
-  { key: "tables",   label: "Maths Tables",    emoji: "🔢" },
   { key: "coloring", label: "Colouring Book",  emoji: "🖍️" }
 ];
 const MAKE_SUBJECTS = [{ key: "create", label: "Creature Maker", emoji: "🎨" }, { key: "engineer", label: "Build It!", emoji: "🔧" }];
@@ -242,7 +241,12 @@ const MATHCOURSE_SUBJECTS = [
   { key: "algebra",    label: "10 · Algebra",         emoji: "🧮" },
   { key: "data",       label: "11 · Data & Chance",   emoji: "📊" },
   { key: "pythagoras", label: "12 · Pythagoras",      emoji: "📐" },
-  { key: "functions",  label: "13 · Functions",       emoji: "📈" }
+  { key: "functions",  label: "13 · Functions",       emoji: "📈" },
+  // Reference tools rather than units, so no numbers. Moved here from Additional Learning
+  // Materials on 2026-07-28, where they sat oddly next to a colouring book.
+  { key: "tables",     label: "Times Tables",         emoji: "🔢" },
+  { key: "abacus",     label: "Abacus",               emoji: "🧮" },
+  { key: "formulas",   label: "Formula Sheet",        emoji: "📐" }
 ];
 const BIOCOURSE_SUBJECTS = [
   { key: "whatis",     label: "1 · What Is Biology?",  emoji: "🔎" },
@@ -795,15 +799,7 @@ function genFF() {
 function genExtra(subj, lesson) {
   const R = (lo, hi) => lo + rand(hi - lo + 1);
   const qs = [];
-  if (subj === "periodic") {
-    for (let i = 0; i < 8; i++) {
-      const e = pick(ELEMENTS), k = i % 4;
-      if (k === 0) qs.push({ q: `What is the chemical symbol for ${e[2]}?  ______`, a: e[1] });
-      else if (k === 1) qs.push({ q: `Which element has the symbol ${e[1]}?  ______`, a: e[2] });
-      else if (k === 2) qs.push({ q: `What is the atomic number of ${e[2]} (${e[1]})?  ______`, a: e[0] });
-      else qs.push({ q: `${e[2]} (${e[1]}) has ${e[0]} protons. How many protons does an atom of ${e[2]} have?  ______`, a: e[0] });
-    }
-  } else if (subj === "abacus") {
+  if (subj === "abacus") {
     for (let i = 0; i < 8; i++) {
       const k = i % 3;
       if (k === 0) {
@@ -982,6 +978,9 @@ function makeSheet(g, subj, lesson) {
   if (g === 14) return genExtra(subj, lesson);
   // Maths is the one course where a worksheet can be endless rather than reshuffled, so
   // category 32 generates fresh numbers every press. See js/math-course.js.
+  // The three reference tools that moved in from category 14 keep the generators they always
+  // had. Everything else in the maths course goes through its own per-unit generator.
+  if (g === 32 && (subj === "abacus" || subj === "tables" || subj === "formulas")) return genExtra(subj, lesson);
   if (g === 32) return genMathCourse(lesson);
   // Chemistry generates its element questions from the verified ELEMENTS data, so a generated
   // question and its answer are correct by construction. See js/chem-course.js.
@@ -1403,7 +1402,7 @@ function lessonsView() {
     if (g === 15 || g === 16 || g === 18 || g === 22) continue;  // now folded into each grade's tabs
     if (g === 27) continue;  // Physical Science retired; Chemistry (33) and Physics (36) cover it
     const locked = !canGrade(g);
-    const label = g === 0 ? "🌈 Kindergarten" : g === 13 ? "🌍 Let's Learn Geography" : g === 14 ? "⚗️ Additional Learning Materials" : g === 17 ? "💻 Let's Learn Computer Science"
+    const label = g === 0 ? "🌈 Kindergarten" : g === 13 ? "🌍 Let's Learn Geography" : g === 14 ? "🖍️ Additional Learning Materials" : g === 17 ? "💻 Let's Learn Computer Science"
                 : g === 19 ? "⏳ Let's Learn The History of Us" : g === 20 ? "🪨 Let's Learn Geology" : g === 21 ? "💬 Let's Learn Spanish" : g === 23 ? "🕐 Let's Learn Time & Money" : g === 24 ? "🚀 Let's Learn Space" : g === 25 ? "💛 Let's Learn Feelings" : g === 26 ? "🦖 Let's Learn Paleontology" : g === 28 ? "🌦️ Let's Learn Weather & Oceans" : g === 29 ? "😂 Kids &amp; Family Jokes" : g === 30 ? "✂️ Paper Activities" : g === 31 ? "🧬 Let's Learn Biology" : g === 32 ? "🧮 Let's Learn Mathematics" : g === 33 ? "⚗️ Let's Learn Chemistry" : g === 34 ? "🎨 Let's Learn Visual Arts" : g === 35 ? "🎵 Let's Learn Music" : g === 36 ? "🔭 Let's Learn Physics" : "Grade " + g;
     tiles.push(`<button class="grade-tile g${g}" onclick="App.openGrade(${g})">${locked ? '<span class="lock">🔒</span>' : ""}${label}</button>`);
   }
@@ -2492,7 +2491,7 @@ const App = {
   openGrade(g) {
     state.grade = g;
     state.reading = null;
-    const dflt = g === 0 ? "alphabet" : g === 13 ? "globe" : g === 14 ? "periodic"
+    const dflt = g === 0 ? "alphabet" : g === 13 ? "globe" : g === 14 ? "coloring"
                : g === 15 ? "readnow" : g === 16 ? "create" : g === 17 ? "basics"
                : g === 18 ? "engplan" : g === 19 ? "earth" : g === 20 ? "rocks"
                : g === 21 ? "greetings" : g === 23 ? "clock" : g === 24 ? "spacecourse" : g === 25 ? "feelings" : g === 26 ? "digsite" : g === 28 ? "weather" : g === 29 ? "jokeshow" : g === 30 ? "paperstudio" : g === 31 ? "whatis" : g === 32 ? "whatis" : g === 33 ? "whatis" : g === 34 ? "whatis" : g === 35 ? "whatis" : g === 36 ? "whatis" : "math";
