@@ -1669,16 +1669,27 @@ function lessonView() {
       body += `<div class="bandhead">${doodle(doodles[bd])}<div><h3>${bands[bd]}</h3>
                  <p>${list.length} free book${list.length === 1 ? "" : "s"} to read right now</p></div></div>`;
       body += `<div class="grid grid-3">` + list.map(b => `
-        <div class="pdcard" onclick="App.readBook('${b.slug}')">
+        <div class="pdcard">
           <div class="pdspine"></div>
-          <h4>${esc(b.t)}</h4>
-          <p class="bookby">${esc(b.a)} · ${b.y}</p>
-          <span class="moral-tag">${esc(b.g)}</span>
-          <p class="bookwhy">${esc(b.w)}</p>
-          <p class="pdmeta">${b.ch} chapter${b.ch === 1 ? "" : "s"} · ${(b.words / 1000).toFixed(0)}k words · about ${Math.max(1, Math.round(b.words / 9000))} hr read</p>
-          <button class="btn btn-primary btn-sm">📖 Read it free</button>
+          <div onclick="App.readBook('${b.slug}')">
+            <h4>${esc(b.t)}</h4>
+            <p class="bookby">${esc(b.a)} · ${b.y}</p>
+            <span class="moral-tag">${esc(b.g)}</span>
+            <p class="bookwhy">${esc(b.w)}</p>
+            <p class="pdmeta">${b.ch} chapter${b.ch === 1 ? "" : "s"} · ${(b.words / 1000).toFixed(0)}k words · about ${Math.max(1, Math.round(b.words / 9000))} hr read</p>
+          </div>
+          <div class="pdactions">
+            <button class="btn btn-primary btn-sm" onclick="App.readBook('${b.slug}')">📖 Read it free</button>
+            <button class="btn btn-ghost btn-sm bookkeep" id="keep-${b.slug}"
+              onclick="event.stopPropagation();App.keepBook('${b.slug}')"
+              title="Save this book so you can read it with no internet">⬇️ Keep offline</button>
+          </div>
         </div>`).join("") + `</div>`;
     });
+    body += `<div class="bookfoot">${doodle("lamp")}
+      <p><b>Reading with no internet:</b> the books are big, so they are not downloaded until you
+      ask. Press <b>Keep offline</b> on any book and it is saved onto this device, ready to read on
+      a plane, in the car, or anywhere with no signal. Press it again to free the space up.</p></div>`;
     body += `<div class="bookfoot">${doodle("lamp")}
       <p><b>Why are these free?</b> Every book here is out of copyright, which means it belongs to
       everybody now. They come from Project Gutenberg, a volunteer library that has been digitising
@@ -2920,7 +2931,19 @@ const App = {
     const keys = Object.keys(BOOK_DOODLES);
     state.reading = { slug, title: meta.t, loading: true, ch: 0, doodles: shuffleArr(keys).slice(0, 4) };
     render();
-    fetch("books/" + slug + ".json")
+    // Look on the device first. A book kept offline has to open with no signal at all, and the
+    // service worker does not precache these, so the page checks the saved-books cache itself.
+    const fromCacheThenNetwork = async () => {
+      if (window.caches) {
+        try {
+          const c = await caches.open("brightsprouts-books");
+          const hit = await c.match("books/" + slug + ".json");
+          if (hit) return hit;
+        } catch (e) { /* fall through to the network */ }
+      }
+      return fetch("books/" + slug + ".json");
+    };
+    fromCacheThenNetwork()
       .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
       .then(book => {
         if (!state.reading || state.reading.slug !== slug) return;   // reader closed while loading
@@ -2934,11 +2957,63 @@ const App = {
       .catch(e => {
         if (!state.reading) return;
         state.reading.loading = false;
-        state.reading.error = "We couldn't load it just now (" + e.message + "). Check your connection and try again.";
+        state.reading.error = navigator.onLine
+          ? "We couldn't load it just now (" + e.message + "). Please try again."
+          : "You are offline and this book is not saved on this device yet. Go back to the shelf and press Keep offline while you have internet, then it will open anywhere.";
         render();
       });
   },
   closeBook() { state.reading = null; render(); window.scrollTo(0, 0); },
+
+  // ---- keeping a book on the device ----
+  // The 34 books come to about 12 MB between them, which is an unkind thing to download onto a
+  // phone without being asked. So nothing is stored until a family presses the button, one book
+  // at a time, and pressing it again gives the space back.
+  async keepBook(slug) {
+    const btn = document.getElementById("keep-" + slug);
+    const url = "books/" + slug + ".json";
+    if (!window.caches) {
+      if (btn) btn.textContent = "not supported here";
+      return false;
+    }
+    try {
+      const c = await caches.open("brightsprouts-books");
+      const already = await c.match(url);
+      if (already) {
+        await c.delete(url);
+        App.paintKeepButtons();
+        return false;
+      }
+      if (btn) { btn.textContent = "⏳ saving..."; btn.disabled = true; }
+      const res = await fetch(url);
+      if (!res || !res.ok) throw new Error("HTTP " + (res && res.status));
+      await c.put(url, res.clone());
+      App.paintKeepButtons();
+      return true;
+    } catch (e) {
+      if (btn) { btn.disabled = false; btn.textContent = "⚠️ needs internet"; }
+      return false;
+    }
+  },
+  // Show which books are already on the device. Called after every render of the shelf.
+  async paintKeepButtons() {
+    if (!window.caches) return;
+    let keys = [];
+    try {
+      const c = await caches.open("brightsprouts-books");
+      keys = (await c.keys()).map(r => new URL(r.url).pathname);
+    } catch (e) { return; }
+    document.querySelectorAll(".bookkeep").forEach(function (btn) {
+      const slug = btn.id.replace("keep-", "");
+      const saved = keys.some(function (k) { return k.indexOf("books/" + slug + ".json") >= 0; });
+      btn.disabled = false;
+      btn.textContent = saved ? "✅ Saved offline" : "⬇️ Keep offline";
+      btn.className = "btn btn-sm bookkeep " + (saved ? "btn-secondary" : "btn-ghost");
+      btn.title = saved
+        ? "Saved on this device. Press to remove it and free the space."
+        : "Save this book so you can read it with no internet";
+    });
+  },
   gotoChapter(i) {
     const r = state.reading; if (!r || !r.book) return;
     r.ch = Math.min(Math.max(0, +i), r.book.chapters.length - 1);
@@ -3580,6 +3655,7 @@ function render() {
   // The joke show's controller needs its screen on the page before it can deal the first joke.
   if (typeof JokeTv !== "undefined") JokeTv.mount();
   if (typeof EssayPad !== "undefined" && document.getElementById("padpaper")) EssayPad.mount();
+  if (document.querySelector(".bookkeep") && App.paintKeepButtons) App.paintKeepButtons();
   mountInk();
 }
 

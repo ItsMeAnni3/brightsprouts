@@ -1803,3 +1803,10 @@ body.inkon #lesson-card{touch-action:pan-y}
   .padbar,.padtools{display:none!important}
   .padpaper{box-shadow:none;border:1px solid #ddd;break-inside:avoid}
 }
+
+/* A picture that could not load. Styled so a lesson still looks deliberate offline. */
+img.imgoffline{background:#f7f4ff;border:1px dashed #d9d2ee;border-radius:10px;
+  object-fit:contain;padding:4px;opacity:.95}
+/* Keeping a book on the device */
+.pdactions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
+.pdcard .bookkeep{white-space:nowrap}
