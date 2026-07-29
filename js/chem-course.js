@@ -434,6 +434,7 @@
        "In a gas the particles are far apart and moving fast. A gas spreads out to fill whatever it is in.",
        "The same substance can be all three. Water is ice, water and steam.",
        "Gases are still matter even though you cannot see them. Air has weight, which you can feel by waving a fan.",
+       "There is a fourth state called plasma: a gas so hot its particles have been given an electric charge. Lightning, neon signs and the Sun are all plasma, which makes it the commonest state in the whole universe.",
        "Heating gives particles more energy so they move more. Cooling takes it away."],
       dStates,
       "The word gas causes trouble, because children often hear it as meaning smelly or dangerous. Air is a gas, and it is all around them right now. Blowing up a balloon and feeling its weight change is the demonstration that fixes it.",
@@ -445,7 +446,7 @@
        { q: "In which state are particles furthest apart?", a: "Gas" },
        { q: "Name the three states of water.", a: "Ice, water and steam" },
        { q: "Is air matter?", a: "Yes" },
-       { q: "What does heating do to particles?", a: "Makes them move more" }]),
+       { q: "What is the fourth state of matter called?", a: "Plasma" }]),
 
     materials: U("materials", "3 · Materials and Their Properties", "🧱", "Grades 1 to 4",
       "A property is something you can observe or measure about a material. We choose a material for a job because of its properties, which is why windows are glass and saucepans are not.",

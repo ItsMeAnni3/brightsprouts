@@ -12,48 +12,9 @@
     { n: "Jupiter", x: 194, r: 17, c: "#d9a06b" }, { n: "Saturn", x: 244, r: 13, c: "#e3c98d" },
     { n: "Uranus", x: 288, r: 10, c: "#9fdbe0" }, { n: "Neptune", x: 320, r: 9.5, c: "#4a6fd4" }
   ];
-  var solarDia = '<svg viewBox="0 0 340 196"><rect width="340" height="196" rx="14" fill="#141a35"/>';
-  for (var st = 0; st < 26; st++) {
-    solarDia += '<circle cx="' + ((st * 61) % 336 + 3) + '" cy="' + ((st * 43) % 60 + 4) + '" r="1" fill="#fff" opacity=".55"/>';
-  }
-  solarDia += '<circle cx="4" cy="88" r="36" fill="#ffb703"/><circle cx="4" cy="88" r="27" fill="#ffd166"/>'
-    + '<text x="20" y="34" ' + FA + ' font-size="12" fill="#ffd166">Sun</text>';
-  for (var pi = 0; pi < planets.length; pi++) {
-    var p = planets[pi];
-    if (p.n === "Saturn") {
-      solarDia += '<ellipse cx="' + p.x + '" cy="88" rx="' + (p.r + 9) + '" ry="4" fill="none" stroke="#e8dcae" stroke-width="2.5"/>';
-    }
-    solarDia += '<circle cx="' + p.x + '" cy="88" r="' + p.r + '" fill="' + p.c + '"/>'
-      + '<text x="' + p.x + '" y="' + (pi % 2 ? 130 : 118) + '" text-anchor="middle" ' + FA + ' font-size="8.5" fill="#dfe6ff">' + p.n + '</text>';
-  }
-  solarDia += '<text x="170" y="160" text-anchor="middle" ' + FA + ' font-size="12" fill="#fff">The eight planets, in order from the Sun</text>'
-    + '<text x="170" y="180" text-anchor="middle" ' + FA + ' font-size="10" fill="#9aa5cc">(sizes and distances are not to scale)</text></svg>';
-
-  // ---- the Moon's phases ----
-  // Lit part is drawn as an outer semicircle plus a terminator ellipse whose width sets the phase.
-  function moonPhase(cx, cy, r, i) {
-    var dark = '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="#3a3a55" stroke="#7a7a9c" stroke-width="1"/>';
-    if (i === 0) return dark;                                                     // new moon
-    if (i === 4) return '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="#f5f3e8"/>';  // full
-    var right = i < 4;                       // waxing half of the cycle is lit on the right
-    var quarter = (i === 2 || i === 6);
-    var crescent = (i === 1 || i === 7);
-    var rx = quarter ? 0 : r * 0.55;
-    var outer = right ? 1 : 0;
-    // crescent: terminator bows toward the lit limb; gibbous: it bows away
-    var term = crescent ? (right ? 0 : 1) : (right ? 1 : 0);
-    var d = 'M ' + cx + ' ' + (cy - r) + ' A ' + r + ' ' + r + ' 0 0 ' + outer + ' ' + cx + ' ' + (cy + r);
-    d += quarter ? ' Z' : ' A ' + rx.toFixed(1) + ' ' + r + ' 0 0 ' + term + ' ' + cx + ' ' + (cy - r) + ' Z';
-    return dark + '<path d="' + d + '" fill="#f5f3e8"/>';
-  }
-  var phaseNames = ["new", "crescent", "half", "gibbous", "full", "gibbous", "half", "crescent"];
-  var moonDia = '<svg viewBox="0 0 340 132"><rect width="340" height="132" rx="14" fill="#141a35"/>';
-  for (var mi = 0; mi < 8; mi++) {
-    var mx = 26 + mi * 41;
-    moonDia += moonPhase(mx, 50, 16, mi)
-      + '<text x="' + mx + '" y="' + (mi % 2 ? 94 : 82) + '" text-anchor="middle" ' + FA + ' font-size="9" fill="#dfe6ff">' + phaseNames[mi] + '</text>';
-  }
-  moonDia += '<text x="170" y="118" text-anchor="middle" ' + FA + ' font-size="11.5" fill="#fff">The Moon\'s phases: about a month from new to new</text></svg>';
+  // The solar-system and Moon-phase diagram builders lived here. They were removed on
+  // 2026-07-28 along with the two tabs that used them, because the Space Course teaches both
+  // topics across the grades and the standalone tabs only repeated it.
 
   // ---- rocket: thrust pushes down, rocket goes up ----
   var rocketDia = '<svg viewBox="0 0 340 214"><rect width="340" height="214" rx="14" fill="#eef3ff"/>'
@@ -112,60 +73,6 @@
     + '<text x="170" y="150" text-anchor="middle" ' + FA + ' font-size="12" fill="#fff">Robots explore where people cannot go yet</text></svg>';
 
   LESSONS[24] = {
-    solar: {
-      title: "The Solar System", emoji: "☀️",
-      intro: "Our address in space! The Sun sits in the middle, and everything else, planets, moons and asteroids, travels around it.",
-      learn: [
-        "The Sun is a star, and it sits at the centre of our solar system. Everything else orbits (travels around) it.",
-        "There are eight planets. In order from the Sun: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune.",
-        "The four closest planets are small and rocky. The four farthest are giants, made mostly of gas and ice.",
-        "Jupiter is the biggest planet and Mercury is the smallest. Venus is the hottest, even hotter than Mercury, because its thick clouds trap the heat.",
-        "A belt of asteroids orbits between Mars and Jupiter. Earth takes 365 days to travel once around the Sun; that is one year."
-      ],
-      activity: "🌞 Planet Parade: Write the eight planets on cards and line them up in order. Learn the sentence 'My Very Educated Mother Just Served Us Noodles': the first letters give you the planets!",
-      diagram: solarDia,
-      questions: [
-        { q: "What is at the centre of our solar system?", a: "The Sun" },
-        { q: "Is the Sun a planet or a star?", a: "A star" },
-        { q: "How many planets are in our solar system?", a: "Eight" },
-        { q: "Which planet is closest to the Sun?", a: "Mercury" },
-        { q: "Which planet is the biggest?", a: "Jupiter" },
-        { q: "Which planet is the hottest?", a: "Venus" },
-        { q: "Which planet is farthest from the Sun?", a: "Neptune" },
-        { q: "Which planet is famous for its bright rings?", a: "Saturn" },
-        { q: "Going outwards, which planet comes right after Earth?", a: "Mars" },
-        { q: "What orbits between Mars and Jupiter?", a: "The asteroid belt" },
-        { q: "Is Pluto one of the eight planets?", a: "No, it is a dwarf planet" },
-        { q: "How long does Earth take to orbit the Sun once?", a: "365 days (one year)" }
-      ]
-    },
-    moon: {
-      title: "The Moon", emoji: "🌙",
-      intro: "The Moon is our closest neighbour in space, and the only other world people have ever walked on.",
-      learn: [
-        "The Moon orbits Earth, taking about a month to travel all the way round.",
-        "The Moon does not make its own light. It shines because sunlight bounces off it.",
-        "As the Moon orbits, we see different amounts of it lit up. These shapes are called phases: new, crescent, half, gibbous and full.",
-        "The same side of the Moon always faces us, so we never see its far side from Earth.",
-        "The Moon has no air and no wind, so the astronauts' footprints are still there. In 1969, Apollo 11 landed and Neil Armstrong became the first person to walk on the Moon."
-      ],
-      activity: "🌙 Moon Diary: Look at the Moon each night for two weeks and draw its shape in a notebook. Watch it grow and shrink through the phases!",
-      diagram: moonDia,
-      questions: [
-        { q: "What does the Moon orbit?", a: "Earth" },
-        { q: "About how long does the Moon take to orbit Earth?", a: "About a month" },
-        { q: "Does the Moon make its own light?", a: "No, it reflects sunlight" },
-        { q: "What do we call the different shapes of the Moon?", a: "Phases" },
-        { q: "What is it called when we cannot see the lit Moon at all?", a: "A new moon" },
-        { q: "What is it called when the whole face is lit up?", a: "A full moon" },
-        { q: "Does the same side of the Moon always face Earth?", a: "Yes" },
-        { q: "Is there air to breathe on the Moon?", a: "No" },
-        { q: "Why do footprints stay on the Moon?", a: "There is no wind or air to blow them away" },
-        { q: "Which mission first landed people on the Moon?", a: "Apollo 11" },
-        { q: "In what year did people first walk on the Moon?", a: "1969" },
-        { q: "Who was the first person to walk on the Moon?", a: "Neil Armstrong" }
-      ]
-    },
     rockets: {
       title: "Rockets & How We Fly", emoji: "🚀",
       intro: "How do you leave a whole planet? You need a rocket, and one very clever push.",

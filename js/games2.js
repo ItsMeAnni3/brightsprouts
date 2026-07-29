@@ -234,7 +234,7 @@
     rockquiz: function () { return orFallback(bankQuestion(poolOfCategory(20))); },
     feelquiz: function () { return orFallback(bankQuestion(poolOfCategory(25))); },
     paleoquiz: function () { return orFallback(bankQuestion(poolOfCategory(26))); },
-    physsciquiz: function () { return orFallback(bankQuestion(poolOfCategory(27))); },
+    physsciquiz: function () { return orFallback(bankQuestion(poolOfCategory(36))); },
     earthspacequiz: function () { return orFallback(bankQuestion(poolOfCategory(28))); },
 
     // ---------------- Geography ----------------
@@ -276,8 +276,8 @@
     { key: "coincount", name: "Coin Counter",     emoji: "💰", desc: "Add up the coins: how much altogether?",     level: "Medium", subject: "Money" },
     { key: "rockquiz",  name: "Rock Detective",   emoji: "🪨", desc: "Rocks, the rock cycle, fossils and gems.",    level: "Medium", subject: "Geology" },
     { key: "paleoquiz", name: "Dino Detective",   emoji: "🦖", desc: "Fossils, dinosaurs and prehistoric life.",    level: "Medium", subject: "Paleontology" },
-    { key: "physsciquiz", name: "Force Field",    emoji: "⚛️", desc: "Matter, forces, energy, electricity and magnetism.", level: "Medium", subject: "Physical Science" },
-    { key: "earthspacequiz", name: "Sky Watcher", emoji: "🛰️", desc: "Weather, oceans, stars and Earth's seasons.", level: "Medium", subject: "Earth & Space Science" },
+    { key: "physsciquiz", name: "Force Field",    emoji: "⚛️", desc: "Forces, motion, energy, light, sound and magnets.", level: "Medium", subject: "Physics" },
+    { key: "earthspacequiz", name: "Sky Watcher", emoji: "🌦️", desc: "Clouds, storms, the water cycle and the oceans.", level: "Medium", subject: "Weather & Oceans" },
     { key: "bioquiz",   name: "Life Science Lab", emoji: "🧬", desc: "Cells, body systems, genetics and ecology.",  level: "Medium", subject: "Biology" },
     { key: "elements",  name: "Element Hunt",     emoji: "🧪", desc: "Name the element from its symbol.",           level: "Medium", subject: "Chemistry" },
     { key: "continent", name: "Which Continent?", emoji: "🗺️", desc: "Find the continent each country belongs to.", level: "Medium", subject: "Geography" },

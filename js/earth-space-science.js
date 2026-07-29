@@ -10,7 +10,6 @@
   var LB = 'font-family="Fredoka, system-ui, sans-serif" font-size="12" fill="#2d2a4a"';
   // Light-on-dark label, for the two night-sky diagrams below; LB's fill is baked in, so a
   // separately-appended fill="..." after it becomes a duplicate attribute (first one wins).
-  var LBW = 'font-family="Fredoka, system-ui, sans-serif" font-size="12" fill="#fff"';
 
   // A tiny auto-turning 3D scene: a starfield + sun sit behind a globe that spins continuously
   // around its own tilted axis (see .earth3d in styles.css, same rotate3d technique validated
@@ -95,74 +94,5 @@
         { q: "List the four stages of the water cycle, in order.", a: "Evaporate, condense, precipitate, collect" },
         { q: "Is ocean water salty or fresh?", a: "Salty" }
       ]
-    },
-    stars: {
-      title: "Stars & Galaxies", emoji: "✨",
-      intro: "On a clear night, the sky fills with thousands of tiny lights. Each one is a star like our Sun, and they're grouped into enormous islands called galaxies.",
-      learn: [
-        "A star is a giant ball of hot, glowing gas that makes its own light and heat through a process called nuclear fusion. Our Sun is a star, just much closer than the others.",
-        "Stars look tiny only because they're incredibly far away. Distances in space are so huge that scientists measure them in light-years, the distance light travels in one year.",
-        "The nearest star system to our Sun, Alpha Centauri, is about 4.2 light-years away. That's roughly 25 trillion miles; and it's still our closest neighbor!",
-        "A galaxy is a huge collection of stars, gas and dust held together by gravity. Our solar system is inside a galaxy called the Milky Way, home to an estimated 100 to 400 billion stars.",
-        "The Milky Way is just one of billions of galaxies in the universe. On a clear, dark night, patterns of stars called constellations (like Orion or the Big Dipper) can help you find your way around the sky."
-      ],
-      activity: "✨ Star Count: On the next clear night, find a dark spot outside and count how many stars you can see in one small patch of sky (about the size of your fist held at arm's length). Try again another night: does the number change?",
-      diagram: '<svg viewBox="0 0 340 170"><rect width="340" height="170" rx="14" fill="#0f1730"/>'
-        + '<g fill="#fff"><circle cx="30" cy="30" r="1.6"/><circle cx="70" cy="18" r="1.3"/><circle cx="110" cy="40" r="1.5"/><circle cx="150" cy="15" r="1.4"/>'
-        + '<circle cx="200" cy="30" r="1.6"/><circle cx="250" cy="18" r="1.3"/><circle cx="290" cy="42" r="1.5"/><circle cx="320" cy="20" r="1.4"/>'
-        + '<circle cx="50" cy="55" r="1.3"/><circle cx="180" cy="55" r="1.4"/><circle cx="270" cy="60" r="1.3"/></g>'
-        + '<ellipse cx="170" cy="120" rx="150" ry="30" fill="#ffffff" opacity=".14"/><ellipse cx="170" cy="120" rx="90" ry="16" fill="#ffffff" opacity=".18"/>'
-        + '<circle cx="170" cy="120" r="10" fill="#ffe08a"/>'
-        + '<g ' + LBW + ' text-anchor="middle"><text x="170" y="150">Our Sun, inside the Milky Way galaxy</text></g>'
-        + '<g ' + LBW + '><text x="12" y="16" font-size="10">Alpha Centauri: about 4.2 light-years away</text></g></svg>',
-      questions: [
-        { q: "A giant ball of hot, glowing gas that makes its own light is a ____.", a: "Star" },
-        { q: "Stars make light and heat through a process called nuclear ____.", a: "Fusion" },
-        { q: "Space distances are measured in ____, the distance light travels in a year.", a: "Light-years" },
-        { q: "Name the nearest star system to our Sun.", a: "Alpha Centauri" },
-        { q: "About how many light-years away is Alpha Centauri?", a: "About 4.2 light-years" },
-        { q: "A huge collection of stars, gas and dust held by gravity is a ____.", a: "Galaxy" },
-        { q: "Name the galaxy our solar system is inside.", a: "The Milky Way" },
-        { q: "About how many stars does the Milky Way have?", a: "Hundreds of billions" },
-        { q: "Is the Milky Way the only galaxy in the universe?", a: "No, there are billions" },
-        { q: "A recognizable pattern of stars in the sky is a ____.", a: "Constellation" },
-        { q: "Name a well-known constellation.", a: "Orion or the Big Dipper" },
-        { q: "Is our Sun a star?", a: "Yes, it is a star" }
-      ]
-    },
-    rotation: {
-      title: "Earth's Rotation & Seasons", emoji: "🍂",
-      intro: "Earth is never standing still: it's always spinning and racing around the Sun. That non-stop motion gives us day and night, and the four seasons.",
-      learn: [
-        "Earth spins all the way around on its axis once every 24 hours: that spin is what gives us day and night. The side facing the Sun has day; the side facing away has night.",
-        "Earth also travels all the way around the Sun once every year, about 365.25 days. That's why we add a leap day every four years, to keep our calendar in sync.",
-        "Earth's axis is tilted about 23.5 degrees. As Earth orbits the Sun, that tilt means different parts of Earth get more or less direct sunlight at different times of year, and that's what causes the seasons, not how close or far Earth is from the Sun.",
-        "When the Northern Hemisphere is tilted toward the Sun, it's summer there, and winter in the Southern Hemisphere, which is tilted away at the same time.",
-        "The equinoxes (spring and fall) are the two days a year when neither hemisphere is tilted toward or away from the Sun, so day and night are close to equal length almost everywhere."
-      ],
-      activity: "🍂 Tilt a Flashlight: Shine a flashlight straight down onto a piece of paper, then shine it at an angle from the same distance. See how the light spreads out and looks dimmer at an angle? That's why tilted parts of Earth get less direct, cooler sunlight.",
-      diagram: '<svg viewBox="0 0 340 190"><rect width="340" height="190" rx="14" fill="#0f1730"/>'
-        + '<ellipse cx="170" cy="100" rx="130" ry="55" fill="none" stroke="#4d5b8a" stroke-width="1.5" stroke-dasharray="3 5"/>'
-        + '<circle cx="170" cy="100" r="18" fill="#ffd166"/>'
-        + '<circle cx="170" cy="47" r="9" fill="#4d96ff"/><circle cx="298" cy="100" r="9" fill="#4d96ff"/><circle cx="170" cy="153" r="9" fill="#4d96ff"/><circle cx="42" cy="100" r="9" fill="#4d96ff"/>'
-        + '<g ' + LBW + ' text-anchor="middle" font-size="10">'
-        + '<text x="170" y="30">Winter (N. Hemisphere)</text><text x="298" y="122">Spring</text><text x="170" y="178">Summer (N. Hemisphere)</text><text x="42" y="122">Fall</text></g>'
-        + '<g ' + LBW + '><text x="170" y="14" text-anchor="middle" font-size="9">Earth\'s tilt (not to scale)</text></g></svg>'
-        + EARTH_3D,
-      questions: [
-        { q: "Earth spinning all the way around once every 24 hours causes ____.", a: "Day and night" },
-        { q: "About how many days does Earth take to orbit the Sun once?", a: "About 365 days" },
-        { q: "Earth's axis is tilted about how many degrees?", a: "About 23.5 degrees" },
-        { q: "What actually causes the seasons: Earth's tilt or its distance from the Sun?", a: "Earth's tilt" },
-        { q: "When the Northern Hemisphere tilts toward the Sun, what season is it there?", a: "Summer" },
-        { q: "When it's summer in the Northern Hemisphere, what season is it in the south?", a: "Winter" },
-        { q: "The extra day added every four years to keep the calendar in sync is a ____ day.", a: "Leap" },
-        { q: "The two days a year when day and night are close to equal length are ____.", a: "Equinoxes" },
-        { q: "Does Earth's axis stay tilted in the same direction all year?", a: "Yes" },
-        { q: "Sunlight hitting Earth at an angle is more spread out and ____ than direct light.", a: "Weaker (dimmer)" },
-        { q: "Which side of Earth has night: the side facing the Sun, or facing away?", a: "The side facing away" },
-        { q: "About how long does it take Earth to spin around once?", a: "About 24 hours" }
-      ]
-    }
-  };
+    },};
 })();

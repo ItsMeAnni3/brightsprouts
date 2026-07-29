@@ -42,7 +42,12 @@
   // Only the standalone "Let's Learn" categories carry fixed, hand-written, fact-checked content
   // (grades 1-12's core subjects generate fresh worksheet questions on the fly and aren't
   // meaningful trivia to search). Category numbers per js/app.js's subjectsFor().
-  var CATEGORY_GRADES = [13, 14, 17, 19, 20, 21, 23, 24, 25, 26, 27, 28];
+  // Every "Let's Learn" tile, so Sprout can answer about all of them. This list went stale badly:
+  // it was last updated before Jokes, Paper, Biology, Mathematics, Chemistry, Visual Arts, Music
+  // and Physics existed, so eight whole courses were invisible to the chat bot. 27 came out when
+  // Physical Science was retired. audit_sproutbot.html now asserts this matches the tiles the app
+  // actually shows, so it cannot drift silently again.
+  var CATEGORY_GRADES = [13, 14, 17, 19, 20, 21, 23, 24, 25, 26, 28, 29, 30, 31, 32, 33, 34, 35, 36];
 
   var KB = [];  // { tokens:[...], answer, topic, emoji, grade, subjKey, weight }
 
@@ -461,7 +466,8 @@
       isUnsafe: isUnsafe,
       buildKb: buildKb,
       findAnswer: findAnswer,
-      kbSize: function () { return KB.length; }
+      kbSize: function () { return KB.length; },
+      categories: function () { return CATEGORY_GRADES.slice(); }
     }
   };
 

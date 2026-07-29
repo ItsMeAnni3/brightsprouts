@@ -1,3 +1,11 @@
+// RETIRED on 2026-07-28. This file is no longer loaded by index.html or the service worker,
+// and category 27 has no tile. All four of its topics are taught in more depth by:
+//   Matter & Atoms          -> Let's Learn Chemistry (33), units 2 and 6
+//   Forces & Motion         -> Let's Learn Physics (36), units 2 and 3
+//   Energy                  -> Let's Learn Physics (36), unit 7
+//   Electricity & Magnetism -> Let's Learn Physics (36), unit 11
+// It is kept so the retirement can be undone by re-adding the two script tags, nothing more.
+//
 // BrightSprouts Academy: Physical Science category (LESSONS[27]): matter, forces, energy and
 // electricity/magnetism for grade-schoolers, K-12 appropriate. Distinct from the Grade 9+
 // Physics/Chemistry subjects, this is the earlier, hands-on foundation, same role Geology plays
