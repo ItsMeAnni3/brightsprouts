@@ -1856,3 +1856,36 @@ img.imgoffline{background:#f7f4ff;border:1px dashed #d9d2ee;border-radius:10px;
   .bs-title,.bs-by,.bs-meta{color:#2d2a4a;text-shadow:none}
   .bs-actions{display:none}
 }
+
+/* ---------- The logo ---------- */
+.bs-logo{display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;
+  margin:0 auto 14px;text-align:left}
+.bs-logo-mark{display:block;flex:0 0 auto}
+.bs-logo-words{min-width:0}
+/* The words inherit their colour rather than fixing it, so the lockup can sit on a white card
+   or on a dark panel without half of the name disappearing into the background. */
+.bs-logo-name{font-family:var(--display);font-weight:700;line-height:1.02;
+  font-size:clamp(1.9rem,5.2vw,2.9rem);color:inherit;letter-spacing:-.5px}
+.bs-logo-name2{color:var(--purple)}
+.bs-logo-acad{display:block;font-size:.44em;letter-spacing:5px;text-transform:uppercase;
+  color:currentColor;opacity:.58;font-weight:600;margin-top:4px}
+/* The motto sits under the name, which is what a motto is for. */
+.bs-logo-motto{margin:8px 0 0;font-size:clamp(.92rem,2.2vw,1.06rem);
+  color:currentColor;opacity:.78;font-style:italic}
+.bs-logo-motto::before{content:"";display:block;width:52px;height:3px;border-radius:3px;
+  margin:0 0 8px;background:linear-gradient(90deg,var(--pink),var(--purple),var(--teal));opacity:1}
+/* The small one in the top bar. It has to stay on the same line as the name: a 30 pixel badge
+   dropped into a 23 pixel line box will otherwise push the words onto a second row. Flex is not
+   an option here because the name is loose text, and flex would space every word apart. */
+.logo{white-space:nowrap}
+.brandmark{display:inline-block;vertical-align:middle;line-height:0;margin-right:3px}
+.bs-logo-inline{display:block}
+@media (max-width:400px){ .logo{font-size:1.2rem} }
+@media (max-width:560px){
+  .bs-logo{gap:12px}
+  .bs-logo-acad{letter-spacing:3px}
+  .bs-logo-motto::before{margin-left:auto;margin-right:auto}
+  .bs-logo-words{text-align:center}
+  .bs-logo{text-align:center}
+}
+@media print{ .bs-logo-motto::before{background:#999} }

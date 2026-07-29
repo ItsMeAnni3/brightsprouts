@@ -1403,8 +1403,8 @@ function cartView() {
 function homeView() {
   return `
   <div class="hero">
-    <span class="big-emoji">🌱</span>
-    <h1>BrightSprouts Academy</h1>
+    ${typeof Logo === "undefined" ? `<span class="big-emoji">🌱</span><h1>BrightSprouts Academy</h1>`
+      : Logo.full({ size: 96 })}
     <p>Everything one family needs for <b>Kindergarten through Grade 12</b>: Math, Reading, Phonics, Vocabulary, Spelling, Writing, Science, Social Studies, Art and Music, plus Biology, Chemistry and Physics for older students. Then twenty one <b>"Let's Learn" courses</b>: Geography, Space, Biology, Chemistry, Physics, Mathematics, Essay Writing, Visual Arts, Music, Computer Science, Spanish, Geology, Paleontology, Weather &amp; Oceans, Time &amp; Money, The History of Us, Feelings &amp; Kindness, Kids &amp; Family Jokes and Paper Activities. Follow biology from "what is a living thing" all the way to genes and ecosystems, write real code in the Code Terminal, make things from 112 paper activities, and every lesson prints. Made for parents. Loved by kids.</p>
     <button class="btn btn-primary" onclick="App.go('lessons')">🚀 Explore Lessons</button>
     <button class="btn btn-secondary" onclick="App.go('library')">📖 Books &amp; Stories</button>
@@ -3654,6 +3654,13 @@ function render() {
     contact: contactView, game: gameView, rewards: rewardsView, globe: globeView,
     shop: shopView, cart: cartView, privacy: privacyView
   };
+  // The top bar ships an emoji in the HTML so there is something there before any script runs.
+  // Once the logo is available, swap in the real mark.
+  const bm = document.getElementById("brandmark");
+  if (bm && typeof Logo !== "undefined" && !bm.dataset.drawn) {
+    bm.innerHTML = Logo.inline(30);
+    bm.dataset.drawn = "1";
+  }
   document.getElementById("nav").innerHTML = navHtml();
   document.getElementById("authzone").innerHTML = authZoneHtml();
   document.getElementById("app").innerHTML = (views[state.view] || homeView)() + (state.modal ? upgradeModal() : "");

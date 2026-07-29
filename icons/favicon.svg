@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="4 4 92 92">
+<defs>
+<linearGradient id="fbg" x1="0" y1="0" x2="0.4" y2="1">
+<stop offset="0" stop-color="#8f6ad6"/><stop offset="1" stop-color="#5b3aa8"/></linearGradient>
+<radialGradient id="fsun" cx="38%" cy="34%" r="70%">
+<stop offset="0" stop-color="#fff3c4"/><stop offset="1" stop-color="#f0a92b"/></radialGradient>
+<linearGradient id="fl1" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#9be86a"/><stop offset="1" stop-color="#3f9c4a"/></linearGradient>
+<linearGradient id="fl2" x1="1" y1="0" x2="0" y2="1">
+<stop offset="0" stop-color="#7fd857"/><stop offset="1" stop-color="#2f7a3c"/></linearGradient>
+<linearGradient id="fso" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0" stop-color="#c98a5a"/><stop offset="1" stop-color="#7a4a1d"/></linearGradient>
+</defs>
+<rect x="4" y="4" width="92" height="92" rx="26" fill="url(#fbg)"/>
+<circle cx="50" cy="44" r="26" fill="url(#fsun)"/>
+<path d="M18 80 q32 -13 64 0 v7 q-32 11 -64 0 z" fill="url(#fso)"/>
+<path d="M50 80 q0 -18 0 -28" stroke="#2f7a3c" stroke-width="7" fill="none" stroke-linecap="round"/>
+<path d="M50 60 q-22 -4 -27 -23 q23 -3 27 23 z" fill="url(#fl1)"/>
+<path d="M50 55 q22 -5 27 -25 q-24 -1 -27 25 z" fill="url(#fl2)"/>
+</svg>
