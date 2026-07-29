@@ -539,7 +539,7 @@
        "The first twenty elements are the ones worth knowing by heart. Hydrogen, helium, lithium, beryllium, boron, carbon, nitrogen, oxygen, fluorine, neon, sodium, magnesium, aluminium, silicon, phosphorus, sulfur, chlorine, argon, potassium and calcium.",
        "A shell holding eight electrons is a useful rule for those first twenty, and it stops being reliable after that. School books simplify here, and it is worth knowing that they do."],
       dTable,
-      "Do not ask for the whole table to be memorised. Twenty symbols and the shape of the thing is plenty, and understanding why group 18 is unreactive is worth more than reciting fifty names. The full interactive table is in Additional Learning Materials if your child wants to explore.",
+      "Do not ask for the whole table to be memorised. Twenty symbols and the shape of the thing is plenty, and understanding why group 18 is unreactive is worth more than reciting fifty names. The full interactive table is on this very page if your child wants to explore.",
       "🧪 Twenty Squares: draw a blank grid of the first twenty elements and fill in the symbols from memory, checking against the table afterwards. Do it once a week. Most children have all twenty inside a month without ever sitting down to learn them.",
       [{ q: "What are the elements arranged in order of?", a: "Atomic number" },
        { q: "What is a row across called?", a: "A period" },

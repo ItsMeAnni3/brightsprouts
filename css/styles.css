@@ -1710,3 +1710,14 @@ footer{background:var(--purple-dark);color:#cfc6ee;text-align:center;padding:20p
 .g34{background:linear-gradient(135deg,#e2453b,#3a7fc9)}
 .g35{background:linear-gradient(135deg,#c9184a,#ffd166)}
 .g36{background:linear-gradient(135deg,#1f6feb,#3f9c4a)}
+
+/* Maze Worksheets (category 14). Mirrors .color-grid so the two tabs feel like one place. */
+.maze-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+.mazepage{margin:0;background:#fff;border-radius:14px;padding:8px;box-shadow:var(--shadow)}
+.mazepage .mzsvg{width:100%;height:auto;display:block;border-radius:10px}
+.mzhint{font-size:.9rem;color:#57547a;background:#f4f1fb;border-radius:10px;padding:9px 13px;margin:10px 0 0}
+@media (max-width:720px){ .maze-grid{grid-template-columns:1fr} }
+@media print{
+  .maze-grid{grid-template-columns:1fr 1fr;gap:10px}
+  .mazepage{box-shadow:none;border:1px solid #ddd;break-inside:avoid;page-break-inside:avoid}
+}

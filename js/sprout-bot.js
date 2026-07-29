@@ -172,8 +172,15 @@
   }
 
   // ==================== 3. Search ====================
-  function scoreEntry(qTokens, entry) {
+  // "How do I ..." is a question about using the site, not about a subject. Without this, a
+  // lesson whose own text happens to say "press the button" and "print" outscores the
+  // hand-written answer that actually tells you how to print, which is what happened when the
+  // maze worksheets arrived.
+  var HOWTO = /\b(how|where|can i)\b.*\b(print|worksheet|answer key|game|arcade|story|creature|sign|account|button)s?\b/i;
+
+  function scoreEntry(qTokens, entry, howto) {
     var score = 0;
+    if (howto && entry.kind === "faq") score += 4;
     qTokens.forEach(function (t) {
       // A word matching the LESSON'S OWN TITLE is a much stronger relevance signal than merely
       // appearing somewhere in one bullet's text; without this, a broad one-word question like
@@ -188,9 +195,10 @@
     var qTokens = tokenize(question);
     if (!qTokens.length || !KB.length) return null;
     var threshold = qTokens.length <= 2 ? 1 : 2;
+    var howto = HOWTO.test(question);
     var best = null, bestScore = 0;
     for (var i = 0; i < KB.length; i++) {
-      var s = scoreEntry(qTokens, KB[i]);
+      var s = scoreEntry(qTokens, KB[i], howto);
       if (s > bestScore) { bestScore = s; best = KB[i]; }
     }
     if (!best || bestScore < threshold) return null;

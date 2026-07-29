@@ -33,11 +33,12 @@ const GEN_SUBJECTS = [
 const BOOK_SUBJECTS = [
   { key: "readnow", label: "Read Online", emoji: "📖" }
 ];
-// The abacus, maths tables and formula sheet moved into Let's Learn Mathematics (32) on
-// 2026-07-28, and the periodic table was deleted because Let's Learn Chemistry (33) unit 7
-// renders the full table of all 118 elements.
+// Category 14 is now Coloring & Maze Worksheets. The abacus, maths tables and formula sheet
+// moved into Let's Learn Mathematics (32) on 2026-07-28, and the periodic table was deleted
+// because Let's Learn Chemistry (33) unit 7 renders the full table of all 118 elements.
 const ADD_SUBJECTS = [
-  { key: "coloring", label: "Colouring Book",  emoji: "🖍️" }
+  { key: "coloring", label: "Coloring Book",   emoji: "🖍️" },
+  { key: "mazes",    label: "Maze Worksheets", emoji: "🌀" }
 ];
 const MAKE_SUBJECTS = [{ key: "create", label: "Creature Maker", emoji: "🎨" }, { key: "engineer", label: "Build It!", emoji: "🔧" }];
 const ENG_SUBJECTS = [
@@ -324,7 +325,7 @@ function subjectsFor(g) {
 function gradeName(g) {
   if (g === 0) return "Kindergarten";
   if (g === 13) return "Let's Learn Geography";
-  if (g === 14) return "Additional Learning Materials";
+  if (g === 14) return "Coloring & Maze Worksheet";
   if (g === 15) return "Books";
   if (g === 16) return "Create";
   if (g === 17) return "Let's Learn Computer Science";
@@ -470,6 +471,7 @@ const state = {
   authMode: "signup", authMsg: "", authOk: "",
   sheetCache: {}, madeStory: null,
   colorTheme: "all", colorBig: false, colorPick: null,
+  mazeTheme: "forest", mazeLevel: "medium", mazeSeed: null,
   contactForm: {}, contactErr: {}, contactMsg: "", contactSent: null,
   traceMode: "upper", tracePick: null,
   reading: null, readFont: 18,
@@ -1402,7 +1404,7 @@ function lessonsView() {
     if (g === 15 || g === 16 || g === 18 || g === 22) continue;  // now folded into each grade's tabs
     if (g === 27) continue;  // Physical Science retired; Chemistry (33) and Physics (36) cover it
     const locked = !canGrade(g);
-    const label = g === 0 ? "🌈 Kindergarten" : g === 13 ? "🌍 Let's Learn Geography" : g === 14 ? "🖍️ Additional Learning Materials" : g === 17 ? "💻 Let's Learn Computer Science"
+    const label = g === 0 ? "🌈 Kindergarten" : g === 13 ? "🌍 Let's Learn Geography" : g === 14 ? "🖍️ Coloring & Maze Worksheet" : g === 17 ? "💻 Let's Learn Computer Science"
                 : g === 19 ? "⏳ Let's Learn The History of Us" : g === 20 ? "🪨 Let's Learn Geology" : g === 21 ? "💬 Let's Learn Spanish" : g === 23 ? "🕐 Let's Learn Time & Money" : g === 24 ? "🚀 Let's Learn Space" : g === 25 ? "💛 Let's Learn Feelings" : g === 26 ? "🦖 Let's Learn Paleontology" : g === 28 ? "🌦️ Let's Learn Weather & Oceans" : g === 29 ? "😂 Kids &amp; Family Jokes" : g === 30 ? "✂️ Paper Activities" : g === 31 ? "🧬 Let's Learn Biology" : g === 32 ? "🧮 Let's Learn Mathematics" : g === 33 ? "⚗️ Let's Learn Chemistry" : g === 34 ? "🎨 Let's Learn Visual Arts" : g === 35 ? "🎵 Let's Learn Music" : g === 36 ? "🔭 Let's Learn Physics" : "Grade " + g;
     tiles.push(`<button class="grade-tile g${g}" onclick="App.openGrade(${g})">${locked ? '<span class="lock">🔒</span>' : ""}${label}</button>`);
   }
@@ -1746,6 +1748,28 @@ function lessonView() {
        </figure>`).join("") + `</div>`;
     body += `<p class="no-print" style="font-size:.82rem;color:#8a86a8;margin-top:10px">${pool.length} pictures in this theme · press <b>New Pictures</b> for a different set · <b>Print</b> gives you clean outlines with no website around them.</p>`;
   }
+  if (lesson.mazeBook && typeof MazeBook !== "undefined") {
+    const th = MazeBook.themeByKey(state.mazeTheme), lv = MazeBook.levelByKey(state.mazeLevel);
+    // One seed per sheet. It is kept in state so the answer key draws the SAME four mazes the
+    // child is holding, and so a refresh does not silently swap the page under them.
+    if (!state.mazeSeed) state.mazeSeed = 1 + Math.floor(Math.random() * 1e9);
+    const seeds = [0, 1, 2, 3].map(i => (state.mazeSeed + i * 7919) % 2147483647);
+    body += `<div class="color-bar no-print">
+      ${MazeBook.themes.map(t => `<button class="btn btn-sm ${state.mazeTheme === t.key ? "btn-primary" : "btn-ghost"}" onclick="App.mazeTheme('${t.key}')">${t.emoji} ${esc(t.name)}</button>`).join("")}
+    </div>
+    <div class="color-bar no-print">
+      ${MazeBook.levels.map(l => `<button class="btn btn-sm ${state.mazeLevel === l.key ? "btn-secondary" : "btn-ghost"}" onclick="App.mazeLevel('${l.key}')">${esc(l.name)} · ${l.w}x${l.h}</button>`).join("")}
+    </div>`;
+    body += `<p class="mzhint no-print">Help <b>${esc(th.you)}</b> reach <b>${esc(th.goal)}</b> · best for <b>${esc(lv.band)}</b> · four fresh mazes every press</p>`;
+    body += `<div class="maze-grid">` + seeds.map(sd =>
+      `<figure class="mazepage">${MazeBook.svg(th, lv, sd, false)}</figure>`).join("") + `</div>`;
+    body += `<div class="answers-section answers-page" style="display:none">
+      <h3>✅ Answer Key: ${esc(th.name)} mazes (${esc(lv.name)})</h3>
+      <div class="maze-grid">` + seeds.map(sd =>
+      `<figure class="mazepage">${MazeBook.svg(th, lv, sd, true)}</figure>`).join("") + `</div></div>`;
+    body += `<p class="no-print" style="font-size:.82rem;color:#8a86a8;margin-top:10px">${MazeBook.themes.length} themes and ${MazeBook.levels.length} sizes · every maze has exactly one route through · tick <b>Show answer key</b> before printing if you want the solutions.</p>`;
+  }
+
   if (lesson.drawTracing) {
     const groups = lesson.groups;
     const cur = groups.find(gr => gr.key === state.drawCat) || groups[0];
@@ -1927,7 +1951,7 @@ function lessonView() {
 
   const sheetKey = g + "-" + subj + (baseLesson.byCurrency ? "-" + curCcy : "") + (baseLesson.units ? "-u" + unitIdx : "");
   // Note: the Earth's Story timeline (earthTimeline) DOES get a worksheet; it has a questions bank.
-  const noQuiz = lesson.globeBoard || lesson.coloringBook || lesson.tracingSheet || lesson.drawTracing || lesson.csPlan || lesson.engPlan || lesson.erasTimeline || lesson.engineerBuild || (lesson.engBand != null) || lesson.readOnline || lesson.magicMaker || lesson.jokeTv || lesson.jokeBook || lesson.paperStudio;
+  const noQuiz = lesson.globeBoard || lesson.coloringBook || lesson.mazeBook || lesson.tracingSheet || lesson.drawTracing || lesson.csPlan || lesson.engPlan || lesson.erasTimeline || lesson.engineerBuild || (lesson.engBand != null) || lesson.readOnline || lesson.magicMaker || lesson.jokeTv || lesson.jokeBook || lesson.paperStudio;
   if (!noQuiz && !state.sheetCache[sheetKey]) state.sheetCache[sheetKey] = makeSheet(g, subj, lesson);
   const questions = noQuiz ? [] : state.sheetCache[sheetKey];
   const qHtml = questions.length ? `
@@ -1957,8 +1981,9 @@ function lessonView() {
       ${qHtml}
       <div class="lesson-tools no-print">
         ${lesson.coloringBook ? `<button class="btn btn-secondary" onclick="App.newColorPage()">🎲 New Pictures</button>` : ""}
+        ${lesson.mazeBook ? `<button class="btn btn-secondary" onclick="App.newMazePage()">🎲 New Mazes</button>` : ""}
         ${lesson.tracingSheet && state.traceMode === "random" ? `<button class="btn btn-secondary" onclick="App.newTracePage()">🎲 New Practice Set</button>` : ""}
-        <button class="btn btn-primary" onclick="window.print()">🖨️ Print ${lesson.coloringBook ? "Colouring Page" : (lesson.tracingSheet || lesson.drawTracing) ? "Tracing Sheet" : "Worksheet"}</button>
+        <button class="btn btn-primary" onclick="window.print()">🖨️ Print ${lesson.mazeBook ? "Mazes" : lesson.coloringBook ? "Coloring Page" : (lesson.tracingSheet || lesson.drawTracing) ? "Tracing Sheet" : "Worksheet"}</button>
         ${questions.length ? `<label><input type="checkbox" id="key-toggle" onchange="App.toggleKey(this.checked)"> Show / print answer key</label>` : ""}
       </div>
     </div>
@@ -2179,7 +2204,7 @@ function pricingView() {
         <ul>
           <li><b>Every grade, K–12</b>: Math, Reading, Phonics, Vocabulary, Spelling, Writing, Science, Social Studies, Art &amp; Music</li>
           <li><b>High-school sciences</b>: Biology, Chemistry &amp; Physics</li>
-          <li><b>20 "Let's Learn" categories</b>: Geography, Space, Biology, Chemistry, Physics, Mathematics, Visual Arts, Music, Computer Science, Spanish, Geology, Paleontology, Weather &amp; Oceans, Time &amp; Money, The History of Us, Feelings &amp; Kindness, Kids &amp; Family Jokes, Paper Activities, Additional Learning Materials &amp; Books</li>
+          <li><b>20 "Let's Learn" categories</b>: Geography, Space, Biology, Chemistry, Physics, Mathematics, Visual Arts, Music, Computer Science, Spanish, Geology, Paleontology, Weather &amp; Oceans, Time &amp; Money, The History of Us, Feelings &amp; Kindness, Kids &amp; Family Jokes, Paper Activities, Coloring &amp; Maze Worksheets &amp; Books</li>
           <li><b>US-aligned Social Studies</b>: 36 units including US History I, II &amp; III and Civics</li>
           <li><b>Computer Science, three ways</b>: the Grade 1–12 course, 20 unplugged activities with no screen, and a live Code Terminal where children write real code and see it run</li>
           <li><b>112 paper activities</b> with pictures, materials and step-by-step instructions, including handmade cards for birthdays, Diwali, Eid, Christmas, Hanukkah and more, plus a printable booklet of all of them</li>
@@ -2507,6 +2532,9 @@ const App = {
   },
   newSheet() { delete state.sheetCache[state.grade + "-" + state.subject]; render(); },
   newColorPage() { state.colorPick = null; render(); },
+  newMazePage() { state.mazeSeed = null; render(); },
+  mazeTheme(t) { state.mazeTheme = t; state.mazeSeed = null; render(); },
+  mazeLevel(l) { state.mazeLevel = l; state.mazeSeed = null; render(); },
   mmSet(part, val) { state.maker[part] = val; render(); mmPop(); },
   mmName(v) { state.maker.name = v; const s = document.getElementById("mmsvg"); if (s) s.setAttribute("aria-label", "A creature called " + v); },
   // ---- Game hub: routes between the plant game and the four arcade games ----
