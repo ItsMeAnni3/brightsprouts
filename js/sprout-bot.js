@@ -47,7 +47,7 @@
   // and Physics existed, so eight whole courses were invisible to the chat bot. 27 came out when
   // Physical Science was retired. audit_sproutbot.html now asserts this matches the tiles the app
   // actually shows, so it cannot drift silently again.
-  var CATEGORY_GRADES = [13, 14, 17, 19, 20, 21, 23, 24, 25, 26, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37];
+  var CATEGORY_GRADES = [13, 14, 17, 19, 20, 21, 23, 24, 25, 26, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38];
 
   var KB = [];  // { tokens:[...], answer, topic, emoji, grade, subjKey, weight }
 

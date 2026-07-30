@@ -1768,6 +1768,38 @@ footer{background:var(--purple-dark);color:#cfc6ee;text-align:center;padding:20p
   font-size:.86rem;line-height:1.5}
 @media (max-width:640px){ .cu-cols{grid-template-columns:1fr} }
 
+/* ============ STEM Activities for Kids (category 38) ============
+   Same shape as the unplugged computer science list above (a plain readable list, not a
+   browsing UI, since twenty is few enough to scroll and a family running one of these wants it
+   on paper). The one addition is a theme badge, since these twenty split across four strands
+   of STEM rather than one subject the way the CS activities do. */
+.se-intro{text-align:center;color:#6c6790;font-size:.88rem;margin:4px 0 16px}
+.se-item{background:#fbf9ff;border-left:5px solid var(--purple);border-radius:14px;
+  padding:14px 18px;margin-bottom:16px;break-inside:avoid;page-break-inside:avoid}
+.se-item h4{font-family:var(--display);font-size:1.08rem;color:var(--ink);
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.se-num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;
+  border-radius:50%;background:var(--purple);color:#fff;font-size:.82rem;flex:0 0 auto}
+.se-theme{font-style:normal;font-size:.7rem;font-weight:700;padding:2px 9px;border-radius:999px;
+  background:color-mix(in srgb, var(--sec) 16%, #fff);color:var(--sec)}
+.se-lvl{font-style:normal;font-size:.66rem;font-weight:800;text-transform:uppercase;
+  letter-spacing:.04em;padding:2px 8px;border-radius:999px;color:#fff}
+.se-lvl.easy{background:#2f9e44} .se-lvl.medium{background:#c9822a} .se-lvl.hard{background:#e2453b}
+.se-mins{font-style:normal;font-size:.74rem;color:#8a86a8;font-weight:700}
+.se-teaches{font-size:.86rem;color:#57547a;background:#f2eefc;border-radius:9px;
+  padding:6px 11px;margin-bottom:10px;line-height:1.45}
+.se-cols{display:grid;grid-template-columns:1fr 2fr;gap:16px}
+.se-side{display:flex;flex-direction:column;gap:10px;min-width:0}
+.se-art{background:#fff;border-radius:12px;padding:6px}
+.se-art svg{width:100%;height:auto;display:block;border-radius:9px}
+.se-needs,.se-steps{background:#fff;border-radius:12px;padding:10px 14px}
+.se-needs h5,.se-steps h5{font-family:var(--display);font-size:.9rem;color:var(--purple-dark);margin-bottom:6px}
+.se-needs ul{margin:0;padding-left:17px} .se-needs li{font-size:.86rem;line-height:1.45;margin:4px 0}
+.se-steps ol{margin:0;padding-left:19px} .se-steps li{font-size:.9rem;line-height:1.55;margin:6px 0}
+.se-tip{margin-top:10px;background:#fff8e1;border-radius:10px;padding:8px 13px;
+  font-size:.86rem;line-height:1.5}
+@media (max-width:640px){ .se-cols{grid-template-columns:1fr} }
+
 /* ============ Code Terminal (category 17, Terminal tab) ============
    Deliberately looks like a real editor and a real console, because it is one. The output panel
    is dark and monospaced so a child can tell at a glance which half they typed and which half
@@ -1883,6 +1915,7 @@ body.inkon #lesson-card{touch-action:pan-y}
   .inkbar{display:none!important}
 }
 .g37{background:linear-gradient(135deg,#2f9e44,#7c5cbf)}
+.g38{background:linear-gradient(135deg,#e2453b,#ffd166)}
 
 /* ---------- The essay Writing Pad: stationery you can write on ---------- */
 .padwrap{margin-top:6px}
