@@ -1421,6 +1421,7 @@ function homeView() {
   <div class="hero">
     ${typeof Logo === "undefined" ? `<span class="big-emoji">🌱</span><h1>BrightSprouts Academy</h1>`
       : Logo.full({ size: 96 })}
+    <h1>Printable K-12 Lessons, Worksheets and Learning Games for Kids</h1>
     <p>Everything one family needs for <b>Kindergarten through Grade 12</b>: Math, Reading, Phonics, Vocabulary, Spelling, Writing, Science, Social Studies, Art and Music, plus Biology, Chemistry and Physics for older students. Then twenty two <b>"Let's Learn" courses</b>: Geography, Space, Biology, Chemistry, Physics, Mathematics, Essay Writing, Visual Arts, Music, Computer Science, Spanish, Geology, Paleontology, Weather &amp; Oceans, Time &amp; Money, The History of Us, Feelings &amp; Kindness, Kids &amp; Family Jokes, Paper Activities and STEM Activities for Kids. Follow biology from "what is a living thing" all the way to genes and ecosystems, write real code in the Code Terminal, make things from 112 paper activities, and every lesson prints. Made for parents. Loved by kids.</p>
     <button class="btn btn-primary" onclick="App.go('lessons')">🚀 Explore Lessons</button>
     <button class="btn btn-secondary" onclick="App.go('library')">📖 Books &amp; Stories</button>
