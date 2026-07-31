@@ -2312,6 +2312,7 @@ function pricingView() {
       </div>
     </div>
     <p style="margin-top:22px;color:#8a86a8;font-size:.85rem">${TAX_NOTE}<br>${STRIPE_PAYMENT_LINK ? "Secure checkout by Stripe. Cancel any time." : "Demo checkout: see README.md to connect Stripe and collect real payments."}</p>
+    ${STRIPE_PAYMENT_LINK ? `<p style="margin-top:6px;color:#8a86a8;font-size:.8rem">Trouble with checkout, or paid but don't see Premium? <a href="#contact" onclick="App.go('contact');return false" style="color:#7c5cbf">Contact us</a> and we'll sort it out.</p>` : ""}
   </div>`;
 }
 
