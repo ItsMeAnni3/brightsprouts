@@ -449,7 +449,7 @@ const TAX_NOTE = "Plus sales tax based on your state, calculated at checkout.";
 // Paste your Stripe Payment Link between the quotes to switch from demo checkout to real payments.
 // In Stripe, set the link's after-payment redirect to: https://brightsprouts.academy/#payment-success
 // This link must point at a $6.99/month price to match PRICE above.
-const STRIPE_PAYMENT_LINK = "https://buy.stripe.com/4gMcN5e1Idl23bS2mE3gk05";
+const STRIPE_PAYMENT_LINK = "https://buy.stripe.com/7sY6oH1eWep6cMs5yQ3gk06";
 
 // ---- Shop checkout ----
 // To take real cart payments, deploy the tiny checkout function (see server/README.md) and paste
