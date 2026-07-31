@@ -3722,7 +3722,7 @@ function applyHash() {
     if (LESSONS[g] && LESSONS[g][m[2]] && canSubject(g, m[2])) { state.grade = g; state.subject = m[2]; state.view = "lesson"; }
   } else if ((m = h.match(/^story-(\d+)$/))) {
     if (canStory(+m[1]) && STORIES.some(s => s.id === +m[1])) { state.currentStory = +m[1]; state.view = "story"; }
-  } else if (h === "payment-success") {
+  } else if (h.indexOf("payment-success") === 0) {
     const u = currentUser();
     if (u) {
       u.plan = "premium"; saveCurrentUser(u);
