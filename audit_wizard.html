@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Wizard Quest audit</title>
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/styles.css"></head>
+<body>
+<!-- Permanent audit for Sprout's Wizard Quest (js/wizard-quest.js, wizardGameView()). Three things
+     matter most: (1) wizardOptions() must produce 4 unique, always-correct-inclusive multiple-choice
+     sets across EVERY answer shape genMath() actually produces (plain numbers, "x = n", fractions,
+     ratios, algebra expressions with several embedded numbers) -- not just simple numbers, since
+     that's the whole reason a generic jitter-the-embedded-number approach was chosen over Castle
+     Quest's numeric-only distractors; (2) the position/animation SVG-group split that broke Castle
+     Quest's characters is checked here too, since this file reuses the same technique for a new
+     character (the wizard) and a new one (the spell orb); (3) a full simulated playthrough with
+     real awaited delays (not a tight synchronous loop -- see js/app.js App.wizardAnswer's 550/900ms
+     pacing) must actually reach the finished state and award the badge. -->
+<nav id="nav"></nav><div id="authzone"></div><main id="app"></main>
+<pre id="results">running…</pre>
+<script src="js/logo.js"></script>
+<script src="js/img-fallback.js"></script>
+<script src="js/lessons1.js"></script>
+<script src="js/lessons2.js"></script>
+<script src="js/lessons3.js"></script>
+<script src="js/lessons4.js"></script>
+<script src="js/lessons5.js"></script>
+<script src="js/species-img.js"></script>
+<script src="js/lessons6.js"></script>
+<script src="js/lessons7.js"></script>
+<script src="js/elements.js"></script>
+<script src="js/lessons8.js"></script>
+<script src="js/lessons9.js"></script>
+<script src="js/coloring.js"></script>
+<script src="js/mazes.js"></script>
+<script src="js/ink.js"></script>
+<script src="js/draw-trace.js"></script>
+<script src="js/books.js"></script>
+<script src="js/book-art.js"></script>
+<script src="js/pd-books.js"></script>
+<script src="js/magic-maker.js"></script>
+<script src="js/engineer.js"></script>
+<script src="js/plant-game.js"></script>
+<script src="js/castle-game.js"></script>
+<script src="js/wizard-quest.js"></script>
+<script src="js/rewards.js"></script>
+<script src="js/arcade.js"></script>
+<script src="js/spelling-bee.js"></script>
+<script src="js/games2.js"></script>
+<script src="js/games3.js"></script>
+<script src="js/speech.js"></script>
+<script src="js/species-popup.js"></script>
+<script src="js/globe-data.js"></script>
+<script src="js/country-info.js"></script>
+<script src="js/globe.js"></script>
+<script src="js/globe-popup.js"></script>
+<script src="js/shop.js"></script>
+<script src="js/lessons10.js"></script>
+<script src="js/lessons11.js"></script>
+<script src="js/earth-art.js"></script>
+<script src="js/human-art.js"></script>
+<script src="js/lessons12.js"></script>
+<script src="js/lessons13.js"></script>
+<script src="js/biology.js"></script>
+<script src="js/bio-art.js"></script>
+<script src="js/chemistry.js"></script>
+<script src="js/chem-art.js"></script>
+<script src="js/physics.js"></script>
+<script src="js/phys-art.js"></script>
+<script src="js/geology.js"></script>
+<script src="js/paleontology.js"></script>
+<script src="js/earth-space-science.js"></script>
+<script src="js/jokes.js"></script>
+<script src="js/paper.js"></script>
+<script src="js/paper-data.js"></script>
+<script src="js/biology-course.js"></script>
+<script src="js/math-course.js"></script>
+<script src="js/chem-course.js"></script>
+<script src="js/visualarts-course.js"></script>
+<script src="js/music-course.js"></script>
+<script src="js/physics-course.js"></script>
+<script src="js/essay-pad.js"></script>
+<script src="js/essay-course.js"></script>
+<script src="js/stem.js"></script>
+<script src="js/spanish.js"></script>
+<script src="js/timemoney.js"></script>
+<script src="js/space.js"></script>
+<script src="js/sel.js"></script>
+<script src="js/compsci.js"></script>
+<script src="js/terminal.js"></script>
+<script src="js/history-us.js"></script>
+<script src="js/history-us2.js"></script>
+<script src="js/geo-course.js"></script>
+<script src="js/space-course.js"></script>
+<script src="js/grade-extras.js"></script>
+<script src="js/lessons0.js"></script>
+<script src="js/phonics.js"></script>
+<script src="js/trace-grades.js"></script>
+<script src="js/create-grades.js"></script>
+<script src="js/story-art.js"></script>
+<script src="js/stories1.js"></script>
+<script src="js/stories2.js"></script>
+<script src="js/email-capture.js"></script>
+<script src="js/schedule.js"></script>
+<script src="js/app.js"></script>
+<script>
+window.addEventListener("load", function () {
+  var out = [], fails = 0;
+  function ok(c, m) { if (!c) { fails++; out.push("FAIL: " + m); } else out.push("ok:   " + m); }
+  function paint() {
+    document.getElementById("results").textContent =
+      (fails === 0 ? "ALL PASS (" + out.length + " checks)" : (fails + " FAILURES")) + "\n\n" + out.join("\n");
+  }
+  function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+
+  (function () {
+    var u = {}; u["audit@t.invalid"] = { name: "T", email: "audit@t.invalid", pass: "x", plan: "premium", joined: "2026-01-01" };
+    localStorage.setItem("bs_users", JSON.stringify(u));
+    localStorage.setItem("bs_session", "audit@t.invalid");
+    localStorage.removeItem("bs_rewards"); localStorage.removeItem("bs_rw_done");
+    if (typeof loadSession === "function") loadSession();
+    state.user = u["audit@t.invalid"];
+  })();
+
+  (async function () {
+    // ---------- 1. static data shape ----------
+    ok(Array.isArray(WIZ_STAGES) && WIZ_STAGES.length === 3, "WIZ_STAGES defines 3 realm stages");
+    ok(!!WIZ_BOSS && WIZ_BOSS.key === "arch", "WIZ_BOSS defines the Archmage final duel");
+    ok(wizAllStages().length === 4, "wizAllStages() returns all 3 stages plus the boss (4 total)");
+    ["fire", "ice", "storm"].forEach(function (el) {
+      ok(WIZ_STAGES.some(function (s) { return s.element === el; }), "WIZ_STAGES covers the \"" + el + "\" element");
+    });
+
+    // ---------- 2. wizardPool(grade): every real grade 0-12 produces real, well-formed questions ----------
+    for (var g = 0; g <= 12; g++) {
+      var pool;
+      try { pool = wizardPool(g); } catch (e) { pool = null; ok(false, "wizardPool(" + g + ") threw: " + e.message); }
+      ok(Array.isArray(pool) && pool.length > 0, "wizardPool(" + g + ") returns real questions (" + (pool ? pool.length : 0) + ")");
+      if (pool) {
+        var wellFormed = pool.every(function (p) { return p && p.q && p.a !== undefined && p.a !== null && String(p.a) !== ""; });
+        ok(wellFormed, "grade " + g + "'s questions all have a real q and a");
+      }
+    }
+
+    // ---------- 3. wizardOptions(): 4 unique options including the answer, across EVERY real answer shape ----------
+    // Sample real answers straight from every grade's actual generator output, not invented examples,
+    // so this exercises the real shapes: plain numbers, "x = n", fractions, ratios, "≈ n.nn", "n°",
+    // and multi-number algebra expressions like "x² + 8x + 15" or "(x + 3)(x + 5)".
+    var shapesSeen = { plain: false, algebraic: false, fraction: false, other: false };
+    for (var g2 = 0; g2 <= 12; g2++) {
+      var pool2 = wizardPool(g2);
+      pool2.forEach(function (p) {
+        // wizardOptions() always stringifies internally and returns string options -- exactly
+        // like js/app.js's wizardNewProblem(), which normalizes w.cur.a = String(p.a) BEFORE
+        // ever calling wizardOptions() or comparing against it (a real bug this audit caught:
+        // genKinder(), used for grade 0, returns raw numeric answers unlike genMath()'s always-
+        // stringified ones, so comparing the RAW answer against the stringified options made the
+        // correct choice unselectable for every Kindergarten question until that normalization
+        // was added). Check the same normalized form the real game actually compares.
+        var s = String(p.a);
+        var opts = wizardOptions(s);
+        if (opts.length !== 4) { ok(false, "wizardOptions(\"" + s + "\") from grade " + g2 + " returned " + opts.length + " options, not 4"); return; }
+        if (opts.indexOf(s) < 0) { ok(false, "wizardOptions(\"" + s + "\") doesn't include the correct answer"); return; }
+        if (new Set(opts).size !== 4) { ok(false, "wizardOptions(\"" + s + "\") has a duplicate: " + opts.join(" | ")); return; }
+        if (/^-?\d+(\.\d+)?$/.test(s)) shapesSeen.plain = true;
+        else if (/[a-zA-Z]/.test(s) && /\d/.test(s)) shapesSeen.algebraic = true;
+        else if (s.indexOf("/") >= 0) shapesSeen.fraction = true;
+        else shapesSeen.other = true;
+      });
+    }
+    ok(true, "every sampled answer across grades 0-12 (from wizardPool's own real output) produced a valid 4-option set");
+    ok(shapesSeen.plain, "the sample actually included plain-number answers (not just one shape)");
+    ok(shapesSeen.algebraic, "the sample actually included algebra-style answers like \"x = n\" or expressions with a letter");
+    ok(shapesSeen.fraction || shapesSeen.other, "the sample actually included non-plain-number answers (fractions, ratios, units)");
+
+    // ---------- 4. scenes render without throwing ----------
+    wizAllStages().forEach(function (stage) {
+      var svg;
+      try { svg = wizardScene(stage, "idle", 1, stage.need, false); } catch (e) { svg = null; ok(false, "wizardScene threw for " + stage.key + ": " + e.message); }
+      ok(!!svg && svg.length > 200 && svg.indexOf(stage.accent) >= 0, stage.name + " scene renders and uses its own accent colour");
+      var svgHappy;
+      try { svgHappy = wizardScene(stage, "impressed", stage.need, stage.need, false); } catch (e) { svgHappy = null; ok(false, "wizardScene (impressed) threw for " + stage.key + ": " + e.message); }
+      ok(!!svgHappy && svgHappy.indexOf("wq-impressed") >= 0, stage.name + " renders its impressed/won mood");
+    });
+
+    // ---------- 5. the position/animation SVG-group split (the exact bug class caught in Castle Quest) ----------
+    (function () {
+      var host = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      host.innerHTML = wizardScene(WIZ_STAGES[0], "idle", 0, WIZ_STAGES[0].need, false);
+      document.body.appendChild(host);
+      var sprout = host.querySelector(".cq-sprout"), wizard = host.querySelector(".wq-wizard");
+      ok(!!sprout && !sprout.getAttribute("transform"), "Sprout's animated inner group carries no transform attribute of its own");
+      ok(!!sprout.closest("g[transform]"), "Sprout has an outer group carrying the real position transform");
+      ok(!!wizard && !wizard.getAttribute("transform"), "the wizard's animated group carries no transform attribute of its own");
+      ok(!!wizard.closest("g[transform]"), "the wizard has an outer group carrying the real position transform");
+      document.body.removeChild(host);
+    })();
+
+    // ---------- 6. wiring: App methods, badge, theme, tile, gameCount, grid class ----------
+    ["wizardPick", "wizardNew", "wizardAnswer"].forEach(function (fn) {
+      ok(typeof App[fn] === "function", "App." + fn + " exists");
+    });
+    ok(typeof wizardGameView === "function", "wizardGameView is defined");
+    ok(BADGES.some(function (b) { return b.id === "wizardapprentice"; }), "the \"wizardapprentice\" badge is registered in BADGES");
+    ok(typeof ARCADE_THEME_BY_KEY !== "undefined" && ARCADE_THEME_BY_KEY.wizard === "wizard", "the wizard tile is registered with its own theme");
+    var hub = gameHubView();
+    ok(hub.indexOf("Sprout's Wizard Quest") >= 0 && hub.indexOf("App.openGame('wizard')") >= 0, "the Game Arcade hub shows a Wizard Quest tile");
+    ok(gameCount() === ARCADE_GAMES.length + 3, "gameCount() accounts for the Plant Game, Castle Quest and Wizard Quest as non-arcade tiles");
+
+    App.openGame("wizard");
+    var pickerHtml = wizardGameView();
+    ok(/class="grid grid-[34]"/.test(pickerHtml), "the grade picker uses a real multi-column grid class");
+    for (var g3 = 0; g3 <= 12; g3++) ok(pickerHtml.indexOf("App.wizardPick(" + g3 + ")") >= 0, "the grade picker offers grade " + g3);
+
+    // ---------- 6b. grade 0 specifically: answering correctly via the real App.wizardAnswer path
+    // actually registers as correct (the exact end-to-end scenario the genKinder number/string
+    // bug broke -- a unit check on wizardOptions() alone wouldn't have caught the app.js side of it).
+    App.wizardPick(0);
+    var wG0 = state.wizard;
+    var correctIdxG0 = wG0.opts.indexOf(wG0.cur.a);
+    ok(correctIdxG0 >= 0, "grade 0's live question has its correct answer among its own options");
+    var shieldBeforeG0 = wG0.shield;
+    App.wizardAnswer(correctIdxG0);
+    ok(state.wizard.shield === shieldBeforeG0 + 1 && state.wizard.wrong === false, "answering grade 0's question correctly actually registers as correct (shield " + shieldBeforeG0 + " -> " + state.wizard.shield + ")");
+
+    // ---------- 7. a full simulated playthrough: answer everything correctly through all 4 duels ----------
+    var starsBefore = Rewards.load().stars;
+    App.wizardPick(5);
+    ok(!!state.wizard && state.wizard.grade === 5 && state.wizard.stageIdx === 0 && !!state.wizard.cur, "wizardPick() starts a fresh quest at grade 5, duel 1, with a live question");
+
+    var guard = 0;
+    while (!state.wizard.finished && guard < 60) {
+      guard++;
+      var w = state.wizard;
+      var idx = w.opts.indexOf(w.cur.a);
+      if (idx < 0) { ok(false, "the correct answer wasn't found in its own options array mid-playthrough"); break; }
+      App.wizardAnswer(idx);
+      await wait(950);   // > the 900ms stage-completion delay in App.wizardAnswer
+    }
+    ok(guard < 60, "the playthrough actually reaches the finished state (didn't loop forever) after " + guard + " correct answers");
+    ok(state.wizard.finished === true, "state.wizard.finished is true after winning all 3 duels and the Archmage");
+
+    await wait(400);
+    var starsAfter = Rewards.load().stars;
+    ok(starsAfter > starsBefore, "stars increased over the playthrough (" + starsBefore + " -> " + starsAfter + ")");
+    ok(Rewards.load().badges.indexOf("wizardapprentice") >= 0, "the wizardapprentice badge was actually earned and saved");
+
+    var finishedHtml = wizardGameView();
+    ok(finishedHtml.indexOf("quest is complete") >= 0 || finishedHtml.indexOf("wq-impressed") >= 0, "the finished screen shows the completed-quest ending");
+
+    // ---------- 8. a wrong answer flips state.wizard.wrong and does not advance progress ----------
+    App.wizardPick(3);
+    var beforeState = { stageIdx: state.wizard.stageIdx, shield: state.wizard.shield };
+    var wrongIdx = state.wizard.opts.findIndex(function (o) { return o !== state.wizard.cur.a; });
+    App.wizardAnswer(wrongIdx);
+    ok(state.wizard.wrong === true, "answering wrong sets state.wizard.wrong");
+    ok(state.wizard.stageIdx === beforeState.stageIdx && state.wizard.shield === beforeState.shield, "a wrong answer does not advance the duel or fill the shield meter");
+
+    // ---------- 9. CSS actually shipped ----------
+    var css = await (await fetch("css/styles.css")).text();
+    ["gt-wizard", "wq-opts", "wq-optbtn", "wq-stage", "wq-scene", "wq-idle", "wq-bolt-orb"].forEach(function (cls) {
+      ok(css.indexOf("." + cls) >= 0, "css/styles.css defines ." + cls);
+    });
+    var reduceBlock = /prefers-reduced-motion:\s*reduce\)\{[^}]*\.wq-scene[^}]*\}/.exec(css);
+    ok(!!reduceBlock, "a prefers-reduced-motion override turns the wizard-quest animations off");
+    paint();
+  })();
+});
+</script>
+</body></html>

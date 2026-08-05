@@ -31,6 +31,7 @@ const BADGES = [
   { id:"memory",       e:"🧠", n:"Memory Master",  d:"Win a game of Memory Match" },
   { id:"builder",      e:"🏗️", n:"Master Builder",  d:"Build every machine in Build It!" },
   { id:"castlehero",   e:"🏰", n:"Castle Hero",    d:"Solve every room in Sprout's Castle Quest and befriend the guardian" },
+  { id:"wizardapprentice", e:"🧙", n:"Wizard's Apprentice", d:"Win every duel in Sprout's Wizard Quest" },
   { id:"streak5",      e:"🔥", n:"On Fire",        d:"Learn 5 days in a row" },
   { id:"star50",       e:"🌟", n:"Star Collector", d:"Earn 50 stars in total" }
 ];

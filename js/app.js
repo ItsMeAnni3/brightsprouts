@@ -513,6 +513,7 @@ const state = {
   maker: null,
   game: { plant: null, stage: 0, water: 0, sun: 0 },
   castle: null,
+  wizard: null,
   schedBand: "elem", schedGrade: null,
   assessGrade: null, assessMarks: {}, assessSaved: false
 };
@@ -2881,6 +2882,7 @@ const App = {
     state.gameScreen = screen;
     if (screen === "plant") { if (!state.game) state.game = { plant: null, stage: 0, water: 0, sun: 0 }; }
     else if (screen === "castle") { if (!state.castle) state.castle = { tier: null }; }
+    else if (screen === "wizard") { if (!state.wizard) state.wizard = { grade: null }; }
     else if (screen === "memory") { state.mem = { deck: memoryDeck(6), flipped: [], moves: 0, matched: 0, lock: false, done: false }; }
     else if ((ARCADE_GAMES.find(x => x.key === screen) || {}).quiz) {
       state.arcade = { type: screen, i: 0, correct: 0, q: arcadeQuestion(screen), answered: null, done: false };
@@ -3026,6 +3028,39 @@ const App = {
       }, 750);
     } else {
       castleNewProblem(c);
+    }
+  },
+
+  // ---- Sprout's Wizard Quest ----
+  wizardPick(grade) {
+    state.wizard = { grade, stageIdx: 0, shield: 0, pool: [], cur: null, opts: null, wrong: false, casting: false, finished: false };
+    wizardNewProblem(state.wizard);
+    go("game");
+  },
+  wizardNew() { state.wizard = { grade: null }; render(); window.scrollTo(0, 0); },
+  wizardAnswer(i) {
+    const w = state.wizard;
+    if (!w || w.finished || w.casting) return;
+    const chosen = w.opts[i];
+    if (chosen !== w.cur.a) {
+      w.wrong = true; render();
+      setTimeout(() => { if (state.wizard === w) { w.wrong = false; render(); } }, 550);
+      return;
+    }
+    w.wrong = false; w.shield++; w.casting = true;
+    render();
+    const stage = wizAllStages()[w.stageIdx];
+    if (w.shield >= stage.need) {
+      const stageName = stage.name;
+      setTimeout(() => {
+        if (state.wizard !== w) return;
+        w.casting = false;
+        earn(1, "✨ " + stageName + " is impressed!");
+        if (w.stageIdx < wizAllStages().length - 1) { w.stageIdx++; w.shield = 0; wizardNewProblem(w); render(); }
+        else { w.finished = true; render(); setTimeout(() => { if (state.wizard === w) { earn(4, "🧙 You completed the Wizard Quest!"); earnBadge("wizardapprentice"); } }, 250); }
+      }, 900);
+    } else {
+      setTimeout(() => { if (state.wizard === w) { w.casting = false; wizardNewProblem(w); render(); } }, 550);
     }
   },
 
@@ -3463,6 +3498,7 @@ function gameView() {
   const sc = state.gameScreen || "hub";
   if (sc === "plant") return plantGameView();
   if (sc === "castle") return castleGameView();
+  if (sc === "wizard") return wizardGameView();
   if (sc === "memory") return memoryView();
   if (sc === "bee") return beeView();
   if ((ARCADE_GAMES.find(x => x.key === sc) || {}).quiz) return arcadeQuizView();
@@ -3473,7 +3509,7 @@ function gameView() {
 // and, later, the game screen itself.
 // Everything in the arcade hub: the quiz/memory games plus the Plant Life Cycle tile.
 // Quoted in the pricing copy, so it can never drift out of date as games are added.
-function gameCount() { return ARCADE_GAMES.length + 2; }
+function gameCount() { return ARCADE_GAMES.length + 3; }
 
 function gameTheme(key) {
   const g = ARCADE_GAMES.find(x => x.key === key);
@@ -3498,6 +3534,14 @@ function gameHubView() {
       <div class="gmeta"><span class="glevel medium">Medium</span><span class="gsubj">Maths</span></div>
       <button class="btn btn-primary btn-sm">Play</button>
     </div>`;
+  const wizardTile = `
+    <div class="gtile${gameTheme("wizard")}" onclick="App.openGame('wizard')">
+      <div class="gtemoji">🧙</div>
+      <h3>Sprout's Wizard Quest</h3>
+      <p>Duel three elemental wizards and the Archmage with real curriculum questions for your grade.</p>
+      <div class="gmeta"><span class="glevel hard">Hard</span><span class="gsubj">Maths</span></div>
+      <button class="btn btn-primary btn-sm">Play</button>
+    </div>`;
   const lvl = state.gameFilter || "all";
   const tile = a => `
     <div class="gtile${a.theme ? ` gt-${a.theme}` : ""}" onclick="App.openGame('${a.key}')">
@@ -3519,7 +3563,7 @@ function gameHubView() {
     <p class="subtitle">${gameCount()} games, each with its own colours, pulled from lessons all over the site.
       Every one earns ⭐ stars for your Rewards collection — filter by how tricky you want it!</p>
     ${filterBar}
-    <div class="grid grid-3 gtiles">${lvl === "all" || lvl === "Easy" ? plantTile : ""}${lvl === "all" || lvl === "Medium" ? castleTile : ""}${arcTiles}</div>
+    <div class="grid grid-3 gtiles">${lvl === "all" || lvl === "Easy" ? plantTile : ""}${lvl === "all" || lvl === "Medium" ? castleTile : ""}${lvl === "all" || lvl === "Hard" ? wizardTile : ""}${arcTiles}</div>
     <div class="bookfoot">${doodle("rocket")}
       <p><b>Play &amp; learn!</b> Race through sums, guess flags from around the world, spell words in the Spelling Bee, or test your memory. Win stars, unlock stickers, and earn badges as you go.</p></div>
   </div>`;
@@ -3831,6 +3875,68 @@ function castleGameView() {
   </div>`;
 }
 
+function wizardGameView() {
+  const w = state.wizard;
+  const back = `<button class="btn btn-ghost btn-sm no-print" onclick="App.wizardNew()">← Choose a different grade</button>`;
+
+  if (!w || w.grade == null) {
+    return `<div class="view">
+      <button class="btn btn-ghost btn-sm no-print" onclick="App.gameHub()">← Back to games</button>
+      <h1 style="margin-top:12px">🧙 Sprout's Wizard Quest</h1>
+      <p class="subtitle">Apprentice Sprout journeys through three realms, each guarded by an elemental wizard,
+        then challenges the Archmage in one final spell duel. Every spell is a real question from your own grade!</p>
+      <div class="grid grid-4">${Array.from({ length: 13 }, (_, g) => g).map((g) => `
+        <button class="btn btn-secondary" onclick="App.wizardPick(${g})">${esc(gradeName(g))}</button>`).join("")}</div>
+      <div class="bookfoot">${doodle("rocket")}
+        <p><b>How it works:</b> answer questions correctly to cast spells and fill your shield meter.
+        A wrong answer just means "try again" — nothing bad happens. Impress all three wizards and the
+        Archmage, and they all join Sprout's journey as friends. Nobody fights; it's a friendly magic contest!</p></div>
+    </div>`;
+  }
+
+  const stages = wizAllStages();
+  const stage = stages[Math.min(w.stageIdx, stages.length - 1)];
+  const mood = w.finished || w.shield >= stage.need ? "impressed" : "idle";
+
+  if (w.finished) {
+    return `<div class="view">${back}
+      <h1 style="margin-top:12px">🧙 Sprout's Wizard Quest</h1>
+      <div class="pgwrap">
+        <div class="pgstage wq-stage" id="wq-stage"><div class="pgscene wq-scene" id="wq-scene">
+          <svg viewBox="0 0 320 220" class="pgsvg" role="img" aria-label="Sprout and the Archmage, now allies">${wizardScene(WIZ_BOSS, "impressed", WIZ_BOSS.need, WIZ_BOSS.need, false)}</svg>
+        </div></div>
+        <div class="pgpanel no-print" style="text-align:center">
+          <div class="pgwin">🎉 The Archmage bows to Sprout's skill — every wizard in the realm is now an ally, and the quest is complete!</div>
+          <button class="btn btn-primary" style="width:100%" onclick="App.wizardPick(${w.grade})">🔁 Play again</button>
+          <button class="btn btn-ghost" style="width:100%;margin-top:8px" onclick="App.wizardNew()">Choose a different grade</button>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  const dots = stages.map((s, i) =>
+    `<span class="pgdot ${i < w.stageIdx ? "past" : i === w.stageIdx ? "now" : ""}" title="${esc(s.name)}"></span>`).join("");
+  const optBtns = (w.opts || []).map((o, i) =>
+    `<button class="btn wq-optbtn" onclick="App.wizardAnswer(${i})">${esc(o)}</button>`).join("");
+  return `<div class="view">${back}
+    <h1 style="margin-top:12px">🧙 ${esc(stage.realm)}: ${esc(stage.name)}</h1>
+    <div class="pgwrap">
+      <div class="pgstage wq-stage" id="wq-stage"><div class="pgscene wq-scene" id="wq-scene">
+        <svg viewBox="0 0 320 220" class="pgsvg" role="img" aria-label="Sprout duels ${esc(stage.name)} in ${esc(stage.realm)}">${wizardScene(stage, mood, w.shield, stage.need, w.casting)}</svg>
+      </div></div>
+      <div class="pgpanel no-print">
+        <div class="pgdots">${dots}</div>
+        <h3 class="pgstagename">Duel ${w.stageIdx + 1} of ${stages.length}: ${esc(stage.name)}</h3>
+        <p class="pgfact">Cast ${stage.need} correct spells to win this duel.</p>
+        <div class="pgmeter gold" style="margin-bottom:10px">${Array.from({ length: stage.need }, (_, i) => `<i class="${i < w.shield ? "on" : ""}"></i>`).join("")}</div>
+        <h3 class="pgstagename">${w.cur ? (w.cur.html ? w.cur.q : esc(w.cur.q)) : ""}</h3>
+        <div class="wq-opts">${optBtns}</div>
+        <p class="cq-tryagain" ${w.wrong ? "" : 'style="visibility:hidden"'}>Not quite — try again!</p>
+      </div>
+    </div>
+  </div>`;
+}
+
 // Same lean-out effect for the plant game: the growing plant leans forward out of the pot.
 function gameTilt() {
   const stage = document.getElementById("pgstage"), scene = document.getElementById("pgscene");
@@ -3982,6 +4088,18 @@ function castleBossAnswer(val) {
   } else {
     castleNewProblem(c);
   }
+}
+// Fills state.wizard.cur/opts with the next curriculum question for the child's own grade,
+// refilling the pool from genMath()/genKinder() (the site's real per-grade generators) whenever
+// it runs low.
+function wizardNewProblem(w) {
+  if (!w.pool || !w.pool.length) w.pool = wizardPool(w.grade);
+  const p = w.pool.shift() || { q: "5 + 5 = ____", a: "10" };
+  // genMath() always stringifies its answers, but genKinder() (grade 0) returns raw numbers for
+  // some subjects -- normalize here so w.cur.a always matches the strings wizardOptions() builds,
+  // or the correct answer silently never appears among its own multiple-choice options.
+  w.cur = { q: p.q, a: String(p.a) };
+  w.opts = wizardOptions(w.cur.a);
 }
 // Same reflow-retrigger trick as gamePop(), for Sprout's little bounce on a correct answer.
 function castleSproutPop() {
