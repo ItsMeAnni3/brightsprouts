@@ -283,6 +283,7 @@ const BIOCOURSE_SUBJECTS = [
 ];
 const JOKE_SUBJECTS = [
   { key: "jokeshow",     label: "The Joke Show",    emoji: "📺" },
+  { key: "budexplains",  label: "Bud Explains It",  emoji: "🎬" },
   { key: "jokebook",     label: "The Joke Book",    emoji: "📖" },
   { key: "howjokeswork", label: "How Jokes Work",   emoji: "🎭" }
 ];
@@ -2021,6 +2022,7 @@ function lessonView() {
   if (lesson.paperStudio && typeof Paper !== "undefined") body += Paper._html() + Paper._bookHtml();
   if (lesson.stemList && typeof StemActivities !== "undefined") body += StemActivities.html();
   if (lesson.jokeTv && typeof JokeTv !== "undefined") body += JokeTv._html();
+  if (lesson.budExplains && typeof BudExplains !== "undefined") body += BudExplains._html();
   if (lesson.jokeBook && typeof JokeTv !== "undefined") body += JokeTv._bookHtml();
   if (lesson.words) {
     body += `<table class="word-table"><tr><th>Word</th><th>Meaning</th><th>Example</th></tr>` +
@@ -2029,7 +2031,7 @@ function lessonView() {
 
   const sheetKey = g + "-" + subj + (baseLesson.byCurrency ? "-" + curCcy : "") + (baseLesson.units ? "-u" + unitIdx : "");
   // Note: the Earth's Story timeline (earthTimeline) DOES get a worksheet; it has a questions bank.
-  const noQuiz = lesson.globeBoard || lesson.coloringBook || lesson.mazeBook || lesson.essayPad || lesson.tracingSheet || lesson.drawTracing || lesson.csPlan || lesson.engPlan || lesson.erasTimeline || lesson.engineerBuild || (lesson.engBand != null) || lesson.readOnline || lesson.magicMaker || lesson.jokeTv || lesson.jokeBook || lesson.paperStudio;
+  const noQuiz = lesson.globeBoard || lesson.coloringBook || lesson.mazeBook || lesson.essayPad || lesson.tracingSheet || lesson.drawTracing || lesson.csPlan || lesson.engPlan || lesson.erasTimeline || lesson.engineerBuild || (lesson.engBand != null) || lesson.readOnline || lesson.magicMaker || lesson.jokeTv || lesson.jokeBook || lesson.budExplains || lesson.paperStudio;
   if (!noQuiz && !state.sheetCache[sheetKey]) state.sheetCache[sheetKey] = makeSheet(g, subj, lesson);
   const questions = noQuiz ? [] : state.sheetCache[sheetKey];
   const qHtml = questions.length ? `
@@ -4142,6 +4144,7 @@ function render() {
   }
   // The joke show's controller needs its screen on the page before it can deal the first joke.
   if (typeof JokeTv !== "undefined") JokeTv.mount();
+  if (typeof BudExplains !== "undefined") BudExplains.mount();
   if (typeof EssayPad !== "undefined" && document.getElementById("padpaper")) EssayPad.mount();
   if (document.querySelector(".bookkeep") && App.paintKeepButtons) App.paintKeepButtons();
   mountInk();

@@ -2155,3 +2155,48 @@ img.imgoffline{background:#f7f4ff;border:1px dashed #d9d2ee;border-radius:10px;
   .wq-idle,.wq-impressed,.wq-tw,.wq-orbglow,.wq-drift,.wq-bolt,.wq-bolt-orb{animation:none !important}
 }
 @media (max-width:600px){ .wq-opts{grid-template-columns:1fr} }
+
+/* ---------- Bud Explains It (part of Kids & Family Jokes) ---------- */
+.be-picker{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-top:10px}
+.be-tile{background:#fff;border:2px solid #e8e4f6;border-top:4px solid var(--bec);border-radius:16px;padding:14px;text-align:center;cursor:pointer;transition:transform .12s}
+.be-tile:hover{transform:translateY(-3px)}
+.be-tileicon{font-size:2.2rem;margin-bottom:4px}
+.be-tile h3{font-size:1rem;margin-bottom:2px}
+.be-tilesubj{display:block;font-size:.78rem;color:#8a86a8;margin-bottom:8px}
+.be-stage{background:#241a3a;border-radius:18px;padding:18px;color:#fff;text-align:center;max-width:560px;margin:14px auto 0;border-top:5px solid var(--bec)}
+.be-stage .jk-host svg{width:88px;height:96px}
+.be-diagram{margin:10px auto}
+.be-icon{width:140px;height:auto;display:block;margin:0 auto}
+.be-line{background:rgba(255,255,255,.08);border-radius:12px;padding:12px 16px;margin:10px 0;font-size:1rem;line-height:1.5;text-align:left}
+.be-progress{display:flex;justify-content:center;gap:6px;margin-bottom:12px}
+.be-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.be-optbtn{background:#fff;border:2px solid #4a3f6b;border-radius:12px;padding:10px 8px;font-size:.92rem;font-weight:700;color:var(--ink);cursor:pointer}
+.be-optbtn:hover:not(:disabled){transform:translateY(-2px);border-color:var(--bec)}
+.be-optbtn.be-correct{background:#e6f9ec;border-color:var(--green);color:#1e6b2c}
+.be-optbtn.be-wrong{background:#fdeaea;border-color:#e05a5a;color:#9e2019}
+.be-optbtn:disabled{cursor:default}
+.be-talking .jk-sprout,.be-talking .jk-bud{animation:beTalkBounce .5s ease}
+@keyframes beTalkBounce{0%{transform:translateY(0)}40%{transform:translateY(-5px)}100%{transform:translateY(0)}}
+.be-tw{animation:cqTwinkle 1.6s ease-in-out infinite}
+.be-sun{animation:beSunPulse 2.4s ease-in-out infinite}
+@keyframes beSunPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.be-drip{animation:beDrip 1.8s ease-in-out infinite}
+@keyframes beDrip{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+.be-jiggle{animation:beJiggle .6s ease-in-out infinite}
+@keyframes beJiggle{0%,100%{transform:translate(0,0)}50%{transform:translate(1.5px,-1.5px)}}
+.be-zoom{animation:beZoom 1.1s linear infinite}
+@keyframes beZoom{0%{transform:translate(0,0)}25%{transform:translate(8px,-4px)}50%{transform:translate(-4px,6px)}75%{transform:translate(-8px,-3px)}100%{transform:translate(0,0)}}
+.be-spark{animation:beSparkFlicker 1s ease-in-out infinite}
+@keyframes beSparkFlicker{0%,100%{opacity:.5}50%{opacity:1}}
+.be-scroll{animation:beScroll 3s ease-in-out infinite}
+@keyframes beScroll{0%,100%{transform:translateX(0)}50%{transform:translateX(28px)}}
+.be-seesaw{animation:beSeesaw 3.2s ease-in-out infinite}
+@keyframes beSeesaw{0%,100%{transform:rotate(0deg)}50%{transform:rotate(6deg)}}
+.be-spin{animation:beSpin 8s linear infinite;transform-origin:60px 55px}
+@keyframes beSpin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+.be-swap{animation:beSwapPulse 1.4s ease-in-out infinite}
+@keyframes beSwapPulse{0%,100%{opacity:.6}50%{opacity:1}}
+@media (prefers-reduced-motion: reduce){
+  .be-talking .jk-sprout,.be-talking .jk-bud,.be-tw,.be-sun,.be-drip,.be-jiggle,.be-zoom,.be-spark,.be-scroll,.be-seesaw,.be-spin,.be-swap{animation:none !important}
+}
+@media (max-width:600px){ .be-opts{grid-template-columns:1fr} }

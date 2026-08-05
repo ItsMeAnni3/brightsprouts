@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Kids &amp; Family Jokes audit</title>
+<link rel="stylesheet" href="css/styles.css"></head>
+<body>
+<nav id="nav"></nav><div id="authzone"></div><main id="app"></main>
+<pre id="results">running…</pre>
+<script src="js/img-fallback.js"></script>
+<script src="js/lessons1.js"></script>
+<script src="js/lessons2.js"></script>
+<script src="js/lessons3.js"></script>
+<script src="js/lessons4.js"></script>
+<script src="js/lessons5.js"></script>
+<script src="js/species-img.js"></script>
+<script src="js/lessons6.js"></script>
+<script src="js/lessons7.js"></script>
+<script src="js/elements.js"></script>
+<script src="js/lessons8.js"></script>
+<script src="js/lessons9.js"></script>
+<script src="js/coloring.js"></script>
+<script src="js/mazes.js"></script>
+<script src="js/ink.js"></script>
+<script src="js/draw-trace.js"></script>
+<script src="js/books.js"></script>
+<script src="js/book-art.js"></script>
+<script src="js/pd-books.js"></script>
+<script src="js/magic-maker.js"></script>
+<script src="js/engineer.js"></script>
+<script src="js/plant-game.js"></script>
+<script src="js/rewards.js"></script>
+<script src="js/arcade.js"></script>
+<script src="js/spelling-bee.js"></script>
+<script src="js/games2.js"></script>
+<script src="js/games3.js"></script>
+<script src="js/speech.js"></script>
+<script src="js/species-popup.js"></script>
+<script src="js/globe-data.js"></script>
+<script src="js/country-info.js"></script>
+<script src="js/globe.js"></script>
+<script src="js/globe-popup.js"></script>
+<script src="js/shop.js"></script>
+<script src="js/lessons10.js"></script>
+<script src="js/lessons11.js"></script>
+<script src="js/earth-art.js"></script>
+<script src="js/human-art.js"></script>
+<script src="js/lessons12.js"></script>
+<script src="js/lessons13.js"></script>
+<script src="js/biology.js"></script>
+<script src="js/bio-art.js"></script>
+<script src="js/chemistry.js"></script>
+<script src="js/chem-art.js"></script>
+<script src="js/physics.js"></script>
+<script src="js/phys-art.js"></script>
+<script src="js/geology.js"></script>
+<script src="js/paleontology.js"></script>
+<script src="js/earth-space-science.js"></script>
+<script src="js/jokes.js"></script>
+<script src="js/bud-explains.js"></script>
+<script src="js/paper.js"></script>
+<script src="js/paper-data.js"></script>
+<script src="js/biology-course.js"></script>
+<script src="js/math-course.js"></script>
+<script src="js/chem-course.js"></script>
+<script src="js/visualarts-course.js"></script>
+<script src="js/music-course.js"></script>
+<script src="js/physics-course.js"></script>
+<script src="js/essay-pad.js"></script>
+<script src="js/essay-course.js"></script>
+<script src="js/stem.js"></script>
+<script src="js/spanish.js"></script>
+<script src="js/timemoney.js"></script>
+<script src="js/space.js"></script>
+<script src="js/sel.js"></script>
+<script src="js/compsci.js"></script>
+<script src="js/terminal.js"></script>
+<script src="js/history-us.js"></script>
+<script src="js/history-us2.js"></script>
+<script src="js/geo-course.js"></script>
+<script src="js/space-course.js"></script>
+<script src="js/grade-extras.js"></script>
+<script src="js/lessons0.js"></script>
+<script src="js/phonics.js"></script>
+<script src="js/trace-grades.js"></script>
+<script src="js/create-grades.js"></script>
+<script src="js/story-art.js"></script>
+<script src="js/stories1.js"></script>
+<script src="js/stories2.js"></script>
+<script src="js/email-capture.js"></script>
+<script src="js/welcome-sprout.js"></script>
+<script src="js/sprout-bot.js"></script>
+<script src="js/install-app.js"></script>
+<script src="js/analytics.js"></script>
+<script src="js/logo.js"></script>
+<script src="js/app.js"></script>
+<script>
+// Audit for category 29. Two jobs: the 100 jokes are well formed and stay child-appropriate,
+// and the category is wired into every place a category has to appear (a missed wiring point
+// leaves a tile that opens onto nothing).
+window.addEventListener("load", function () {
+  var out = [], fails = 0;
+  function ok(c, m) { if (!c) { fails++; out.push("FAIL: " + m); } else out.push("ok:   " + m); }
+  var J = JokeTv._test.JOKES, CH = JokeTv._test.CHANNELS;
+
+  // ---------- 1. the jokes themselves ----------
+  ok(J.length === 100, "the show has " + J.length + " jokes (expected 100)");
+  ok(CH.length === 10, CH.length + " channels");
+
+  var malformed = J.filter(function (j) {
+    return !j.q || !j.a || typeof j.c !== "number" || j.c < 0 || j.c >= CH.length ||
+           j.q.trim().length < 8 || j.a.trim().length < 2;
+  });
+  ok(malformed.length === 0, "every joke has a channel, a set-up and a punchline" +
+    (malformed.length ? " — bad: " + malformed.map(function (j) { return j.q; }).join(" / ") : ""));
+
+  // A repeated set-up or punchline is the easiest mistake to make in a list this long.
+  function dupes(get) {
+    var seen = {}, bad = [];
+    J.forEach(function (j) {
+      var k = get(j).toLowerCase().replace(/[^a-z0-9]/g, "");
+      if (seen[k]) bad.push(get(j)); else seen[k] = 1;
+    });
+    return bad;
+  }
+  var dq = dupes(function (j) { return j.q; }), da = dupes(function (j) { return j.a; });
+  ok(dq.length === 0, "no repeated set-ups" + (dq.length ? ": " + dq.join(" | ") : ""));
+  ok(da.length === 0, "no repeated punchlines" + (da.length ? ": " + da.join(" | ") : ""));
+
+  // Ten per channel, so no channel is thin and every channel button has something behind it.
+  var counts = CH.map(function (c, i) { return J.filter(function (j) { return j.c === i; }).length; });
+  ok(counts.every(function (n) { return n === 10; }),
+     "every channel holds 10 jokes — " + CH.map(function (c, i) { return c.e + counts[i]; }).join(" "));
+
+  // The set-up should read as a question or a knock-knock; a set-up that is a statement usually
+  // means the punchline got pasted into the wrong field.
+  var notAsk = J.filter(function (j) { return !/\?$|\?…|—$/.test(j.q.trim()) && !/^Knock, knock/.test(j.q); });
+  ok(notAsk.length === 0, "every set-up asks something or knocks" +
+    (notAsk.length ? " — odd: " + notAsk.map(function (j) { return j.q; }).join(" / ") : ""));
+
+  // Child-appropriateness. Word-boundary matched so "class" doesn't trip "ass" and "buttons"
+  // doesn't trip "butt"; this is a backstop for a careless addition, not a substitute for reading.
+  var BANNED = ["stupid","idiot","dumb","hate","kill","killed","die","died","dead","death","gun","shoot",
+                "shot","blood","bloody","damn","hell","fat","ugly","loser","shut up","weapon","drunk",
+                "beer","wine","cigarette","smoking","sexy","kiss","naked","bum","butt","fart","poo","wee"];
+  var flagged = [];
+  J.forEach(function (j) {
+    var text = (j.q + " " + j.a).toLowerCase();
+    BANNED.forEach(function (w) {
+      if (new RegExp("\\b" + w.replace(/ /g, "\\s+") + "\\b").test(text)) flagged.push(w + " → " + j.q);
+    });
+  });
+  ok(flagged.length === 0, "no joke trips the not-for-children word list" +
+    (flagged.length ? " — " + flagged.join(" | ") : ""));
+
+  // Punchlines carry the laugh, so they should be short. A long one is usually an explanation.
+  var longA = J.filter(function (j) { return j.a.length > 62; });
+  ok(longA.length === 0, "punchlines stay snappy" +
+    (longA.length ? " — too long: " + longA.map(function (j) { return j.a; }).join(" / ") : ""));
+
+  // ---------- 2. the category wiring ----------
+  ok(!!LESSONS[29], "LESSONS[29] exists");
+  var subs = subjectsFor(29);
+  // 4 tabs: the Joke Show, Bud Explains It (js/bud-explains.js), the Joke Book, How Jokes Work.
+  ok(subs.length === 4, "subjectsFor(29) returns " + subs.length + " subjects");
+  var missing = subs.filter(function (s) { return !LESSONS[29][s.key]; });
+  ok(missing.length === 0, "every tab has a lesson behind it" +
+    (missing.length ? ": " + missing.map(function (s) { return s.key; }).join(", ") : ""));
+  subs.forEach(function (s) {
+    var L = LESSONS[29][s.key];
+    if (!L) return;   // already reported by the `missing` check above; don't throw past it
+    // Bud Explains It carries 3 learn points rather than 4: its teaching happens in the scenes.
+    var minLearn = s.key === "budexplains" ? 3 : 4;
+    ok(!!(L.title && L.emoji && L.intro && L.learn && L.learn.length >= minLearn),
+       s.key + ": title, emoji, intro and " + ((L.learn || []).length) + " learn points");
+  });
+  ok(gradeName(29) === "Kids & Family Jokes", "gradeName(29) = " + gradeName(29));
+
+  // the tile loop must actually emit a tile for 29
+  var tiles = lessonsView().match(/App\.openGrade\(29\)/g) || [];
+  ok(tiles.length === 1, "the Pick a Grade screen shows exactly one Jokes tile (" + tiles.length + ")");
+  ok(/g29/.test(lessonsView()), "the tile carries its own .g29 colour class");
+
+  // openGrade's default subject must be one this category actually has
+  state.grade = 29; App.openGrade(29);
+  ok(!!LESSONS[29][state.subject], "opening the category lands on a real subject (" + state.subject + ")");
+
+  // no worksheet generator should run for the show or the book
+  ok(LESSONS[29].jokeshow.jokeTv === true && !LESSONS[29].jokeshow.questions, "the show is marked as an interactive board");
+  ok(LESSONS[29].jokebook.jokeBook === true && !LESSONS[29].jokebook.questions, "the book is marked as an interactive board");
+  ok((LESSONS[29].howjokeswork.questions || []).length >= 10,
+     "How Jokes Work has " + (LESSONS[29].howjokeswork.questions || []).length + " worksheet questions");
+
+  // ---------- 3. the television renders ----------
+  var html = JokeTv._html();
+  ["jk-screen", "jk-setup", "jk-punch", "jk-buddy", "jk-go", "jk-sound", "jk-badge", "jk-count"].forEach(function (id) {
+    ok(html.indexOf('id="' + id + '"') >= 0, "the TV markup includes #" + id);
+  });
+  ok((html.match(/class="jk-ch\b/g) || []).length + (html.match(/jk-ch jk-chall/g) || []).length >= 11,
+     "the TV offers all 10 channels plus All Channels");
+  ok(/jk-sprout/.test(html) && /jk-bud/.test(html), "both hosts are on stage: Sprout and Bud");
+  ok(/aria-label="Bud the flower"/.test(html), "Bud has a label for screen readers");
+
+  var book = JokeTv._bookHtml();
+  ok((book.match(/<li>/g) || []).length === 100, "the joke book prints all " + (book.match(/<li>/g) || []).length + " jokes");
+  ok((book.match(/jk-booksec/g) || []).length === 10, "the joke book is split into 10 sections");
+
+  // ---------- 4. the show actually works ----------
+  document.getElementById("app").innerHTML = html;
+  JokeTv.mount();
+  var setup = document.getElementById("jk-setup"), punch = document.getElementById("jk-punch"),
+      go = document.getElementById("jk-go");
+
+  JokeTv.go();                                  // first press: deal a joke
+  var firstQ = setup.textContent;
+  ok(J.some(function (j) { return j.q === firstQ; }), "pressing the button tells a real joke");
+  ok(punch.hidden, "the punchline stays hidden until asked for");
+
+  JokeTv.go();                                  // second press: reveal
+  var thisJoke = J.filter(function (j) { return j.q === firstQ; })[0];
+  ok(!punch.hidden && punch.textContent === thisJoke.a, "the second press reveals the matching punchline");
+  ok(/next/i.test(go.textContent), "the button then offers the next joke");
+  ok(document.getElementById("jk-buddy").classList.contains("jk-laughing"), "Bud laughs at the punchline");
+  ok(document.querySelectorAll("#jk-hahas i").length === 3, "Bud's HA HAs float up");
+
+  JokeTv.go();                                  // third press: move on
+  ok(setup.textContent !== firstQ, "the third press moves to a different joke");
+  ok(punch.hidden, "the new joke hides its punchline again");
+
+  // A channel must only ever play its own jokes.
+  JokeTv.channel(5);
+  var wrong = 0, seen = {};
+  for (var i = 0; i < 10; i++) {
+    var q = setup.textContent;
+    var j = J.filter(function (x) { return x.q === q; })[0];
+    if (!j || j.c !== 5) wrong++;
+    seen[q] = (seen[q] || 0) + 1;
+    JokeTv.go(); JokeTv.go();                   // reveal, then next
+  }
+  ok(wrong === 0, "the Knock-Knock channel played only knock-knock jokes");
+  var repeats = Object.keys(seen).filter(function (k) { return seen[k] > 1; });
+  ok(repeats.length === 0, "a channel plays all 10 of its jokes before repeating any" +
+    (repeats.length ? " — repeated: " + repeats.join(" | ") : ""));
+
+  ok(document.getElementById("jk-badge").textContent.indexOf("Knock") >= 0,
+     "the screen badge names the channel (" + document.getElementById("jk-badge").textContent + ")");
+
+  // ---------- 5. the arcade game built on this category ----------
+  var jq = null, bad = 0;
+  for (var k = 0; k < 200; k++) {
+    jq = arcadeQuestion("jokequiz");
+    if (!jq || !jq.options || jq.options.length !== 4 || jq.options.indexOf(jq.answer) < 0) bad++;
+  }
+  ok(bad === 0, "the Joke Detective arcade game asks 200 well-formed questions");
+
+  out.push("");
+  out.push(fails ? "❌ " + fails + " FAILURES" : "✅ all checks passed");
+  document.getElementById("results").textContent = out.join("\n");
+  document.title = fails ? "FAIL " + fails : "PASS";
+});
+</script>
+</body></html>

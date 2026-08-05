@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Bud Explains It audit</title>
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/styles.css"></head>
+<body>
+<!-- Permanent audit for "Bud Explains It" (js/bud-explains.js), the new segment inside Kids &
+     Family Jokes (category 29) that pairs a short animated Sprout/Bud scene with a 4-question
+     quiz for 8 science/social-studies concepts. Checks the content shape (every topic has real
+     beats and a well-formed quiz), that every quiz's marked-correct option is actually the
+     accurate answer (spot-checked against the real fact, not just "is it well-formed"), that the
+     reward-once-per-topic + all-topics badge logic fires correctly, and that all 8 hand-drawn
+     concept icons render without throwing. -->
+<nav id="nav"></nav><div id="authzone"></div><main id="app"></main>
+<pre id="results">running…</pre>
+<script src="js/logo.js"></script>
+<script src="js/img-fallback.js"></script>
+<script src="js/lessons1.js"></script>
+<script src="js/lessons2.js"></script>
+<script src="js/lessons3.js"></script>
+<script src="js/lessons4.js"></script>
+<script src="js/lessons5.js"></script>
+<script src="js/species-img.js"></script>
+<script src="js/lessons6.js"></script>
+<script src="js/lessons7.js"></script>
+<script src="js/elements.js"></script>
+<script src="js/lessons8.js"></script>
+<script src="js/lessons9.js"></script>
+<script src="js/coloring.js"></script>
+<script src="js/mazes.js"></script>
+<script src="js/ink.js"></script>
+<script src="js/draw-trace.js"></script>
+<script src="js/books.js"></script>
+<script src="js/book-art.js"></script>
+<script src="js/pd-books.js"></script>
+<script src="js/magic-maker.js"></script>
+<script src="js/engineer.js"></script>
+<script src="js/plant-game.js"></script>
+<script src="js/castle-game.js"></script>
+<script src="js/wizard-quest.js"></script>
+<script src="js/rewards.js"></script>
+<script src="js/arcade.js"></script>
+<script src="js/spelling-bee.js"></script>
+<script src="js/games2.js"></script>
+<script src="js/games3.js"></script>
+<script src="js/speech.js"></script>
+<script src="js/species-popup.js"></script>
+<script src="js/globe-data.js"></script>
+<script src="js/country-info.js"></script>
+<script src="js/globe.js"></script>
+<script src="js/globe-popup.js"></script>
+<script src="js/shop.js"></script>
+<script src="js/lessons10.js"></script>
+<script src="js/lessons11.js"></script>
+<script src="js/earth-art.js"></script>
+<script src="js/human-art.js"></script>
+<script src="js/lessons12.js"></script>
+<script src="js/lessons13.js"></script>
+<script src="js/biology.js"></script>
+<script src="js/bio-art.js"></script>
+<script src="js/chemistry.js"></script>
+<script src="js/chem-art.js"></script>
+<script src="js/physics.js"></script>
+<script src="js/phys-art.js"></script>
+<script src="js/geology.js"></script>
+<script src="js/paleontology.js"></script>
+<script src="js/earth-space-science.js"></script>
+<script src="js/jokes.js"></script>
+<script src="js/bud-explains.js"></script>
+<script src="js/paper.js"></script>
+<script src="js/paper-data.js"></script>
+<script src="js/biology-course.js"></script>
+<script src="js/math-course.js"></script>
+<script src="js/chem-course.js"></script>
+<script src="js/visualarts-course.js"></script>
+<script src="js/music-course.js"></script>
+<script src="js/physics-course.js"></script>
+<script src="js/essay-pad.js"></script>
+<script src="js/essay-course.js"></script>
+<script src="js/stem.js"></script>
+<script src="js/spanish.js"></script>
+<script src="js/timemoney.js"></script>
+<script src="js/space.js"></script>
+<script src="js/sel.js"></script>
+<script src="js/compsci.js"></script>
+<script src="js/terminal.js"></script>
+<script src="js/history-us.js"></script>
+<script src="js/history-us2.js"></script>
+<script src="js/geo-course.js"></script>
+<script src="js/space-course.js"></script>
+<script src="js/grade-extras.js"></script>
+<script src="js/lessons0.js"></script>
+<script src="js/phonics.js"></script>
+<script src="js/trace-grades.js"></script>
+<script src="js/create-grades.js"></script>
+<script src="js/story-art.js"></script>
+<script src="js/stories1.js"></script>
+<script src="js/stories2.js"></script>
+<script src="js/email-capture.js"></script>
+<script src="js/schedule.js"></script>
+<script src="js/app.js"></script>
+<script>
+window.addEventListener("load", function () {
+  var out = [], fails = 0;
+  function ok(c, m) { if (!c) { fails++; out.push("FAIL: " + m); } else out.push("ok:   " + m); }
+  function paint() {
+    document.getElementById("results").textContent =
+      (fails === 0 ? "ALL PASS (" + out.length + " checks)" : (fails + " FAILURES")) + "\n\n" + out.join("\n");
+  }
+
+  (function () {
+    var u = {}; u["audit@t.invalid"] = { name: "T", email: "audit@t.invalid", pass: "x", plan: "premium", joined: "2026-01-01" };
+    localStorage.setItem("bs_users", JSON.stringify(u));
+    localStorage.setItem("bs_session", "audit@t.invalid");
+    localStorage.removeItem("bs_rewards"); localStorage.removeItem("bs_rw_done");
+    if (typeof loadSession === "function") loadSession();
+    state.user = u["audit@t.invalid"];
+  })();
+
+  // ---------- 1. content shape: every topic has real beats and a well-formed quiz ----------
+  var TOPICS = BudExplains._test.TOPICS;
+  ok(Array.isArray(TOPICS) && TOPICS.length === 8, "BUD_TOPICS defines 8 topics (" + (TOPICS ? TOPICS.length : 0) + ")");
+  var sciCount = TOPICS.filter(function (t) { return t.subject === "Science"; }).length;
+  var ssCount = TOPICS.filter(function (t) { return t.subject === "Social Studies"; }).length;
+  ok(sciCount === 4 && ssCount === 4, "the 8 topics split evenly, 4 Science and 4 Social Studies (" + sciCount + "/" + ssCount + ")");
+  var seenKeys = {};
+  TOPICS.forEach(function (t) {
+    ok(!!t.key && !seenKeys[t.key], "topic key \"" + t.key + "\" is present and unique");
+    seenKeys[t.key] = 1;
+    ok(!!t.title && !!t.emoji && !!t.accent && !!t.icon, "\"" + t.key + "\" has a title, emoji, accent colour and icon kind");
+    ok(Array.isArray(t.beats) && t.beats.length >= 6, "\"" + t.key + "\" has a real multi-beat scene (" + (t.beats || []).length + " beats)");
+    var whosSeen = {};
+    (t.beats || []).forEach(function (b) {
+      if (!b.text || !b.text.trim()) ok(false, "\"" + t.key + "\" has a beat with empty text");
+      if (b.who !== "sprout" && b.who !== "bud") ok(false, "\"" + t.key + "\" has a beat with an unknown speaker: " + b.who);
+      whosSeen[b.who] = 1;
+    });
+    ok(whosSeen.sprout && whosSeen.bud, "\"" + t.key + "\" is a real back-and-forth (both Sprout and Bud speak)");
+    ok(Array.isArray(t.quiz) && t.quiz.length === 4, "\"" + t.key + "\" has exactly 4 quiz questions (" + (t.quiz || []).length + ")");
+    (t.quiz || []).forEach(function (q, i) {
+      ok(!!q.q && q.q.trim().length > 0, "\"" + t.key + "\" quiz " + i + " has real question text");
+      ok(Array.isArray(q.options) && q.options.length === 4, "\"" + t.key + "\" quiz " + i + " has exactly 4 options");
+      ok(typeof q.a === "number" && q.a >= 0 && q.a <= 3, "\"" + t.key + "\" quiz " + i + "'s answer index is valid (0-3)");
+      if (q.options && q.options[q.a] !== undefined) {
+        ok(q.options[q.a].trim().length > 0, "\"" + t.key + "\" quiz " + i + "'s marked-correct option is real text, not blank");
+      }
+      var uniqOpts = new Set(q.options || []);
+      ok(uniqOpts.size === (q.options || []).length, "\"" + t.key + "\" quiz " + i + " has no duplicate options");
+    });
+  });
+
+  // ---------- 2. content accuracy spot checks: the marked-correct answer is actually correct ----------
+  // Not exhaustive, but catches the highest-risk mistake: an author swapping which option index is right.
+  function correctOptionText(topicKey, qIndex) {
+    var t = TOPICS.filter(function (x) { return x.key === topicKey; })[0];
+    var q = t.quiz[qIndex];
+    return q.options[q.a];
+  }
+  ok(correctOptionText("photo", 1) === "Sugar", "photosynthesis quiz: plants make SUGAR for food (real fact, not just well-formed)");
+  ok(correctOptionText("photo", 2) === "Oxygen", "photosynthesis quiz: plants release OXYGEN (real fact)");
+  ok(correctOptionText("water", 0) === "Evaporation", "water cycle quiz: sun turning water to vapor is EVAPORATION (real fact)");
+  ok(correctOptionText("water", 1) === "Condensation", "water cycle quiz: vapor cooling into droplets is CONDENSATION (real fact)");
+  ok(correctOptionText("matter", 2) === "Gas", "states of matter quiz: steam is a GAS (real fact)");
+  ok(correctOptionText("static", 0) === "Electrons", "static electricity quiz: ELECTRONS move between rubbed objects (real fact)");
+  ok(correctOptionText("law", 0) === "A bill", "civics quiz: a proposed law is called A BILL (real fact)");
+  ok(correctOptionText("time", 1) === "24", "time zones quiz: the world has 24 time zones (real fact)");
+  ok(correctOptionText("barter", 0) === "Bartering", "economics quiz: trading goods directly (no money) is BARTERING (real fact)");
+
+  // ---------- 3. every concept icon renders without throwing ----------
+  BudExplains._test.reset();
+  TOPICS.forEach(function (t) {
+    var threw = false, html;
+    try { BudExplains.pick(t.key); html = BudExplains._html(); } catch (e) { threw = true; }
+    ok(!threw && !!html && html.indexOf("be-icon") >= 0, "\"" + t.key + "\"'s scene (including its concept icon) renders without throwing");
+  });
+  BudExplains._test.reset();
+
+  // ---------- 4. wiring: LESSONS[29], subject tab, lessonView renders it ----------
+  ok(!!LESSONS[29] && !!LESSONS[29].budexplains, "LESSONS[29].budexplains is registered");
+  ok(LESSONS[29].budexplains.budExplains === true, "LESSONS[29].budexplains carries the budExplains flag lessonView() checks for");
+  ok(JOKE_SUBJECTS.some(function (s) { return s.key === "budexplains"; }), "\"Bud Explains It\" is a real tab in category 29's subject list");
+  state.grade = 29; state.subject = "budexplains";
+  var lessonHtml;
+  try { lessonHtml = lessonView(); } catch (e) { lessonHtml = null; ok(false, "lessonView() threw for budexplains: " + e.message); }
+  ok(!!lessonHtml && lessonHtml.indexOf("be-picker") >= 0, "lessonView() renders the Bud Explains picker for category 29");
+  ok(lessonHtml.indexOf("✏️ Practice Time") === -1, "no separate worksheet/answer-key section is generated (the quiz IS the content here)");
+
+  // ---------- 5. picker renders all 8 tiles, each clickable ----------
+  var pickerHtml = BudExplains._html();
+  TOPICS.forEach(function (t) {
+    ok(pickerHtml.indexOf("BudExplains.pick('" + t.key + "')") >= 0, "the picker offers a tile for \"" + t.key + "\"");
+  });
+
+  // ---------- 6. a full simulated run through one topic: beats -> quiz -> score -> reward ----------
+  BudExplains.pick("photo");
+  var beforeStars = Rewards.load().stars;
+  ok(BudExplains._test.state().topic.key === "photo", "pick() loads the right topic");
+  var guard = 0;
+  while (!BudExplains._test.state().showQuiz && guard < 30) { BudExplains.nextBeat(); guard++; }
+  ok(guard < 30, "clicking Next through every beat actually reaches the quiz");
+  var qGuard = 0;
+  while (!BudExplains._test.state().done && qGuard < 10) {
+    var st = BudExplains._test.state();
+    var correctIdx = st.topic.quiz[st.quizIdx].a;
+    BudExplains.answer(correctIdx);
+    var afterAnswerHtml = BudExplains._html();
+    ok(afterAnswerHtml.indexOf("be-correct") >= 0, "picking the right answer marks it visually correct");
+    BudExplains.nextQuiz();
+    qGuard++;
+  }
+  ok(qGuard < 10, "answering every quiz question correctly actually reaches the done screen");
+  ok(BudExplains._test.state().quizCorrect === 4, "a perfect run scores 4 out of 4 (" + BudExplains._test.state().quizCorrect + ")");
+  var afterStars = Rewards.load().stars;
+  ok(afterStars > beforeStars, "completing a topic's quiz awards stars (" + beforeStars + " -> " + afterStars + ")");
+  ok(Rewards.load().badges.indexOf("budscholar") < 0, "the completion badge is NOT awarded after just 1 of 8 topics");
+
+  // repeating the same topic must not farm extra stars
+  BudExplains.pick("photo");
+  var starsBeforeRepeat = Rewards.load().stars;
+  guard = 0; while (!BudExplains._test.state().showQuiz && guard < 30) { BudExplains.nextBeat(); guard++; }
+  qGuard = 0;
+  while (!BudExplains._test.state().done && qGuard < 10) {
+    var st2 = BudExplains._test.state();
+    BudExplains.answer(st2.topic.quiz[st2.quizIdx].a);
+    BudExplains.nextQuiz();
+    qGuard++;
+  }
+  ok(Rewards.load().stars === starsBeforeRepeat, "replaying an already-completed topic doesn't award extra stars (anti-farming)");
+
+  // ---------- 7. a wrong answer is marked wrong and does not count toward the score ----------
+  BudExplains.pick("water");
+  guard = 0; while (!BudExplains._test.state().showQuiz && guard < 30) { BudExplains.nextBeat(); guard++; }
+  var stw = BudExplains._test.state();
+  var wrongIdx = stw.topic.quiz[0].options.findIndex(function (_, i) { return i !== stw.topic.quiz[0].a; });
+  BudExplains.answer(wrongIdx);
+  ok(BudExplains._test.state().quizCorrect === 0, "answering the first question wrong does not add to the score");
+  ok(BudExplains._html().indexOf("be-wrong") >= 0, "the wrong pick is visually marked wrong");
+
+  // ---------- 8. finishing ALL 8 topics awards the completion badge ----------
+  BudExplains._test.reset();
+  TOPICS.forEach(function (top) {
+    BudExplains.pick(top.key);
+    var g = 0; while (!BudExplains._test.state().showQuiz && g < 30) { BudExplains.nextBeat(); g++; }
+    var qg = 0;
+    while (!BudExplains._test.state().done && qg < 10) {
+      var s = BudExplains._test.state();
+      BudExplains.answer(s.topic.quiz[s.quizIdx].a);
+      BudExplains.nextQuiz();
+      qg++;
+    }
+  });
+  ok(Rewards.load().badges.indexOf("budscholar") >= 0, "completing all 8 topics awards the \"Bud's Star Pupil\" badge");
+
+  // ---------- 9. CSS actually shipped ----------
+  fetch("css/styles.css").then(function (r) { return r.text(); }).then(function (css) {
+    ["be-picker", "be-tile", "be-stage", "be-icon", "be-opts", "be-optbtn", "be-correct", "be-wrong"].forEach(function (cls) {
+      ok(css.indexOf("." + cls) >= 0, "css/styles.css defines ." + cls);
+    });
+    var reduceBlock = /prefers-reduced-motion:\s*reduce\)\{[^}]*\.be-tw[^}]*\}/.exec(css);
+    ok(!!reduceBlock, "a prefers-reduced-motion override turns the Bud Explains icon animations off");
+    paint();
+  });
+});
+</script>
+</body></html>
