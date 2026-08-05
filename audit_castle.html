@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Castle Quest audit</title>
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/styles.css"></head>
+<body>
+<!-- Permanent audit for Sprout's Castle Quest (js/castle-game.js, castleGameView()). Two things
+     matter most here: (1) the problem generator must never produce a wrong "correct" answer or a
+     malformed multiple-choice set (a duplicate option, a missing correct option, a negative
+     number for a young child) across every operation and every tier, checked with many random
+     samples rather than by eye; (2) a full simulated playthrough — answering every problem
+     correctly through all 4 rooms and the boss round — must actually reach the finished state,
+     award the badge, and add stars, since that whole flow is timer-based (setTimeout) and easy to
+     silently break with an off-by-one. -->
+<nav id="nav"></nav><div id="authzone"></div><main id="app"></main>
+<pre id="results">running…</pre>
+<script src="js/logo.js"></script>
+<script src="js/img-fallback.js"></script>
+<script src="js/lessons1.js"></script>
+<script src="js/lessons2.js"></script>
+<script src="js/lessons3.js"></script>
+<script src="js/lessons4.js"></script>
+<script src="js/lessons5.js"></script>
+<script src="js/species-img.js"></script>
+<script src="js/lessons6.js"></script>
+<script src="js/lessons7.js"></script>
+<script src="js/elements.js"></script>
+<script src="js/lessons8.js"></script>
+<script src="js/lessons9.js"></script>
+<script src="js/coloring.js"></script>
+<script src="js/mazes.js"></script>
+<script src="js/ink.js"></script>
+<script src="js/draw-trace.js"></script>
+<script src="js/books.js"></script>
+<script src="js/book-art.js"></script>
+<script src="js/pd-books.js"></script>
+<script src="js/magic-maker.js"></script>
+<script src="js/engineer.js"></script>
+<script src="js/plant-game.js"></script>
+<script src="js/castle-game.js"></script>
+<script src="js/rewards.js"></script>
+<script src="js/arcade.js"></script>
+<script src="js/spelling-bee.js"></script>
+<script src="js/games2.js"></script>
+<script src="js/games3.js"></script>
+<script src="js/speech.js"></script>
+<script src="js/species-popup.js"></script>
+<script src="js/globe-data.js"></script>
+<script src="js/country-info.js"></script>
+<script src="js/globe.js"></script>
+<script src="js/globe-popup.js"></script>
+<script src="js/shop.js"></script>
+<script src="js/lessons10.js"></script>
+<script src="js/lessons11.js"></script>
+<script src="js/earth-art.js"></script>
+<script src="js/human-art.js"></script>
+<script src="js/lessons12.js"></script>
+<script src="js/lessons13.js"></script>
+<script src="js/biology.js"></script>
+<script src="js/bio-art.js"></script>
+<script src="js/chemistry.js"></script>
+<script src="js/chem-art.js"></script>
+<script src="js/physics.js"></script>
+<script src="js/phys-art.js"></script>
+<script src="js/geology.js"></script>
+<script src="js/paleontology.js"></script>
+<script src="js/earth-space-science.js"></script>
+<script src="js/jokes.js"></script>
+<script src="js/paper.js"></script>
+<script src="js/paper-data.js"></script>
+<script src="js/biology-course.js"></script>
+<script src="js/math-course.js"></script>
+<script src="js/chem-course.js"></script>
+<script src="js/visualarts-course.js"></script>
+<script src="js/music-course.js"></script>
+<script src="js/physics-course.js"></script>
+<script src="js/essay-pad.js"></script>
+<script src="js/essay-course.js"></script>
+<script src="js/stem.js"></script>
+<script src="js/spanish.js"></script>
+<script src="js/timemoney.js"></script>
+<script src="js/space.js"></script>
+<script src="js/sel.js"></script>
+<script src="js/compsci.js"></script>
+<script src="js/terminal.js"></script>
+<script src="js/history-us.js"></script>
+<script src="js/history-us2.js"></script>
+<script src="js/geo-course.js"></script>
+<script src="js/space-course.js"></script>
+<script src="js/grade-extras.js"></script>
+<script src="js/lessons0.js"></script>
+<script src="js/phonics.js"></script>
+<script src="js/trace-grades.js"></script>
+<script src="js/create-grades.js"></script>
+<script src="js/story-art.js"></script>
+<script src="js/stories1.js"></script>
+<script src="js/stories2.js"></script>
+<script src="js/email-capture.js"></script>
+<script src="js/schedule.js"></script>
+<script src="js/app.js"></script>
+<script>
+window.addEventListener("load", function () {
+  var out = [], fails = 0;
+  function ok(c, m) { if (!c) { fails++; out.push("FAIL: " + m); } else out.push("ok:   " + m); }
+  function paint() {
+    document.getElementById("results").textContent =
+      (fails === 0 ? "ALL PASS (" + out.length + " checks)" : (fails + " FAILURES")) + "\n\n" + out.join("\n");
+  }
+
+  (function () {
+    var u = {}; u["audit@t.invalid"] = { name: "T", email: "audit@t.invalid", pass: "x", plan: "premium", joined: "2026-01-01" };
+    localStorage.setItem("bs_users", JSON.stringify(u));
+    localStorage.setItem("bs_session", "audit@t.invalid");
+    localStorage.removeItem("bs_rewards"); localStorage.removeItem("bs_rw_done");
+    if (typeof loadSession === "function") loadSession();
+    state.user = u["audit@t.invalid"];
+  })();
+
+  // ---------- 1. static data shape ----------
+  ok(Array.isArray(CASTLE_TIERS) && CASTLE_TIERS.length === 4, "CASTLE_TIERS defines 4 tiers");
+  ok(Array.isArray(CASTLE_ROOMS) && CASTLE_ROOMS.length === 4, "CASTLE_ROOMS defines 4 rooms");
+  var ops = CASTLE_ROOMS.map(function (r) { return r.op; });
+  ["+", "-", "*", "/"].forEach(function (op) { ok(ops.indexOf(op) >= 0, "CASTLE_ROOMS covers operation \"" + op + "\""); });
+  ok(typeof CASTLE_NEED === "number" && CASTLE_NEED >= 2, "CASTLE_NEED is a sane per-room target (" + CASTLE_NEED + ")");
+  ok(typeof CASTLE_BOSS_N === "number" && CASTLE_BOSS_N >= 2, "CASTLE_BOSS_N is a sane boss-round length (" + CASTLE_BOSS_N + ")");
+  ["+", "-", "*", "/"].forEach(function (op) {
+    ok(Array.isArray(CASTLE_RANGES[op]) && CASTLE_RANGES[op].length === 4, "CASTLE_RANGES[\"" + op + "\"] has a range for every tier");
+  });
+
+  // ---------- 2. problem generator: correctness across every op x tier, many samples ----------
+  ["+", "-", "*", "/"].forEach(function (op) {
+    for (var tier = 0; tier < 4; tier++) {
+      var sawNonTrivial = false;
+      for (var i = 0; i < 200; i++) {
+        var p = castleProblem(op, tier);
+        var expect = op === "+" ? p.x + p.y : op === "-" ? p.x - p.y : op === "*" ? p.x * p.y : p.x / p.y;
+        if (p.a !== expect) { ok(false, op + " tier " + tier + ": " + p.x + " " + op + " " + p.y + " = " + p.a + " (expected " + expect + ")"); return; }
+        if (op === "-" && p.a < 0) { ok(false, op + " tier " + tier + " produced a negative subtraction result: " + p.x + "-" + p.y); return; }
+        if (op === "/" && (!Number.isInteger(p.a) || p.a <= 0)) { ok(false, op + " tier " + tier + " division isn't a clean positive whole number: " + p.x + "/" + p.y + "=" + p.a); return; }
+        if (p.a !== 0) sawNonTrivial = true;
+      }
+      ok(true, op + " tier " + tier + ": 200 sampled problems are all arithmetically correct" + (op === "-" ? " and never negative" : op === "/" ? " and always a clean whole number" : ""));
+      ok(sawNonTrivial, op + " tier " + tier + " produces real (non-zero) answers, not just edge cases");
+    }
+  });
+
+  // ---------- 3. multiple-choice options: always 4 unique, non-negative, includes the answer ----------
+  for (var i2 = 0; i2 < 300; i2++) {
+    var op2 = ["+", "-", "*", "/"][i2 % 4], tier2 = i2 % 4;
+    var p2 = castleProblem(op2, tier2);
+    var opts = castleOptions(p2.a);
+    if (opts.length !== 4) { ok(false, "castleOptions(" + p2.a + ") returned " + opts.length + " options, not 4"); break; }
+    if (opts.indexOf(p2.a) < 0) { ok(false, "castleOptions(" + p2.a + ") doesn't include the correct answer"); break; }
+    if (new Set(opts).size !== 4) { ok(false, "castleOptions(" + p2.a + ") has a duplicate: " + opts.join(",")); break; }
+    if (opts.some(function (o) { return o < 0; })) { ok(false, "castleOptions(" + p2.a + ") includes a negative option: " + opts.join(",")); break; }
+  }
+  ok(true, "300 sampled option sets are all exactly 4 unique non-negative choices including the right answer");
+
+  // ---------- 4. op symbol mapping ----------
+  ok(castleOpSymbol("+") === "+" && castleOpSymbol("-") === "−" && castleOpSymbol("*") === "×" && castleOpSymbol("/") === "÷",
+     "castleOpSymbol maps all four operators to their display glyphs");
+
+  // ---------- 5. scenes render without throwing and produce real markup ----------
+  // A CSS "transform" animation on an SVG element REPLACES its "transform" attribute rather than
+  // composing with it, so an animated character group must never carry translate(x,y) on the same
+  // element as its animation class -- position has to live on an unanimated outer <g>. Caught in
+  // development: Sprout and the monster rendered snapped to the SVG's origin, clipped in the
+  // top-left corner, because cq-sprout/cq-monster carried both at once.
+  ok(!/<g class="cq-sprout[^"]*" transform=/.test(cqSprout(0, 0, false)), "cq-sprout's animation class is never on the same element as its position transform");
+  ok(!/<g class="cq-monster[^"]*" transform=/.test(cqMonster("grumpy", 0, 0)), "cq-monster's animation class is never on the same element as its position transform");
+
+  CASTLE_ROOMS.forEach(function (room) {
+    var svg;
+    try { svg = castleRoomScene(room, 1); } catch (e) { svg = null; ok(false, "castleRoomScene threw for " + room.key + ": " + e.message); }
+    ok(!!svg && svg.length > 200 && svg.indexOf(room.accent) >= 0, room.name + " scene renders and uses its own accent colour");
+  });
+  ["grumpy", "happy"].forEach(function (mood) {
+    var svg;
+    try { svg = castleBossScene(mood); } catch (e) { svg = null; ok(false, "castleBossScene threw for " + mood + ": " + e.message); }
+    ok(!!svg && svg.indexOf(mood === "happy" ? "cq-happy" : "cq-grumpy") >= 0, "boss scene (" + mood + ") renders with the right mood class");
+  });
+
+  // Rendered live: the OUTER <g> (position, untouched by CSS) must carry the real translate(x,y),
+  // and the ANIMATED inner <g class="cq-sprout"/"cq-monster"> must carry no transform attribute of
+  // its own -- that split is the actual fix, so check the DOM structure directly rather than via
+  // getBBox() (which reports an element's bbox in its OWN local space, before its own transform,
+  // so it can't distinguish "positioned correctly" from "reset to origin" here).
+  (function () {
+    var host = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    host.innerHTML = castleBossScene("grumpy");
+    document.body.appendChild(host);
+    var sprout = host.querySelector(".cq-sprout"), monster = host.querySelector(".cq-monster");
+    var sproutOuter = sprout.parentElement, monsterOuter = monster.parentElement;
+    ok(sproutOuter.tagName === "g" || sproutOuter.tagName === "G", "Sprout's animated group sits inside its own outer <g>");
+    ok(/translate\(64 168\)/.test(sproutOuter.getAttribute("transform") || ""), "Sprout's outer group carries the real position transform (" + sproutOuter.getAttribute("transform") + ")");
+    ok(!sprout.getAttribute("transform"), "Sprout's animated inner group carries no transform attribute of its own to collide with its CSS animation");
+    ok(/translate\(210 108\)/.test(monsterOuter.getAttribute("transform") || ""), "the monster's outer group carries the real position transform (" + monsterOuter.getAttribute("transform") + ")");
+    ok(!monster.getAttribute("transform"), "the monster's animated inner group carries no transform attribute of its own to collide with its CSS animation");
+    document.body.removeChild(host);
+  })();
+
+  // ---------- 6. wiring: App methods, badge registered, theme registered, nav tile ----------
+  ["castlePick", "castleNew", "castleAnswer"].forEach(function (fn) {
+    ok(typeof App[fn] === "function", "App." + fn + " exists");
+  });
+  ok(typeof castleGameView === "function", "castleGameView is defined");
+  ok(BADGES.some(function (b) { return b.id === "castlehero"; }), "the \"castlehero\" badge is registered in BADGES");
+  ok(typeof ARCADE_THEME_BY_KEY !== "undefined" && ARCADE_THEME_BY_KEY.castle === "castle", "the castle tile is registered with its own theme");
+  var hub = gameHubView();
+  ok(hub.indexOf("Sprout's Castle Quest") >= 0 && hub.indexOf("App.openGame('castle')") >= 0, "the Game Arcade hub shows a Castle Quest tile");
+  ok(gameCount() === ARCADE_GAMES.length + 2, "gameCount() accounts for both the Plant Game and Castle Quest as non-arcade tiles");
+
+  // ---------- 7. rendered live: tier picker, then every room, then the boss, then finished ----------
+  App.openGame("castle");
+  var pickerHtml = castleGameView();
+  ok(pickerHtml.indexOf("Choose") === -1 && CASTLE_TIERS.every(function (t) { return pickerHtml.indexOf("App.castlePick(" + t.key + ")") >= 0; }),
+     "the tier-picker screen offers all 4 tiers");
+  // .grid-2 doesn't exist in styles.css (only .grid-3/.grid-4) -- using it silently collapses the
+  // picker to one column with no error, so check the actual class used, not just that it renders.
+  ok(pickerHtml.indexOf("grid-2") === -1, "the tier picker doesn't reference the nonexistent .grid-2 class");
+  ok(/class="grid grid-[34]"/.test(pickerHtml), "the tier picker uses a real multi-column grid class");
+
+  // ---------- 8. a full simulated playthrough: answer everything correctly, verify it actually finishes ----------
+  // Room/boss transitions are deliberately paced with a 750ms setTimeout in App.castleAnswer (so
+  // the player sees the door-unlock animation before moving on) -- this must actually wait for
+  // real time to pass between answers, or every answer after a room completes just keeps hitting
+  // the same frozen problem forever.
+  function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+
+  (async function () {
+    var starsBefore = Rewards.load().stars;
+    App.castlePick(2);   // Knight's Path
+    ok(!!state.castle && state.castle.tier === 2 && state.castle.room === 0 && !!state.castle.cur, "castlePick() starts a fresh game in room 0 with a live problem");
+
+    var guard = 0;
+    while (!state.castle.finished && guard < 60) {
+      guard++;
+      var c = state.castle;
+      var correctVal = c.boss ? c.boss.cur.a : c.cur.a;
+      App.castleAnswer(correctVal);
+      await wait(850);   // >750ms so any pending room/boss-completion setTimeout has already fired
+    }
+    ok(guard < 60, "the playthrough actually reaches the finished state (didn't loop forever) after " + guard + " correct answers");
+    ok(state.castle.finished === true, "state.castle.finished is true after clearing all 4 rooms and the boss round");
+
+    var starsAfter = Rewards.load().stars;
+    ok(starsAfter > starsBefore, "stars increased over the playthrough (" + starsBefore + " -> " + starsAfter + ")");
+    ok(Rewards.load().badges.indexOf("castlehero") >= 0, "the castlehero badge was actually earned and saved");
+
+    var finishedHtml = castleGameView();
+    ok(finishedHtml.indexOf("cq-happy") >= 0 || finishedHtml.indexOf("now friends") >= 0, "the finished screen shows the happy/friends ending");
+
+    // ---------- 9. a wrong answer flips state.castle.wrong and does not advance progress ----------
+    App.castlePick(0);
+    var before = { room: state.castle.room, filled: state.castle.filled };
+    var wrongVal = (state.castle.opts.filter(function (o) { return o !== state.castle.cur.a; }))[0];
+    App.castleAnswer(wrongVal);
+    ok(state.castle.wrong === true, "answering wrong sets state.castle.wrong");
+    ok(state.castle.room === before.room && state.castle.filled === before.filled, "a wrong answer does not advance the room or fill the meter");
+
+    // ---------- 10. CSS actually shipped ----------
+    var css = await (await fetch("css/styles.css")).text();
+    ["gt-castle", "cq-opts", "cq-optbtn", "cq-torch", "cq-sprout", "cq-monster", "cq-door"].forEach(function (cls) {
+      ok(css.indexOf("." + cls) >= 0, "css/styles.css defines ." + cls);
+    });
+    var reduceBlock = /prefers-reduced-motion:\s*reduce\)\{[^}]*\.cq-torch[^}]*\}/.exec(css);
+    ok(!!reduceBlock, "a prefers-reduced-motion override turns the castle animations off");
+    paint();
+  })();
+});
+</script>
+</body></html>

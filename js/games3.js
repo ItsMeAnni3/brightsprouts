@@ -600,7 +600,7 @@
 
   // Themes for the games that were already here, so the whole arcade is colour-coded.
   var THEME_BY_KEY = {
-    plant: "forest",
+    plant: "forest", castle: "castle",
     matharace: "ocean", flagquiz: "berry", bee: "lemon", spellbee: "candy", memory: "grape",
     addsub: "mint", clockread: "sky", rhyme: "candy", spanishq: "flame", spacequiz: "galaxy",
     feelquiz: "berry", times: "ocean", coincount: "sand", rockquiz: "clay", paleoquiz: "jungle",

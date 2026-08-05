@@ -512,6 +512,7 @@ const state = {
   reading: null, readFont: 18,
   maker: null,
   game: { plant: null, stage: 0, water: 0, sun: 0 },
+  castle: null,
   schedBand: "elem", schedGrade: null,
   assessGrade: null, assessMarks: {}, assessSaved: false
 };
@@ -2879,6 +2880,7 @@ const App = {
   openGame(screen) {
     state.gameScreen = screen;
     if (screen === "plant") { if (!state.game) state.game = { plant: null, stage: 0, water: 0, sun: 0 }; }
+    else if (screen === "castle") { if (!state.castle) state.castle = { tier: null }; }
     else if (screen === "memory") { state.mem = { deck: memoryDeck(6), flipped: [], moves: 0, matched: 0, lock: false, done: false }; }
     else if ((ARCADE_GAMES.find(x => x.key === screen) || {}).quiz) {
       state.arcade = { type: screen, i: 0, correct: 0, q: arcadeQuestion(screen), answered: null, done: false };
@@ -2993,6 +2995,39 @@ const App = {
   },
   gameWater() { if (state.game.water < GAME_NEED) state.game.water++; gameCheckGrow(); },
   gameSun() { if (state.game.sun < GAME_NEED) state.game.sun++; gameCheckGrow(); },
+
+  // ---- Sprout's Castle Quest ----
+  castlePick(tier) {
+    state.castle = { tier, room: 0, filled: 0, cur: null, opts: null, boss: null, finished: false, wrong: false };
+    castleNewProblem(state.castle);
+    go("game");
+  },
+  castleNew() { state.castle = { tier: null }; render(); window.scrollTo(0, 0); },
+  castleAnswer(val) {
+    const c = state.castle;
+    if (!c || c.finished) return;
+    if (c.boss) { castleBossAnswer(val); return; }
+    if (val !== c.cur.a) {
+      c.wrong = true; render();
+      setTimeout(() => { if (state.castle === c) { c.wrong = false; render(); } }, 550);
+      return;
+    }
+    c.wrong = false; c.filled++;
+    render();
+    castleSproutPop();
+    if (c.filled >= CASTLE_NEED) {
+      const roomName = CASTLE_ROOMS[c.room].name;
+      setTimeout(() => {
+        if (state.castle !== c) return;
+        earn(1, "🔓 " + roomName + " unlocked!");
+        if (c.room < CASTLE_ROOMS.length - 1) { c.room++; c.filled = 0; castleNewProblem(c); }
+        else { c.boss = { correct: 0, done: false }; castleNewProblem(c); }
+        render();
+      }, 750);
+    } else {
+      castleNewProblem(c);
+    }
+  },
 
   // ---- Arcade quiz answer (Math Race / Flag Quiz / Spelling Bee) ----
   // ---- Spelling Bee: hear the word, type the spelling ----
@@ -3427,6 +3462,7 @@ const GAME_NEED = 3;   // waters and suns needed to grow to the next stage
 function gameView() {
   const sc = state.gameScreen || "hub";
   if (sc === "plant") return plantGameView();
+  if (sc === "castle") return castleGameView();
   if (sc === "memory") return memoryView();
   if (sc === "bee") return beeView();
   if ((ARCADE_GAMES.find(x => x.key === sc) || {}).quiz) return arcadeQuizView();
@@ -3437,7 +3473,7 @@ function gameView() {
 // and, later, the game screen itself.
 // Everything in the arcade hub: the quiz/memory games plus the Plant Life Cycle tile.
 // Quoted in the pricing copy, so it can never drift out of date as games are added.
-function gameCount() { return ARCADE_GAMES.length + 1; }
+function gameCount() { return ARCADE_GAMES.length + 2; }
 
 function gameTheme(key) {
   const g = ARCADE_GAMES.find(x => x.key === key);
@@ -3452,6 +3488,14 @@ function gameHubView() {
       <h3>Plant Life Cycle</h3>
       <p>Grow your own plant from seed to fruit.</p>
       <div class="gmeta"><span class="glevel easy">Easy</span><span class="gsubj">Science</span></div>
+      <button class="btn btn-primary btn-sm">Play</button>
+    </div>`;
+  const castleTile = `
+    <div class="gtile${gameTheme("castle")}" onclick="App.openGame('castle')">
+      <div class="gtemoji">🏰</div>
+      <h3>Sprout's Castle Quest</h3>
+      <p>Solve four puzzle rooms and befriend the castle's one-eyed guardian.</p>
+      <div class="gmeta"><span class="glevel medium">Medium</span><span class="gsubj">Maths</span></div>
       <button class="btn btn-primary btn-sm">Play</button>
     </div>`;
   const lvl = state.gameFilter || "all";
@@ -3475,7 +3519,7 @@ function gameHubView() {
     <p class="subtitle">${gameCount()} games, each with its own colours, pulled from lessons all over the site.
       Every one earns ⭐ stars for your Rewards collection — filter by how tricky you want it!</p>
     ${filterBar}
-    <div class="grid grid-3 gtiles">${lvl === "all" || lvl === "Easy" ? plantTile : ""}${arcTiles}</div>
+    <div class="grid grid-3 gtiles">${lvl === "all" || lvl === "Easy" ? plantTile : ""}${lvl === "all" || lvl === "Medium" ? castleTile : ""}${arcTiles}</div>
     <div class="bookfoot">${doodle("rocket")}
       <p><b>Play &amp; learn!</b> Race through sums, guess flags from around the world, spell words in the Spelling Bee, or test your memory. Win stars, unlock stickers, and earn badges as you go.</p></div>
   </div>`;
@@ -3702,6 +3746,91 @@ function plantGameView() {
   </div>`;
 }
 
+function castleGameView() {
+  const c = state.castle;
+  const back = `<button class="btn btn-ghost btn-sm no-print" onclick="App.castleNew()">← Choose a different level</button>`;
+  const optBtns = (opts) => (opts || []).map((o) =>
+    `<button class="btn cq-optbtn" onclick="App.castleAnswer(${o})">${o}</button>`).join("");
+
+  if (!c || c.tier == null) {
+    return `<div class="view">
+      <button class="btn btn-ghost btn-sm no-print" onclick="App.gameHub()">← Back to games</button>
+      <h1 style="margin-top:12px">🏰 Sprout's Castle Quest</h1>
+      <p class="subtitle">A lonely one-eyed guardian has locked the castle behind four puzzle doors:
+        Addition, Subtraction, Multiplication and Division. Help Sprout solve every room and make a new friend!</p>
+      <div class="grid grid-3">${CASTLE_TIERS.map((t) => `
+        <div class="pgpick" onclick="App.castlePick(${t.key})">
+          <div class="pgpickart" style="display:flex;align-items:center;justify-content:center;font-size:52px;background:#2b2640">${t.emoji}</div>
+          <h3>${t.emoji} ${esc(t.name)}</h3>
+          <p>${esc(t.grades)}</p>
+          <button class="btn btn-primary btn-sm">Start the quest</button>
+        </div>`).join("")}</div>
+      <div class="bookfoot">${doodle("rocket")}
+        <p><b>How it works:</b> answer 3 puzzles correctly to unlock each door. Clear all four rooms, then help
+        Sprout answer a few mixed puzzles to cheer up the castle's guardian — nobody fights, you just make a friend!</p></div>
+    </div>`;
+  }
+
+  if (c.finished) {
+    return `<div class="view">${back}
+      <h1 style="margin-top:12px">🏰 Sprout's Castle Quest</h1>
+      <div class="pgwrap">
+        <div class="pgstage" id="cq-stage"><div class="pgscene" id="cq-scene">
+          <svg viewBox="0 0 320 220" class="pgsvg" role="img" aria-label="Sprout and the castle guardian, now friends">${castleBossScene("happy")}</svg>
+        </div></div>
+        <div class="pgpanel no-print" style="text-align:center">
+          <div class="pgwin">🎉 The guardian isn't grumpy anymore — you solved every puzzle in the castle and made a new friend!</div>
+          <button class="btn btn-primary" style="width:100%" onclick="App.castlePick(${c.tier})">🔁 Play again</button>
+          <button class="btn btn-ghost" style="width:100%;margin-top:8px" onclick="App.castleNew()">Choose a different level</button>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  if (c.boss) {
+    const b = c.boss;
+    const dots = Array.from({ length: CASTLE_BOSS_N }, (_, i) =>
+      `<span class="pgdot ${i < b.correct ? "past" : i === b.correct ? "now" : ""}"></span>`).join("");
+    return `<div class="view">${back}
+      <h1 style="margin-top:12px">🏰 The Guardian's Challenge</h1>
+      <div class="pgwrap">
+        <div class="pgstage" id="cq-stage"><div class="pgscene" id="cq-scene">
+          <svg viewBox="0 0 320 220" class="pgsvg" role="img" aria-label="The castle's one-eyed guardian">${castleBossScene("grumpy")}</svg>
+        </div></div>
+        <div class="pgpanel no-print">
+          <div class="pgdots">${dots}</div>
+          <p class="pggrowhint">The guardian is lonely, not mean — answer ${CASTLE_BOSS_N} mixed puzzles to cheer them up!</p>
+          <h3 class="pgstagename">${b.cur.x} ${castleOpSymbol(b.cur.op)} ${b.cur.y} = ?</h3>
+          <div class="cq-opts">${optBtns(b.opts)}</div>
+          <p class="cq-tryagain" ${c.wrong ? "" : 'style="visibility:hidden"'}>Not quite — try again!</p>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  const room = CASTLE_ROOMS[c.room];
+  const dots = CASTLE_ROOMS.map((r, i) =>
+    `<span class="pgdot ${i < c.room ? "past" : i === c.room ? "now" : ""}" title="${esc(r.name)}"></span>`).join("");
+  const meter = Array.from({ length: CASTLE_NEED }, (_, i) => `<i class="${i < c.filled ? "on" : ""}"></i>`).join("");
+  return `<div class="view">${back}
+    <h1 style="margin-top:12px">🏰 ${esc(room.name)}</h1>
+    <div class="pgwrap">
+      <div class="pgstage" id="cq-stage"><div class="pgscene" id="cq-scene">
+        <svg viewBox="0 0 320 220" class="pgsvg" role="img" aria-label="Sprout in the ${esc(room.name)}">${castleRoomScene(room, c.filled)}</svg>
+      </div></div>
+      <div class="pgpanel no-print">
+        <div class="pgdots">${dots}</div>
+        <h3 class="pgstagename">Room ${c.room + 1} of ${CASTLE_ROOMS.length}: ${esc(room.name)}</h3>
+        <p class="pgfact">${esc(room.blurb)}</p>
+        <div class="pgmeter gold" style="margin-bottom:10px">${meter}</div>
+        <h3 class="pgstagename">${c.cur.x} ${castleOpSymbol(c.cur.op)} ${c.cur.y} = ?</h3>
+        <div class="cq-opts">${optBtns(c.opts)}</div>
+        <p class="cq-tryagain" ${c.wrong ? "" : 'style="visibility:hidden"'}>Not quite — try again!</p>
+      </div>
+    </div>
+  </div>`;
+}
+
 // Same lean-out effect for the plant game: the growing plant leans forward out of the pot.
 function gameTilt() {
   const stage = document.getElementById("pgstage"), scene = document.getElementById("pgscene");
@@ -3822,6 +3951,45 @@ function gameCheckGrow() {
       if (g.stage >= PLANT_STAGES.length - 1) { earn(2, "🌿 +2 stars: your plant is fully grown!"); earnBadge("greenthumb"); }
     }, 550);   // a beat so the child sees both meters fill, then the plant leaps to its new stage
   }
+}
+
+// Fills state.castle.cur/opts (or state.castle.boss.cur/opts) with a fresh problem for whichever
+// room or boss round is currently active, at that game's chosen tier.
+function castleNewProblem(c) {
+  if (c.boss) {
+    const p = castleBossProblem(c.tier);
+    c.boss.cur = p; c.boss.opts = castleOptions(p.a);
+  } else {
+    const room = CASTLE_ROOMS[c.room];
+    const p = castleProblem(room.op, c.tier);
+    c.cur = p; c.opts = castleOptions(p.a);
+  }
+}
+function castleBossAnswer(val) {
+  const c = state.castle, b = c.boss;
+  if (val !== b.cur.a) {
+    c.wrong = true; render();
+    setTimeout(() => { if (state.castle === c) { c.wrong = false; render(); } }, 550);
+    return;
+  }
+  c.wrong = false; b.correct++;
+  render();
+  castleSproutPop();
+  if (b.correct >= CASTLE_BOSS_N) {
+    b.done = true; c.finished = true;
+    render();
+    setTimeout(() => { if (state.castle === c) { earn(4, "🏰 You and the guardian are friends now!"); earnBadge("castlehero"); } }, 300);
+  } else {
+    castleNewProblem(c);
+  }
+}
+// Same reflow-retrigger trick as gamePop(), for Sprout's little bounce on a correct answer.
+function castleSproutPop() {
+  const s = document.querySelector("#cq-scene .cq-sprout");
+  if (!s) return;
+  s.classList.remove("cq-pop");
+  void s.offsetWidth;
+  s.classList.add("cq-pop");
 }
 
 function render() {
