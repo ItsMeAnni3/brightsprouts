@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Schedule & Weekly Assessment audit</title>
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/styles.css"></head>
+<body>
+<!-- Permanent audit for the Daily Schedule (js/schedule.js, scheduleView()) and Weekly Assessment
+     (assessmentView()) features. The schedule's row data is hand-authored (which subject "role"
+     sits in which time slot per grade band), so the main risk is a row referencing a subject key
+     that doesn't actually exist for some grade in its band — this checks every real grade 0-12
+     against the actual LESSONS data rather than trusting the authored rows by eye. The assessment
+     pulls questions from makeSheet(), the same function every "New Worksheet" button already
+     uses, so this checks that it never produces an empty or malformed set for any grade. -->
+<nav id="nav"></nav><div id="authzone"></div><main id="app"></main>
+<pre id="results">running…</pre>
+<script src="js/img-fallback.js"></script>
+<script src="js/lessons1.js"></script>
+<script src="js/lessons2.js"></script>
+<script src="js/lessons3.js"></script>
+<script src="js/lessons4.js"></script>
+<script src="js/lessons5.js"></script>
+<script src="js/species-img.js"></script>
+<script src="js/lessons6.js"></script>
+<script src="js/lessons7.js"></script>
+<script src="js/elements.js"></script>
+<script src="js/lessons8.js"></script>
+<script src="js/lessons9.js"></script>
+<script src="js/coloring.js"></script>
+<script src="js/mazes.js"></script>
+<script src="js/ink.js"></script>
+<script src="js/draw-trace.js"></script>
+<script src="js/books.js"></script>
+<script src="js/book-art.js"></script>
+<script src="js/pd-books.js"></script>
+<script src="js/magic-maker.js"></script>
+<script src="js/engineer.js"></script>
+<script src="js/plant-game.js"></script>
+<script src="js/rewards.js"></script>
+<script src="js/arcade.js"></script>
+<script src="js/spelling-bee.js"></script>
+<script src="js/games2.js"></script>
+<script src="js/games3.js"></script>
+<script src="js/speech.js"></script>
+<script src="js/species-popup.js"></script>
+<script src="js/globe-data.js"></script>
+<script src="js/country-info.js"></script>
+<script src="js/globe.js"></script>
+<script src="js/globe-popup.js"></script>
+<script src="js/shop.js"></script>
+<script src="js/lessons10.js"></script>
+<script src="js/lessons11.js"></script>
+<script src="js/earth-art.js"></script>
+<script src="js/human-art.js"></script>
+<script src="js/lessons12.js"></script>
+<script src="js/lessons13.js"></script>
+<script src="js/biology.js"></script>
+<script src="js/bio-art.js"></script>
+<script src="js/chemistry.js"></script>
+<script src="js/chem-art.js"></script>
+<script src="js/physics.js"></script>
+<script src="js/phys-art.js"></script>
+<script src="js/geology.js"></script>
+<script src="js/paleontology.js"></script>
+<script src="js/earth-space-science.js"></script>
+<script src="js/jokes.js"></script>
+<script src="js/paper.js"></script>
+<script src="js/paper-data.js"></script>
+<script src="js/biology-course.js"></script>
+<script src="js/math-course.js"></script>
+<script src="js/chem-course.js"></script>
+<script src="js/visualarts-course.js"></script>
+<script src="js/music-course.js"></script>
+<script src="js/physics-course.js"></script>
+<script src="js/essay-pad.js"></script>
+<script src="js/essay-course.js"></script>
+<script src="js/stem.js"></script>
+<script src="js/spanish.js"></script>
+<script src="js/timemoney.js"></script>
+<script src="js/space.js"></script>
+<script src="js/sel.js"></script>
+<script src="js/compsci.js"></script>
+<script src="js/terminal.js"></script>
+<script src="js/history-us.js"></script>
+<script src="js/history-us2.js"></script>
+<script src="js/geo-course.js"></script>
+<script src="js/space-course.js"></script>
+<script src="js/grade-extras.js"></script>
+<script src="js/lessons0.js"></script>
+<script src="js/phonics.js"></script>
+<script src="js/trace-grades.js"></script>
+<script src="js/create-grades.js"></script>
+<script src="js/story-art.js"></script>
+<script src="js/stories1.js"></script>
+<script src="js/stories2.js"></script>
+<script src="js/email-capture.js"></script>
+<script src="js/schedule.js"></script>
+<script src="js/logo.js"></script>
+<script src="js/app.js"></script>
+<script>
+window.addEventListener("load", function () {
+  var out = [], fails = 0;
+  function ok(c, m) { if (!c) { fails++; out.push("FAIL: " + m); } else out.push("ok:   " + m); }
+  function paint() {
+    document.getElementById("results").textContent =
+      (fails === 0 ? "ALL PASS (" + out.length + " checks)" : (fails + " FAILURES")) + "\n\n" + out.join("\n");
+  }
+
+  (function () {
+    var u = {}; u["audit@t.invalid"] = { name: "T", email: "audit@t.invalid", pass: "x", plan: "premium", joined: "2026-01-01" };
+    localStorage.setItem("bs_users", JSON.stringify(u));
+    localStorage.setItem("bs_session", "audit@t.invalid");
+    if (typeof loadSession === "function") loadSession();
+    state.user = u["audit@t.invalid"];
+  })();
+
+  function run() {
+    // ---------- 1. band data shape ----------
+    ok(Array.isArray(SCHED_BANDS) && SCHED_BANDS.length === 3, "SCHED_BANDS defines exactly 3 bands");
+    var allBandGrades = [].concat.apply([], SCHED_BANDS.map(function (b) { return b.grades; }));
+    ok(allBandGrades.length === 13, "the 3 bands together cover exactly 13 grades (K-12)");
+    for (var g = 0; g <= 12; g++) ok(allBandGrades.indexOf(g) >= 0, "grade " + g + " is covered by some band");
+    var seenG = {}, dupeG = [];
+    allBandGrades.forEach(function (g) { if (seenG[g]) dupeG.push(g); seenG[g] = 1; });
+    ok(dupeG.length === 0, "no grade appears in two bands" + (dupeG.length ? ": " + dupeG.join(",") : ""));
+
+    // ---------- 2. every schedule row resolves to real content for every real grade ----------
+    for (var g = 0; g <= 12; g++) {
+      var rows = scheduleRowsFor(g);
+      ok(Array.isArray(rows) && rows.length >= 8, "grade " + g + " has a real schedule (" + (rows ? rows.length : 0) + " rows)");
+      var totalMinutesOk = true;
+      rows.forEach(function (row) {
+        if (row.routine || row.hub) return;
+        var keys = resolveRowKeys(g, row);
+        ok(keys.length > 0, "grade " + g + " row \"" + row.title + "\" resolves to at least one real subject (" + keys.join(",") + ")");
+        keys.forEach(function (k) {
+          ok(!!(LESSONS[g] && LESSONS[g][k]), "grade " + g + " subject \"" + k + "\" referenced by \"" + row.title + "\" really exists in LESSONS[" + g + "]");
+        });
+      });
+    }
+    ok(scienceTrackKey(9) === "biology" && scienceTrackKey(10) === "chemistry" && scienceTrackKey(11) === "physics" && scienceTrackKey(12) === "physics",
+       "the high-school science track sequences Biology -> Chemistry -> Physics correctly by grade");
+
+    // ---------- 3. Weekly Assessment: real, non-empty, well-formed for every grade ----------
+    for (var g2 = 0; g2 <= 12; g2++) {
+      var groups = weeklyAssessment(g2);
+      ok(Array.isArray(groups) && groups.length >= 4, "grade " + g2 + " weekly assessment covers at least 4 subjects (" + (groups ? groups.length : 0) + ")");
+      var totalQ = 0, allWellFormed = true;
+      (groups || []).forEach(function (gr) {
+        ok(!!gr.label && !!gr.emoji, "grade " + g2 + " group \"" + gr.key + "\" has a label and emoji");
+        ok(gr.items.length > 0 && gr.items.length <= 3, "grade " + g2 + " group \"" + gr.key + "\" has 1-3 questions (" + gr.items.length + ")");
+        gr.items.forEach(function (qa) {
+          totalQ++;
+          if (!qa || qa.q === undefined || qa.q === null || qa.q === "" || qa.a === undefined || qa.a === null || qa.a === "") allWellFormed = false;
+        });
+      });
+      ok(allWellFormed, "grade " + g2 + "'s assessment questions all have a real q and a");
+      ok(totalQ >= 8, "grade " + g2 + "'s assessment has a substantial question count (" + totalQ + ")");
+    }
+    // books/create/tracing/drawtrace/english must never appear as their own assessment group
+    ["books", "create", "tracing", "drawtrace", "english"].forEach(function (k) {
+      var found = false;
+      for (var g3 = 0; g3 <= 12; g3++) if (weeklyAssessment(g3).some(function (gr) { return gr.key === k; })) found = true;
+      ok(!found, "\"" + k + "\" never appears as its own assessment subject group (it's a hub/tool, not a quiz)");
+    });
+
+    // ---------- 4. App wiring ----------
+    ["openLessonDirect", "pickSchedBand", "pickSchedGrade", "pickAssessGrade", "markAssess", "resetAssess", "saveAssessment"].forEach(function (fn) {
+      ok(typeof App[fn] === "function", "App." + fn + " exists");
+    });
+    ok(typeof scheduleView === "function" && typeof assessmentView === "function", "scheduleView and assessmentView are defined");
+
+    // ---------- 5. rendered live: scheduleView for a sample grade in each band ----------
+    [0, 3, 7, 10].forEach(function (g4) {
+      state.schedGrade = g4;
+      state.schedBand = SCHED_BANDS.find(function (b) { return b.grades.indexOf(g4) >= 0; }).key;
+      var html;
+      try { html = scheduleView(); } catch (e) { html = null; ok(false, "scheduleView() threw for grade " + g4 + ": " + e.message); }
+      if (html) {
+        document.getElementById("app").innerHTML = html;
+        var chips = document.querySelectorAll("#app .sch-chip");
+        ok(chips.length >= 6, "grade " + g4 + " schedule renders real clickable chips (" + chips.length + ")");
+      }
+    });
+
+    // ---------- 6. rendered live: assessmentView, marking, and saving actually persists ----------
+    [1, 6, 9].forEach(function (g5) {
+      App.pickAssessGrade(g5);
+      var html;
+      try { html = assessmentView(); } catch (e) { html = null; ok(false, "assessmentView() threw for grade " + g5 + ": " + e.message); }
+      if (html) {
+        document.getElementById("app").innerHTML = html;
+        // .q-item is reused for both the interactive questions and the (hidden) answer key, same
+        // convention as every other lesson's worksheet — exclude the answer key from this count.
+        var qItems = Array.prototype.filter.call(document.querySelectorAll("#app .q-item"), function (el) { return !el.closest(".answers-section"); });
+        ok(qItems.length >= 8, "grade " + g5 + " assessment renders real question items (" + qItems.length + ")");
+        var akItems = document.querySelectorAll("#app .answers-section .q-item");
+        ok(akItems.length === qItems.length, "grade " + g5 + " answer key has exactly one entry per question (" + akItems.length + " vs " + qItems.length + ")");
+        // each question has 2 mark buttons (Got it / Missed it) sharing one id by design; the
+        // DISTINCT id count should equal the number of questions, not the number of buttons.
+        var rawIds = [];
+        document.querySelectorAll("#app .sch-mark-btn").forEach(function (b) {
+          var m = /markAssess\('([^']+)'/.exec(b.getAttribute("onclick"));
+          if (m) rawIds.push(m[1]);
+        });
+        ok(rawIds.length === qItems.length * 2, "grade " + g5 + " each question has exactly 2 mark buttons (" + rawIds.length + " buttons for " + qItems.length + " questions)");
+        var distinctIds = Array.from(new Set(rawIds));
+        ok(distinctIds.length === qItems.length, "grade " + g5 + " assessment has one distinct question id per question (" + distinctIds.length + " ids, " + qItems.length + " questions)");
+      }
+    });
+
+    // Now actually mark some answers and save, and confirm it reaches the account.
+    App.pickAssessGrade(6);
+    var freshHtml = assessmentView();
+    document.getElementById("app").innerHTML = freshHtml;
+    var rawMarkIds = [];
+    document.querySelectorAll("#app .sch-mark-btn").forEach(function (b) {
+      var m = /markAssess\('([^']+)',(true|false)\)/.exec(b.getAttribute("onclick"));
+      if (m) rawMarkIds.push(m[1]);
+    });
+    var markIds = Array.from(new Set(rawMarkIds));
+    var before = (currentUser().assessments || []).length;
+    markIds.slice(0, 5).forEach(function (id, i) { App.markAssess(id, i % 3 !== 0); });
+    App.saveAssessment(6, weeklyAssessment(6).length);
+    var afterUser = currentUser();
+    var after = (afterUser.assessments || []).length;
+    ok(after === before + 1, "saveAssessment() adds exactly one record to the user's assessment history (" + before + " -> " + after + ")");
+    var last = afterUser.assessments[afterUser.assessments.length - 1];
+    ok(last && last.grade === 6 && last.total === 5 && last.correct >= 0 && last.correct <= 5,
+       "the saved record has the right grade and totals (grade=" + (last && last.grade) + ", correct=" + (last && last.correct) + "/" + (last && last.total) + ")");
+    var acctHtml = accountView();
+    ok(acctHtml.indexOf("Recent Weekly Assessments") >= 0, "the Account page shows the Recent Weekly Assessments section once a score is saved");
+
+    // ---------- 7. navigation & routing wiring ----------
+    ok(navHtml().indexOf("App.go('schedule')") >= 0, "the header nav includes a Schedule button");
+    state.view = "schedule";
+    var renderedOk = true;
+    try { render(); } catch (e) { renderedOk = false; ok(false, "render() threw on the schedule view: " + e.message); }
+    ok(renderedOk, "render() completes for state.view = 'schedule'");
+    state.view = "assessment";
+    try { render(); } catch (e) { renderedOk = false; ok(false, "render() threw on the assessment view: " + e.message); }
+
+    // ---------- 8. CSS actually shipped ----------
+    fetch("css/styles.css").then(function (r) { return r.text(); }).then(function (css) {
+      ["sch-row", "sch-time", "sch-chip", "sch-mark-btn", "sch-score-bar"].forEach(function (cls) {
+        ok(css.indexOf("." + cls) >= 0, "css/styles.css defines ." + cls);
+      });
+      paint();
+    });
+  }
+  run();
+});
+</script>
+</body></html>

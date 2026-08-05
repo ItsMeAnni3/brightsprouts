@@ -511,7 +511,9 @@ const state = {
   traceMode: "upper", tracePick: null,
   reading: null, readFont: 18,
   maker: null,
-  game: { plant: null, stage: 0, water: 0, sun: 0 }
+  game: { plant: null, stage: 0, water: 0, sun: 0 },
+  schedBand: "elem", schedGrade: null,
+  assessGrade: null, assessMarks: {}, assessSaved: false
 };
 
 // ---------- Storage helpers ----------
@@ -1177,7 +1179,7 @@ function makeStory(name, friend, settingKey, themeKey, valueKey) {
 function go(view) { if (typeof Speech !== "undefined") Speech.stop(); state.view = view; state.authMsg = ""; state.authOk = ""; render(); window.scrollTo(0, 0); }
 
 function navHtml() {
-  const items = [["home", "🏡 Home"], ["lessons", "📚 Lessons"], ["shop", "🛒 Shop"], ["pricing", "⭐ Plans"],
+  const items = [["home", "🏡 Home"], ["lessons", "📚 Lessons"], ["schedule", "🗓️ Schedule"], ["shop", "🛒 Shop"], ["pricing", "⭐ Plans"],
                  ["privacy", "🔒 Privacy"], ["contact", "✉️ Contact"]];
   return items.map(([v, l]) => `<button class="${state.view === v ? "active" : ""}" onclick="App.go('${v}')">${l}</button>`).join("");
 }
@@ -2254,6 +2256,124 @@ function makerView() {
   </div>`;
 }
 
+// ---------- Daily Schedule ----------
+function scheduleView() {
+  const band = SCHED_BANDS.find((b) => b.key === state.schedBand) || SCHED_BANDS[0];
+  if (!state.schedGrade || !band.grades.includes(state.schedGrade)) state.schedGrade = band.grades[0];
+  const g = state.schedGrade;
+  const rows = scheduleRowsFor(g);
+  const locked = !canGrade(g);
+
+  const bandBtns = SCHED_BANDS.map((b) =>
+    `<button class="btn ${b.key === band.key ? "btn-primary" : "btn-ghost"}" onclick="App.pickSchedBand('${b.key}')">${b.emoji} ${b.label}</button>`).join("");
+  const gradeBtns = band.grades.map((gr) =>
+    `<button class="btn btn-sm ${gr === g ? "btn-primary" : "btn-ghost"}" onclick="App.pickSchedGrade(${gr})">${esc(gradeName(gr))}</button>`).join("");
+
+  const rowsHtml = rows.map((row) => {
+    if (row.hub) {
+      return `<div class="sch-row"><div class="sch-time">${esc(row.time)}</div>
+        <div class="sch-body"><span class="sch-title">${esc(row.title)}</span>
+        <button class="sch-chip" onclick="App.openGrade(${row.hub})">📚 Free Books</button></div></div>`;
+    }
+    if (row.routine) {
+      return `<div class="sch-row sch-routine"><div class="sch-time">${esc(row.time)}</div>
+        <div class="sch-body"><span class="sch-title">${esc(row.title)}</span></div></div>`;
+    }
+    const keys = resolveRowKeys(g, row);
+    const chips = keys.map((k) => {
+      const meta = subjectsFor(g).find((s) => s.key === k);
+      const label = meta ? `${meta.emoji} ${meta.label}` : k;
+      return `<button class="sch-chip" onclick="App.openLessonDirect(${g},'${k}')">${label}</button>`;
+    }).join("");
+    return `<div class="sch-row"><div class="sch-time">${esc(row.time)}</div>
+      <div class="sch-body"><span class="sch-title">${esc(row.title)}</span>
+      ${chips || '<span class="sch-none">Not part of this grade\'s subjects</span>'}
+      ${row.note ? `<span class="sch-note">(${esc(row.note)})</span>` : ""}</div></div>`;
+  }).join("");
+
+  return `<div class="view">
+    <h1>🗓️ Daily Schedule</h1>
+    <p class="lead">A suggested daily structure so learning at home can follow a rhythm close to a
+    typical US school day: recess and lunch in the right places, and about the same number of
+    instructional hours. Swap subjects around freely to fit your family — this is a starting point,
+    not a requirement.</p>
+    <div class="sch-picker no-print">${bandBtns}</div>
+    <p class="sch-band-sub">${esc(band.sub)}</p>
+    <div class="sch-picker no-print">${gradeBtns}</div>
+    ${locked ? `<p class="sch-locked">🔒 ${esc(gradeName(g))} is a Premium grade. <a href="#pricing" onclick="App.go('pricing');return false">See Plans</a> — you can still browse this schedule and open any free Books block.</p>` : ""}
+    <div class="card sch-table">${rowsHtml}</div>
+    <div class="no-print" style="margin-top:16px">
+      <button class="btn btn-primary" onclick="App.pickAssessGrade(${g});App.go('assessment')">📝 This Week's Assessment for ${esc(gradeName(g))}</button>
+      <button class="btn btn-ghost" onclick="window.print()">🖨️ Print Schedule</button>
+    </div>
+  </div>`;
+}
+
+// ---------- Weekly Assessment ----------
+function assessmentView() {
+  const g = state.assessGrade != null ? state.assessGrade : 1;
+  const locked = !canGrade(g);
+  const groups = locked ? [] : weeklyAssessment(g);
+  const marks = state.assessMarks;
+  let idx = 0;
+  const totalQ = groups.reduce((n, gr) => n + gr.items.length, 0);
+  const answeredIds = Object.keys(marks);
+  const correct = answeredIds.filter((k) => marks[k]).length;
+
+  const gradePicker = Array.from({ length: 13 }, (_, gr) => gr).map((gr) =>
+    `<button class="btn btn-sm ${gr === g ? "btn-primary" : "btn-ghost"}" onclick="App.pickAssessGrade(${gr})">${esc(gradeName(gr))}</button>`).join("");
+
+  const groupsHtml = groups.map((gr) => {
+    const items = gr.items.map((qa) => {
+      const id = gr.key + "-" + (idx++);
+      const mark = marks[id];
+      return `<div class="q-item">
+        <div>${qa.html ? qa.q : esc(qa.q)}<span class="write-line print-only"></span></div>
+        <div class="sch-mark no-print">
+          <button class="sch-mark-btn ${mark === true ? "on-yes" : ""}" onclick="App.markAssess('${id}',true)">✅ Got it</button>
+          <button class="sch-mark-btn ${mark === false ? "on-no" : ""}" onclick="App.markAssess('${id}',false)">❌ Missed it</button>
+        </div>
+      </div>`;
+    }).join("");
+    return `<div class="sch-subjgroup">
+      <h3>${gr.emoji} ${esc(gr.label)}</h3>
+      ${items}
+    </div>`;
+  }).join("");
+
+  const answersHtml = groups.map((gr) => `
+    <div class="sch-subjgroup">
+      <h3>${gr.emoji} ${esc(gr.label)}</h3>
+      ${gr.items.map((qa, i) => `<div class="q-item">${i + 1}. ${qa.html ? qa.q : esc(qa.q)}<span class="answer">Answer: ${esc(String(qa.a))}</span></div>`).join("")}
+    </div>`).join("");
+
+  return `<div class="view">
+    <h1>📝 Weekly Assessment</h1>
+    <p class="lead no-print">A short check-in pulled from this grade's own lessons across every subject —
+    print it for a paper test, or mark each question right on screen as your child answers out loud
+    and save the score to track progress week to week.</p>
+    <div class="sch-picker no-print">${gradePicker}</div>
+    ${locked ? `<p class="sch-locked">🔒 ${esc(gradeName(g))} is a Premium grade. <a href="#pricing" onclick="App.go('pricing');return false">See Plans</a> to unlock its assessment.</p>` : ""}
+    <div class="print-only print-header"><span class="brand">🌱 BrightSprouts Academy: ${esc(gradeName(g))} Weekly Assessment</span><span>Name: ____________ &nbsp; Date: ________</span></div>
+    ${groups.length ? `
+    <div class="no-print" style="margin:14px 0">
+      <button class="btn btn-primary" onclick="window.print()">🖨️ Print Assessment</button>
+      <label><input type="checkbox" id="key-toggle" onchange="App.toggleKey(this.checked)"> Show / print answer key</label>
+      <button class="btn btn-ghost" onclick="App.resetAssess()">↺ Reset Marks</button>
+    </div>
+    <div class="card">${groupsHtml}</div>
+    <div class="no-print sch-score-bar">
+      <b>Score so far: ${correct} / ${answeredIds.length}${totalQ ? ` (of ${totalQ} questions)` : ""}</b>
+      <button class="btn btn-primary" ${answeredIds.length ? "" : "disabled"} onclick="App.saveAssessment(${g},${groups.length})">💾 Save This Week's Score</button>
+      ${state.assessSaved ? `<span class="sch-saved">Saved! See it on your <a href="#account" onclick="App.go('account');return false">Account</a> page.</span>` : ""}
+    </div>
+    <div class="answers-section answers-page" style="display:none">
+      <h3>✅ Answer Key: ${esc(gradeName(g))} Weekly Assessment</h3>
+      ${answersHtml}
+    </div>` : locked ? "" : `<p class="sch-none">This grade doesn't have quizzable content yet.</p>`}
+  </div>`;
+}
+
 // ---------- Pricing ----------
 function pricingView() {
   const u = currentUser();
@@ -2500,6 +2620,12 @@ function accountView() {
         </div>
         <div id="ac-code-msg"></div>
       </div>` : `<p class="famcode-ok">🎟️ ${u.familyCode ? "Premium unlocked with a family code" : "Premium is active"}, enjoy everything!</p>`}
+      ${u.assessments && u.assessments.length ? `
+      <div style="margin-top:20px">
+        <h3>📝 Recent Weekly Assessments</h3>
+        ${u.assessments.slice().reverse().slice(0, 8).map((a) =>
+          `<div class="q-item">${esc(a.date)} — ${esc(gradeName(a.grade))}: <b>${a.correct} / ${a.total}</b> correct across ${a.subjects} subjects</div>`).join("")}
+      </div>` : ""}
       <div style="margin-top:20px;display:flex;gap:10px;flex-direction:column">
         ${u.plan !== "premium" ? `<button class="btn btn-primary" onclick="App.go('pricing')">⭐ Upgrade to Premium</button>` : ""}
         <button class="btn btn-ghost" onclick="App.logout()">Log Out</button>
@@ -2617,6 +2743,38 @@ const App = {
     if (!LESSONS[state.grade] || !LESSONS[state.grade][s]) return;
     state.reading = null;
     state.subject = s; go("lesson");
+  },
+  // Used by Schedule chips to jump straight to a specific grade+subject in one step.
+  // Falls back to the free Books tab if the grade is locked or the subject doesn't exist,
+  // matching openGrade()'s own fallback so a schedule link never blanks the page.
+  openLessonDirect(g, s) {
+    state.grade = g; state.reading = null;
+    state.subject = (canGrade(g) && LESSONS[g] && LESSONS[g][s]) ? s : "books";
+    go("lesson");
+  },
+  pickSchedBand(bandKey) {
+    const band = SCHED_BANDS.find((b) => b.key === bandKey);
+    if (!band) return;
+    state.schedBand = bandKey;
+    state.schedGrade = band.grades[0];
+    render();
+  },
+  pickSchedGrade(g) { state.schedGrade = g; render(); },
+  pickAssessGrade(g) { state.assessGrade = g; state.assessMarks = {}; state.assessSaved = false; render(); },
+  markAssess(id, correct) { state.assessMarks[id] = correct; state.assessSaved = false; render(); },
+  resetAssess() { state.assessMarks = {}; state.assessSaved = false; render(); },
+  saveAssessment(g, subjCount) {
+    const u = currentUser();
+    if (!u) { state.authMode = "signup"; state.authMsg = "Create your free account first, so your progress can be saved!"; go("auth"); return; }
+    const marks = Object.values(state.assessMarks);
+    if (!marks.length) return;
+    const correct = marks.filter(Boolean).length;
+    u.assessments = u.assessments || [];
+    u.assessments.push({ grade: g, date: new Date().toISOString().slice(0, 10), correct, total: marks.length, subjects: subjCount });
+    if (u.assessments.length > 30) u.assessments = u.assessments.slice(-30);
+    saveCurrentUser(u);
+    state.assessSaved = true;
+    render();
   },
   newSheet() { delete state.sheetCache[state.grade + "-" + state.subject]; render(); },
   newColorPage() { state.colorPick = null; render(); },
@@ -3672,7 +3830,8 @@ function render() {
     stories: storiesView, story: storyView, maker: makerView, library: libraryView,
     pricing: pricingView, auth: authView, account: accountView,
     contact: contactView, game: gameView, rewards: rewardsView, globe: globeView,
-    shop: shopView, cart: cartView, privacy: privacyView
+    shop: shopView, cart: cartView, privacy: privacyView,
+    schedule: scheduleView, assessment: assessmentView
   };
   // The top bar ships an emoji in the HTML so there is something there before any script runs.
   // Once the logo is available, swap in the real mark.
@@ -3735,7 +3894,7 @@ function applyHash() {
       state.view = "auth";
     }
     history.replaceState(null, "", location.pathname);
-  } else if (["home", "lessons", "stories", "maker", "library", "pricing", "privacy", "contact", "game", "rewards", "globe", "shop", "cart"].includes(h)) {
+  } else if (["home", "lessons", "stories", "maker", "library", "pricing", "privacy", "contact", "game", "rewards", "globe", "shop", "cart", "schedule", "assessment"].includes(h)) {
     state.view = h;
   }
 }
