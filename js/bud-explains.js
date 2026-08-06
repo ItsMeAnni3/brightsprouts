@@ -360,10 +360,17 @@
     }).join("") + '</div>';
   }
 
+  // Every screen after "Watch & Learn" carries this, so a child is never stuck inside a topic
+  // they didn't mean to open and can always get back to the list.
+  function backBar() {
+    return '<div class="be-back"><button type="button" class="btn btn-ghost btn-sm" onclick="BudExplains.menu()">← All Topics</button></div>';
+  }
+
   function beatHtml() {
     var t = state.topic, b = t.beats[state.beatIdx];
     var speaker = b.who === "bud" ? "Bud" : "Sprout";
     return '<div class="be-stage" style="--bec:' + t.accent + '">' +
+      backBar() +
       '<div class="jk-stage">' +
         '<div class="jk-host' + (b.who === "sprout" ? " be-talking" : "") + '">' + tvSproutSvg() + '<span class="jk-name">Sprout</span></div>' +
         '<div class="jk-host jk-buddy' + (b.who === "bud" ? " be-talking" : "") + (b.mood === "amazed" || b.mood === "surprised" ? " jk-laughing" : "") + '">' + budSvg() + '<span class="jk-name">Bud</span></div>' +
@@ -373,8 +380,11 @@
       '<div class="be-progress">' + t.beats.map(function (_, i) {
         return '<span class="pgdot ' + (i < state.beatIdx ? "past" : i === state.beatIdx ? "now" : "") + '"></span>';
       }).join("") + '</div>' +
-      '<button type="button" class="btn btn-primary" onclick="BudExplains.nextBeat()">' +
-        (state.beatIdx < t.beats.length - 1 ? "Next ▶" : "🧠 Take the Quiz") + '</button>' +
+      '<div class="be-nav">' +
+        (state.beatIdx > 0 ? '<button type="button" class="btn btn-secondary" onclick="BudExplains.prevBeat()">◀ Back</button>' : '') +
+        '<button type="button" class="btn btn-primary" onclick="BudExplains.nextBeat()">' +
+          (state.beatIdx < t.beats.length - 1 ? "Next ▶" : "🧠 Take the Quiz") + '</button>' +
+      '</div>' +
     '</div>';
   }
 
@@ -391,6 +401,7 @@
         ' onclick="BudExplains.answer(' + i + ')">' + esc(o) + '</button>';
     }).join("");
     return '<div class="be-stage" style="--bec:' + t.accent + '">' +
+      backBar() +
       '<h3 class="pgstagename">Quiz ' + (state.quizIdx + 1) + ' of ' + t.quiz.length + ': ' + esc(t.title) + '</h3>' +
       '<div class="be-line">' + esc(q.q) + '</div>' +
       '<div class="be-opts">' + optsHtml + '</div>' +
@@ -402,7 +413,7 @@
   function doneHtml() {
     var t = state.topic;
     return '<div class="be-stage" style="--bec:' + t.accent + '">' +
-      '<div class="be-hosts"><div class="jk-host">' + tvSproutSvg() + '<span class="jk-name">Sprout</span></div>' +
+      '<div class="jk-stage"><div class="jk-host">' + tvSproutSvg() + '<span class="jk-name">Sprout</span></div>' +
         '<div class="jk-host jk-buddy jk-laughing">' + budSvg() + '<span class="jk-name">Bud</span></div></div>' +
       '<div class="pgwin">🎉 You got ' + state.quizCorrect + ' of ' + t.quiz.length + ' right on ' + esc(t.title) + '!</div>' +
       '<button type="button" class="btn btn-primary" onclick="BudExplains.pick(\'' + t.key + '\')">🔁 Watch again</button>' +
@@ -419,6 +430,9 @@
       say(t.beats[0].text);
     },
     menu: function () {
+      // Leaving mid-scene must silence the narration too; Speech.speak() only cancels itself when
+      // the NEXT line starts, and going back to the list never starts one.
+      if (typeof Speech !== "undefined" && Speech.supported()) Speech.stop();
       state = { topic: null, beatIdx: 0, quizIdx: 0, quizCorrect: 0, quizPicked: null, showQuiz: false, done: false };
       paint();
     },
@@ -432,6 +446,13 @@
         state.showQuiz = true;
         paint();
       }
+    },
+    // Step back one line, for a child who missed what was said. Stops at the first beat.
+    prevBeat: function () {
+      if (!state.topic || state.beatIdx <= 0) return;
+      state.beatIdx--;
+      paint();
+      say(state.topic.beats[state.beatIdx].text);
     },
     answer: function (i) {
       if (state.quizPicked !== null) return;

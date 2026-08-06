@@ -226,6 +226,27 @@ window.addEventListener("load", function () {
   }
   ok(Rewards.load().stars === starsBeforeRepeat, "replaying an already-completed topic doesn't award extra stars (anti-farming)");
 
+  // ---------- 6b. back navigation: a child must never be stuck inside a topic ----------
+  BudExplains._test.reset();
+  BudExplains.pick("matter");
+  var beatScreen = BudExplains._html();
+  ok(beatScreen.indexOf("BudExplains.menu()") >= 0, "the scene screen offers an \"All Topics\" back button");
+  ok(beatScreen.indexOf("BudExplains.prevBeat()") === -1, "no \"Back\" step button on the very first beat (nothing to go back to)");
+  BudExplains.nextBeat();
+  ok(BudExplains._html().indexOf("BudExplains.prevBeat()") >= 0, "a \"Back\" step button appears from the second beat on");
+  ok(BudExplains._test.state().beatIdx === 1, "nextBeat() advanced to beat 1");
+  BudExplains.prevBeat();
+  ok(BudExplains._test.state().beatIdx === 0, "prevBeat() steps back to the previous line");
+  BudExplains.prevBeat();
+  ok(BudExplains._test.state().beatIdx === 0, "prevBeat() stops at the first beat instead of going negative");
+  // and from the quiz screen
+  var g2 = 0; while (!BudExplains._test.state().showQuiz && g2 < 30) { BudExplains.nextBeat(); g2++; }
+  ok(BudExplains._html().indexOf("BudExplains.menu()") >= 0, "the quiz screen also offers an \"All Topics\" back button");
+  // pressing it really does return to the picker, and clears the in-progress topic
+  BudExplains.menu();
+  ok(BudExplains._test.state().topic === null, "menu() clears the current topic");
+  ok(BudExplains._html().indexOf("be-picker") >= 0, "menu() returns to the topic picker");
+
   // ---------- 7. a wrong answer is marked wrong and does not count toward the score ----------
   BudExplains.pick("water");
   guard = 0; while (!BudExplains._test.state().showQuiz && guard < 30) { BudExplains.nextBeat(); guard++; }

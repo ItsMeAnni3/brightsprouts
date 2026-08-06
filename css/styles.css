@@ -2169,6 +2169,11 @@ img.imgoffline{background:#f7f4ff;border:1px dashed #d9d2ee;border-radius:10px;
 .be-icon{width:140px;height:auto;display:block;margin:0 auto}
 .be-line{background:rgba(255,255,255,.08);border-radius:12px;padding:12px 16px;margin:10px 0;font-size:1rem;line-height:1.5;text-align:left}
 .be-progress{display:flex;justify-content:center;gap:6px;margin-bottom:12px}
+.be-back{text-align:left;margin-bottom:6px}
+/* .btn-ghost is drawn for light cards; on this dark stage it needs a light outline to be visible */
+.be-back .btn-ghost{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.35);color:#fff}
+.be-back .btn-ghost:hover{background:rgba(255,255,255,.2)}
+.be-nav{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 .be-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
 .be-optbtn{background:#fff;border:2px solid #4a3f6b;border-radius:12px;padding:10px 8px;font-size:.92rem;font-weight:700;color:var(--ink);cursor:pointer}
 .be-optbtn:hover:not(:disabled){transform:translateY(-2px);border-color:var(--bec)}
