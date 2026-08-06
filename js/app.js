@@ -1594,7 +1594,7 @@ function lessonView() {
          </button>`).join("")}</div>
     </div>`;
   }
-  if (lesson.passage) body += `<div class="lesson-tools no-print" style="margin-bottom:10px">${listenBtn("passage-say", "Read this to me")}</div>
+  if (lesson.passage) body += `<div class="lesson-tools no-print" style="margin-bottom:10px">${listenBtn("passage-say", "Read this to me", "ls_" + g + "_" + subj + "_u" + unitIdx + "_p")}</div>
     <div class="passage-box" id="passage-say" data-say="${esc(lesson.passage)}"><b>📄 Read this:</b><br><br>${esc(lesson.passage)}</div>`;
   if (lesson.cards) {
     body += `<div class="kgrid">` + lesson.cards.map(c =>
@@ -2706,9 +2706,12 @@ function rewardOnce(key, stars, msg, badge) {
   return true;
 }
 // Read-aloud button (only shown if the browser supports free speech). Reads the text of element `srcId`.
-function listenBtn(srcId, label) {
+// `clipId` is optional: pass one where the text is fixed and has been recorded, leave it off
+// where the text is generated (a custom story) or simply too long to record (a whole book).
+// Either way the button reads the text; only the voice differs.
+function listenBtn(srcId, label, clipId) {
   if (typeof Speech === "undefined" || !Speech.supported()) return "";
-  return `<button class="btn btn-secondary btn-sm listenbtn no-print" data-listen="${srcId}" onclick="App.listen('${srcId}')">🔊 ${label || "Listen"}</button>`;
+  return `<button class="btn btn-secondary btn-sm listenbtn no-print" data-listen="${srcId}"${clipId ? ` data-clip="${clipId}"` : ""} onclick="App.listen('${srcId}')">🔊 ${label || "Listen"}</button>`;
 }
 let _toastT = null;
 function showToast(text, big) {
@@ -2733,17 +2736,23 @@ const App = {
   listen(srcId) {
     const btn = document.querySelector('[data-listen="' + srcId + '"]');
     if (typeof Speech === "undefined" || !Speech.supported()) return;
-    if (Speech.speaking()) {
-      Speech.stop();
-      document.querySelectorAll(".listenbtn").forEach(b => b.innerHTML = "🔊 Listen");
+    const reset = () => document.querySelectorAll(".listenbtn").forEach(b => b.innerHTML = "🔊 Listen");
+    const busy = (typeof Voice !== "undefined") ? Voice.playing() : Speech.speaking();
+    if (busy) {
+      if (typeof Voice !== "undefined") Voice.stop(); else Speech.stop();
+      reset();
       return;
     }
     const src = document.getElementById(srcId);
     if (!src) return;
     const text = src.getAttribute("data-say") || src.textContent || "";
-    document.querySelectorAll(".listenbtn").forEach(b => b.innerHTML = "🔊 Listen");
+    reset();
     if (btn) btn.innerHTML = "⏹ Stop";
-    Speech.speak(text, () => { if (btn) btn.innerHTML = "🔊 Listen"; });
+    // a recorded clip if this text has one (reading passages, moral stories); otherwise the
+    // device voice, which is the only option for a whole book or a story the child just invented
+    const clip = btn && btn.getAttribute("data-clip");
+    if (typeof Voice !== "undefined") Voice.play(clip, text, "mom", () => { if (btn) btn.innerHTML = "🔊 Listen"; });
+    else Speech.speak(text, () => { if (btn) btn.innerHTML = "🔊 Listen"; }, "en", null, "mom");
   },
 
   // Read the whole lesson: the intro, then each "Let's Learn" bullet, back to back.
