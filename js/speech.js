@@ -7,9 +7,25 @@
 // is. Chrome and Edge stream the recorded audio to a cloud service to transcribe it; only Safari
 // does some of it on device. That is why the microphone is opt-in per tap, never listens on page
 // load, and stops the moment it has a sentence. See README for what to tell families.
+// ---- Who is talking ----
+// Three voices across the whole site, all American English, all from the device's own engine:
+//   mom    the grown-up reading voice: warm, unhurried, the default everywhere
+//   sprout Sprout the seedling: a bright, clear child
+//   bud    Bud the flower: a younger, goofier child, deliberately sillier than Sprout
+// The device usually ships ONE good US voice, not three, so the characters are made by shifting
+// pitch and pace off that same voice rather than by hoping a child voice is installed. Pitch is
+// capped at 2 by the Web Speech spec; past about 1.7 the voice turns into a chipmunk, which is
+// funny for one line and unlistenable for a lesson, so the character values stay well under it.
+const SPEECH_ROLES = {
+  mom:    { pitch: 1.02, rate: 0.92 },
+  sprout: { pitch: 1.42, rate: 1.00 },
+  bud:    { pitch: 1.60, rate: 1.06 }
+};
+
 const Speech = {
   supported() { return typeof window !== "undefined" && "speechSynthesis" in window && typeof SpeechSynthesisUtterance !== "undefined"; },
   speaking() { return this.supported() && window.speechSynthesis.speaking; },
+  roles: SPEECH_ROLES,
   _voice(lang) {
     if (!this.supported()) return null;
     const vs = window.speechSynthesis.getVoices() || [];
@@ -18,8 +34,12 @@ const Speech = {
       return vs.find(v => /^es/i.test(v.lang) && /natural|google|helena|laura|sabina|mónica|monica|elvira/i.test(v.name))
           || vs.find(v => /^es/i.test(v.lang)) || null;
     }
-    // prefer a natural-sounding English voice; fall back to any English, then anything
-    return vs.find(v => /en[-_]?(GB|US)/i.test(v.lang) && /natural|google|samantha|libby|aria/i.test(v.name))
+    // American English on purpose, and a warm female voice first: these are the US voices that
+    // actually ship on Windows, macOS, iOS, Android and Chrome. Fall back to any US English, then
+    // any English at all, so a device with none of them still reads aloud.
+    return vs.find(v => /en[-_]?US/i.test(v.lang) && /natural|aria|jenny|michelle|ava|samantha|allison|zira|google us/i.test(v.name))
+        || vs.find(v => /en[-_]?US/i.test(v.lang) && /female|woman/i.test(v.name))
+        || vs.find(v => /en[-_]?US/i.test(v.lang))
         || vs.find(v => /^en/i.test(v.lang))
         || vs[0] || null;
   },
@@ -30,7 +50,8 @@ const Speech = {
   stop() { if (this.supported()) window.speechSynthesis.cancel(); },
   // speak plain text; onend() fires when finished or stopped. lang "es" speaks Spanish.
   // rate overrides the default pace (the Spelling Bee uses a slow one for "say it slowly").
-  speak(text, onend, lang, rate) {
+  // role picks who is talking: "mom" (default), "sprout" or "bud".
+  speak(text, onend, lang, rate, role) {
     if (!this.supported() || !text) { if (onend) onend(); return false; }
     this.stop();
     // long texts are chunked by sentence so a child can stop mid-way and browsers don't truncate
@@ -38,13 +59,15 @@ const Speech = {
     let i = 0;
     const es = lang === "es";
     const v = this._voice(es ? "es" : "en");
+    const r = SPEECH_ROLES[role] || SPEECH_ROLES.mom;
     const next = () => {
       if (i >= chunks.length) { if (onend) onend(); return; }
       const u = new SpeechSynthesisUtterance(chunks[i++].trim());
       // a little slower in Spanish — learners need to catch each syllable
-      u.rate = rate || (es ? 0.8 : 0.92); u.pitch = 1.05;
+      u.rate = rate || (es ? 0.8 : r.rate);
+      u.pitch = es ? 1.05 : r.pitch;        // the character pitch is for English only
       // with no Spanish voice we still tag the utterance es-ES so the browser can pick its own
-      if (v) { u.voice = v; u.lang = v.lang; } else { u.lang = es ? "es-ES" : "en-GB"; }
+      if (v) { u.voice = v; u.lang = v.lang; } else { u.lang = es ? "es-ES" : "en-US"; }
       u.onend = next;
       u.onerror = () => { if (onend) onend(); };
       window.speechSynthesis.speak(u);
@@ -75,7 +98,7 @@ const Listen = {
     const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
     let rec;
     try { rec = new Rec(); } catch (e) { if (cb.onError) cb.onError("unsupported"); if (cb.onEnd) cb.onEnd(); return false; }
-    rec.lang = "en-GB";
+    rec.lang = "en-US";
     rec.interimResults = true;      // show the words as the child says them
     rec.continuous = false;         // stop at the end of one question
     rec.maxAlternatives = 1;

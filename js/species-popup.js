@@ -120,7 +120,8 @@
 
   function speak() {
     if (typeof Speech !== "undefined" && chipEl) {
-      Speech.speak(caption(readData(chipEl)));
+      // straight information about a real animal or plant, so this is the grown-up reading voice
+      Speech.speak(caption(readData(chipEl)), null, "en", null, "mom");
     }
   }
 

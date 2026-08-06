@@ -346,9 +346,11 @@
   function $(id) { return document.getElementById(id); }
   function topicByKey(k) { return BUD_TOPICS.filter(function (t) { return t.key === k; })[0]; }
 
-  function say(text, then) {
+  // Each beat already records who is talking, so the scene is genuinely voiced as two characters
+  // rather than one narrator reading both parts.
+  function say(text, then, who) {
     if (typeof Speech === "undefined" || !Speech.supported()) { if (then) setTimeout(then, 250); return; }
-    Speech.speak(text, then);
+    Speech.speak(text, then, "en", null, who === "bud" ? "bud" : "sprout");
   }
 
   function pickerHtml() {
@@ -427,7 +429,7 @@
       if (!t) return;
       state = { topic: t, beatIdx: 0, quizIdx: 0, quizCorrect: 0, quizPicked: null, showQuiz: false, done: false };
       paint();
-      say(t.beats[0].text);
+      say(t.beats[0].text, null, t.beats[0].who);
     },
     menu: function () {
       // Leaving mid-scene must silence the narration too; Speech.speak() only cancels itself when
@@ -441,7 +443,7 @@
       if (state.beatIdx < t.beats.length - 1) {
         state.beatIdx++;
         paint();
-        say(t.beats[state.beatIdx].text);
+        say(t.beats[state.beatIdx].text, null, t.beats[state.beatIdx].who);
       } else {
         state.showQuiz = true;
         paint();
@@ -452,7 +454,7 @@
       if (!state.topic || state.beatIdx <= 0) return;
       state.beatIdx--;
       paint();
-      say(state.topic.beats[state.beatIdx].text);
+      say(state.topic.beats[state.beatIdx].text, null, state.topic.beats[state.beatIdx].who);
     },
     answer: function (i) {
       if (state.quizPicked !== null) return;

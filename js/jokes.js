@@ -306,9 +306,11 @@
   }
   function $(id) { return document.getElementById(id); }
 
+  // Sprout is the one holding the microphone, so the whole show is read in Sprout's voice.
+  // Bud never speaks here; he only laughs, which is drawn rather than spoken.
   function say(text, then) {
     if (state.muted || typeof Speech === "undefined" || !Speech.supported()) { if (then) setTimeout(then, 350); return; }
-    Speech.speak(text, then);
+    Speech.speak(text, then, "en", null, "sprout");
   }
 
   function laugh() {

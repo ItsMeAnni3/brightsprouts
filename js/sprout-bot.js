@@ -280,7 +280,8 @@
   function speak(text) {
     if (muted || typeof Speech === "undefined" || !Speech.supported()) return;
     if (els.avatarHead) els.avatarHead.classList.add("sb-talking");
-    Speech.speak(text, function () { if (els.avatarHead) els.avatarHead.classList.remove("sb-talking"); });
+    // this is Sprout answering in his own chat window, so it is Sprout's voice, not the reader's
+    Speech.speak(text, function () { if (els.avatarHead) els.avatarHead.classList.remove("sb-talking"); }, "en", null, "sprout");
   }
 
   function respondTo(question) {

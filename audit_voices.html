@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Voice roles audit</title></head>
+<body>
+<!-- Permanent audit for the site-wide voice roles in js/speech.js: one warm American grown-up
+     voice ("mom") for reading TO a child, and two distinct child voices for Sprout and Bud where
+     those characters are actually speaking.
+
+     None of this can be verified by listening in headless Chrome: the browser exposes
+     speechSynthesis but ships no voices there, so getVoices() returns an empty list and nothing is
+     ever audible. What CAN be verified, and is what actually breaks in practice, is the wiring:
+     that the right pitch/rate reaches the utterance for each role, that voice selection prefers
+     American English, that the Spanish path is not distorted by a character pitch, and that every
+     call site across the site passes the role it should. Those are all checked below against a
+     stubbed speech engine. -->
+<pre id="results">running…</pre>
+<script src="js/speech.js"></script>
+<script>
+// An audit that throws would otherwise sit on "running…" forever and look like a hang rather
+// than a failure. Surface it instead.
+window.onerror = function (msg, src, line) {
+  document.getElementById("results").textContent = "SCRIPT ERROR: " + msg + " (line " + line + ")";
+};
+window.addEventListener("load", function () {
+  var out = [], fails = 0;
+  function ok(c, m) { if (!c) { fails++; out.push("FAIL: " + m); } else out.push("ok:   " + m); }
+  function paint() {
+    document.getElementById("results").textContent =
+      (fails === 0 ? "ALL PASS (" + out.length + " checks)" : (fails + " FAILURES")) + "\n\n" + out.join("\n");
+  }
+
+  // ---------- stub the speech engine so utterances can be inspected ----------
+  var spoken = [];
+  function V(name, lang) { return { name: name, lang: lang }; }
+  var MOCK_VOICES = [
+    V("Microsoft George - English (United Kingdom)", "en-GB"),
+    V("Google UK English Female", "en-GB"),
+    V("Microsoft David - English (United States)", "en-US"),
+    V("Microsoft Aria Online (Natural) - English (United States)", "en-US"),
+    V("Microsoft Helena - Spanish (Spain)", "es-ES")
+  ];
+  window.speechSynthesis.getVoices = function () { return MOCK_VOICES; };
+  window.speechSynthesis.cancel = function () {};
+  window.speechSynthesis.speak = function (u) {
+    spoken.push({ text: u.text, pitch: u.pitch, rate: u.rate, lang: u.lang, voice: u.voice && u.voice.name });
+    setTimeout(function () { if (u.onend) u.onend(); }, 0);
+  };
+  // The real SpeechSynthesisUtterance refuses a `voice` that is not a genuine
+  // SpeechSynthesisVoice, and headless Chrome ships no voices to hand out — so the utterance
+  // class has to be stubbed as well, not just the synthesiser.
+  window.SpeechSynthesisUtterance = function (text) {
+    this.text = text; this.rate = 1; this.pitch = 1; this.lang = ""; this.voice = null;
+    this.onend = null; this.onerror = null;
+  };
+
+  function sayAndGrab(text, lang, rate, role, done) {
+    spoken = [];
+    Speech.speak(text, function () { done(spoken); }, lang, rate, role);
+  }
+
+  // ---------- 1. the role table itself ----------
+  ok(!!Speech.roles, "Speech.roles is exposed");
+  ["mom", "sprout", "bud"].forEach(function (r) {
+    ok(!!Speech.roles[r], "role \"" + r + "\" is defined");
+    if (Speech.roles[r]) {
+      var p = Speech.roles[r].pitch, rt = Speech.roles[r].rate;
+      ok(typeof p === "number" && p > 0 && p <= 2, r + " pitch is inside the Web Speech range 0-2 (" + p + ")");
+      ok(typeof rt === "number" && rt >= 0.5 && rt <= 1.5, r + " rate is a sane speaking pace (" + rt + ")");
+    }
+  });
+  var mom = Speech.roles.mom, sp = Speech.roles.sprout, bud = Speech.roles.bud;
+  ok(sp.pitch > mom.pitch, "Sprout is pitched above the grown-up voice (" + sp.pitch + " > " + mom.pitch + ")");
+  ok(bud.pitch > sp.pitch, "Bud is pitched above Sprout, so the two children are told apart (" + bud.pitch + " > " + sp.pitch + ")");
+  ok(bud.pitch <= 1.7, "Bud stays below the chipmunk threshold of 1.7 (" + bud.pitch + ")");
+  ok(mom.rate < 1.0, "the grown-up reading voice is unhurried (rate " + mom.rate + ")");
+
+  // ---------- 2. American English voice selection ----------
+  var v = Speech._voice("en");
+  ok(!!v, "an English voice is selected from the list");
+  ok(/en[-_]?US/i.test(v.lang), "the selected English voice is American, not British (" + v.lang + " " + v.name + ")");
+  ok(/aria/i.test(v.name), "the warm natural US voice wins over the other US voice (" + v.name + ")");
+  var es = Speech._voice("es");
+  ok(!!es && /^es/i.test(es.lang), "a real Spanish voice is still chosen for Spanish (" + (es && es.name) + ")");
+
+  // ---------- 3. each role reaches the utterance ----------
+  var queue = [
+    ["mom",    "This is a sentence for the grown-up voice."],
+    ["sprout", "This is Sprout talking."],
+    ["bud",    "This is Bud talking."],
+    [undefined, "No role was passed at all."]
+  ];
+  var i = 0;
+  function step() {
+    if (i >= queue.length) return spanishCheck();
+    var role = queue[i][0], text = queue[i][1];
+    sayAndGrab(text, "en", null, role, function (got) {
+      var label = role || "(default)";
+      ok(got.length > 0, label + ": something was actually spoken");
+      if (got.length) {
+        var want = Speech.roles[role] || Speech.roles.mom;
+        ok(Math.abs(got[0].pitch - want.pitch) < 1e-6, label + ": utterance pitch is " + got[0].pitch + " as expected");
+        ok(Math.abs(got[0].rate - want.rate) < 1e-6, label + ": utterance rate is " + got[0].rate + " as expected");
+        ok(/en[-_]?US/i.test(got[0].lang), label + ": utterance speaks American English (" + got[0].lang + ")");
+      }
+      i++; step();
+    });
+  }
+
+  function spanishCheck() {
+    // A character pitch must never bend the Spanish voice: Spanish is used to teach pronunciation,
+    // and a pitched-up vowel is a mispronounced vowel.
+    sayAndGrab("Hola, buenos dias.", "es", null, "bud", function (got) {
+      ok(got.length > 0, "Spanish: something was spoken");
+      if (got.length) {
+        ok(Math.abs(got[0].pitch - 1.05) < 1e-6, "Spanish keeps its own neutral pitch even when a character role is passed (" + got[0].pitch + ")");
+        ok(got[0].rate < 0.9, "Spanish is spoken slowly enough to hear each syllable (" + got[0].rate + ")");
+        ok(/^es/i.test(got[0].lang), "Spanish utterance is tagged Spanish (" + got[0].lang + ")");
+      }
+      rateOverride();
+    });
+  }
+
+  function rateOverride() {
+    // the Spelling Bee's "say it slowly" must still win over the role's own pace
+    sayAndGrab("apple", "en", 0.45, "mom", function (got) {
+      ok(got.length && Math.abs(got[0].rate - 0.45) < 1e-6, "an explicit rate overrides the role's default pace (" + (got[0] && got[0].rate) + ")");
+      chunkCheck();
+    });
+  }
+
+  function chunkCheck() {
+    sayAndGrab("First sentence. Second sentence! Third one?", "en", null, "sprout", function (got) {
+      ok(got.length === 3, "a multi-sentence line is still chunked per sentence (" + got.length + ")");
+      ok(got.every(function (u) { return Math.abs(u.pitch - Speech.roles.sprout.pitch) < 1e-6; }),
+         "every chunk keeps the same character pitch, so the voice does not change mid-line");
+      sourceCheck();
+    });
+  }
+
+  // ---------- 4. every call site across the site passes the role it should ----------
+  function sourceCheck() {
+    // Match the role literal as the final argument. A [^)]* pattern cannot be used here: real
+    // calls nest parentheses, e.g. Speech.speak(caption(readData(chipEl)), null, "en", null, "mom").
+    var wants = [
+      ["js/jokes.js",         /Speech\.speak\([\s\S]*?,\s*"sprout"\s*\)/,  "the Joke Show speaks in Sprout's voice"],
+      ["js/sprout-bot.js",    /Speech\.speak\([\s\S]*?,\s*"sprout"\s*\)/,  "Sprout's chat window speaks in Sprout's voice"],
+      ["js/species-popup.js", /Speech\.speak\([\s\S]*?,\s*"mom"\s*\)/,     "the species card uses the grown-up reading voice"],
+      ["js/bud-explains.js",  /who === "bud" \? "bud" : "sprout"/, "Bud Explains It picks the voice from who is speaking in each beat"]
+    ];
+    var done = 0;
+    wants.forEach(function (w) {
+      fetch(w[0]).then(function (r) { return r.text(); }).then(function (src) {
+        ok(w[1].test(src), w[2]);
+        if (++done === wants.length) budBeatsCheck();
+      });
+    });
+  }
+
+  function budBeatsCheck() {
+    // the three say() calls in Bud Explains It must each hand over the speaker
+    fetch("js/bud-explains.js").then(function (r) { return r.text(); }).then(function (src) {
+      // Count the scene say() calls (the ones that read a beat aloud) and require every one of
+      // them to hand over that beat's own speaker.
+      // The lookbehind matters: without it this also matches the `function say(...)` DEFINITION,
+      // because the match begins at "say(" and so never contains the word "function" to filter on.
+      var sceneCalls = src.match(/(?<!function )\bsay\([^;]*?\);/g) || [];
+      var withWho = sceneCalls.filter(function (c) { return /\.who\s*\)/.test(c); });
+      ok(sceneCalls.length >= 3, "Bud Explains It has its scene say() calls (" + sceneCalls.length + ")");
+      ok(withWho.length === sceneCalls.length,
+         "every scene say() call passes the beat's own speaker, so no line is read in the wrong voice (" +
+         withWho.length + "/" + sceneCalls.length + ")");
+      // and the recogniser listens in American English too
+      fetch("js/speech.js").then(function (r2) { return r2.text(); }).then(function (s2) {
+        ok(/rec\.lang = "en-US"/.test(s2), "the microphone also listens for American English");
+        ok(!/en-GB/.test(s2), "no British English left anywhere in speech.js");
+        paint();
+      });
+    });
+  }
+
+  step();
+});
+</script>
+</body></html>

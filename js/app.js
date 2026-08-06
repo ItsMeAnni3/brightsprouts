@@ -2699,6 +2699,9 @@ const App = {
   goAuth(mode) { state.authMode = mode; go("auth"); },
 
   // Read-aloud toggle. Speaks the text inside element `srcId`; press again (or its Stop) to halt.
+  // No role is passed, so this uses Speech's default "mom" voice: the warm grown-up reading
+  // voice. That is deliberate for lesson text, worksheets and the Spelling Bee, where a child is
+  // being read TO. Sprout and Bud's own voices are only used where those characters are talking.
   listen(srcId) {
     const btn = document.querySelector('[data-listen="' + srcId + '"]');
     if (typeof Speech === "undefined" || !Speech.supported()) return;
