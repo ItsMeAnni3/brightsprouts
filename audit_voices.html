@@ -163,7 +163,9 @@ window.addEventListener("load", function () {
       // The lookbehind matters: without it this also matches the `function say(...)` DEFINITION,
       // because the match begins at "say(" and so never contains the word "function" to filter on.
       var sceneCalls = src.match(/(?<!function )\bsay\([^;]*?\);/g) || [];
-      var withWho = sceneCalls.filter(function (c) { return /\.who\s*\)/.test(c); });
+      // `.who` is no longer the last argument -- a clip id follows it -- so match the argument
+      // itself rather than its old position before the closing bracket.
+      var withWho = sceneCalls.filter(function (c) { return /\.who\b/.test(c); });
       ok(sceneCalls.length >= 3, "Bud Explains It has its scene say() calls (" + sceneCalls.length + ")");
       ok(withWho.length === sceneCalls.length,
          "every scene say() call passes the beat's own speaker, so no line is read in the wrong voice (" +

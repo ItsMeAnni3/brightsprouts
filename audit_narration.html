@@ -49,11 +49,15 @@ window.addEventListener("load", function () {
      (missing.length ? " — missing " + missing.length + ": " + missing.slice(0, 6).join(", ") : ""));
 
   // ---------- 3. no orphan clips (a renamed line would leave one behind) ----------
+  // Lesson clips (ls_*) are excluded: enumerating them needs the whole app loaded, and this page
+  // deliberately loads only the two content files. audit_voices/app-level checks cover those.
   var want = {};
   wanted.forEach(function (id) { want[id] = 1; });
-  var orphans = manifestIds.filter(function (id) { return !want[id]; });
-  ok(orphans.length === 0, "no orphaned recordings left over from renamed or deleted lines" +
+  var orphans = manifestIds.filter(function (id) { return id.indexOf("ls_") !== 0 && !want[id]; });
+  ok(orphans.length === 0, "no orphaned show recordings left over from renamed or deleted lines" +
      (orphans.length ? " — " + orphans.length + ": " + orphans.slice(0, 6).join(", ") : ""));
+  var lessonClips = manifestIds.filter(function (id) { return id.indexOf("ls_") === 0; });
+  ok(lessonClips.length > 0, "the manifest also carries lesson narration (" + lessonClips.length + " clips)");
 
   // ---------- 4. ids are unique (two lines sharing an id would overwrite each other) ----------
   var seen = {}, dupes = [];
@@ -100,10 +104,60 @@ window.addEventListener("load", function () {
       played = []; spoke = [];
       Voice.play(null, "no id at all", "mom", function () {
         ok(spoke.length === 1 && played.length === 0, "a null id falls back cleanly rather than throwing");
-        offlineCheck();
+        lessonWiring();
       });
     });
   });
+
+  // ---------- 5b. lesson read-aloud: ids must be built by the same rule the pipeline used ----------
+  // currentLessonForSpeech() lives in js/app.js, which this page does not load (it needs the whole
+  // app). Check the rule itself instead: the prefix format, and that the button exists.
+  function lessonWiring() {
+    var files = [
+      ["js/app.js", /ls_" \+ g \+ "_" \+ subj \+ "_u" \+ unitIdx/, "lesson clip ids are built from grade, subject and unit"],
+      ["js/app.js", /App\.listenLesson\(\)/, "the lesson card has a Read this to me button"],
+      ["js/app.js", /listenLesson\(\)\s*\{/, "App.listenLesson is defined"],
+      ["js/app.js", /Voice\.playList\(/, "the lesson reads its lines back to back rather than one press each"],
+      ["js/speech.js", /_hush\(\)/, "Voice separates hushing the current line from cancelling a sequence"]
+    ];
+    var done = 0;
+    files.forEach(function (f) {
+      fetch(f[0]).then(function (r) { return r.text(); }).then(function (src) {
+        ok(f[1].test(src), f[2]);
+        if (++done === files.length) seqCheck();
+      });
+    });
+  }
+
+  // A sequence must play its lines IN ORDER and stop dead when superseded — the bug that would
+  // otherwise appear is a lesson halting after its first line, or two lessons talking at once.
+  function seqCheck() {
+    played = []; spoke = [];
+    var items = [
+      { id: "no_a", text: "one", role: "mom" },
+      { id: "no_b", text: "two", role: "mom" },
+      { id: "no_c", text: "three", role: "mom" }
+    ];
+    Voice.playList(items, function () {
+      ok(spoke.length === 3, "a 3-line sequence plays all 3 lines (" + spoke.length + ")");
+      ok(spoke.map(function (s) { return s.text; }).join(",") === "one,two,three",
+         "the lines play in order (" + spoke.map(function (s) { return s.text; }).join(",") + ")");
+
+      // starting a new sequence must abandon the old one rather than interleave
+      played = []; spoke = [];
+      var finished = 0;
+      Voice.playList([{ id: "no_x", text: "old", role: "mom" }, { id: "no_y", text: "older", role: "mom" }],
+                     function () { finished++; });
+      Voice.playList([{ id: "no_z", text: "new", role: "mom" }], function () {
+        setTimeout(function () {
+          ok(finished === 0, "the superseded sequence never reports completion");
+          var texts = spoke.map(function (s) { return s.text; });
+          ok(texts.indexOf("older") === -1, "the superseded sequence stops instead of talking over the new one (" + texts.join(",") + ")");
+          offlineCheck();
+        }, 30);
+      });
+    });
+  }
 
   // ---------- 6. the audio must NOT be in the offline precache ----------
   function offlineCheck() {

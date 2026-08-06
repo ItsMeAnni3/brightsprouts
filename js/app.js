@@ -1473,6 +1473,31 @@ function lessonsView() {
   </div>`;
 }
 
+// The spoken form of whatever lesson is on screen: the intro, then each "Let's Learn" bullet.
+// This MUST resolve the lesson exactly the way lessonView() does (currency copy, then unit),
+// or a clip id would point at a different lesson's recording. The recording pipeline builds its
+// filenames from the same rule, so the two cannot drift apart silently.
+function currentLessonForSpeech() {
+  const g = state.grade;
+  const subj = state.subject;
+  if (!LESSONS[g] || !LESSONS[g][subj]) return null;
+  const baseLesson = LESSONS[g][subj];
+  const curCcy = state.currency || "us";
+  let lesson = baseLesson.byCurrency
+    ? Object.assign({}, baseLesson, baseLesson.byCurrency[curCcy] || {})
+    : baseLesson;
+  let unitIdx = 0;
+  if (lesson.units && lesson.units.length) {
+    unitIdx = Math.min(Math.max(0, (state.unitPick || {})[g + "-" + subj] || 0), lesson.units.length - 1);
+    lesson = Object.assign({}, lesson, lesson.units[unitIdx]);
+  }
+  const prefix = "ls_" + g + "_" + subj + "_u" + unitIdx;
+  const items = [];
+  if (lesson.intro) items.push({ id: prefix + "_i", text: lesson.intro, role: "mom" });
+  (lesson.learn || []).forEach((l, i) => items.push({ id: prefix + "_b" + i, text: l, role: "mom" }));
+  return { g: g, subj: subj, unitIdx: unitIdx, prefix: prefix, items: items };
+}
+
 function lessonView() {
   const g = state.grade;
   // belt and braces: if state ever holds a subject this grade doesn't have, fall back to its first one
@@ -2063,6 +2088,9 @@ function lessonView() {
     <div class="card" id="lesson-card">
       <div class="print-only print-header"><span class="brand">🌱 BrightSprouts Academy: ${gradeName(g)} ${subjectsFor(g).find(s => s.key === subj).label}</span><span>Name: ____________ &nbsp; Date: ________</span></div>
       <div class="lesson-head"><span class="lesson-emoji">${lesson.emoji}</span><h2>${esc(lesson.title)}</h2></div>
+      ${(lesson.intro || (lesson.learn && lesson.learn.length)) ? `<div class="lesson-tools no-print" style="margin-bottom:10px">
+        <button class="btn btn-secondary btn-sm listenbtn" id="lesson-listen" onclick="App.listenLesson()">🔊 Read this to me</button>
+      </div>` : ""}
       <p class="lesson-intro">${esc(lesson.intro)}</p>
       ${lesson.learn ? `<div class="learn-box"><h3>🧠 Let's Learn!</h3><ul>${lesson.learn.map(l => `<li>${esc(l)}</li>`).join("")}</ul></div>` : ""}
       ${lesson.parentNote ? `<div class="parentnote"><h3>👩‍👧 For the grown-up</h3><p>${esc(lesson.parentNote)}</p></div>` : ""}
@@ -2716,6 +2744,22 @@ const App = {
     document.querySelectorAll(".listenbtn").forEach(b => b.innerHTML = "🔊 Listen");
     if (btn) btn.innerHTML = "⏹ Stop";
     Speech.speak(text, () => { if (btn) btn.innerHTML = "🔊 Listen"; });
+  },
+
+  // Read the whole lesson: the intro, then each "Let's Learn" bullet, back to back.
+  // The pricing page promises "read-aloud on every lesson"; before this existed only reading
+  // passages, book chapters and stories could be read aloud, so the main lesson body could not.
+  // Clip ids match the recording pipeline: ls_<grade>_<subject>_u<unit>_i and ..._b<n>.
+  listenLesson() {
+    const btn = document.getElementById("lesson-listen");
+    const reset = () => { if (btn) btn.innerHTML = "🔊 Read this to me"; };
+    if (typeof Voice === "undefined") return;
+    if (Voice.playing()) { Voice.stop(); reset(); return; }
+
+    const cur = currentLessonForSpeech();
+    if (!cur || !cur.items.length) return;
+    if (btn) btn.innerHTML = "⏹ Stop";
+    Voice.playList(cur.items, reset);
   },
 
   // Speak one word/phrase aloud in its card's language; the tapped card lights up while it plays.

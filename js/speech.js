@@ -90,23 +90,56 @@ const Voice = {
   has(id) {
     return typeof VOICE_CLIPS !== "undefined" && !!id && !!VOICE_CLIPS[id];
   },
-  stop() {
+  _seq: 0,
+  // Silence whatever is sounding right now, WITHOUT cancelling a running sequence. play() uses
+  // this between the lines of a lesson; if it cancelled the sequence, a lesson would stop dead
+  // after its first line.
+  _hush() {
     if (this._audio) { try { this._audio.pause(); } catch (e) {} this._audio = null; }
     if (typeof Speech !== "undefined") Speech.stop();
   },
+  // Stop everything and abandon any sequence in progress. This is what a Stop button, muting,
+  // or navigating away should call.
+  stop() {
+    this._seq++;
+    this._hush();
+  },
+  playing() { return !!this._audio || (typeof Speech !== "undefined" && Speech.speaking()); },
+  // Play a list of [{id, text, role}] back to back, so a lesson reads as one continuous piece
+  // rather than needing a press per line. A newer request bumps _seq, and any in-flight step
+  // sees it has been superseded and gives up rather than talking over the new one.
+  playList(items, onend) {
+    this.stop();
+    const token = this._seq;
+    let i = 0;
+    const step = () => {
+      if (token !== this._seq) return;            // superseded
+      if (i >= items.length) { if (onend) onend(); return; }
+      const it = items[i++];
+      this.play(it.id, it.text, it.role, step, token);
+    };
+    step();
+  },
   // Play the recording for `id` if there is one; otherwise speak `text` with the device voice.
   // Either way onend() fires exactly once, so callers do not care which happened.
-  play(id, text, role, onend) {
-    this.stop();
-    var done = false;
-    var finish = function () { if (!done) { done = true; if (onend) onend(); } };
+  play(id, text, role, onend, token) {
+    this._hush();
+    const self = this;
+    let done = false;
+    const finish = function () {
+      if (done) return;
+      done = true;
+      // a step from an abandoned sequence must not advance the new one
+      if (token !== undefined && token !== self._seq) return;
+      if (onend) onend();
+    };
     if (!this.has(id)) { Speech.speak(text, finish, "en", null, role); return false; }
-    var a = new Audio("audio/" + id + ".mp3");
+    const a = new Audio("audio/" + id + ".mp3");
     this._audio = a;
     a.onended = finish;
     // a missing or unplayable file must not swallow the line: read it with the device voice
     a.onerror = function () { Speech.speak(text, finish, "en", null, role); };
-    var p = a.play();
+    const p = a.play();
     if (p && p.catch) p.catch(function () { Speech.speak(text, finish, "en", null, role); });
     return true;
   }
