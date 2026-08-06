@@ -308,9 +308,17 @@
 
   // Sprout is the one holding the microphone, so the whole show is read in Sprout's voice.
   // Bud never speaks here; he only laughs, which is drawn rather than spoken.
-  function say(text, then) {
-    if (state.muted || typeof Speech === "undefined" || !Speech.supported()) { if (then) setTimeout(then, 350); return; }
+  // `id` picks the pre-recorded clip; Voice.play falls back to the device voice without one.
+  function say(text, then, id) {
+    if (state.muted) { if (then) setTimeout(then, 350); return; }
+    if (typeof Voice !== "undefined") { Voice.play(id, text, "sprout", then); return; }
+    if (typeof Speech === "undefined" || !Speech.supported()) { if (then) setTimeout(then, 350); return; }
     Speech.speak(text, then, "en", null, "sprout");
+  }
+  // the clip id is keyed to the joke's position in the JOKES array, not to its text
+  function jokeClipId(joke, part) {
+    var i = JOKES.indexOf(joke);
+    return i < 0 ? null : "jk_" + i + "_" + part;
   }
 
   function laugh() {
@@ -362,7 +370,7 @@
       if (punch) { punch.hidden = true; punch.textContent = ""; }
       if (go) go.textContent = "😆 What's the answer?";
       paintCount();
-      say(j.q);
+      say(j.q, null, jokeClipId(j, "q"));
     },
     reveal: function () {
       var j = state.order[state.at];
@@ -371,7 +379,7 @@
       var punch = $("jk-punch"), go = $("jk-go");
       if (punch) { punch.textContent = j.a; punch.hidden = false; }
       if (go) go.textContent = "▶ Next joke!";
-      say(j.a, laugh);
+      say(j.a, laugh, jokeClipId(j, "a"));
       if (state.muted) laugh();
     },
     channel: function (ch) {
@@ -392,7 +400,9 @@
     toggleSound: function () {
       state.muted = !state.muted;
       try { localStorage.setItem("bs_sproutbot_mute", state.muted ? "1" : "0"); } catch (e) {}
-      if (state.muted && typeof Speech !== "undefined") Speech.stop();
+      // muting has to silence a playing RECORDING too, not just the device voice
+      if (state.muted && typeof Voice !== "undefined") Voice.stop();
+      else if (state.muted && typeof Speech !== "undefined") Speech.stop();
       var b = $("jk-sound");
       if (b) {
         b.textContent = state.muted ? "🔇" : "🔊";

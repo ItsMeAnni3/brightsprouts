@@ -347,10 +347,13 @@
   function topicByKey(k) { return BUD_TOPICS.filter(function (t) { return t.key === k; })[0]; }
 
   // Each beat already records who is talking, so the scene is genuinely voiced as two characters
-  // rather than one narrator reading both parts.
-  function say(text, then, who) {
+  // rather than one narrator reading both parts. `id` selects the pre-recorded clip; without one
+  // (or offline) Voice.play falls back to the device voice with the same character role.
+  function say(text, then, who, id) {
+    var role = who === "bud" ? "bud" : "sprout";
+    if (typeof Voice !== "undefined") { Voice.play(id, text, role, then); return; }
     if (typeof Speech === "undefined" || !Speech.supported()) { if (then) setTimeout(then, 250); return; }
-    Speech.speak(text, then, "en", null, who === "bud" ? "bud" : "sprout");
+    Speech.speak(text, then, "en", null, role);
   }
 
   function pickerHtml() {
@@ -429,12 +432,13 @@
       if (!t) return;
       state = { topic: t, beatIdx: 0, quizIdx: 0, quizCorrect: 0, quizPicked: null, showQuiz: false, done: false };
       paint();
-      say(t.beats[0].text, null, t.beats[0].who);
+      say(t.beats[0].text, null, t.beats[0].who, "be_" + t.key + "_0");
     },
     menu: function () {
       // Leaving mid-scene must silence the narration too; Speech.speak() only cancels itself when
       // the NEXT line starts, and going back to the list never starts one.
-      if (typeof Speech !== "undefined" && Speech.supported()) Speech.stop();
+      if (typeof Voice !== "undefined") Voice.stop();
+      else if (typeof Speech !== "undefined" && Speech.supported()) Speech.stop();
       state = { topic: null, beatIdx: 0, quizIdx: 0, quizCorrect: 0, quizPicked: null, showQuiz: false, done: false };
       paint();
     },
@@ -443,7 +447,7 @@
       if (state.beatIdx < t.beats.length - 1) {
         state.beatIdx++;
         paint();
-        say(t.beats[state.beatIdx].text, null, t.beats[state.beatIdx].who);
+        say(t.beats[state.beatIdx].text, null, t.beats[state.beatIdx].who, "be_" + t.key + "_" + state.beatIdx);
       } else {
         state.showQuiz = true;
         paint();
@@ -454,7 +458,7 @@
       if (!state.topic || state.beatIdx <= 0) return;
       state.beatIdx--;
       paint();
-      say(state.topic.beats[state.beatIdx].text, null, state.topic.beats[state.beatIdx].who);
+      say(state.topic.beats[state.beatIdx].text, null, state.topic.beats[state.beatIdx].who, "be_" + state.topic.key + "_" + state.beatIdx);
     },
     answer: function (i) {
       if (state.quizPicked !== null) return;

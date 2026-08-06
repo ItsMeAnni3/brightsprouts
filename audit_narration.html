@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Recorded narration audit</title></head>
+<body>
+<!-- Permanent audit for the recorded ElevenLabs narration layer.
+
+     The risk here is not "does it sound good" (nobody can check that automatically) but
+     "does the right recording play for the right line, and does anything without a recording
+     still get read aloud". A clip mapped to the wrong id would play the wrong sentence with a
+     straight face, and a missing clip that silently plays nothing would leave a pre-reader stuck.
+
+     So this checks three things against the REAL manifest and the REAL site data:
+       1. every id the site can ask for actually exists in the manifest
+       2. every id in the manifest is one the site can actually ask for (no orphans)
+       3. Voice.play falls back to the device voice for an unknown id, and still calls onend once
+     Audio cannot be heard in headless Chrome, so playback is checked by stubbing Audio(). -->
+<pre id="results">running…</pre>
+<script src="js/voice-manifest.js"></script>
+<script src="js/speech.js"></script>
+<script src="js/jokes.js"></script>
+<script src="js/bud-explains.js"></script>
+<script>
+window.onerror = function (m, s, l) {
+  document.getElementById("results").textContent = "SCRIPT ERROR: " + m + " (line " + l + ")";
+};
+window.addEventListener("load", function () {
+  var out = [], fails = 0;
+  function ok(c, m) { if (!c) { fails++; out.push("FAIL: " + m); } else out.push("ok:   " + m); }
+  function paint() {
+    document.getElementById("results").textContent =
+      (fails === 0 ? "ALL PASS (" + out.length + " checks)" : (fails + " FAILURES")) + "\n\n" + out.join("\n");
+  }
+
+  // ---------- 1. the manifest exists and is non-trivial ----------
+  ok(typeof VOICE_CLIPS !== "undefined", "js/voice-manifest.js defines VOICE_CLIPS");
+  var manifestIds = Object.keys(VOICE_CLIPS || {});
+  ok(manifestIds.length > 250, "the manifest lists a real body of clips (" + manifestIds.length + ")");
+
+  // ---------- 2. every id the site can ask for is present ----------
+  var wanted = [];
+  BUD_TOPICS.forEach(function (t) {
+    t.beats.forEach(function (b, i) { wanted.push("be_" + t.key + "_" + i); });
+    t.quiz.forEach(function (q, i) { wanted.push("beq_" + t.key + "_" + i); });
+  });
+  JOKES.forEach(function (j, i) { wanted.push("jk_" + i + "_q"); wanted.push("jk_" + i + "_a"); });
+  ok(wanted.length > 250, "the site can ask for " + wanted.length + " distinct clips");
+
+  var missing = wanted.filter(function (id) { return !VOICE_CLIPS[id]; });
+  ok(missing.length === 0, "every clip the site asks for exists" +
+     (missing.length ? " — missing " + missing.length + ": " + missing.slice(0, 6).join(", ") : ""));
+
+  // ---------- 3. no orphan clips (a renamed line would leave one behind) ----------
+  var want = {};
+  wanted.forEach(function (id) { want[id] = 1; });
+  var orphans = manifestIds.filter(function (id) { return !want[id]; });
+  ok(orphans.length === 0, "no orphaned recordings left over from renamed or deleted lines" +
+     (orphans.length ? " — " + orphans.length + ": " + orphans.slice(0, 6).join(", ") : ""));
+
+  // ---------- 4. ids are unique (two lines sharing an id would overwrite each other) ----------
+  var seen = {}, dupes = [];
+  wanted.forEach(function (id) { if (seen[id]) dupes.push(id); seen[id] = 1; });
+  ok(dupes.length === 0, "every clip id is unique" + (dupes.length ? ": " + dupes.slice(0, 5).join(", ") : ""));
+
+  // ---------- 5. the Voice layer ----------
+  ok(typeof Voice !== "undefined", "Voice is defined");
+  ok(typeof Voice.play === "function" && typeof Voice.has === "function" && typeof Voice.stop === "function",
+     "Voice exposes play/has/stop");
+  ok(Voice.has(wanted[0]) === true, "Voice.has() is true for a real clip (" + wanted[0] + ")");
+  ok(Voice.has("no_such_clip_xyz") === false, "Voice.has() is false for an unknown id");
+
+  // stub Audio + the speech engine so playback can be observed without any sound
+  var played = [], spoke = [];
+  window.Audio = function (src) {
+    played.push(src);
+    var self = this;
+    this.play = function () { setTimeout(function () { if (self.onended) self.onended(); }, 0); return { catch: function () {} }; };
+    this.pause = function () {};
+  };
+  Speech.speak = function (text, onend, lang, rate, role) {
+    spoke.push({ text: text, role: role });
+    setTimeout(function () { if (onend) onend(); }, 0);
+    return true;
+  };
+
+  // a known clip must play the recording, not the device voice
+  played = []; spoke = [];
+  Voice.play(wanted[0], "some text", "sprout", function () {
+    ok(played.length === 1, "a known id plays its recording");
+    ok(played[0] === "audio/" + wanted[0] + ".mp3", "the recording path is built from the id (" + played[0] + ")");
+    ok(spoke.length === 0, "a known id does NOT also fire the device voice");
+
+    // an unknown clip must fall back, keep the character role, and still finish
+    played = []; spoke = [];
+    Voice.play("no_such_clip_xyz", "fallback line", "bud", function () {
+      ok(played.length === 0, "an unknown id plays no recording");
+      ok(spoke.length === 1, "an unknown id falls back to the device voice");
+      ok(spoke[0].role === "bud", "the fallback keeps the character's voice role (" + spoke[0].role + ")");
+      ok(spoke[0].text === "fallback line", "the fallback speaks the real line");
+
+      // a null id (a line with no recording planned) must behave the same way
+      played = []; spoke = [];
+      Voice.play(null, "no id at all", "mom", function () {
+        ok(spoke.length === 1 && played.length === 0, "a null id falls back cleanly rather than throwing");
+        offlineCheck();
+      });
+    });
+  });
+
+  // ---------- 6. the audio must NOT be in the offline precache ----------
+  function offlineCheck() {
+    fetch("sw.js").then(function (r) { return r.text(); }).then(function (sw) {
+      ok(sw.indexOf("voice-manifest.js") >= 0, "the manifest IS precached, so the app knows offline what exists");
+      ok(!/["']\.\/audio\//.test(sw), "the mp3s are NOT precached — they would bloat the offline install");
+      wiringCheck();
+    });
+  }
+
+  // ---------- 7. the call sites pass ids ----------
+  function wiringCheck() {
+    var files = [
+      ["js/jokes.js", /jokeClipId\(j, "q"\)/, "the Joke Show passes a clip id for the set-up"],
+      ["js/jokes.js", /jokeClipId\(j, "a"\)/, "the Joke Show passes a clip id for the punchline"],
+      ["js/bud-explains.js", /"be_" \+ t\.key \+ "_0"/, "Bud Explains It passes a clip id for the first beat"],
+      ["js/jokes.js", /Voice\.stop\(\)/, "muting the show also stops a playing recording"]
+    ];
+    var done = 0;
+    files.forEach(function (f) {
+      fetch(f[0]).then(function (r) { return r.text(); }).then(function (src) {
+        ok(f[1].test(src), f[2]);
+        if (++done === files.length) paint();
+      });
+    });
+  }
+});
+</script>
+</body></html>
