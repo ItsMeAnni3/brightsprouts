@@ -2205,3 +2205,20 @@ img.imgoffline{background:#f7f4ff;border:1px dashed #d9d2ee;border-radius:10px;
   .be-talking .jk-sprout,.be-talking .jk-bud,.be-tw,.be-sun,.be-drip,.be-jiggle,.be-zoom,.be-spark,.be-scroll,.be-seesaw,.be-spin,.be-swap{animation:none !important}
 }
 @media (max-width:600px){ .be-opts{grid-template-columns:1fr} }
+
+
+/* ---------- Cursive practice sheet ---------- */
+.curs-note{background:#f4f0ff;border-left:4px solid var(--purple);border-radius:0 10px 10px 0;
+  padding:10px 14px;margin:10px 0;font-size:.92rem;color:#4a3f7a}
+.curs-sheet{margin-top:8px}
+.curs-line{display:flex;align-items:center;gap:10px;margin-bottom:2px;break-inside:avoid}
+.curs-label{flex:0 0 68px;text-align:right;font-family:var(--display);font-weight:700;
+  font-size:.85rem;color:#8a86a8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cursrow{flex:1;width:100%;height:auto;max-width:700px}
+.curs-tip{font-size:.86rem;color:#6a668c;margin-top:10px}
+@media print{
+  .curs-note{background:#fff;border-left:3px solid #999}
+  .curs-label{color:#555}
+  .curs-line{margin-bottom:0}
+}
+@media (max-width:600px){ .curs-label{flex-basis:44px;font-size:.75rem} }

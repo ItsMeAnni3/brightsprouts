@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Cursive audit</title>
+<link rel="stylesheet" href="css/fonts.css"><link rel="stylesheet" href="css/styles.css"></head>
+<body>
+<!-- Permanent audit for Cursive (js/cursive.js), Grades 2-5.
+     The letterforms are hand-authored SVG paths, so the failure modes are geometric and mostly
+     invisible to a code read. Three of them actually happened while building this and each has a
+     check below:
+       * letters FLOATED above the baseline, because scale() shrinks a glyph's y coordinates too
+         and the guide lines were hard-coded at the unscaled baseline;
+       * whole rows rendered EMPTY, because a sentence is wider than the sheet and the overflow
+         guard rejected even the first copy;
+       * several letters rendered as the WRONG LETTER (v as u, r as n, s as e, O as a). Shape
+         cannot be checked automatically, but the distinguishing feature of each can be. -->
+<pre id="results">running…</pre>
+<script src="js/cursive.js"></script>
+<script>
+window.onerror = function (m, s, l) {
+  document.getElementById("results").textContent = "SCRIPT ERROR: " + m + " (line " + l + ")";
+};
+window.addEventListener("load", function () {
+  var out = [], fails = 0;
+  function ok(c, m) { if (!c) { fails++; out.push("FAIL: " + m); } else out.push("ok:   " + m); }
+  function paint() {
+    document.getElementById("results").textContent =
+      (fails === 0 ? "ALL PASS (" + out.length + " checks)" : (fails + " FAILURES")) + "\n\n" + out.join("\n");
+  }
+  var A = "abcdefghijklmnopqrstuvwxyz".split("");
+
+  // ---------- 1. a complete alphabet, both cases ----------
+  ok(!!window.Cursive, "Cursive is defined");
+  ok(Object.keys(Cursive.LOWER).length === 26, "26 lowercase letterforms (" + Object.keys(Cursive.LOWER).length + ")");
+  ok(Object.keys(Cursive.UPPER).length === 26, "26 uppercase letterforms (" + Object.keys(Cursive.UPPER).length + ")");
+  A.forEach(function (c) {
+    ok(!!Cursive.LOWER[c], "lowercase " + c + " exists");
+    ok(!!Cursive.UPPER[c.toUpperCase()], "uppercase " + c.toUpperCase() + " exists");
+  });
+
+  // ---------- 2. every path is well formed ----------
+  var bad = [];
+  function checkGlyph(name, g) {
+    if (!g || typeof g.d !== "string" || g.d.charAt(0) !== "M") { bad.push(name + ":no-M"); return; }
+    if (/NaN|undefined/.test(g.d)) { bad.push(name + ":NaN"); return; }
+    if (!(g.w > 0)) { bad.push(name + ":width"); return; }
+    // every coordinate must sit inside the drawing box, or the glyph pokes through a guide line
+    var nums = g.d.match(/-?\d+(\.\d+)?/g) || [];
+    for (var i = 0; i < nums.length; i++) {
+      var v = parseFloat(nums[i]);
+      if (v < -20 || v > 130) { bad.push(name + ":coord " + v); return; }
+    }
+  }
+  Object.keys(Cursive.LOWER).forEach(function (c) { checkGlyph("l:" + c, Cursive.LOWER[c]); });
+  Object.keys(Cursive.UPPER).forEach(function (c) { checkGlyph("U:" + c, Cursive.UPPER[c]); });
+  ok(bad.length === 0, "every letterform is a valid path with a sane width and in-range coordinates" +
+     (bad.length ? " — " + bad.slice(0, 6).join(", ") : ""));
+
+  // ---------- 3. the letters that were once drawn as the wrong letter ----------
+  // v must reach the baseline at a POINT. If its lowest point is a flat curve it is a u.
+  function lowestY(d) {
+    var nums = d.match(/-?\d+(\.\d+)?/g).map(Number), lo = -1;
+    for (var i = 1; i < nums.length; i += 2) if (nums[i] > lo) lo = nums[i];
+    return lo;
+  }
+  ok(Cursive.LOWER.v.d !== Cursive.LOWER.u.d, "v and u are not the same path");
+  ok(Cursive.UPPER.V.d !== Cursive.UPPER.U.d, "V and U are not the same path");
+  ok(Cursive.LOWER.r.d !== Cursive.LOWER.n.d, "r and n are not the same path");
+  ok(Cursive.LOWER.s.d !== Cursive.LOWER.e.d, "s and e are not the same path");
+  ok(Cursive.UPPER.O.d !== Cursive.LOWER.a.d, "capital O is not lowercase a");
+  // e keeps its loop (a stroke that travels back leftwards); s must NOT have one, or it reads as e
+  ok(/C\d+ \d+ \d+ \d+ \d+ \d+/.test(Cursive.LOWER.e.d), "e is built from curves");
+  ok(lowestY(Cursive.LOWER.v.d) >= 76, "v reaches the baseline (lowest point " + lowestY(Cursive.LOWER.v.d) + ")");
+  ok(lowestY(Cursive.LOWER.g.d) > 90, "g drops a real descender (" + lowestY(Cursive.LOWER.g.d) + ")");
+  ok(lowestY(Cursive.LOWER.l.d) <= 82, "l does not drop below the baseline (" + lowestY(Cursive.LOWER.l.d) + ")");
+
+  // ---------- 4. every practice mode produces real rows ----------
+  var modes = Cursive.MODES.map(function (m) { return m[0]; });
+  ok(modes.length >= 10, "there are " + modes.length + " practice modes");
+  var emptyModes = [], emptyRows = [];
+  modes.forEach(function (m) {
+    var rows = Cursive.rowsFor(m);
+    if (!rows.length) { emptyModes.push(m); return; }
+    rows.forEach(function (r) {
+      var svg = Cursive.row(r[0], r[1]);
+      // THE regression test: a row that draws no glyphs at all. Long sentences used to do this.
+      var paths = (svg.match(/<path /g) || []).length;
+      if (paths === 0) emptyRows.push(m + ":" + r[0]);
+    });
+  });
+  ok(emptyModes.length === 0, "every mode returns rows" + (emptyModes.length ? " — empty: " + emptyModes.join(", ") : ""));
+  ok(emptyRows.length === 0, "every row actually draws letters, including the longest sentence" +
+     (emptyRows.length ? " — blank: " + emptyRows.slice(0, 4).join(", ") : ""));
+
+  // ---------- 5. the baseline the letters sit on ----------
+  // Regression: the guide lines must be derived from the same scale as the glyphs. If the
+  // baseline is drawn at a fixed y while the glyphs are scaled, the letters float above it.
+  function parse(svg) {
+    var lines = svg.match(/<line[^>]*>/g) || [];
+    var ys = lines.map(function (l) { return parseFloat((l.match(/y1="([\d.]+)"/) || [])[1]); });
+    var tr = svg.match(/translate\([\d.]+ ([\d.]+)\) scale\(([\d.]+)\)/);
+    return { ys: ys.sort(function (a, b) { return a - b; }), pad: tr ? parseFloat(tr[1]) : null, unit: tr ? parseFloat(tr[2]) : null };
+  }
+  var p = parse(Cursive.row("a", 3));
+  ok(p.unit !== null, "a row reports its glyph scale (" + p.unit + ")");
+  var expectedBase = p.pad + 80 * p.unit;
+  var actualBase = p.ys[2];
+  ok(Math.abs(expectedBase - actualBase) < 0.6,
+     "the baseline guide sits exactly where the scaled glyph's baseline lands (expected " +
+     expectedBase.toFixed(1) + ", drawn " + actualBase + ")");
+  var expectedMid = p.pad + 40 * p.unit;
+  ok(Math.abs(expectedMid - p.ys[1]) < 0.6, "the dashed middle guide matches the scaled x-height");
+
+  // a long line auto-fits to a SMALLER scale rather than overflowing or vanishing
+  var longUnit = parse(Cursive.row(Cursive.SENTENCES[0], 1)).unit;
+  ok(longUnit < p.unit, "a whole sentence auto-fits to a smaller scale (" + longUnit + " < " + p.unit + ")");
+  ok(longUnit > 0.15, "but not so small it becomes unreadable (" + longUnit + ")");
+
+  // ---------- 6. the slant is applied once, to everything ----------
+  var svgA = Cursive.row("a", 2);
+  ok(/skewX\(-?\d+/.test(svgA), "the cursive slant is applied as a single skew on the group");
+  ok((svgA.match(/skewX/g) || []).length === 1, "exactly one skew per row, so glyphs cannot disagree");
+
+  // ---------- 7. stroke families reference real letters ----------
+  var missing = [];
+  Cursive.FAMILIES.forEach(function (f) {
+    ok(!!f.name && !!f.note && f.letters.length > 0, "family \"" + f.key + "\" has a name, a teaching note and letters");
+    f.letters.forEach(function (c) { if (!Cursive.LOWER[c]) missing.push(f.key + ":" + c); });
+  });
+  ok(missing.length === 0, "every letter named in a stroke family really exists" +
+     (missing.length ? " — " + missing.join(", ") : ""));
+  var covered = {};
+  Cursive.FAMILIES.forEach(function (f) { f.letters.forEach(function (c) { covered[c] = 1; }); });
+  var uncovered = A.filter(function (c) { return !covered[c]; });
+  ok(uncovered.length === 0, "every one of the 26 letters is taught in at least one family" +
+     (uncovered.length ? " — missed: " + uncovered.join(", ") : ""));
+
+  // ---------- 8. the lessons ----------
+  // LESSONS is not loaded on this page, so check the modes the lessons ask for are all real.
+  fetch("js/cursive.js").then(function (r) { return r.text(); }).then(function (src) {
+    var asked = (src.match(/cursiveModes: \[([^\]]*)\]/g) || []).join(" ");
+    var refs = (asked.match(/"([a-z-]+)"/g) || []).map(function (s) { return s.replace(/"/g, ""); });
+    var unknown = refs.filter(function (m) { return modes.indexOf(m) < 0; });
+    ok(refs.length > 0, "the lessons name " + refs.length + " practice modes between them");
+    ok(unknown.length === 0, "every mode a lesson asks for exists" + (unknown.length ? " — " + unknown.join(", ") : ""));
+    [2, 3, 4, 5].forEach(function (g) {
+      ok(new RegExp("\\n      " + g + ": \\{").test(src), "Grade " + g + " has a cursive lesson");
+    });
+    // The no-dash rule is about prose a child or parent reads, not source comments -- every file
+    // on the site opens with an em dash in its header line, including jokes.js.
+    var prose = (src.match(/(intro|activity|note|title):\s*"((?:[^"\\]|\\.)*)"/g) || []).join(" ") +
+                (src.match(/^\s+"[A-Z][^"]{20,}"/gm) || []).join(" ");
+    ok(prose.length > 500, "found the lesson prose to check (" + prose.length + " chars)");
+    ok(!/[–—]/.test(prose), "no en or em dashes in the lesson prose");
+
+    fetch("js/app.js").then(function (r2) { return r2.text(); }).then(function (app) {
+      ok(/CURSIVE_SUBJECT/.test(app), "app.js defines the Cursive subject");
+      ok(/g >= 2 && g <= 5/.test(app), "the subject is offered for Grades 2 to 5");
+      ok(/lesson\.cursiveSheet/.test(app), "lessonView renders a cursive sheet");
+      ok(/lesson\.cursiveSheet \|\| lesson\.drawTracing/.test(app) || /tracingSheet \|\| lesson\.cursiveSheet/.test(app),
+         "a cursive sheet is excluded from the auto-generated worksheet");
+      ok(/cursiveMode\(m\)/.test(app), "App.cursiveMode switches practice sets");
+      fetch("css/styles.css").then(function (r3) { return r3.text(); }).then(function (css) {
+        ["curs-sheet", "curs-line", "curs-label", "cursrow", "curs-note"].forEach(function (c) {
+          ok(css.indexOf("." + c) >= 0, "css defines ." + c);
+        });
+        paint();
+      });
+    });
+  });
+});
+</script>
+</body></html>

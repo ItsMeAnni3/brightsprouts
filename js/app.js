@@ -107,6 +107,9 @@ const TRACE_SUBJECTS = [
   { key: "tracing",   label: "Tracing",      emoji: "✏️" },
   { key: "drawtrace", label: "Trace & Draw", emoji: "🖌️" }
 ];
+// Cursive picks up where print tracing stops: tracing runs K-2, cursive runs 2-5, overlapping
+// at Grade 2 the way schools introduce it alongside print rather than instead of it.
+const CURSIVE_SUBJECT = { key: "cursive", label: "Cursive", emoji: "✒️" };
 function phonicsSubject(g) {
   return g <= 3 ? { key: "phonics", label: "Phonics", emoji: "🔤" }
                 : { key: "phonics", label: "Word Study", emoji: "🧩" };
@@ -337,6 +340,13 @@ function subjectsFor(g) {
     core.splice(core.findIndex(x => x.key === "writing") + 1, 0, TRACE_SUBJECTS[0]);
     core.splice(core.findIndex(x => x.key === "art") + 1, 0, TRACE_SUBJECTS[1]);
   }
+  if (g >= 2 && g <= 5) {
+    // sits straight after Writing (and after Tracing in Grade 2, where both are offered)
+    const w = core.findIndex(x => x.key === "tracing") >= 0
+      ? core.findIndex(x => x.key === "tracing")
+      : core.findIndex(x => x.key === "writing");
+    core.splice(w + 1, 0, CURSIVE_SUBJECT);
+  }
   if (g >= 6) {
     const i = core.findIndex(s => s.key === "science") + 1;
     core.splice(i, 0, BIO_SUBJECT);
@@ -510,6 +520,7 @@ const state = {
   mazeTheme: "forest", mazeLevel: "medium", mazeSeed: null,
   contactForm: {}, contactErr: {}, contactMsg: "", contactSent: null,
   traceMode: "upper", tracePick: null,
+  cursiveMode: null,
   reading: null, readFont: 18,
   maker: null,
   game: { plant: null, stage: 0, water: 0, sun: 0 },
@@ -1753,6 +1764,27 @@ function lessonView() {
       everybody now. They come from Project Gutenberg, a volunteer library that has been digitising
       public-domain books since 1971. Read them, print them, share them: they're yours.</p></div>`;
   }
+  // Cursive practice sheet. The letterforms are SVG paths from js/cursive.js rather than text in
+  // a font, so this renders rows of paths instead of rows of <text> like the print sheet below.
+  if (lesson.cursiveSheet && typeof Cursive !== "undefined") {
+    const offered = lesson.cursiveModes || Cursive.MODES.map(m => m[0]);
+    if (!state.cursiveMode || offered.indexOf(state.cursiveMode) < 0) {
+      state.cursiveMode = lesson.cursiveStart || offered[0];
+    }
+    const cm = state.cursiveMode;
+    body += `<div class="trace-bar no-print">` + Cursive.MODES
+      .filter(m => offered.indexOf(m[0]) >= 0)
+      .map(m => `<button class="btn btn-sm ${cm === m[0] ? "btn-primary" : "btn-ghost"}" onclick="App.cursiveMode('${m[0]}')">${esc(m[1])}</button>`)
+      .join("") + `</div>`;
+    // The stroke families each carry a one-line note explaining what they have in common;
+    // that note is the actual teaching, so show it above the rows.
+    const fam = (Cursive.FAMILIES || []).filter(f => "fam-" + f.key === cm)[0];
+    if (fam) body += `<p class="curs-note">${fam.emoji} <b>${esc(fam.name)}:</b> ${esc(fam.note)}</p>`;
+    const rows = Cursive.rowsFor(cm);
+    body += `<div class="curs-sheet">` + rows.map(r =>
+      `<div class="curs-line"><span class="curs-label">${esc(r[0])}</span>${Cursive.row(r[0], r[1])}</div>`).join("") + `</div>`;
+    body += `<p class="curs-tip no-print">✋ Trace the solid letter first, then the dashed ones. Print the page, or write straight on the screen with the pen buttons above.</p>`;
+  }
   if (lesson.tracingSheet) {
     // A tracing row: three-line handwriting guides, one solid model glyph, then dashed copies.
     // Glyphs are real text rendered as outlines (fill:none + dashed stroke) so they trace properly.
@@ -2056,7 +2088,7 @@ function lessonView() {
 
   const sheetKey = g + "-" + subj + (baseLesson.byCurrency ? "-" + curCcy : "") + (baseLesson.units ? "-u" + unitIdx : "");
   // Note: the Earth's Story timeline (earthTimeline) DOES get a worksheet; it has a questions bank.
-  const noQuiz = lesson.globeBoard || lesson.coloringBook || lesson.mazeBook || lesson.essayPad || lesson.tracingSheet || lesson.drawTracing || lesson.csPlan || lesson.engPlan || lesson.erasTimeline || lesson.engineerBuild || (lesson.engBand != null) || lesson.readOnline || lesson.magicMaker || lesson.jokeTv || lesson.jokeBook || lesson.budExplains || lesson.paperStudio;
+  const noQuiz = lesson.globeBoard || lesson.coloringBook || lesson.mazeBook || lesson.essayPad || lesson.tracingSheet || lesson.cursiveSheet || lesson.drawTracing || lesson.csPlan || lesson.engPlan || lesson.erasTimeline || lesson.engineerBuild || (lesson.engBand != null) || lesson.readOnline || lesson.magicMaker || lesson.jokeTv || lesson.jokeBook || lesson.budExplains || lesson.paperStudio;
   if (!noQuiz && !state.sheetCache[sheetKey]) state.sheetCache[sheetKey] = makeSheet(g, subj, lesson);
   const questions = noQuiz ? [] : state.sheetCache[sheetKey];
   const qHtml = questions.length ? `
@@ -2102,7 +2134,7 @@ function lessonView() {
         ${lesson.coloringBook ? `<button class="btn btn-secondary" onclick="App.newColorPage()">🎲 New Pictures</button>` : ""}
         ${lesson.mazeBook ? `<button class="btn btn-secondary" onclick="App.newMazePage()">🎲 New Mazes</button>` : ""}
         ${lesson.tracingSheet && state.traceMode === "random" ? `<button class="btn btn-secondary" onclick="App.newTracePage()">🎲 New Practice Set</button>` : ""}
-        <button class="btn btn-primary" onclick="window.print()">🖨️ Print ${lesson.mazeBook ? "Mazes" : lesson.coloringBook ? "Coloring Page" : (lesson.tracingSheet || lesson.drawTracing) ? "Tracing Sheet" : "Worksheet"}</button>
+        <button class="btn btn-primary" onclick="window.print()">🖨️ Print ${lesson.mazeBook ? "Mazes" : lesson.coloringBook ? "Coloring Page" : (lesson.tracingSheet || lesson.cursiveSheet || lesson.drawTracing) ? "Tracing Sheet" : "Worksheet"}</button>
         ${questions.length ? `<label><input type="checkbox" id="key-toggle" onchange="App.toggleKey(this.checked)"> Show / print answer key</label>` : ""}
       </div>
     </div>
@@ -3345,6 +3377,7 @@ const App = {
     render();
   },
   traceMode(m) { state.traceMode = m; state.tracePick = null; render(); },
+  cursiveMode(m) { state.cursiveMode = m; render(); },
   newTracePage() { state.tracePick = null; render(); },
   pickDrawCat(k) { state.drawCat = k; render(); },
   pickUnit(key, i) { state.unitPick = state.unitPick || {}; state.unitPick[key] = i; render(); window.scrollTo(0, 0); },
