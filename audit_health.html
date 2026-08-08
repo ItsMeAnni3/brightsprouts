@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Health &amp; My Body audit</title>
+<link rel="stylesheet" href="css/fonts.css"><link rel="stylesheet" href="css/styles.css"></head>
+<body>
+<!-- Permanent audit for Health & My Body (LESSONS[39], js/health.js).
+     Health content aimed at children has two failure modes an ordinary structural audit misses:
+       1. A WRONG NUMBER. Every figure here comes from a named authority (CDC, USDA MyPlate, AAP,
+          ADA) and is pinned below, so an edit that quietly changes "20 seconds" or "9 to 12
+          hours" fails this file rather than shipping bad health guidance to families.
+       2. The WRONG TONE. Diet-culture language is the real risk in children's health material,
+          so the banned-word scan below is a deliberate part of the audit, not decoration.
+     Also checks the category-wiring points that are easy to miss (tile loop, gradeName, default
+     subject, Sprout's knowledge base) and that no diagram text runs off its own viewBox. -->
+<nav id="nav"></nav><div id="authzone"></div><main id="app"></main>
+<pre id="results">running…</pre>
+<script src="js/logo.js"></script>
+<script src="js/img-fallback.js"></script>
+<script src="js/lessons1.js"></script><script src="js/lessons2.js"></script>
+<script src="js/lessons3.js"></script><script src="js/lessons4.js"></script>
+<script src="js/lessons5.js"></script><script src="js/species-img.js"></script>
+<script src="js/lessons6.js"></script><script src="js/lessons7.js"></script>
+<script src="js/elements.js"></script><script src="js/lessons8.js"></script>
+<script src="js/lessons9.js"></script><script src="js/coloring.js"></script>
+<script src="js/mazes.js"></script><script src="js/ink.js"></script>
+<script src="js/draw-trace.js"></script><script src="js/books.js"></script>
+<script src="js/book-art.js"></script><script src="js/pd-books.js"></script>
+<script src="js/magic-maker.js"></script><script src="js/engineer.js"></script>
+<script src="js/plant-game.js"></script><script src="js/castle-game.js"></script>
+<script src="js/wizard-quest.js"></script><script src="js/rewards.js"></script>
+<script src="js/arcade.js"></script><script src="js/spelling-bee.js"></script>
+<script src="js/games2.js"></script><script src="js/games3.js"></script>
+<script src="js/voice-manifest.js"></script><script src="js/speech.js"></script>
+<script src="js/species-popup.js"></script><script src="js/globe-data.js"></script>
+<script src="js/country-info.js"></script><script src="js/globe.js"></script>
+<script src="js/globe-popup.js"></script><script src="js/shop.js"></script>
+<script src="js/lessons10.js"></script><script src="js/lessons11.js"></script>
+<script src="js/earth-art.js"></script><script src="js/human-art.js"></script>
+<script src="js/lessons12.js"></script><script src="js/lessons13.js"></script>
+<script src="js/biology.js"></script><script src="js/bio-art.js"></script>
+<script src="js/chemistry.js"></script><script src="js/chem-art.js"></script>
+<script src="js/physics.js"></script><script src="js/phys-art.js"></script>
+<script src="js/geology.js"></script><script src="js/paleontology.js"></script>
+<script src="js/health.js"></script>
+<script src="js/earth-space-science.js"></script><script src="js/jokes.js"></script>
+<script src="js/bud-explains.js"></script><script src="js/paper.js"></script>
+<script src="js/paper-data.js"></script><script src="js/biology-course.js"></script>
+<script src="js/math-course.js"></script><script src="js/chem-course.js"></script>
+<script src="js/visualarts-course.js"></script><script src="js/music-course.js"></script>
+<script src="js/physics-course.js"></script><script src="js/essay-pad.js"></script>
+<script src="js/essay-course.js"></script><script src="js/stem.js"></script>
+<script src="js/spanish.js"></script><script src="js/timemoney.js"></script>
+<script src="js/space.js"></script><script src="js/sel.js"></script>
+<script src="js/compsci.js"></script><script src="js/terminal.js"></script>
+<script src="js/history-us.js"></script><script src="js/history-us2.js"></script>
+<script src="js/geo-course.js"></script><script src="js/space-course.js"></script>
+<script src="js/grade-extras.js"></script><script src="js/lessons0.js"></script>
+<script src="js/phonics.js"></script><script src="js/trace-grades.js"></script>
+<script src="js/cursive.js"></script><script src="js/create-grades.js"></script>
+<script src="js/story-art.js"></script><script src="js/stories1.js"></script>
+<script src="js/stories2.js"></script><script src="js/email-capture.js"></script>
+<script src="js/schedule.js"></script><script src="js/app.js"></script>
+<script src="js/sprout-bot.js"></script>
+<script>
+window.onerror = function (m, s, l) {
+  document.getElementById("results").textContent = "SCRIPT ERROR: " + m + " (line " + l + ")";
+};
+window.addEventListener("load", function () {
+  var out = [], fails = 0;
+  function ok(c, m) { if (!c) { fails++; out.push("FAIL: " + m); } else out.push("ok:   " + m); }
+  function paint() {
+    document.getElementById("results").textContent =
+      (fails === 0 ? "ALL PASS (" + out.length + " checks)" : (fails + " FAILURES")) + "\n\n" + out.join("\n");
+  }
+  var G = 39, KEYS = ["body", "eat", "germs", "teeth", "sleep", "move", "safe"];
+
+  // ---------- 1. shape ----------
+  ok(!!LESSONS[G], "LESSONS[39] exists");
+  ok(subjectsFor(G).length === KEYS.length, "subjectsFor(39) returns " + KEYS.length + " subjects (got " + subjectsFor(G).length + ")");
+  KEYS.forEach(function (k) {
+    var L = LESSONS[G][k];
+    ok(!!L, "subject " + k + " exists");
+    if (!L) return;
+    ok(!!L.title && !!L.emoji && !!L.intro, k + " has a title, emoji and intro");
+    ok(Array.isArray(L.learn) && L.learn.length >= 5, k + " has real teaching content (" + (L.learn || []).length + " points)");
+    ok(!!L.activity, k + " has a family activity");
+    ok(Array.isArray(L.questions) && L.questions.length >= 10, k + " has " + (L.questions || []).length + " questions");
+    ok((L.questions || []).every(function (q) { return q.q && q.a; }), k + " every question has both q and a");
+  });
+  ok(subjectsFor(G).every(function (s) { return !!LESSONS[G][s.key]; }), "every tab has a lesson behind it");
+
+  // ---------- 2. THE NUMBERS. Pinned to their sources. ----------
+  function textOf(k) {
+    var L = LESSONS[G][k];
+    return [L.intro, (L.learn || []).join(" "), L.activity, (L.questions || []).map(function (q) { return q.q + " " + q.a; }).join(" "), L.diagram || ""].join(" ");
+  }
+  var sleep = textOf("sleep"), germs = textOf("germs"), teeth = textOf("teeth"),
+      move = textOf("move"), eat = textOf("eat"), body = textOf("body");
+
+  ok(/9 to 12 hours/.test(sleep), "sleep: 6-12 year olds need 9 to 12 hours (AAP)");
+  ok(/8 to 10 hours/.test(sleep), "sleep: 13-18 year olds need 8 to 10 hours (AAP)");
+  ok(/American Academy of Pediatrics/.test(sleep), "sleep: the source is named in the lesson");
+  ok(/20 seconds/.test(germs), "handwashing: at least 20 seconds (CDC)");
+  ok(/Happy Birthday/.test(germs), "handwashing: the Happy Birthday timing tip (CDC)");
+  ok(/[Ww]et.*[Ss]oap.*[Ss]crub.*[Rr]inse.*[Dd]ry/.test(germs), "handwashing: all five CDC steps in order");
+  ok(/CDC/.test(germs), "handwashing: the source is named");
+  ok(/[Tt]wo minutes/.test(teeth) && /[Tt]wice/.test(teeth), "teeth: twice a day, two minutes (ADA)");
+  ok(/[Ff]luoride/.test(teeth), "teeth: fluoride toothpaste (ADA)");
+  ok(/3 to 4 months/.test(teeth), "teeth: replace the brush every 3 to 4 months (ADA)");
+  ok(/American Dental Association/.test(teeth), "teeth: the source is named");
+  ok(/60 minutes/.test(move), "activity: 60 minutes a day (CDC)");
+  ok(/6 to 17/.test(move), "activity: the age range 6 to 17 is stated (CDC)");
+  ok(/CDC/.test(move), "activity: the source is named");
+  ok(/Fruits, Vegetables, Grains, Protein/.test(eat), "food: the MyPlate groups are listed (USDA)");
+  ok(/MyPlate/.test(eat), "food: MyPlate is named as the source");
+  ok(/206/.test(body), "body: a grown-up has 206 bones");
+
+  // ---------- 3. TONE. The real risk in children's health content. ----------
+  var all = KEYS.map(textOf).join(" ").toLowerCase();
+  var banned = ["calorie", "calories", "diet", "dieting", "overweight", "obese", "obesity",
+                "fat kid", "lose weight", "weight loss", "slim", "skinny", "burn off",
+                "guilty", "cheat meal", "junk food", "bad food", "naughty food"];
+  // Negation-aware, or this flags the very sentences that do the teaching: "There are no bad
+  // foods" and the question "Are some foods bad foods?" (answer: "No...") would both fail a naive
+  // scan for "bad food".
+  // A question and its answer are scanned as ONE unit, because the answer is what carries the
+  // negation. Splitting them apart is what made the first fix still fail.
+  var units = [];
+  KEYS.forEach(function (k) {
+    var L = LESSONS[G][k];
+    units.push(L.intro, L.activity);
+    (L.learn || []).forEach(function (b) { b.split(/[.!?]+/).forEach(function (x) { units.push(x); }); });
+    (L.questions || []).forEach(function (q) { units.push(q.q + " " + q.a); });
+  });
+  var hits = [];
+  units.forEach(function (u) {
+    var low = String(u || "").toLowerCase();
+    if (/\b(no|not|never|aren't|arent|isn't|isnt|nor)\b/.test(low)) return;   // being denied, not asserted
+    banned.forEach(function (w) {
+      if (low.indexOf(w) >= 0) hits.push(w + ' in "' + low.trim().slice(0, 44) + '"');
+    });
+  });
+  ok(hits.length === 0, "no diet-culture or body-shame language anywhere in the category" +
+     (hits.length ? " — found: " + hits.join(" | ") : ""));
+  ok(/no bad foods|not bad foods|different foods just do different jobs/i.test(eat),
+     "the food lesson explicitly says there are no bad foods");
+  ok(/every body is different|no one right kind of body/i.test(body),
+     "the body lesson says bodies differ and there is no one right body");
+  // body-safety wording must stay protective and non-graphic
+  var safe = textOf("safe");
+  ok(/body belongs to you/i.test(safe), "safety: teaches bodily autonomy in plain words");
+  ok(/trusted grown-?ups?/i.test(safe), "safety: points the child at trusted grown-ups");
+  ok(/surprise/i.test(safe) && /secret/i.test(safe), "safety: distinguishes a surprise from a secret");
+  ok(!/[–—]/.test(KEYS.map(textOf).join(" ")), "no en or em dashes in the content");
+
+  // ---------- 4. diagrams render, and nothing runs off its own viewBox ----------
+  var over = [], noDiag = [];
+  KEYS.forEach(function (k) {
+    var d = LESSONS[G][k].diagram;
+    if (!d) { noDiag.push(k); return; }
+    // MEASURE, do not estimate. A characters-times-font-size guess is wrong by enough to both
+    // miss real clipping and invent it: it flagged three labels here that actually fit. The
+    // element has to be in the document for getComputedTextLength() to return anything.
+    var host = document.createElement("div");
+    host.style.cssText = "position:absolute;left:-9999px;top:0;width:400px";
+    host.innerHTML = d;
+    document.body.appendChild(host);
+    var svg = host.querySelector("svg");
+    if (!svg) { over.push(k + ":no-svg"); document.body.removeChild(host); return; }
+    var vb = (svg.getAttribute("viewBox") || "0 0 360 232").split(/\s+/).map(Number);
+    svg.querySelectorAll("text").forEach(function (t) {
+      var x = parseFloat(t.getAttribute("x") || "0");
+      var w = 0;
+      try { w = t.getComputedTextLength(); } catch (e) { w = 0; }
+      if (!w) return;
+      var anchor = t.getAttribute("text-anchor") || "start";
+      var right = anchor === "middle" ? x + w / 2 : anchor === "end" ? x : x + w;
+      var left = anchor === "middle" ? x - w / 2 : anchor === "end" ? x - w : x;
+      if (right > vb[2] + 1 || left < vb[0] - 1) {
+        over.push(k + ': "' + t.textContent.slice(0, 24) + '" spans ' + left.toFixed(0) + " to " + right.toFixed(0));
+      }
+    });
+    document.body.removeChild(host);
+  });
+  ok(noDiag.length <= 2, "most subjects carry a diagram (" + (KEYS.length - noDiag.length) + " of " + KEYS.length + ")");
+  ok(over.length === 0, "no diagram label runs off its own viewBox" +
+     (over.length ? " — " + over.slice(0, 3).join("; ") : ""));
+
+  // ---------- 5. category wiring, the bits that are easy to forget ----------
+  ok(gradeName(G) === "Health & My Body", "gradeName(39) = " + gradeName(G));
+  var tiles = lessonsView();
+  ok(tiles.indexOf("App.openGrade(39)") >= 0, "the Pick a Grade page shows a tile for 39");
+  ok(tiles.indexOf("Health &amp; My Body") >= 0, "the tile carries the category name");
+  App.openGrade(G);
+  ok(state.subject === "body" || state.subject === "books",
+     "opening the category lands on a real subject (" + state.subject + ")");
+  ok(!canGrade(G), "the category is Premium-gated like the other Let's Learn courses");
+  // the tile label and the page heading are written in two different places and have drifted before
+  var m = tiles.match(/openGrade\(39\)[^>]*>(?:<span[^>]*>[^<]*<\/span>)?([^<]*)</);
+  var label = m ? m[1].replace(/^[^A-Za-z]+/, "").replace(/&amp;/g, "&").trim() : "";
+  ok(label === gradeName(G), "the tile label matches the page heading (\"" + label + "\")");
+
+  // Sprout's knowledge base has gone stale before, by eight whole courses
+  fetch("js/sprout-bot.js").then(function (r) { return r.text(); }).then(function (src) {
+    var arr = (src.match(/CATEGORY_GRADES = \[([^\]]*)\]/) || [])[1] || "";
+    ok(arr.split(",").map(function (n) { return n.trim(); }).indexOf("39") >= 0,
+       "Sprout's knowledge base includes category 39");
+
+    fetch("js/app.js").then(function (r2) { return r2.text(); }).then(function (app) {
+      ok(/23 "Let's Learn" categories/.test(app), "the pricing copy says 23 categories");
+      ok(/twenty three <b>"Let's Learn" courses/.test(app), "the home page copy says twenty three courses");
+      ok(/Health &amp; My Body/.test(app), "the marketing name lists include Health & My Body");
+      fetch("sw.js").then(function (r3) { return r3.text(); }).then(function (sw) {
+        ok(sw.indexOf("./js/health.js") >= 0, "js/health.js is in the offline precache");
+        fetch("css/styles.css").then(function (r4) { return r4.text(); }).then(function (css) {
+          ok(/\.g39\{/.test(css), "the tile has its own colour (.g39)");
+          paint();
+        });
+      });
+    });
+  });
+});
+</script>
+</body></html>

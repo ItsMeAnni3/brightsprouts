@@ -294,6 +294,18 @@ const JOKE_SUBJECTS = [
 // Math activities for grade schoolers to do with a parent, plus the scientific-method lesson
 // that sits underneath all of them. Same two-subject shape as Paper (30): one browsable list,
 // one lesson explaining the idea behind it.
+// Health & My Body (category 39): how a body works and how to look after it. Every figure in
+// js/health.js comes from a named authority (CDC, USDA MyPlate, AAP, ADA) and is cited in the
+// lesson text, because health guidance a parent cannot trace is worse than none.
+const HEALTH_SUBJECTS = [
+  { key: "body",  label: "Your Body",     emoji: "🫀" },
+  { key: "eat",   label: "Food Is Fuel",  emoji: "🍎" },
+  { key: "germs", label: "Germs & Hands", emoji: "🧼" },
+  { key: "teeth", label: "Happy Teeth",   emoji: "🦷" },
+  { key: "sleep", label: "Sleep",         emoji: "😴" },
+  { key: "move",  label: "Move",          emoji: "🤸" },
+  { key: "safe",  label: "Staying Safe",  emoji: "🪖" }
+];
 const STEM_SUBJECTS = [
   { key: "activities", label: "STEM Activities",     emoji: "🧪" },
   { key: "method",     label: "Think Like a Scientist", emoji: "🔬" }
@@ -328,6 +340,7 @@ function subjectsFor(g) {
   if (g === 36) return PHYSCOURSE_SUBJECTS;
   if (g === 37) return ESSAYCOURSE_SUBJECTS;
   if (g === 38) return STEM_SUBJECTS;
+  if (g === 39) return HEALTH_SUBJECTS;
   // Grades 1–12: core subjects (+ Biology after Science from Grade 6) + folded-in extras
   // (+ the creative tools in Grades 1–6 only).
   let core = SUBJECTS.slice();
@@ -387,6 +400,7 @@ function gradeName(g) {
   if (g === 36) return "Let's Learn Physics";
   if (g === 37) return "Let's Learn Essay Writing";
   if (g === 38) return "STEM Activities for Kids";
+  if (g === 39) return "Health & My Body";
   return "Grade " + g;
 }
 // Build the creature SVG from the chosen parts. Order matters: back to front.
@@ -1438,7 +1452,7 @@ function homeView() {
     ${typeof Logo === "undefined" ? `<span class="big-emoji">🌱</span><h1>BrightSprouts Academy</h1>`
       : Logo.full({ size: 96 })}
     <h1>Printable K-12 Lessons, Worksheets and Learning Games for Kids</h1>
-    <p>Everything one family needs for <b>Kindergarten through Grade 12</b>: Math, Reading, Phonics, Vocabulary, Spelling, Writing, Science, Social Studies, Art and Music, plus Biology, Chemistry and Physics for older students. Then twenty two <b>"Let's Learn" courses</b>: Geography, Space, Biology, Chemistry, Physics, Mathematics, Essay Writing, Visual Arts, Music, Computer Science, Spanish, Geology, Paleontology, Weather &amp; Oceans, Time &amp; Money, The History of Us, Feelings &amp; Kindness, Kids &amp; Family Jokes, Paper Activities and STEM Activities for Kids. Follow biology from "what is a living thing" all the way to genes and ecosystems, write real code in the Code Terminal, make things from 112 paper activities, and every lesson prints. Made for parents. Loved by kids.</p>
+    <p>Everything one family needs for <b>Kindergarten through Grade 12</b>: Math, Reading, Phonics, Vocabulary, Spelling, Writing, Science, Social Studies, Art and Music, plus Biology, Chemistry and Physics for older students. Then twenty three <b>"Let's Learn" courses</b>: Geography, Space, Biology, Chemistry, Physics, Mathematics, Essay Writing, Visual Arts, Music, Computer Science, Spanish, Geology, Paleontology, Weather &amp; Oceans, Time &amp; Money, The History of Us, Feelings &amp; Kindness, Kids &amp; Family Jokes, Paper Activities, STEM Activities for Kids and Health &amp; My Body. Follow biology from "what is a living thing" all the way to genes and ecosystems, write real code in the Code Terminal, make things from 112 paper activities, and every lesson prints. Made for parents. Loved by kids.</p>
     <button class="btn btn-primary" onclick="App.go('lessons')">🚀 Explore Lessons</button>
     <button class="btn btn-secondary" onclick="App.go('library')">📖 Books &amp; Stories</button>
   </div>
@@ -1465,12 +1479,12 @@ function homeView() {
 // ---------- Lessons ----------
 function lessonsView() {
   const tiles = [];
-  for (let g = 0; g <= 38; g++) {
+  for (let g = 0; g <= 39; g++) {
     if (g === 15 || g === 16 || g === 18 || g === 22) continue;  // now folded into each grade's tabs
     if (g === 27) continue;  // Physical Science retired; Chemistry (33) and Physics (36) cover it
     const locked = !canGrade(g);
     const label = g === 0 ? "🌈 Kindergarten" : g === 13 ? "🌍 Let's Learn Geography" : g === 14 ? "🖍️ Coloring & Maze Worksheet" : g === 17 ? "💻 Let's Learn Computer Science"
-                : g === 19 ? "⏳ Let's Learn The History of Us" : g === 20 ? "🪨 Let's Learn Geology" : g === 21 ? "💬 Let's Learn Spanish" : g === 23 ? "🕐 Let's Learn Time & Money" : g === 24 ? "🚀 Let's Learn Space" : g === 25 ? "💛 Let's Learn Feelings" : g === 26 ? "🦖 Let's Learn Paleontology" : g === 28 ? "🌦️ Let's Learn Weather & Oceans" : g === 29 ? "😂 Kids &amp; Family Jokes" : g === 30 ? "✂️ Paper Activities" : g === 31 ? "🧬 Let's Learn Biology" : g === 32 ? "🧮 Let's Learn Mathematics" : g === 33 ? "⚗️ Let's Learn Chemistry" : g === 34 ? "🎨 Let's Learn Visual Arts" : g === 35 ? "🎵 Let's Learn Music" : g === 36 ? "🔭 Let's Learn Physics" : g === 37 ? "📝 Let's Learn Essay Writing" : g === 38 ? "🧪 STEM Activities for Kids" : "Grade " + g;
+                : g === 19 ? "⏳ Let's Learn The History of Us" : g === 20 ? "🪨 Let's Learn Geology" : g === 21 ? "💬 Let's Learn Spanish" : g === 23 ? "🕐 Let's Learn Time & Money" : g === 24 ? "🚀 Let's Learn Space" : g === 25 ? "💛 Let's Learn Feelings" : g === 26 ? "🦖 Let's Learn Paleontology" : g === 28 ? "🌦️ Let's Learn Weather & Oceans" : g === 29 ? "😂 Kids &amp; Family Jokes" : g === 30 ? "✂️ Paper Activities" : g === 31 ? "🧬 Let's Learn Biology" : g === 32 ? "🧮 Let's Learn Mathematics" : g === 33 ? "⚗️ Let's Learn Chemistry" : g === 34 ? "🎨 Let's Learn Visual Arts" : g === 35 ? "🎵 Let's Learn Music" : g === 36 ? "🔭 Let's Learn Physics" : g === 37 ? "📝 Let's Learn Essay Writing" : g === 38 ? "🧪 STEM Activities for Kids" : g === 39 ? "🫀 Health &amp; My Body" : "Grade " + g;
     tiles.push(`<button class="grade-tile g${g}" onclick="App.openGrade(${g})">${locked ? '<span class="lock">🔒</span>' : ""}${label}</button>`);
   }
   // The arcade lives here now instead of the top bar. gameHub() so it always opens on the
@@ -2475,7 +2489,7 @@ function pricingView() {
           <li><b>High-school sciences</b>: Biology, Chemistry &amp; Physics</li>
           <li><b>A Writing Pad with ten sheets of stationery</b>: write an essay plan by hand with a stylus or a finger, then turn the handwriting into typed notes, read on your own device and never sent anywhere</li>
           <li><b>Write straight on the screen</b>: answer the questions, trace a maze or colour a picture with a stylus, a finger or a mouse. Pressure sensitive if your pen supports it, with an eraser, undo, and your writing saved per sheet</li>
-          <li><b>22 "Let's Learn" categories</b>: Geography, Space, Biology, Chemistry, Physics, Mathematics, Essay Writing, Visual Arts, Music, Computer Science, Spanish, Geology, Paleontology, Weather &amp; Oceans, Time &amp; Money, The History of Us, Feelings &amp; Kindness, Kids &amp; Family Jokes, Paper Activities, STEM Activities for Kids, Coloring &amp; Maze Worksheets &amp; Books</li>
+          <li><b>23 "Let's Learn" categories</b>: Geography, Space, Biology, Chemistry, Physics, Mathematics, Essay Writing, Visual Arts, Music, Computer Science, Spanish, Geology, Paleontology, Weather &amp; Oceans, Time &amp; Money, The History of Us, Feelings &amp; Kindness, Kids &amp; Family Jokes, Paper Activities, STEM Activities for Kids, Health &amp; My Body, Coloring &amp; Maze Worksheets &amp; Books</li>
           <li><b>US-aligned Social Studies</b>: 36 units including US History I, II &amp; III and Civics</li>
           <li><b>Computer Science, three ways</b>: the Grade 1–12 course, 20 unplugged activities with no screen, and a live Code Terminal where children write real code and see it run</li>
           <li><b>112 paper activities</b> with pictures, materials and step-by-step instructions, including handmade cards for birthdays, Diwali, Eid, Christmas, Hanukkah and more, plus a printable booklet of all of them</li>
@@ -2825,7 +2839,7 @@ const App = {
     const dflt = g === 0 ? "alphabet" : g === 13 ? "globe" : g === 14 ? "coloring"
                : g === 15 ? "readnow" : g === 16 ? "create" : g === 17 ? "basics"
                : g === 18 ? "engplan" : g === 19 ? "earth" : g === 20 ? "rocks"
-               : g === 21 ? "greetings" : g === 23 ? "clock" : g === 24 ? "spacecourse" : g === 25 ? "feelings" : g === 26 ? "digsite" : g === 28 ? "weather" : g === 29 ? "jokeshow" : g === 30 ? "paperstudio" : g === 31 ? "whatis" : g === 32 ? "whatis" : g === 33 ? "whatis" : g === 34 ? "whatis" : g === 35 ? "whatis" : g === 36 ? "whatis" : g === 37 ? "whatis" : g === 38 ? "activities" : "math";
+               : g === 21 ? "greetings" : g === 23 ? "clock" : g === 24 ? "spacecourse" : g === 25 ? "feelings" : g === 26 ? "digsite" : g === 28 ? "weather" : g === 29 ? "jokeshow" : g === 30 ? "paperstudio" : g === 31 ? "whatis" : g === 32 ? "whatis" : g === 33 ? "whatis" : g === 34 ? "whatis" : g === 35 ? "whatis" : g === 36 ? "whatis" : g === 37 ? "whatis" : g === 38 ? "activities" : g === 39 ? "body" : "math";
     // Premium grades still open, landing on the free Books tab; other subjects show an upgrade card.
     state.subject = canGrade(g) ? dflt : "books";
     go("lesson");
