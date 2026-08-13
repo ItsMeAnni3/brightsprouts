@@ -1,0 +1,51 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Lesson video: premium check</title>
+<body><pre id="out">running…</pre>
+<script>
+// Stand up a premium session, then load the app's own lessonView for the four video lessons
+// and report whether the video card rendered with the right file. Dev-only, never deployed.
+localStorage.setItem("bs_users", JSON.stringify({
+  "t@t.t": { email: "t@t.t", name: "Test", plan: "premium" }
+}));
+localStorage.setItem("bs_session", "t@t.t");
+</script>
+<script src="js/logo.js"></script>
+<script>window.LESSONS = window.LESSONS || {};</script>
+<script src="js/lessons1.js"></script>
+<script src="js/lessons2.js"></script>
+<script src="js/lessons3.js"></script>
+<script src="js/lessons4.js"></script>
+<script src="js/lessons0.js"></script>
+<script src="js/lesson-video.js"></script>
+<script>
+(function () {
+  var want = [
+    [0, "counting", "k-counting-to-100.mp4"],
+    [1, "math", "g1-adding-to-20.mp4"],
+    [2, "math", "g2-tens-and-ones.mp4"],
+    [3, "math", "g3-multiplication.mp4"],
+    [5, "math", null],
+    [3, "reading", null]
+  ];
+  var out = [], pass = 0, fail = 0;
+  want.forEach(function (w) {
+    var g = w[0], s = w[1], expect = w[2];
+    var h = LessonVideo.html(g, s, "x");
+    var got = (h.match(/data-src="video\/([^"]+)"/) || [])[1] || null;
+    var ok = got === expect;
+    ok ? pass++ : fail++;
+    out.push((ok ? "PASS " : "FAIL ") + "grade " + g + " / " + s +
+             "  expected=" + expect + "  got=" + got);
+  });
+  // the poster must be a real button (keyboard reachable) and must not preload anything
+  var h0 = LessonVideo.html(0, "counting", "x");
+  var isBtn = h0.indexOf("<button") >= 0 && h0.indexOf("<video") < 0;
+  isBtn ? pass++ : fail++;
+  out.push((isBtn ? "PASS " : "FAIL ") + "poster is a button and contains no <video> until clicked");
+  out.push("");
+  out.push(fail ? ("FAILED " + fail) : ("ALL " + pass + " CHECKS PASS"));
+  document.getElementById("out").textContent = out.join("\n");
+})();
+</script>
+</body>

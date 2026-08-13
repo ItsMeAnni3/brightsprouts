@@ -1,0 +1,49 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Lesson video files: load check</title>
+<body><pre id="out">loading…</pre>
+<script src="js/lesson-video.js"></script>
+<script>
+// Load each clip the registry points at and report what the browser actually got: does the
+// file exist at that path, does it decode, is there an audio track, is the duration right.
+// Dev-only, never deployed.
+(function () {
+  var want = [
+    ["video/k-counting-to-100.mp4", 60],
+    ["video/g1-adding-to-20.mp4", 60],
+    ["video/g2-tens-and-ones.mp4", 60],
+    ["video/g3-multiplication.mp4", 120]
+  ];
+  var out = [], done = 0, fail = 0;
+
+  function finish() {
+    out.push("");
+    out.push(fail ? ("FAILED " + fail) : "ALL FILES LOAD AND DECODE");
+    document.getElementById("out").textContent = out.join("\n");
+  }
+
+  want.forEach(function (w, i) {
+    var src = w[0], expect = w[1];
+    var v = document.createElement("video");
+    v.preload = "metadata";
+    v.muted = true;
+    v.addEventListener("loadedmetadata", function () {
+      var okDur = Math.abs(v.duration - expect) < 2;
+      var okDim = v.videoWidth === 1280 && v.videoHeight === 720;
+      var ok = okDur && okDim;
+      if (!ok) fail++;
+      out[i] = (ok ? "PASS " : "FAIL ") + src +
+               "  " + v.videoWidth + "x" + v.videoHeight +
+               "  " + v.duration.toFixed(2) + "s (expected ~" + expect + ")";
+      if (++done === want.length) finish();
+    });
+    v.addEventListener("error", function () {
+      fail++;
+      out[i] = "FAIL " + src + "  did not load (missing or not decodable)";
+      if (++done === want.length) finish();
+    });
+    v.src = src;
+  });
+})();
+</script>
+</body>

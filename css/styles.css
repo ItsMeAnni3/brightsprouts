@@ -2223,3 +2223,35 @@ img.imgoffline{background:#f7f4ff;border:1px dashed #d9d2ee;border-radius:10px;
   .curs-line{margin-bottom:0}
 }
 @media (max-width:600px){ .curs-label{flex-basis:44px;font-size:.75rem} }
+
+/* ---------- Lesson video ----------
+   A short clip that teaches the lesson, above the reading. The poster card is a button so it
+   is reachable by keyboard and announced properly; the real player only appears on the click. */
+.lessonvid { margin: 0 0 14px; }
+.lessonvid-poster {
+  display: flex; align-items: center; gap: 14px; width: 100%;
+  padding: 14px 18px; border: 0; cursor: pointer; text-align: left;
+  border-radius: 16px; color: #fff;
+  background: linear-gradient(135deg, #7c5cbf, #5b3aa8);
+  box-shadow: 0 4px 14px rgba(91, 58, 168, .28);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.lessonvid-poster:hover { transform: translateY(-2px); box-shadow: 0 7px 20px rgba(91, 58, 168, .34); }
+.lessonvid-poster:focus-visible { outline: 3px solid #f0a92b; outline-offset: 3px; }
+.lessonvid-play {
+  flex: 0 0 auto; width: 46px; height: 46px; border-radius: 50%;
+  display: grid; place-items: center; font-size: 1.15rem; padding-left: 4px;
+  background: rgba(255, 255, 255, .22);
+}
+.lessonvid-copy { display: flex; flex-direction: column; gap: 2px; }
+.lessonvid-copy b { font-size: 1.05rem; }
+.lessonvid-copy small { opacity: .88; font-size: .82rem; }
+.lessonvid-player {
+  width: 100%; max-width: 100%; display: block;
+  border-radius: 16px; background: #000; box-shadow: 0 4px 14px rgba(45, 42, 74, .25);
+}
+.lessonvid-err {
+  margin: 0; padding: 12px 16px; border-radius: 14px;
+  background: #fff3e0; color: #7a4a1d; font-size: .9rem;
+}
+@media (prefers-reduced-motion: reduce) { .lessonvid-poster { transition: none; } }
