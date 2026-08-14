@@ -35,8 +35,24 @@
     2: { math: { file: "g2-tens-and-ones.mp4", seconds: 60 } },
     3: { math: { file: "g3-multiplication.mp4", seconds: 120 } },
     4: { math: { file: "g4-division-fractions.mp4", seconds: 60 } },
-    // Geography course. Unit 1 is "Maps, Globes & Directions".
-    13: { geocourse: { units: { 1: { file: "geo-globe.mp4", seconds: 60 } } } }
+    // Let's Learn Geography. The clip sits on the three places a visitor could reasonably meet it:
+    // the "The Globe" tab (whose own lesson text says flat maps always have to stretch something,
+    // which IS this video's turn), and inside the Geography Course below.
+    //
+    // Geography course. The globe clip is listed under BOTH unit 0 and unit 1 on purpose.
+    // Unit 1 ("Maps, Globes & Directions") is what it teaches in depth, but unit 0 ("My Place in
+    // the World") is where the category opens, and unit 0 already teaches that a globe is a model
+    // of the whole round Earth and asks "What is a globe?" in its questions. Listing it only on
+    // unit 1 meant anyone opening Let's Learn Geography saw no video at all.
+    13: {
+      globe: { file: "geo-globe.mp4", seconds: 60 },
+      geocourse: {
+        units: {
+          0: { file: "geo-globe.mp4", seconds: 60 },
+          1: { file: "geo-globe.mp4", seconds: 60 }
+        }
+      }
+    }
   };
 
   function get(grade, subject, unitIdx) {
