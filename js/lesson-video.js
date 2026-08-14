@@ -29,7 +29,8 @@
     0: { counting: { file: "k-counting-to-100.mp4", seconds: 60 } },
     1: { math: { file: "g1-adding-to-20.mp4", seconds: 60 } },
     2: { math: { file: "g2-tens-and-ones.mp4", seconds: 60 } },
-    3: { math: { file: "g3-multiplication.mp4", seconds: 120 } }
+    3: { math: { file: "g3-multiplication.mp4", seconds: 120 } },
+    4: { math: { file: "g4-division-fractions.mp4", seconds: 60 } }
   };
 
   function get(grade, subject) {
