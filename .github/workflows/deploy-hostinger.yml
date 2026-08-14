@@ -1,0 +1,62 @@
+# Deploy BrightSprouts to Hostinger over FTP whenever main changes.
+#
+# This keeps "git push" as the deploy button after the site leaves GitHub Pages. Until the three
+# FTP secrets exist the job SKIPS rather than fails, so adding this file changes nothing today
+# and shows no red crosses on the repo.
+#
+# Secrets to add (Settings > Secrets and variables > Actions > New repository secret):
+#   FTP_HOST      the FTP hostname from Hostinger hPanel, e.g. ftp.brightsprouts.academy
+#   FTP_USER      the FTP username from hPanel
+#   FTP_PASSWORD  that account's password
+#
+# Nobody but GitHub can read those once saved, including me.
+
+name: Deploy to Hostinger
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:        # lets you run it by hand from the Actions tab
+
+concurrency:
+  group: hostinger-deploy   # never let two uploads overlap and interleave files
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check the FTP secrets exist
+        id: gate
+        env:
+          FTP_HOST: ${{ secrets.FTP_HOST }}
+        run: |
+          if [ -z "$FTP_HOST" ]; then
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "No FTP_HOST secret set, so Hostinger is not configured yet. Skipping."
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check out the site
+        if: steps.gate.outputs.ready == 'true'
+        uses: actions/checkout@v4
+
+      - name: Upload changed files
+        if: steps.gate.outputs.ready == 'true'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps                 # plain ftp would send the password in the clear
+          local-dir: ./
+          server-dir: public_html/       # Hostinger's web root
+          # Only what changed is uploaded after the first run, so a normal deploy is seconds.
+          exclude: |
+            **/.git*
+            **/.git*/**
+            brand/**
+            README.md
+            APP-STORE.md
+            books/*.raw.txt

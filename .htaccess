@@ -1,0 +1,61 @@
+# BrightSprouts Academy: Apache / LiteSpeed configuration, for hosts that read .htaccess.
+#
+# GitHub Pages ignores this file completely, so it is safe to keep in the repo while the site
+# is still served from Pages. It only starts doing anything once the site sits on Hostinger.
+#
+# Written without em dashes.
+
+# ---------- MIME types ----------
+# Shared hosting frequently does not know .webmanifest. When it is served as the wrong type the
+# browser stops offering "install as an app" and gives no error, so this is the single most
+# likely thing to break quietly after a move.
+AddType application/manifest+json .webmanifest
+AddType font/woff2 .woff2
+AddType audio/mpeg .mp3
+AddType video/mp4 .mp4
+AddType image/svg+xml .svg
+
+# ---------- Caching ----------
+# Order matters here: the general rule comes first, then the two files that must override it.
+<IfModule mod_headers.c>
+
+  # Lessons, art, fonts, narration and video can be cached hard. When a deploy changes them the
+  # service worker's CACHE name is bumped, which is what actually invalidates them for installed
+  # users, so a long browser cache costs nothing.
+  <FilesMatch "\.(css|js|woff2|png|jpg|jpeg|webp|svg|mp3|mp4)$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+
+  # These two must NEVER be cached hard. If the browser holds an old sw.js it keeps serving the
+  # old app forever and no deploy ever reaches that person: the worker is the thing that fetches
+  # everything else. index.html is the shell that loads the current script list.
+  <FilesMatch "^(sw\.js|index\.html)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+  </FilesMatch>
+
+</IfModule>
+
+# ---------- Compression ----------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml
+  AddOutputFilterByType DEFLATE application/javascript application/json application/manifest+json
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# ---------- Force HTTPS ----------
+# The site is an installable app and its service worker only runs on a secure connection, so a
+# child who lands on http:// would lose offline mode without being told why. Send everyone to
+# https. This is safe to leave in place: it only fires when the request arrived over http.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} !=on
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# ---------- Tidiness ----------
+# No directory listings: without this, /audio/ and /video/ hand a visitor the whole file index.
+Options -Indexes
+
+# The site routes with location.hash (#lesson-3-math), which never reaches the server, so there
+# are deliberately NO rewrite rules for routing here. Nothing else is needed.
+ErrorDocument 404 /index.html
