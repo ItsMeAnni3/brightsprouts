@@ -25,18 +25,27 @@
 
   // grade -> subject -> the clip. `seconds` is only used for the label on the poster card.
   // Kindergarten's maths lesson is keyed `counting`, not `math`, so it is listed as such.
+  //
+  // A subject that is taught in UNITS (the "Let's Learn" courses) nests its clips under `units`,
+  // keyed by unit index, so a video only shows on the unit it actually teaches. Without that, one
+  // clip would sit on top of all twelve geography units, including the ones it says nothing about.
   var VIDEOS = {
     0: { counting: { file: "k-counting-to-100.mp4", seconds: 60 } },
     1: { math: { file: "g1-adding-to-20.mp4", seconds: 60 } },
     2: { math: { file: "g2-tens-and-ones.mp4", seconds: 60 } },
     3: { math: { file: "g3-multiplication.mp4", seconds: 120 } },
-    4: { math: { file: "g4-division-fractions.mp4", seconds: 60 } }
+    4: { math: { file: "g4-division-fractions.mp4", seconds: 60 } },
+    // Geography course. Unit 1 is "Maps, Globes & Directions".
+    13: { geocourse: { units: { 1: { file: "geo-globe.mp4", seconds: 60 } } } }
   };
 
-  function get(grade, subject) {
+  function get(grade, subject, unitIdx) {
     var byGrade = VIDEOS[String(grade)] || VIDEOS[grade];
     if (!byGrade) return null;
-    return byGrade[subject] || null;
+    var entry = byGrade[subject];
+    if (!entry) return null;
+    if (entry.units) return entry.units[unitIdx || 0] || null;
+    return entry;
   }
 
   function mmss(s) {
@@ -45,8 +54,8 @@
   }
 
   // The poster card. Deliberately not a <video> yet: see the note at the top.
-  function html(grade, subject, title) {
-    var v = get(grade, subject);
+  function html(grade, subject, title, unitIdx) {
+    var v = get(grade, subject, unitIdx);
     if (!v) return "";
     var t = title || "this lesson";
     return '<div class="lessonvid no-print" id="lessonvid" data-src="' + BASE + v.file + '">' +

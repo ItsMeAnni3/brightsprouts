@@ -27,16 +27,20 @@ localStorage.setItem("bs_session", "t@t.t");
     [3, "math", "g3-multiplication.mp4"],
     [4, "math", "g4-division-fractions.mp4"],
     [5, "math", null],
-    [3, "reading", null]
+    [3, "reading", null],
+    // the geography course is taught in units: only unit 1 (Maps, Globes & Directions) has a clip
+    [13, "geocourse", "geo-globe.mp4", 1],
+    [13, "geocourse", null, 0],
+    [13, "geocourse", null, 5]
   ];
   var out = [], pass = 0, fail = 0;
   want.forEach(function (w) {
-    var g = w[0], s = w[1], expect = w[2];
-    var h = LessonVideo.html(g, s, "x");
+    var g = w[0], s = w[1], expect = w[2], u = w[3];
+    var h = LessonVideo.html(g, s, "x", u);
     var got = (h.match(/data-src="video\/([^"]+)"/) || [])[1] || null;
     var ok = got === expect;
     ok ? pass++ : fail++;
-    out.push((ok ? "PASS " : "FAIL ") + "grade " + g + " / " + s +
+    out.push((ok ? "PASS " : "FAIL ") + "grade " + g + " / " + s + (u === undefined ? "" : " unit " + u) +
              "  expected=" + expect + "  got=" + got);
   });
   // the poster must be a real button (keyboard reachable) and must not preload anything

@@ -2134,7 +2134,7 @@ function lessonView() {
     <div class="card" id="lesson-card">
       <div class="print-only print-header"><span class="brand">🌱 BrightSprouts Academy: ${gradeName(g)} ${subjectsFor(g).find(s => s.key === subj).label}</span><span>Name: ____________ &nbsp; Date: ________</span></div>
       <div class="lesson-head"><span class="lesson-emoji">${lesson.emoji}</span><h2>${esc(lesson.title)}</h2></div>
-      ${window.LessonVideo ? LessonVideo.html(g, subj, lesson.title) : ""}
+      ${window.LessonVideo ? LessonVideo.html(g, subj, lesson.title, unitIdx) : ""}
       ${(lesson.intro || (lesson.learn && lesson.learn.length)) ? `<div class="lesson-tools no-print" style="margin-bottom:10px">
         <button class="btn btn-secondary btn-sm listenbtn" id="lesson-listen" onclick="App.listenLesson()">🔊 Read this to me</button>
       </div>` : ""}
