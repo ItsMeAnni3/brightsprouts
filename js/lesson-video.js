@@ -70,6 +70,14 @@
     19: {
       earth: { file: "hist-earth-and-us.mp4", seconds: 60 },
       eras: { file: "hist-earth-and-us.mp4", seconds: 60 }
+    },
+    // Let's Learn Geology. Four tabs; the clip teaches the rock cycle, which is what the first
+    // two share: `rocks` names the three families and `cycle` shows them turning into each
+    // other. `rocks` is the tab the category opens on. Not listed on `earth` (inside the Earth)
+    // or `fossils`, which the clip only brushes past.
+    20: {
+      rocks: { file: "geo-rock-cycle.mp4", seconds: 60 },
+      cycle: { file: "geo-rock-cycle.mp4", seconds: 60 }
     }
   };
 
