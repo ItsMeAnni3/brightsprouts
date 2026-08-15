@@ -61,6 +61,15 @@
     17: {
       basics: { file: "cs-what-is-cs.mp4", seconds: 60 },
       algorithms: { file: "cs-what-is-cs.mp4", seconds: 60 }
+    },
+    // Let's Learn The History of Us. The whole category is only these two tabs, and one clip
+    // covers both because it is about how they FIT TOGETHER: all of Earth's history squeezed
+    // into a single day, with the entire human story in the last few seconds before midnight.
+    // That framing is the earth lesson's own closing line, and it is the reason the human story
+    // gets a separate timeline, so the clip belongs on both tabs rather than either one alone.
+    19: {
+      earth: { file: "hist-earth-and-us.mp4", seconds: 60 },
+      eras: { file: "hist-earth-and-us.mp4", seconds: 60 }
     }
   };
 
