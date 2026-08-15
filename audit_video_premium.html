@@ -33,7 +33,12 @@ localStorage.setItem("bs_session", "t@t.t");
     [13, "geocourse", "geo-globe.mp4", 0],
     [13, "geocourse", "geo-globe.mp4", 1],
     [13, "geocourse", null, 5],
-    [13, "geocourse", null, 11]
+    [13, "geocourse", null, 11],
+    // computer science is a FLAT course (no units), so no unit index is passed
+    [17, "basics", "cs-what-is-cs.mp4"],
+    [17, "algorithms", "cs-what-is-cs.mp4"],
+    [17, "loops", null],
+    [17, "safety", null]
   ];
   var out = [], pass = 0, fail = 0;
   want.forEach(function (w) {

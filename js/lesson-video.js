@@ -52,6 +52,15 @@
           1: { file: "geo-globe.mp4", seconds: 60 }
         }
       }
+    },
+    // Let's Learn Computer Science. Unlike Geography this course is a flat list of subjects with
+    // no units, and `basics` ("What Is a Computer?") is both the tab the category opens on
+    // (js/app.js picks it as the default subject for grade 17) and the lesson this clip teaches,
+    // so one entry is enough. The clip also answers "what is an algorithm" with a worked binary
+    // search, which is the next rung up, so it is listed on `algorithms` too.
+    17: {
+      basics: { file: "cs-what-is-cs.mp4", seconds: 60 },
+      algorithms: { file: "cs-what-is-cs.mp4", seconds: 60 }
     }
   };
 
