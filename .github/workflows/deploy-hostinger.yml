@@ -5,9 +5,17 @@
 # and shows no red crosses on the repo.
 #
 # Secrets to add (Settings > Secrets and variables > Actions > New repository secret):
-#   FTP_HOST      the FTP hostname from Hostinger hPanel, e.g. ftp.brightsprouts.academy
-#   FTP_USER      the FTP username from hPanel
+#   FTP_HOST      the FTP IP or hostname shown in hPanel > Files > FTP Accounts.
+#                 Use the IP. Do NOT use ftp.brightsprouts.academy: no such record exists,
+#                 because DNS is at Porkbun and has no ftp subdomain.
+#   FTP_USER      the FTP username from that page, usually of the form u123456789
 #   FTP_PASSWORD  that account's password
+#
+# Optional:
+#   FTP_DIR       the web root, only if it is not public_html/. Hostinger uses
+#                 public_html/ for a primary domain but domains/<site>/public_html/
+#                 when the site was added as an extra one. Check in File Manager; if the
+#                 upload lands in the wrong folder every page 404s.
 #
 # Nobody but GitHub can read those once saved, including me.
 
@@ -30,12 +38,16 @@ jobs:
         id: gate
         env:
           FTP_HOST: ${{ secrets.FTP_HOST }}
+          FTP_DIR: ${{ secrets.FTP_DIR }}
         run: |
           if [ -z "$FTP_HOST" ]; then
             echo "ready=false" >> "$GITHUB_OUTPUT"
             echo "No FTP_HOST secret set, so Hostinger is not configured yet. Skipping."
           else
             echo "ready=true" >> "$GITHUB_OUTPUT"
+            # Default to the primary-domain web root, overridable without editing this file.
+            echo "dir=${FTP_DIR:-public_html/}" >> "$GITHUB_OUTPUT"
+            echo "Deploying to ${FTP_DIR:-public_html/}"
           fi
 
       - name: Check out the site
@@ -51,7 +63,7 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftps                 # plain ftp would send the password in the clear
           local-dir: ./
-          server-dir: public_html/       # Hostinger's web root
+          server-dir: ${{ steps.gate.outputs.dir }}   # public_html/ unless FTP_DIR overrides it
           # Only what changed is uploaded after the first run, so a normal deploy is seconds.
           exclude: |
             **/.git*
