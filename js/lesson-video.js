@@ -78,6 +78,12 @@
     20: {
       rocks: { file: "geo-rock-cycle.mp4", seconds: 60 },
       cycle: { file: "geo-rock-cycle.mp4", seconds: 60 }
+    },
+    // Let's Learn Paleontology. Four tabs; the clip teaches how a fossil actually forms, which
+    // is the `digsite` tab and the one the category opens on. Deliberately NOT on `dinosaurs`,
+    // `prehistoric` or `extinction`: it mentions dinosaurs but teaches none of them.
+    26: {
+      digsite: { file: "paleo-how-fossils-form.mp4", seconds: 60 }
     }
   };
 
